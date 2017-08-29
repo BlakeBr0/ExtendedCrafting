@@ -18,15 +18,12 @@ import net.minecraftforge.oredict.OreDictionary;
 import stanhebben.zenscript.annotations.ZenClass;
 import stanhebben.zenscript.annotations.ZenMethod;
 
-// TODO: cleanup
 @ZenClass("mods.extendedcrafting.CombinationCrafting")
 public class CombinationCrafting {
 
 	@ZenMethod
-	public static void addRecipe(IItemStack output, int cost, int perTick, IItemStack input,
-			IIngredient[] ingredients) {
-		CraftTweakerAPI.apply(
-				new Add(new CombinationRecipe(toStack(output), cost, perTick, toStack(input), toObjects(ingredients))));
+	public static void addRecipe(IItemStack output, int cost, int perTick, IItemStack input, IIngredient[] ingredients) {
+		CraftTweakerAPI.apply(new Add(new CombinationRecipe(toStack(output), cost, perTick, toStack(input), toObjects(ingredients))));
 	}
 
 	@ZenMethod
@@ -44,9 +41,6 @@ public class CombinationCrafting {
 		@Override
 		public void apply() {
 			CombinationRecipeManager.getInstance().getRecipes().add(recipe);
-			if (Loader.isModLoaded("JEI") && CompatJEI.recipeRegistry != null) {
-				CompatJEI.recipeRegistry.addRecipe(recipe);
-			}
 		}
 
 		@Override
@@ -69,9 +63,6 @@ public class CombinationCrafting {
 				if (recipe.getOutput().isItemEqual(remove)) {
 					this.recipe = recipe;
 					CombinationRecipeManager.getInstance().getRecipes().remove(recipe);
-					if (Loader.isModLoaded("JEI") && CompatJEI.recipeRegistry != null) {
-						CompatJEI.recipeRegistry.removeRecipe(recipe);
-					}
 					break;
 				}
 			}
@@ -79,13 +70,13 @@ public class CombinationCrafting {
 
 		@Override
 		public String describe() {
-			return "Removing an Advanced Crafting recipe for " + remove.getDisplayName();
+			return "Removing an Combination Crafting recipe for " + remove.getDisplayName();
 		}
 	}
 
 	private static ItemStack toStack(IItemStack item) {
 		if (item == null) {
-			return null;
+			return ItemStack.EMPTY;
 		} else {
 			Object internal = item.getInternal();
 			if (internal == null || !(internal instanceof ItemStack)) {

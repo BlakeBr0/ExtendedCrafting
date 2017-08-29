@@ -23,7 +23,6 @@ import net.minecraftforge.oredict.OreDictionary;
 import stanhebben.zenscript.annotations.ZenClass;
 import stanhebben.zenscript.annotations.ZenMethod;
 
-// TODO: cleanup
 @ZenClass("mods.extendedcrafting.TableCrafting")
 public class TableCrafting {
 
@@ -35,8 +34,7 @@ public class TableCrafting {
 	@ZenMethod
 	public static void addShaped(int tier, IItemStack output, IIngredient[][] ingredients) {
 		if (tier > 4 || tier < 0) {
-			CraftTweakerAPI.getLogger().logError("Unable to assign a tier to the Table Recipe for stack "
-					+ output.getDisplayName() + ". Tier cannot be greater than 4 or less than 0.");
+			CraftTweakerAPI.getLogger().logError("Unable to assign a tier to the Table Recipe for stack " + output.getDisplayName() + ". Tier cannot be greater than 4 or less than 0.");
 			tier = 0;
 		}
 
@@ -71,8 +69,7 @@ public class TableCrafting {
 	@ZenMethod
 	public static void addShapeless(int tier, IItemStack output, IIngredient[] ingredients) {
 		if (tier > 4 || tier < 0) {
-			CraftTweakerAPI.getLogger().logError("Unable to assign a tier to the Table Recipe for stack "
-					+ output.getDisplayName() + ". Tier cannot be greater than 4 or less than 0.");
+			CraftTweakerAPI.getLogger().logError("Unable to assign a tier to the Table Recipe for stack " + output.getDisplayName() + ". Tier cannot be greater than 4 or less than 0.");
 			tier = 0;
 		}
 
@@ -94,9 +91,6 @@ public class TableCrafting {
 		@Override
 		public void apply() {
 			TableRecipeManager.getInstance().getRecipes().add(recipe);
-			if (Loader.isModLoaded("JEI") && CompatJEI.recipeRegistry != null) {
-				CompatJEI.recipeRegistry.addRecipe(recipe);
-			}
 		}
 
 		@Override
@@ -121,9 +115,6 @@ public class TableCrafting {
 					if (recipe.getRecipeOutput().isItemEqual(remove)) {
 						this.recipe = recipe;
 						TableRecipeManager.getInstance().getRecipes().remove(recipe);
-						if (Loader.isModLoaded("JEI") && CompatJEI.recipeRegistry != null) {
-							CompatJEI.recipeRegistry.removeRecipe(recipe);
-						}
 						break;
 					}
 				}
@@ -138,7 +129,7 @@ public class TableCrafting {
 
 	private static ItemStack toStack(IItemStack item) {
 		if (item == null) {
-			return null;
+			return ItemStack.EMPTY;
 		} else {
 			Object internal = item.getInternal();
 			if (internal == null || !(internal instanceof ItemStack)) {

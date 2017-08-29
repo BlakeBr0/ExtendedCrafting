@@ -19,15 +19,12 @@ import net.minecraftforge.oredict.OreDictionary;
 import stanhebben.zenscript.annotations.ZenClass;
 import stanhebben.zenscript.annotations.ZenMethod;
 
-// TODO: cleanup
 @ZenClass("mods.extendedcrafting.CompressionCrafting")
 public class CompressionCrafting {
 
 	@ZenMethod
-	public static void addRecipe(IItemStack output, IItemStack input, int inputCount, IItemStack catalyst,
-			int powerCost) {
-		CraftTweakerAPI.apply(new Add(new CompressorRecipe(toStack(output), toStack(input), inputCount,
-				toStack(catalyst), false, powerCost)));
+	public static void addRecipe(IItemStack output, IItemStack input, int inputCount, IItemStack catalyst, int powerCost) {
+		CraftTweakerAPI.apply(new Add(new CompressorRecipe(toStack(output), toStack(input), inputCount, toStack(catalyst), false, powerCost)));
 	}
 
 	@ZenMethod
@@ -45,9 +42,6 @@ public class CompressionCrafting {
 		@Override
 		public void apply() {
 			CompressorRecipeManager.getInstance().getRecipes().add(recipe);
-			if (Loader.isModLoaded("JEI") && CompatJEI.recipeRegistry != null) {
-				CompatJEI.recipeRegistry.addRecipe(recipe);
-			}
 		}
 
 		@Override
@@ -70,9 +64,6 @@ public class CompressionCrafting {
 				if (recipe.getOutput().isItemEqual(remove)) {
 					this.recipe = recipe;
 					CombinationRecipeManager.getInstance().getRecipes().remove(recipe);
-					if (Loader.isModLoaded("JEI") && CompatJEI.recipeRegistry != null) {
-						CompatJEI.recipeRegistry.removeRecipe(recipe);
-					}
 					break;
 				}
 			}
@@ -86,7 +77,7 @@ public class CompressionCrafting {
 
 	private static ItemStack toStack(IItemStack item) {
 		if (item == null) {
-			return null;
+			return ItemStack.EMPTY;
 		} else {
 			Object internal = item.getInternal();
 			if (internal == null || !(internal instanceof ItemStack)) {

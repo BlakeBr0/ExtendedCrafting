@@ -10,6 +10,7 @@ import com.blakebr0.cucumber.item.ItemMeta;
 import com.blakebr0.cucumber.util.Utils;
 import com.blakebr0.extendedcrafting.ExtendedCrafting;
 import com.blakebr0.extendedcrafting.config.ModConfig;
+import com.blakebr0.extendedcrafting.crafting.CompressorRecipeManager;
 
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.renderer.color.IItemColor;
@@ -17,6 +18,7 @@ import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.common.config.Configuration;
+import net.minecraftforge.oredict.OreDictionary;
 
 public class ItemSingularity extends ItemMeta {
 
@@ -31,8 +33,7 @@ public class ItemSingularity extends ItemMeta {
 
 	@Override
 	public String getItemStackDisplayName(ItemStack stack) {
-		String name = items.containsKey(stack.getMetadata())
-				? items.get(stack.getMetadata()).getName().replace("_", " ") : "Dummy";
+		String name = items.containsKey(stack.getMetadata()) ? items.get(stack.getMetadata()).getName().replace("_", " ") : "Dummy";
 		return WordUtils.capitalize(name) + " " + Utils.localize("item.ec.singularity.name");
 	}
 
@@ -80,34 +81,55 @@ public class ItemSingularity extends ItemMeta {
 	@Override
 	public void initModels() {
 		for (Map.Entry<Integer, MetaItem> item : items.entrySet()) {
-			ModelLoader.setCustomModelResourceLocation(this, item.getKey(),
-					new ModelResourceLocation(ExtendedCrafting.MOD_ID + ":singularity", "inventory"));
+			ModelLoader.setCustomModelResourceLocation(this, item.getKey(), new ModelResourceLocation(ExtendedCrafting.MOD_ID + ":singularity", "inventory"));
 		}
 	}
 
 	public ItemStack addSingularity(int meta, String name, ItemStack material, int color) {
-		singularityColors.put(meta, color);
-		singularityMaterials.put(meta, material);
 		boolean enabled = config.get("singularity", name, true).getBoolean();
-		config.save();
+		if (config.hasChanged()) {
+			config.save();
+		}		
 		if (enabled) {
+			singularityColors.put(meta, color);
+			singularityMaterials.put(meta, material);
 			ItemSingularityUltimate.addSingularityToRecipe(StackHelper.to(this, 1, meta));
 		}
 		return addItem(meta, name, enabled);
 	}
 
 	public ItemStack addSingularity(int meta, String name, String oreName, int color) {
-		singularityColors.put(meta, color);
-		singularityMaterials.put(meta, oreName);
 		boolean enabled = config.get("singularity", name, true).getBoolean();
-		config.save();
+		if (config.hasChanged()) {
+			config.save();
+		}
 		if (enabled) {
+			singularityColors.put(meta, color);
+			singularityMaterials.put(meta, oreName);
 			ItemSingularityUltimate.addSingularityToRecipe(StackHelper.to(this, 1, meta));
 		}
 		return addItem(meta, name, enabled);
 	}
 	
-	
+	public void initRecipes() {
+		for (Map.Entry<Integer, Object> obj : singularityMaterials.entrySet()) {
+			Object value = obj.getValue();
+			int meta = obj.getKey();
+			if (value instanceof ItemStack) {
+				ItemStack stack = (ItemStack) value;
+				if (!StackHelper.isNull(stack)) {
+					CompressorRecipeManager.getInstance().addRecipe(StackHelper.to(this, 1, meta), stack.copy(), ModConfig.confSingularityAmount, ModItems.itemMaterial.itemUltimateCatalyst, false, ModConfig.confSingularityRF);
+				} else if (value instanceof String) {
+					String name = (String) value;
+					if (OreDictionary.doesOreNameExist(name)) {
+						if (!OreDictionary.getOres(name).isEmpty()) {
+							// TODO: OreDict support for the compressor input
+						}
+					}
+				}
+			}
+		}
+	}
 
 	public static class ColorHandler implements IItemColor {
 

@@ -12,13 +12,18 @@ import com.blakebr0.cucumber.item.ItemMeta;
 import com.blakebr0.cucumber.util.Utils;
 import com.blakebr0.extendedcrafting.ExtendedCrafting;
 import com.blakebr0.extendedcrafting.config.ModConfig;
+import com.blakebr0.extendedcrafting.crafting.CompressorRecipeManager;
 
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.renderer.color.IItemColor;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.common.config.ConfigCategory;
 import net.minecraftforge.common.config.Configuration;
+import net.minecraftforge.fml.common.registry.ForgeRegistries;
+import net.minecraftforge.oredict.OreDictionary;
 
 public class ItemSingularityCustom extends ItemMeta implements IModelHelper {
 
@@ -42,8 +47,8 @@ public class ItemSingularityCustom extends ItemMeta implements IModelHelper {
 	public void configure(Configuration config) {
 		ConfigCategory category = config.getCategory("singularity");
 		String[] values = config.get(category.getName(), "_custom_singularities", new String[0]).getStringList();
-		category.get("_custom_singularities")
-				.setComment("Here you can add your own custom Singularities." + "\n- Syntax: meta;name;material;color"
+		category.get("_custom_singularities").setComment("Here you can add your own custom Singularities." 
+						+ "\n- Syntax: meta;name;material;color"
 						+ "\n- Example: 12;super_potato;minecraft:carrot;123456"
 						+ "\n- 'meta' must be different for each, and should not be changed."
 						+ "\n- 'name' should be lower case with underscores for spaces. Singularity is added automatically."
@@ -51,6 +56,8 @@ public class ItemSingularityCustom extends ItemMeta implements IModelHelper {
 						+ "\n- 'material' can be an item id, or an OreDictionary value. This is for the generic crafting recipe."
 						+ "\n- Note: if you plan on adding your own recipe with the CraftTweaker integration, put 'none'."
 						+ "\n- Examples: 'minecraft:stone' is an item id, 'ore:ingotIron' is the OreDictionary value 'ingotIron'."
+						+ "\n- Note: you can also specify meta for item ids, by adding them to the end of the item id."
+						+ "\n- Example: minecraft:stone:3 for a meta of 3. Make the meta 32767 if you want all metas to work."
 						+ "\n- 'color' the color of the singularity as a hex value. http://htmlcolorcodes.com/"
 						+ "\n- Example: 123456 would color it as whatever that color is.");
 
@@ -76,40 +83,70 @@ public class ItemSingularityCustom extends ItemMeta implements IModelHelper {
 			}
 
 			singularities.add(new CustomSingularity(meta, name, material, color));
-		}
+		} 
 	}
 
 	@Override
 	public void init() {
 		for (CustomSingularity sing : singularities) {
-			if (sing.name.startsWith("ore:")) {
-				addSingularity(sing.meta, sing.name, sing.material.substring(4), sing.color);
-			} else {
-				addSingularity(sing.meta, sing.name, sing.material, sing.color);
-			}
+			addSingularity(sing.meta, sing.name, sing.material, sing.color);
 		}
 	}
 
 	@Override
 	public void initModels() {
 		for (Map.Entry<Integer, MetaItem> item : items.entrySet()) {
-			ModelLoader.setCustomModelResourceLocation(this, item.getKey(),
-					new ModelResourceLocation(ExtendedCrafting.MOD_ID + ":singularity", "inventory"));
+			ModelLoader.setCustomModelResourceLocation(this, item.getKey(), new ModelResourceLocation(ExtendedCrafting.MOD_ID + ":singularity", "inventory"));
 		}
 	}
 
-	public ItemStack addSingularity(int meta, String name, ItemStack material, int color) {
+	public ItemStack addSingularity(int meta, String name, String material, int color) {
 		singularityColors.put(meta, color);
 		singularityMaterials.put(meta, material);
 		ItemSingularityUltimate.addSingularityToRecipe(StackHelper.to(this, 1, meta));
 		return addItem(meta, name, true);
 	}
-
-	public ItemStack addSingularity(int meta, String name, String oreName, int color) {
-		singularityColors.put(meta, color);
-		singularityMaterials.put(meta, oreName);
-		ItemSingularityUltimate.addSingularityToRecipe(StackHelper.to(this, 1, meta));
-		return addItem(meta, name, true);
+	
+	public void initRecipes() {
+		for (Map.Entry<Integer, Object> obj : singularityMaterials.entrySet()) {
+			Object value = obj.getValue();
+			int meta = obj.getKey();
+			Item item = null;
+			ItemStack stack = ItemStack.EMPTY;
+			if (value instanceof String) {
+				String[] parts = ((String) value).split(":");
+				int matMeta = 0;
+				if (parts.length == 3) {
+					try {
+						matMeta = Integer.valueOf(parts[2]);
+					} catch (NumberFormatException e) {
+						ExtendedCrafting.LOGGER.error("Invalid meta for singularity: " + value.toString());
+						continue;
+					}
+					item = ForgeRegistries.ITEMS.getValue(new ResourceLocation(parts[0], parts[1]));
+					stack = StackHelper.to(item, 1, matMeta);
+					if (!StackHelper.isNull(stack)) {
+						CompressorRecipeManager.getInstance().addRecipe(StackHelper.to(this, 1, meta), stack.copy(), ModConfig.confSingularityAmount, ModItems.itemMaterial.itemUltimateCatalyst, false, ModConfig.confSingularityRF);
+					}
+				} else if (parts.length == 2) {
+					if (((String) value).startsWith("ore:")) {
+						// TODO: OreDictionary support for the compressor input
+					} else {
+						item = ForgeRegistries.ITEMS.getValue(new ResourceLocation(parts[0], parts[1]));
+						stack = StackHelper.to(item);
+						if (!StackHelper.isNull(stack)) {
+							CompressorRecipeManager.getInstance().addRecipe(StackHelper.to(this, 1, meta), stack.copy(), ModConfig.confSingularityAmount, ModItems.itemMaterial.itemUltimateCatalyst, false, ModConfig.confSingularityRF);
+						}
+					}
+				} else {
+					ExtendedCrafting.LOGGER.error("Invalid material for singularity: " + value.toString());
+					continue;
+				}
+			} else {
+				ExtendedCrafting.LOGGER.error("Invalid material for singularity: " + value.toString());
+				continue;
+			}
+		}
 	}
 
 	public class CustomSingularity {
@@ -118,7 +155,7 @@ public class ItemSingularityCustom extends ItemMeta implements IModelHelper {
 		public String name;
 		public String material;
 		public int color;
-
+		
 		public CustomSingularity(int meta, String name, String material, int color) {
 			this.meta = meta;
 			this.name = name;

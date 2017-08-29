@@ -43,10 +43,10 @@ public class CompressorCraftingCategory implements IRecipeCategory<CompressorCra
 		IGuiItemStackGroup stacks = layout.getItemStacks();
 
 		layout.getItemStacks().init(0, true, 58, 31);
-		layout.getItemStacks().set(0, ingredients.getInputs(ItemStack.class).get(0).get(0));
+		layout.getItemStacks().set(0, ingredients.getInputs(ItemStack.class).get(0));
 
 		layout.getItemStacks().init(1, true, 31, 31);
-		layout.getItemStacks().set(1, ingredients.getInputs(ItemStack.class).get(0).get(1));
+		layout.getItemStacks().set(1, ingredients.getInputs(ItemStack.class).get(1));
 
 		layout.getItemStacks().init(2, false, 128, 31);
 		layout.getItemStacks().set(2, ingredients.getOutputs(ItemStack.class).get(0));

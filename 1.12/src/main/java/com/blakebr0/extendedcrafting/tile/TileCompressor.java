@@ -130,7 +130,7 @@ public class TileCompressor extends TileEntity implements ISidedInventory, ITick
 	public CompressorRecipe getRecipe() {
 		List<CompressorRecipe> recipes = getValidRecipes(getStackForRecipe());
 		if (!recipes.isEmpty()) {
-			for (CompressorRecipe recipe : recipes) {
+			for (CompressorRecipe recipe : recipes) { // TODO: wildcard support for input stacks
 				if ((this.materialStack.isItemEqual(recipe.getInput()) || this.getStackInSlot(1).isItemEqual(recipe.getInput())) && this.getStackInSlot(2).isItemEqual(recipe.getCatalyst())) {
 					return recipe;
 				}
@@ -140,7 +140,7 @@ public class TileCompressor extends TileEntity implements ISidedInventory, ITick
 	}
 
 	private ItemStack getStackForRecipe() {
-		return !this.getStackInSlot(1).isEmpty() ? this.getStackInSlot(1) : this.materialStack;
+		return !this.materialStack.isEmpty() ? this.materialStack : this.getStackInSlot(1);
 	}
 	
 	private boolean process(CompressorRecipe recipe) {

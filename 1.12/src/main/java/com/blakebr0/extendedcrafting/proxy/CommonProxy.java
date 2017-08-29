@@ -11,6 +11,7 @@ import com.blakebr0.extendedcrafting.compat.crafttweaker.TableCrafting;
 import com.blakebr0.extendedcrafting.config.ModConfig;
 import com.blakebr0.extendedcrafting.crafting.CombinationRecipeManager;
 import com.blakebr0.extendedcrafting.crafting.CompressorRecipeManager;
+import com.blakebr0.extendedcrafting.crafting.ModRecipes;
 import com.blakebr0.extendedcrafting.item.ModItems;
 import com.blakebr0.extendedcrafting.tile.ModTiles;
 import com.blakebr0.extendedcrafting.util.NetworkThingy;
@@ -50,6 +51,7 @@ public class CommonProxy {
 		NetworkThingy.init();
 		NetworkRegistry.INSTANCE.registerGuiHandler(ExtendedCrafting.instance, new GuiHandler());
 		FMLInterModComms.sendMessage("waila", "register", "com.blakebr0.extendedcrafting.compat.WailaDataProvider.callbackRegister");
+		ModRecipes.init();
 /*		CombinationRecipeManager.getInstance().addRecipe(new ItemStack(Items.DIAMOND), 50000, 100,
 				new ItemStack(Items.COAL), new ItemStack(Items.STICK), new ItemStack(Items.LAVA_BUCKET), "ingotIron",
 				new ItemStack(Items.WHEAT), new ItemStack(Items.WHEAT), new ItemStack(Items.WHEAT),
@@ -86,10 +88,9 @@ public class CommonProxy {
 		CompressorRecipeManager.getInstance().addRecipe(new ItemStack(ModItems.itemSingularity, 1, 2),
 				new ItemStack(Items.IRON_INGOT), 2000, new ItemStack(Items.DIAMOND), false, 100000);
 */
-		ModItems.itemSingularityUltimate.addRecipe();
 	} // TODO: remember to remove this LUL
 
 	public void postInit(FMLPostInitializationEvent event) {
-
+		ModRecipes.post();
 	}
 }

@@ -1,5 +1,6 @@
 package com.blakebr0.extendedcrafting.compat.jei.compressor;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -41,8 +42,13 @@ public class CompressorCraftingWrapper implements IRecipeWrapper {
 		ItemStack output = this.recipe.getOutput();
 		ItemStack input = this.recipe.getInput();
 		ItemStack catalyst = this.recipe.getCatalyst();
-
-		ingredients.setInput(ItemStack.class, helper.expandRecipeItemStackInputs(Arrays.asList(input, catalyst)));
+		
+		List<List<ItemStack>> stacks = new ArrayList<>();
+		
+		stacks.add(Arrays.asList(input));
+		stacks.add(Arrays.asList(catalyst));
+		
+		ingredients.setInputLists(ItemStack.class, stacks);
 		ingredients.setOutput(ItemStack.class, output);
 	}
 }

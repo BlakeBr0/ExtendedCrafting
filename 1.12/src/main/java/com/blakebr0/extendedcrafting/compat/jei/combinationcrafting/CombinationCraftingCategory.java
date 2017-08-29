@@ -22,8 +22,7 @@ public class CombinationCraftingCategory implements IRecipeCategory<CombinationC
 	private final IDrawable background;
 
 	public CombinationCraftingCategory(IGuiHelper helper) {
-		ResourceLocation texture = new ResourceLocation(ExtendedCrafting.MOD_ID,
-				"textures/jei/combination_crafting.png");
+		ResourceLocation texture = new ResourceLocation(ExtendedCrafting.MOD_ID, "textures/jei/combination_crafting.png");
 		this.background = helper.createDrawable(texture, 10, 14, 156, 92);
 	}
 

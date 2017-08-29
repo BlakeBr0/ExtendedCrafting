@@ -14,6 +14,7 @@ import com.blakebr0.extendedcrafting.client.container.ContainerUltimateTable;
 import com.blakebr0.extendedcrafting.client.gui.GuiAdvancedTable;
 import com.blakebr0.extendedcrafting.client.gui.GuiBasicTable;
 import com.blakebr0.extendedcrafting.client.gui.GuiCompressor;
+import com.blakebr0.extendedcrafting.client.gui.GuiCraftingCore;
 import com.blakebr0.extendedcrafting.client.gui.GuiCraftingTable;
 import com.blakebr0.extendedcrafting.client.gui.GuiEliteTable;
 import com.blakebr0.extendedcrafting.client.gui.GuiHandheldTable;
@@ -104,6 +105,7 @@ public class CompatJEI implements IModPlugin {
 
 		registry.addRecipeClickArea(GuiCraftingTable.class, 88, 32, 28, 23, VanillaRecipeCategoryUid.CRAFTING);
 		registry.addRecipeClickArea(GuiHandheldTable.class, 88, 32, 28, 23, VanillaRecipeCategoryUid.CRAFTING);
+		registry.addRecipeClickArea(GuiCraftingCore.class, 117, 37, 21, 14, CombinationCraftingCategory.UID);
 		registry.addRecipeClickArea(GuiBasicTable.class, 91, 34, 21, 14, BasicTableCategory.UID);
 		registry.addRecipeClickArea(GuiAdvancedTable.class, 109, 51, 21, 14, AdvancedTableCategory.UID);
 		registry.addRecipeClickArea(GuiEliteTable.class, 145, 69, 21, 14, EliteTableCategory.UID);

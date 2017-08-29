@@ -19,6 +19,7 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
 
 public class BlockCraftingCore extends BlockBase implements ITileEntityProvider {
@@ -53,8 +54,7 @@ public class BlockCraftingCore extends BlockBase implements ITileEntityProvider 
 				// TODO: DEBUG, REMOVE OR DIE TY
 			/*	if (player.isSneaking()) {
 					tile.getEnergy().receiveEnergy(100000, false);
-					player.sendMessage(new TextComponentTranslation(
-							"Cheaty cheaty Darkosto, back at it again... I'll let it slide though since it's your birthday."));
+					player.sendMessage(new TextComponentTranslation("Cheaty cheaty Darkosto, back at it again... I'll let it slide though since it's your birthday."));
 				} */
 			} 
 		}

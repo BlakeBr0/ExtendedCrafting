@@ -37,8 +37,7 @@ public class RenderCraftingCore extends TileEntitySpecialRenderer<TileCraftingCo
 			GlStateManager.pushAttrib();
 			RenderHelper.enableStandardItemLighting();
 			GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
-			Minecraft.getMinecraft().getRenderItem().renderItem(tile.getInventory().getStackInSlot(0),
-					TransformType.FIXED);
+			Minecraft.getMinecraft().getRenderItem().renderItem(tile.getInventory().getStackInSlot(0), TransformType.FIXED);
 			RenderHelper.disableStandardItemLighting();
 			GlStateManager.popAttrib();
 			GlStateManager.enableLighting();

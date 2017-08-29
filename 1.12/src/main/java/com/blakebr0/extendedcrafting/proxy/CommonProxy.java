@@ -9,11 +9,15 @@ import com.blakebr0.extendedcrafting.compat.crafttweaker.CombinationCrafting;
 import com.blakebr0.extendedcrafting.compat.crafttweaker.CompressionCrafting;
 import com.blakebr0.extendedcrafting.compat.crafttweaker.TableCrafting;
 import com.blakebr0.extendedcrafting.config.ModConfig;
+import com.blakebr0.extendedcrafting.crafting.CombinationRecipeManager;
+import com.blakebr0.extendedcrafting.crafting.CompressorRecipeManager;
 import com.blakebr0.extendedcrafting.item.ModItems;
 import com.blakebr0.extendedcrafting.tile.ModTiles;
 import com.blakebr0.extendedcrafting.util.NetworkThingy;
 
 import crafttweaker.CraftTweakerAPI;
+import net.minecraft.init.Items;
+import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;

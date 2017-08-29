@@ -69,23 +69,16 @@ public class TileCraftingCore extends TileEntity implements ITickable {
 					boolean done = this.process(recipe);
 					if (done) {
 						for (TilePedestal pedestal : pedestals) {
-							pedestal.getInventory().setStackInSlot(0,
-									StackHelper.decrease(pedestal.getInventory().getStackInSlot(0), 1, true));
+							pedestal.getInventory().setStackInSlot(0, StackHelper.decrease(pedestal.getInventory().getStackInSlot(0), 1, true));
 							pedestal.markDirty();
-							((WorldServer) this.getWorld()).spawnParticle(EnumParticleTypes.SMOKE_NORMAL, false,
-									pedestal.getPos().getX() + 0.5D, pedestal.getPos().getY() + 1.1D,
-									pedestal.getPos().getZ() + 0.5D, 20, 0, 0, 0, 0.1D);
+							((WorldServer) this.getWorld()).spawnParticle(EnumParticleTypes.SMOKE_NORMAL, false, pedestal.getPos().getX() + 0.5D, pedestal.getPos().getY() + 1.1D, pedestal.getPos().getZ() + 0.5D, 20, 0, 0, 0, 0.1D);
 						}
-						((WorldServer) this.getWorld()).spawnParticle(EnumParticleTypes.END_ROD, false,
-								this.getPos().getX() + 0.5D, this.getPos().getY() + 1.1D, this.getPos().getZ() + 0.5D,
-								50, 0, 0, 0, 0.1D);
+						((WorldServer) this.getWorld()).spawnParticle(EnumParticleTypes.END_ROD, false, this.getPos().getX() + 0.5D, this.getPos().getY() + 1.1D, this.getPos().getZ() + 0.5D, 50, 0, 0, 0, 0.1D);
 						this.getInventory().setStackInSlot(0, recipe.getOutput().copy());
 						this.progress = 0;
 						mark = true;
 					} else {
-						((WorldServer) this.getWorld()).spawnParticle(EnumParticleTypes.SPELL, false,
-								this.getPos().getX() + 0.5D, this.getPos().getY() + 1.1D, this.getPos().getZ() + 0.5D,
-								2, 0, 0, 0, 0.1D);
+						((WorldServer) this.getWorld()).spawnParticle(EnumParticleTypes.SPELL, false, this.getPos().getX() + 0.5D, this.getPos().getY() + 1.1D, this.getPos().getZ() + 0.5D, 2, 0, 0, 0, 0.1D);
 					}
 				}
 			} else {
@@ -253,8 +246,7 @@ public class TileCraftingCore extends TileEntity implements ITickable {
 	}
 
 	public boolean isUseableByPlayer(EntityPlayer player) {
-		return this.getWorld().getTileEntity(this.getPos()) == this
-				&& player.getDistanceSq(this.getPos().add(0.5, 0.5, 0.5)) <= 64;
+		return this.getWorld().getTileEntity(this.getPos()) == this && player.getDistanceSq(this.getPos().add(0.5, 0.5, 0.5)) <= 64;
 	}
 
 	@Nonnull

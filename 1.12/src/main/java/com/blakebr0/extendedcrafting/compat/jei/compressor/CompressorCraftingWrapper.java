@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.List;
 
 import com.blakebr0.cucumber.util.Utils;
+import com.blakebr0.extendedcrafting.config.ModConfig;
 import com.blakebr0.extendedcrafting.crafting.CompressorRecipe;
 
 import mezz.jei.api.IJeiHelpers;
@@ -26,7 +27,7 @@ public class CompressorCraftingWrapper implements IRecipeWrapper {
 	@Override
 	public List<String> getTooltipStrings(int mouseX, int mouseY) {
 		if (mouseX > 1 && mouseX < 14 && mouseY > 1 && mouseY < 78) {
-			return Arrays.<String> asList(Utils.format(this.recipe.getPowerCost()) + " RF");
+			return Arrays.<String> asList(Utils.format(this.recipe.getPowerCost()) + " RF", Utils.format(ModConfig.confCompressorRFRate) + " RF/t");
 		}
 		if (mouseX > 54 && mouseX < 78 && mouseY > 58 && mouseY < 68) {
 			return Arrays.<String> asList(Utils.format(this.recipe.getInputCount()));

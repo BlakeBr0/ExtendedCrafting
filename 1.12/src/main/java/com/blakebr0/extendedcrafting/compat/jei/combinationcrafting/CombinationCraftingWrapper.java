@@ -1,7 +1,10 @@
 package com.blakebr0.extendedcrafting.compat.jei.combinationcrafting;
 
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
+import com.blakebr0.cucumber.util.Utils;
 import com.blakebr0.extendedcrafting.crafting.CombinationRecipe;
 
 import mezz.jei.api.IJeiHelpers;
@@ -26,8 +29,11 @@ public class CombinationCraftingWrapper implements IRecipeWrapper {
 	}
 
 	@Override
-	public void drawInfo(Minecraft minecraft, int recipeWidth, int recipeHeight, int mouseX, int mouseY) {
-		minecraft.fontRenderer.drawString(recipe.getCost() + " RF (" + recipe.getPerTick() + " RF/t)", 7, 90, 0, false);
+	public List<String> getTooltipStrings(int mouseX, int mouseY) {
+		if (mouseX > 1 && mouseX < 14 && mouseY > 9 && mouseY < 86) {
+			return Arrays.<String> asList(Utils.format(this.recipe.getCost()) + " RF", Utils.format(this.recipe.getPerTick()) + " RF/t");
+		}
+		return Collections.emptyList();
 	}
 
 	@Override

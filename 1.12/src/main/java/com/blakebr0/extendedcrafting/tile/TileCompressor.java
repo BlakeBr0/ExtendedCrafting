@@ -131,9 +131,7 @@ public class TileCompressor extends TileEntity implements ISidedInventory, ITick
 		List<CompressorRecipe> recipes = getValidRecipes(getStackForRecipe());
 		if (!recipes.isEmpty()) {
 			for (CompressorRecipe recipe : recipes) {
-				if ((this.materialStack.isItemEqual(recipe.getInput())
-						|| this.getStackInSlot(1).isItemEqual(recipe.getInput()))
-						&& this.getStackInSlot(2).isItemEqual(recipe.getCatalyst())) {
+				if ((this.materialStack.isItemEqual(recipe.getInput()) || this.getStackInSlot(1).isItemEqual(recipe.getInput())) && this.getStackInSlot(2).isItemEqual(recipe.getCatalyst())) {
 					return recipe;
 				}
 			}
@@ -189,8 +187,7 @@ public class TileCompressor extends TileEntity implements ISidedInventory, ITick
 			this.setInventorySlotContents(slot, stack);
 			return true;
 		} else {
-			if (slotStack.isItemEqual(stack)
-					&& slotStack.getCount() + stack.getCount() <= slotStack.getMaxStackSize()) {
+			if (slotStack.isItemEqual(stack) && slotStack.getCount() + stack.getCount() <= slotStack.getMaxStackSize()) {
 				ItemStack newStack = slotStack.copy();
 				newStack.grow(stack.getCount());
 				this.setInventorySlotContents(slot, newStack);
@@ -281,8 +278,7 @@ public class TileCompressor extends TileEntity implements ISidedInventory, ITick
 	@Override
 	public void setInventorySlotContents(int index, ItemStack stack) {
 		ItemStack itemstack = (ItemStack) this.inventoryStacks.get(index);
-		boolean flag = !stack.isEmpty() && stack.isItemEqual(itemstack)
-				&& ItemStack.areItemStackTagsEqual(stack, itemstack);
+		boolean flag = !stack.isEmpty() && stack.isItemEqual(itemstack) && ItemStack.areItemStackTagsEqual(stack, itemstack);
 		this.inventoryStacks.set(index, stack);
 
 		if (stack.getCount() > this.getInventoryStackLimit()) {
@@ -301,8 +297,7 @@ public class TileCompressor extends TileEntity implements ISidedInventory, ITick
 
 	@Override
 	public boolean isUsableByPlayer(EntityPlayer player) {
-		return this.getWorld().getTileEntity(this.getPos()) == this
-				&& player.getDistanceSq(this.getPos().add(0.5, 0.5, 0.5)) <= 64;
+		return this.getWorld().getTileEntity(this.getPos()) == this && player.getDistanceSq(this.getPos().add(0.5, 0.5, 0.5)) <= 64;
 	}
 
 	@Override

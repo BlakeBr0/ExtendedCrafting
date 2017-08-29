@@ -53,11 +53,11 @@ public class ItemSingularityCustom extends ItemMeta implements IModelHelper {
 						+ "\n- 'meta' must be different for each, and should not be changed."
 						+ "\n- 'name' should be lower case with underscores for spaces. Singularity is added automatically."
 						+ "\n- Example: 'lots_of_spaghetti' would show 'Lots Of Spaghetti Singularity'."
-						+ "\n- 'material' can be an item id, or an OreDictionary value. This is for the generic crafting recipe."
+						+ "\n- 'material' is an item id. This is for the generic crafting recipe."
 						+ "\n- Note: if you plan on adding your own recipe with the CraftTweaker integration, put 'none'."
-						+ "\n- Examples: 'minecraft:stone' is an item id, 'ore:ingotIron' is the OreDictionary value 'ingotIron'."
+						+ "\n- Examples: 'minecraft:stone'."
 						+ "\n- Note: you can also specify meta for item ids, by adding them to the end of the item id."
-						+ "\n- Example: minecraft:stone:3 for a meta of 3. Make the meta 32767 if you want all metas to work."
+						+ "\n- Example: minecraft:stone:3 for a meta of 3."
 						+ "\n- 'color' the color of the singularity as a hex value. http://htmlcolorcodes.com/"
 						+ "\n- Example: 123456 would color it as whatever that color is.");
 

@@ -11,8 +11,7 @@ public class CompressorRecipe {
 	protected boolean consumeCatalyst;
 	protected int powerCost;
 
-	public CompressorRecipe(ItemStack output, ItemStack input, int inputCount, ItemStack catalyst,
-			boolean consumeCatalyst, int powerCost) {
+	public CompressorRecipe(ItemStack output, ItemStack input, int inputCount, ItemStack catalyst, boolean consumeCatalyst, int powerCost) {
 		this.output = output;
 		this.input = input;
 		this.inputCount = inputCount;

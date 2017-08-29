@@ -28,6 +28,7 @@ import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.wrapper.SidedInvWrapper;
+import net.minecraftforge.oredict.OreDictionary;
 
 public class TileCompressor extends TileEntity implements ISidedInventory, ITickable {
 
@@ -131,7 +132,8 @@ public class TileCompressor extends TileEntity implements ISidedInventory, ITick
 		List<CompressorRecipe> recipes = getValidRecipes(getStackForRecipe());
 		if (!recipes.isEmpty()) {
 			for (CompressorRecipe recipe : recipes) { // TODO: wildcard support for input stacks
-				if ((this.materialStack.isItemEqual(recipe.getInput()) || this.getStackInSlot(1).isItemEqual(recipe.getInput())) && this.getStackInSlot(2).isItemEqual(recipe.getCatalyst())) {
+				ItemStack mat = this.materialStack;
+				if ((StackHelper.areItemsEqual(mat, recipe.getInput(), false)) && this.getStackInSlot(2).isItemEqual(recipe.getCatalyst())) {
 					return recipe;
 				}
 			}

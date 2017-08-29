@@ -1,0 +1,35 @@
+{
+  "type": "forge:ore_shaped",
+  "pattern": [
+	"BAB",
+	"CIC",
+	"BSB"
+  ],
+  "key": {
+	"I": {
+      "item": "minecraft:gold_block",
+	  "data": 0
+    },
+    "C": {
+      "item": "extendedcrafting:table_basic",
+      "data": 0
+    },
+    "B": {
+      "item": "extendedcrafting:material",
+      "data": 15
+    },
+    "S": {
+      "item": "extendedcrafting:material",
+      "data": 2
+    },
+    "A": {
+      "item": "extendedcrafting:material",
+      "data": 9
+    }
+  },
+  "result": {
+    "item": "extendedcrafting:table_advanced",
+    "count": 1,
+	"data": 0
+  }
+}

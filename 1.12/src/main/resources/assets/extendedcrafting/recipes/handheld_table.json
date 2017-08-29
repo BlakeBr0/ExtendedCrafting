@@ -1,0 +1,27 @@
+{
+  "type": "forge:ore_shaped",
+  "conditions": [
+     {
+	    "type": "minecraft:item_exists",
+		"item": "extendedcrafting:handheld_table"
+	 }
+  ],
+  "pattern": [
+	" C",
+	"S "
+  ],
+  "key": {
+    "S": {
+      "type": "forge:ore_dict",
+      "ore": "stickWood"
+    },
+	"C": {
+      "type": "forge:ore_dict",
+      "ore": "workbench"
+    }
+  },
+  "result": {
+    "item": "extendedcrafting:handheld_table",
+	"data": 0
+  }
+}

@@ -1,0 +1,35 @@
+{
+  "type": "forge:ore_shaped",
+  "pattern": [
+	"CAC",
+	"BIB",
+	"CSC"
+  ],
+  "key": {
+	"I": {
+      "item": "extendedcrafting:frame",
+	  "data": 0
+    },
+    "B": {
+      "item": "extendedcrafting:material",
+      "data": 16
+    },
+    "S": {
+      "item": "extendedcrafting:material",
+      "data": 2
+    },
+    "C": {
+      "item": "extendedcrafting:material",
+      "data": 0
+    },
+    "A": {
+      "item": "extendedcrafting:material",
+      "data": 10
+    }
+  },
+  "result": {
+    "item": "extendedcrafting:crafting_core",
+    "count": 1,
+	"data": 0
+  }
+}

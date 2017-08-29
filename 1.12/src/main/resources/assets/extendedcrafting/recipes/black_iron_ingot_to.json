@@ -1,0 +1,24 @@
+{
+  "type": "forge:ore_shaped",
+  "conditions": [
+     {
+	    "type": "minecraft:item_exists",
+		"item": "extendedcrafting:material"
+	 }
+  ],
+  "pattern": [
+	"III",
+	"III",
+	"III"
+  ],
+  "key": {
+	"I": {
+      "item": "extendedcrafting:material",
+	  "data": 1
+    }
+  },
+  "result": {
+    "item": "extendedcrafting:material",
+	"data": 0
+  }
+}

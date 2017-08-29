@@ -1,0 +1,7 @@
+{
+    "variants": {
+        "normal": {
+            "model": "extendedcrafting:crafting_table"
+        }
+    }
+}

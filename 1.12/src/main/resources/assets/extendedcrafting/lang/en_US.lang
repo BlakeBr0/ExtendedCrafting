@@ -1,0 +1,54 @@
+# CREATIVE TAB
+itemGroup.ec.extended_crafting=Extended Crafting
+
+# BLOCKS §e
+tile.ec.storage_black_iron.name=Block of Black Iron
+tile.ec.frame.name=Black Iron Frame
+
+tile.ec.crafting_table.name=Crafting Table
+
+tile.ec.pedestal.name=Pedestal
+tile.ec.crafting_core.name=Crafting Core
+
+tile.ec.table_basic.name=Basic Crafting Table
+tile.ec.table_advanced.name=Advanced Crafting Table
+tile.ec.table_elite.name=Elite Crafting Table
+tile.ec.table_ultimate.name=Ultimate Crafting Table
+
+tile.ec.compressor.name=Quantum Compressor
+
+# ITEMS
+item.ec.material_black_iron.name=Black Iron Ingot
+item.ec.material_black_iron_nugget.name=Black Iron Nugget
+item.ec.material_black_iron_slate.name=Black Iron Slate
+item.ec.material_luminessence.name=Luminessence
+item.ec.material_basic_catalyst.name=Basic Crafting Catalyst
+item.ec.material_advanced_catalyst.name=Advanced Crafting Catalyst
+item.ec.material_elite_catalyst.name=Elite Crafting Catalyst
+item.ec.material_ultimate_catalyst.name=Ultimate Crafting Catalyst
+item.ec.material_basic_component.name=Basic Crafting Component
+item.ec.material_advanced_component.name=Advanced Crafting Component
+item.ec.material_elite_component.name=Elite Crafting Component
+item.ec.material_ultimate_component.name=Ultimate Crafting Component
+
+item.ec.handheld_table.name=Handheld Crafting Table
+
+item.ec.singularity.name=Singularity
+item.ec.singularity_ultimate.name=Ultimate Singularity
+
+# CONTAINERS
+
+# JEI
+jei.ec.table_crafting_3x3=Basic Crafting
+jei.ec.table_crafting_5x5=Advanced Crafting
+jei.ec.table_crafting_7x7=Elite Crafting
+jei.ec.table_crafting_9x9=Ultimate Crafting
+jei.ec.combination_crafting=Combination Crafting
+jei.ec.compressor=Quantum Compression
+
+# TOOLTIPS
+tooltip.ec.crafting_table=Holds it's inventory.
+tooltip.ec.singularity_ultimate=With our powers combined...
+tooltip.ec.empty=Empty
+tooltip.ec.eject=Eject
+tooltip.ec.ejecting=Ejecting...

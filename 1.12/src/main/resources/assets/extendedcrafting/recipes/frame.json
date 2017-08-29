@@ -1,0 +1,26 @@
+{
+  "type": "forge:ore_shaped",
+  "pattern": [
+	"IGI",
+	"GSG",
+	"IGI"
+  ],
+  "key": {
+	"I": {
+      "item": "extendedcrafting:material",
+	  "data": 0
+    },
+    "G": {
+      "item": "minecraft:glass",
+      "data": 0
+    },
+    "S": {
+      "item": "extendedcrafting:material",
+      "data": 2
+    }
+  },
+  "result": {
+    "item": "extendedcrafting:frame",
+	"data": 0
+  }
+}

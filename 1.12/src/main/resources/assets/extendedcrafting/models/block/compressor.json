@@ -1,0 +1,39 @@
+{
+    "parent": "block/cube",
+    "display": {
+        "firstperson_righthand": {
+            "rotation": [ 0, 135, 0 ],
+            "translation": [ 0, 0, 0 ],
+            "scale": [ 0.40, 0.40, 0.40 ]
+        }
+    },
+    "textures": {
+        "particle": "extendedcrafting:blocks/storage_black_iron",
+        "down": "extendedcrafting:blocks/storage_black_iron",
+        "up": "extendedcrafting:blocks/compressor_top",
+        "north": "extendedcrafting:blocks/compressor_front",
+        "east": "extendedcrafting:blocks/storage_black_iron",
+        "south": "extendedcrafting:blocks/storage_black_iron",
+        "west": "extendedcrafting:blocks/storage_black_iron",
+		"band": "extendedcrafting:blocks/crafting_core_band"
+    },
+	"elements": [
+		{   "from": [ 0, 0, 0 ],
+            "to": [ 16, 16, 16 ],
+            "faces": {
+                "north": { "uv": [ 0, 0, 16, 16 ], "texture": "#band",   "cullface": "north" }
+            }
+        },
+        {   "from": [ 0, 0, 0 ],
+            "to": [ 16, 16, 16 ],
+            "faces": {
+                "down":  { "uv": [ 0, 0, 16, 16 ], "texture": "#down", "cullface": "down" },
+                "up":    { "uv": [ 0, 0, 16, 16 ], "texture": "#up", "cullface": "up" },
+                "north": { "uv": [ 0, 0, 16, 16 ], "texture": "#north", "cullface": "north" },
+                "south": { "uv": [ 0, 0, 16, 16 ], "texture": "#south", "cullface": "south" },
+                "west":  { "uv": [ 0, 0, 16, 16 ], "texture": "#west", "cullface": "west" },
+                "east":  { "uv": [ 0, 0, 16, 16 ], "texture": "#east", "cullface": "east" }
+            }
+        }
+    ]
+}

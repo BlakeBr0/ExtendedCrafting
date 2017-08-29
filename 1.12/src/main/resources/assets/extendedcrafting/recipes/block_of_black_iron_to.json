@@ -1,0 +1,18 @@
+{
+  "type": "forge:ore_shaped",
+  "pattern": [
+	"III",
+	"III",
+	"III"
+  ],
+  "key": {
+	"I": {
+      "item": "extendedcrafting:material",
+	  "data": 0
+    }
+  },
+  "result": {
+    "item": "extendedcrafting:storage",
+	"data": 0
+  }
+}

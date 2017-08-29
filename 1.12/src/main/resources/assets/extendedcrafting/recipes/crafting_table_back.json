@@ -1,0 +1,14 @@
+{
+  "type": "forge:ore_shapeless",
+  "ingredients": [
+    {
+      "item": "extendedcrafting:crafting_table",
+      "data": 0
+    }
+  ],
+  "result": {
+    "item": "minecraft:crafting_table",
+	"count": 1,
+    "data": 0
+  }
+}

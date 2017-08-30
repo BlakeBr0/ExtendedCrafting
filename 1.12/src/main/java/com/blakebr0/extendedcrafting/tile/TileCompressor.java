@@ -98,7 +98,7 @@ public class TileCompressor extends TileEntity implements ISidedInventory, ITick
 			}
 
 			if (recipe != null) {
-				if (this.getEnergy().getEnergyStored() >= recipe.getPowerCost()) {
+				if (this.getEnergy().getEnergyStored() > 0) {
 					if (this.materialCount >= recipe.getInputCount()) {
 						this.process(recipe);
 						if (this.progress == recipe.getPowerCost()) {

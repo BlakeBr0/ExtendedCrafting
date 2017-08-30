@@ -101,16 +101,16 @@ public class GuiCraftingCore extends GuiContainer {
 		GlStateManager.pushMatrix();
 		this.fontRenderer.drawString(Utils.localize("container.inventory"), 8, this.ySize - 94, 4210752);
 		GlStateManager.scale(0.75F, 0.75F, 0.75F);
-		this.fontRenderer.drawString(Utils.localize("ec.ccore.pedestals") + " " + tile.getPedestalCount(), 36, 23, -1);
+		this.fontRenderer.drawString(Utils.localize("ec.ccore.pedestals") + " " + this.tile.getPedestalCount(), 36, 23, -1);
 		CombinationRecipe recipe = this.tile.getRecipe();
 		if (recipe == null) {
 			this.fontRenderer.drawString(Utils.localize("ec.ccore.no_recipe"), 36, 43, -1);
 		} else {
 			this.fontRenderer.drawString(Utils.localize("ec.ccore.rf_cost") + " " + Utils.format(recipe.getCost()) + " RF", 36, 43, -1);
 			this.fontRenderer.drawString(Utils.localize("ec.ccore.rf_rate") + " " + Utils.format(recipe.getPerTick()) + " RF/t", 36, 53, -1);
-			this.fontRenderer.drawString(Utils.localize("ec.ccore.progress") + " " + this.tile.getProgress() / recipe.getCost() + "%", 36, 63, -1);
+			//this.fontRenderer.drawString(Utils.localize("ec.ccore.progress") + " " + this.tile.getProgress() + " " + recipe.getCost() + "%", 36, 63, -1);
 			if (this.tile.getEnergy().getEnergyStored() < recipe.getPerTick()) {
-				this.fontRenderer.drawString(Utils.localize("ec.ccore.no_power"), 36, 83, -1);
+				this.fontRenderer.drawString(Utils.localize("ec.ccore.no_power"), 36, 73, -1);
 			}
 		}
 		GlStateManager.popMatrix();

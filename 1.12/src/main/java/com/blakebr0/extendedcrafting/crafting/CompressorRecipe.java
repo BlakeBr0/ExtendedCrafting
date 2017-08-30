@@ -1,19 +1,36 @@
 package com.blakebr0.extendedcrafting.crafting;
 
+import java.util.List;
+
+import net.minecraft.block.Block;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.oredict.OreDictionary;
 
 public class CompressorRecipe {
 
 	protected ItemStack output;
-	protected ItemStack input;
+	protected Object input;
 	protected int inputCount;
 	protected ItemStack catalyst;
 	protected boolean consumeCatalyst;
 	protected int powerCost;
 
-	public CompressorRecipe(ItemStack output, ItemStack input, int inputCount, ItemStack catalyst, boolean consumeCatalyst, int powerCost) {
+	public CompressorRecipe(ItemStack output, Object input, int inputCount, ItemStack catalyst, boolean consumeCatalyst, int powerCost) {
 		this.output = output;
-		this.input = input;
+		if (input instanceof ItemStack) {
+			this.input = ((ItemStack) input).copy();
+		} else if (input instanceof Item) {
+			this.input = new ItemStack((Item) input);
+		} else if (input instanceof Block) {
+			this.input = new ItemStack((Block) input);
+		} else if (input instanceof String) {
+			this.input = OreDictionary.getOres((String) input);
+		} else if (input instanceof List) {
+			this.input = input;
+		} else {
+			throw new RuntimeException("Invalid compressor recipe input: " + input.toString());
+		}
 		this.inputCount = inputCount;
 		this.catalyst = catalyst;
 		this.consumeCatalyst = consumeCatalyst;
@@ -24,8 +41,8 @@ public class CompressorRecipe {
 		return this.output.copy();
 	}
 
-	public ItemStack getInput() {
-		return this.input.copy();
+	public Object getInput() {
+		return this.input;
 	}
 
 	public int getInputCount() {

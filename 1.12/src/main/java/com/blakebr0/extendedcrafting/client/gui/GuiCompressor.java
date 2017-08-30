@@ -18,6 +18,7 @@ import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.translation.I18n;
@@ -70,7 +71,10 @@ public class GuiCompressor extends GuiContainer {
 	}
 
 	private void drawFakeItemStack(ItemStack stack, int xOffset, int yOffset, int mouseX, int mouseY) {
+		GlStateManager.pushMatrix();
+		RenderHelper.enableGUIStandardItemLighting();
 		this.drawItemStack(stack, this.guiLeft + xOffset, this.guiTop + yOffset, (String) null);
+		GlStateManager.popMatrix();
 	}
 
 	private void drawFakeItemStackTooltip(ItemStack stack, int xOffset, int yOffset, int mouseX, int mouseY) {
@@ -128,9 +132,7 @@ public class GuiCompressor extends GuiContainer {
 		this.renderHoveredToolTip(mouseX, mouseY);
 
 		if (mouseX > left + 7 && mouseX < guiLeft + 20 && mouseY > this.guiTop + 7 && mouseY < this.guiTop + 84) {
-			this.drawHoveringText(
-					Collections.singletonList(Utils.format(this.tile.getEnergy().getEnergyStored()) + " RF"), mouseX,
-					mouseY);
+			this.drawHoveringText(Collections.singletonList(Utils.format(this.tile.getEnergy().getEnergyStored()) + " RF"), mouseX, mouseY);
 		}
 
 		if (mouseX > left + 60 && mouseX < guiLeft + 85 && mouseY > this.guiTop + 64 && mouseY < this.guiTop + 73) {
@@ -141,8 +143,7 @@ public class GuiCompressor extends GuiContainer {
 				if (!this.tile.getMaterialStack().isEmpty()) {
 					l.add(this.tile.getMaterialStack().getDisplayName());
 				}
-				l.add(Utils.format(this.tile.getMaterialCount()) + " / "
-						+ Utils.format((this.tile.getRecipe() != null ? this.tile.getRecipe().getInputCount() : 0)));
+				l.add(Utils.format(this.tile.getMaterialCount()) + " / " + Utils.format((this.tile.getRecipe() != null ? this.tile.getRecipe().getInputCount() : 0)));
 			}
 			this.drawHoveringText(l, mouseX, mouseY);
 		}

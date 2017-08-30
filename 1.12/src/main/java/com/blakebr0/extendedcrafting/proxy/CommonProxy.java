@@ -17,6 +17,7 @@ import com.blakebr0.extendedcrafting.tile.ModTiles;
 import com.blakebr0.extendedcrafting.util.NetworkThingy;
 
 import crafttweaker.CraftTweakerAPI;
+import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.MinecraftForge;
@@ -55,7 +56,7 @@ public class CommonProxy {
 /*		CombinationRecipeManager.getInstance().addRecipe(new ItemStack(Items.DIAMOND), 50000, 100,
 				new ItemStack(Items.COAL), new ItemStack(Items.STICK), new ItemStack(Items.LAVA_BUCKET), "ingotIron",
 				new ItemStack(Items.WHEAT), new ItemStack(Items.WHEAT), new ItemStack(Items.WHEAT),
-				new ItemStack(Items.WHEAT), new ItemStack(Items.WHEAT));
+				"dyeRed", new ItemStack(Items.WHEAT));
 
 		TableRecipeManager.getInstance().addShaped(new ItemStack(Items.DIAMOND), "XXXXXXXXX", "XXXXXXXXX", "XXXXXXXXX",
 				"XXXXXXXXX", "XXXXXXXXX", 'X', new ItemStack(Items.DIAMOND));
@@ -87,8 +88,9 @@ public class CommonProxy {
 				new ItemStack(Items.IRON_INGOT), 100, ItemStack.EMPTY, false, 100000);
 		CompressorRecipeManager.getInstance().addRecipe(new ItemStack(ModItems.itemSingularity, 1, 2),
 				new ItemStack(Items.IRON_INGOT), 2000, new ItemStack(Items.DIAMOND), false, 100000);
-*/
-	} // TODO: remember to remove this LUL
+
+		CompressorRecipeManager.getInstance().addRecipe(new ItemStack(Blocks.ACACIA_FENCE), "sand", 50, ModItems.itemMaterial.itemUltimateCatalyst, false, 1000000);
+*/	} // TODO: remember to remove this LUL
 
 	public void postInit(FMLPostInitializationEvent event) {
 		ModRecipes.post();

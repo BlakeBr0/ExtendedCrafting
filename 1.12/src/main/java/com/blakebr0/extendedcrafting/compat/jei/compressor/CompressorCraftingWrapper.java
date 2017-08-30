@@ -40,12 +40,12 @@ public class CompressorCraftingWrapper implements IRecipeWrapper {
 	public void getIngredients(IIngredients ingredients) {
 		IStackHelper helper = this.helpers.getStackHelper();
 		ItemStack output = this.recipe.getOutput();
-		ItemStack input = this.recipe.getInput();
+		Object input = this.recipe.getInput();
 		ItemStack catalyst = this.recipe.getCatalyst();
 		
 		List<List<ItemStack>> stacks = new ArrayList<>();
 		
-		stacks.add(Arrays.asList(input));
+		stacks.add(helper.toItemStackList(input));
 		stacks.add(Arrays.asList(catalyst));
 		
 		ingredients.setInputLists(ItemStack.class, stacks);

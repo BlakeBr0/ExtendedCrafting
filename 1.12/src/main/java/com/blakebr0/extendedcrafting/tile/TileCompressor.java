@@ -1,6 +1,7 @@
 package com.blakebr0.extendedcrafting.tile;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.annotation.Nonnull;
@@ -40,12 +41,31 @@ public class TileCompressor extends TileEntity implements ISidedInventory, ITick
 	private boolean ejecting = false;
 	private int oldEnergy;
 	
-	private static List<CompressorRecipe> getValidRecipes(ItemStack stack) {
+	private List<CompressorRecipe> getValidRecipes(ItemStack stack) {
 		List<CompressorRecipe> valid = new ArrayList<CompressorRecipe>();
 		if (!StackHelper.isNull(stack)) {
 			for (CompressorRecipe recipe : CompressorRecipeManager.getInstance().getRecipes()) {
-				if (!StackHelper.isNull(recipe.getInput()) && recipe.getInput().isItemEqual(stack)) {
-					valid.add(recipe);
+				Object input = recipe.getInput();
+				if (input instanceof ItemStack) {
+					ItemStack inputStack = (ItemStack) input;
+					if (inputStack.getItemDamage() == 32767 || inputStack.getMetadata() == stack.getMetadata()) {
+						if (inputStack.getItem() == stack.getItem()) {
+							valid.add(recipe);
+						}
+					}
+					if (!StackHelper.isNull(inputStack) && inputStack.isItemEqual(stack)) {
+						valid.add(recipe);
+					}
+				} else if (input instanceof List) {
+					Iterator<ItemStack> itr = ((List<ItemStack>) input).iterator();
+					while (itr.hasNext()) {
+						ItemStack next = itr.next();
+						if (next.getMetadata() == 32767 || next.getMetadata() == stack.getMetadata()) {
+							if (next.getItem() == stack.getItem()) {
+								valid.add(recipe);
+							}
+						}
+					}
 				}
 			}
 		}
@@ -61,10 +81,15 @@ public class TileCompressor extends TileEntity implements ISidedInventory, ITick
 			ItemStack output = this.getStackInSlot(0);
 			ItemStack input = this.getStackInSlot(1);
 
+			
 			if (!input.isEmpty()) {
 				if (this.materialStack.isEmpty()) {
 					this.materialStack = input.copy();
+					if (!mark) {
+						mark = true;
+					}
 				}
+				System.out.println(this.materialStack.toString());
 				if (input.isItemEqual(this.materialStack)) {
 					StackHelper.decrease(input, 1, false);
 					this.materialCount++;
@@ -129,20 +154,28 @@ public class TileCompressor extends TileEntity implements ISidedInventory, ITick
 	}
 
 	public CompressorRecipe getRecipe() {
-		List<CompressorRecipe> recipes = getValidRecipes(getStackForRecipe());
+		List<CompressorRecipe> recipes = getValidRecipes(this.materialStack);
 		if (!recipes.isEmpty()) {
-			for (CompressorRecipe recipe : recipes) { // TODO: wildcard support for input stacks
+			for (CompressorRecipe recipe : recipes) {
 				ItemStack mat = this.materialStack;
-				if ((StackHelper.areItemsEqual(mat, recipe.getInput(), false)) && this.getStackInSlot(2).isItemEqual(recipe.getCatalyst())) {
-					return recipe;
+				Object input = recipe.getInput();
+
+				if (input instanceof ItemStack) {
+					if ((StackHelper.areItemsEqual((ItemStack) input, mat, true)) && this.getStackInSlot(2).isItemEqual(recipe.getCatalyst())) {
+						return recipe;
+					}
+				} else if (input instanceof List) {
+					Iterator<ItemStack> itr = ((List<ItemStack>) input).iterator();
+					while (itr.hasNext()) {
+						ItemStack next = itr.next();
+						if ((StackHelper.areItemsEqual(next, mat, true)) && this.getStackInSlot(2).isItemEqual(recipe.getCatalyst())) {
+							return recipe;
+						}
+					}
 				}
 			}
 		}
 		return null;
-	}
-
-	private ItemStack getStackForRecipe() {
-		return !this.materialStack.isEmpty() ? this.materialStack : this.getStackInSlot(1);
 	}
 	
 	private boolean process(CompressorRecipe recipe) {
@@ -158,6 +191,25 @@ public class TileCompressor extends TileEntity implements ISidedInventory, ITick
 		}
 		return false;
 	}
+	
+	@Override
+	public NBTTagCompound writeToNBT(NBTTagCompound compound) {
+		compound = super.writeToNBT(compound);
+		ItemStackHelper.saveAllItems(compound, this.inventoryStacks);
+		compound.setInteger("MaterialCount", this.materialCount);
+		if (this.materialStack == null) {
+			this.materialStack = ItemStack.EMPTY;
+		}
+		if (!this.materialStack.isEmpty()) {
+			NBTTagCompound matStack = new NBTTagCompound();
+			this.materialStack.writeToNBT(matStack);
+			compound.setTag("MaterialStack", matStack);
+		}
+		compound.setInteger("Progress", this.progress);
+		compound.setBoolean("Ejecting", this.ejecting);
+		compound.setInteger("Energy", this.energy.getEnergyStored());
+		return compound;
+	}
 
 	@Override
 	public void readFromNBT(NBTTagCompound compound) {
@@ -169,18 +221,6 @@ public class TileCompressor extends TileEntity implements ISidedInventory, ITick
 		this.progress = compound.getInteger("Progress");
 		this.ejecting = compound.getBoolean("Ejecting");
 		this.energy.setEnergy(compound.getInteger("Energy"));
-	}
-
-	@Override
-	public NBTTagCompound writeToNBT(NBTTagCompound compound) {
-		compound = super.writeToNBT(compound);
-		ItemStackHelper.saveAllItems(compound, this.inventoryStacks);
-		compound.setInteger("MaterialCount", this.materialCount);
-		compound.setTag("MaterialStack", this.materialStack.writeToNBT(new NBTTagCompound()));
-		compound.setInteger("Progress", this.progress);
-		compound.setBoolean("Ejecting", this.ejecting);
-		compound.setInteger("Energy", this.energy.getEnergyStored());
-		return compound;
 	}
 
 	public boolean addStackToSlot(int slot, ItemStack stack) {

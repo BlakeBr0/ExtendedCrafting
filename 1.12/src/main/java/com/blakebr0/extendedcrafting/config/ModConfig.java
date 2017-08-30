@@ -21,6 +21,7 @@ public class ModConfig {
 	
 	public static int confSingularityAmount;
 	public static int confSingularityRF;
+	public static boolean confSingularityRecipes;
 	public static boolean confUltimateSingularityRecipe;
 
 	@SubscribeEvent
@@ -51,6 +52,7 @@ public class ModConfig {
 		config.setCategoryComment(category, "High end crafting components.");
 		confSingularityAmount = config.getInt("_singularity_amount", category, 10000, 1, Integer.MAX_VALUE, "The amount of materials required to create a Singularity, for the default recipes.");
 		confSingularityRF = config.getInt("_singularity_rf", category, 5000000, 0, Integer.MAX_VALUE, "The amount of RF required to craft a Singularity, for the default recipes.");
+		confSingularityRecipes = config.getBoolean("_singularity_recipes", category, true, "Should the default Singularity recipes be enabled?");
 		confUltimateSingularityRecipe = config.getBoolean("_ultimate_singularity_recipe", category, true, "Should the default Ultimate Singularity recipe be enabled?");
 		ModItems.itemSingularityCustom.configure(config);
 		ModItems.itemSingularityUltimate.configure(config);

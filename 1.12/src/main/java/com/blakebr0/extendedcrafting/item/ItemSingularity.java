@@ -112,6 +112,9 @@ public class ItemSingularity extends ItemMeta {
 	}
 	
 	public void initRecipes() {
+		if (!ModConfig.confSingularityRecipes) {
+			return;
+		}
 		for (Map.Entry<Integer, Object> obj : singularityMaterials.entrySet()) {
 			Object value = obj.getValue();
 			int meta = obj.getKey();

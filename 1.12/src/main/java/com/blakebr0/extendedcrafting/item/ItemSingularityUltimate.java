@@ -92,7 +92,7 @@ public class ItemSingularityUltimate extends ItemBase {
 	}
 
 	public void initRecipe() {
-		if (ModConfig.confUltimateSingularityRecipe) {
+		if (!ModConfig.confUltimateSingularityRecipe) {
 			return;
 		}
 		TableRecipeManager.getInstance().addShapeless(4, StackHelper.to(ModItems.itemSingularityUltimate, 1, 0), singularities.toArray());

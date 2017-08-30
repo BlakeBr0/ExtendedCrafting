@@ -44,9 +44,9 @@ public class ItemSingularity extends ItemMeta {
 		addSingularity(2, "lapis_lazuli", StackHelper.to(Items.DYE, 1, 4), 0x345EC3);
 		addSingularity(3, "redstone", StackHelper.to(Items.REDSTONE), 0x720000);
 		addSingularity(4, "glowstone", StackHelper.to(Items.GLOWSTONE_DUST), 0x868600);
-		addSingularity(5, "gold", StackHelper.to(Items.GOLD_INGOT), 0xDEDE00);
-		addSingularity(6, "diamond", StackHelper.to(Items.DIAMOND), 0x2CCDB1);
-		addSingularity(7, "emerald", StackHelper.to(Items.EMERALD), 0x00A835);
+		addSingularity(5, "gold", "ingotGold", 0xDEDE00);
+		addSingularity(6, "diamond", "gemDiamond", 0x2CCDB1);
+		addSingularity(7, "emerald", "gemEmerald", 0x00A835);
 
 		addSingularity(16, "aluminum", "ingotAluminum", 0xCACCDA);
 		addSingularity(17, "copper", "ingotCopper", 0xCE7201);

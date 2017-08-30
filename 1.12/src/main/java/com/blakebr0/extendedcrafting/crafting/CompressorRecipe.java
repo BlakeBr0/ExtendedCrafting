@@ -2,6 +2,8 @@ package com.blakebr0.extendedcrafting.crafting;
 
 import java.util.List;
 
+import com.blakebr0.extendedcrafting.config.ModConfig;
+
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -15,8 +17,13 @@ public class CompressorRecipe {
 	protected ItemStack catalyst;
 	protected boolean consumeCatalyst;
 	protected int powerCost;
-
+	protected int powerRate;
+	
 	public CompressorRecipe(ItemStack output, Object input, int inputCount, ItemStack catalyst, boolean consumeCatalyst, int powerCost) {
+		this(output, input, inputCount, catalyst, consumeCatalyst, powerCost, ModConfig.confCompressorRFRate);
+	}
+
+	public CompressorRecipe(ItemStack output, Object input, int inputCount, ItemStack catalyst, boolean consumeCatalyst, int powerCost, int powerRate) {
 		this.output = output;
 		if (input instanceof ItemStack) {
 			this.input = ((ItemStack) input).copy();
@@ -35,6 +42,7 @@ public class CompressorRecipe {
 		this.catalyst = catalyst;
 		this.consumeCatalyst = consumeCatalyst;
 		this.powerCost = powerCost;
+		this.powerRate = powerRate;
 	}
 
 	public ItemStack getOutput() {
@@ -59,5 +67,9 @@ public class CompressorRecipe {
 
 	public int getPowerCost() {
 		return this.powerCost;
+	}
+	
+	public int getPowerRate() {
+		return this.powerRate;
 	}
 }

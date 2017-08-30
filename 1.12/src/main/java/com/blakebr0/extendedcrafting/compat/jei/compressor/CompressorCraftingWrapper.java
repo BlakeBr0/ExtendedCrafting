@@ -28,7 +28,7 @@ public class CompressorCraftingWrapper implements IRecipeWrapper {
 	@Override
 	public List<String> getTooltipStrings(int mouseX, int mouseY) {
 		if (mouseX > 1 && mouseX < 14 && mouseY > 1 && mouseY < 78) {
-			return Arrays.<String> asList(Utils.format(this.recipe.getPowerCost()) + " RF", Utils.format(ModConfig.confCompressorRFRate) + " RF/t");
+			return Arrays.<String> asList(Utils.format(this.recipe.getPowerCost()) + " RF", Utils.format(this.recipe.getPowerRate()) + " RF/t");
 		}
 		if (mouseX > 54 && mouseX < 78 && mouseY > 58 && mouseY < 68) {
 			return Arrays.<String> asList(Utils.format(this.recipe.getInputCount()));

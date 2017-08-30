@@ -26,6 +26,11 @@ public class CompressionCrafting {
 	public static void addRecipe(IItemStack output, IItemStack input, int inputCount, IItemStack catalyst, int powerCost) {
 		CraftTweakerAPI.apply(new Add(new CompressorRecipe(toStack(output), toStack(input), inputCount, toStack(catalyst), false, powerCost)));
 	}
+	
+	@ZenMethod
+	public static void addRecipe(IItemStack output, IItemStack input, int inputCount, IItemStack catalyst, int powerCost, int powerRate) {
+		CraftTweakerAPI.apply(new Add(new CompressorRecipe(toStack(output), toStack(input), inputCount, toStack(catalyst), false, powerCost, powerRate)));
+	}
 
 	@ZenMethod
 	public static void remove(IItemStack target) {

@@ -183,8 +183,7 @@ public class GuiCompressor extends GuiContainer {
 			this.drawTexturedModalRect(x + 68, y + 20, 194, 32, 11, 9);
 		}
 
-		if (this.tile.getRecipe() != null) { // TODO figure out how to make this
-												// less shitty
+		if (this.tile.getRecipe() != null) {
 			this.drawFakeItemStack(this.tile.getRecipe().getOutput(), 135, 14, 0, 0);
 		}
 	}

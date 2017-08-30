@@ -48,12 +48,12 @@ public class TileCompressor extends TileEntity implements ISidedInventory, ITick
 				Object input = recipe.getInput();
 				if (input instanceof ItemStack) {
 					ItemStack inputStack = (ItemStack) input;
-					if (inputStack.getItemDamage() == 32767 || inputStack.getMetadata() == stack.getMetadata()) {
+					if (inputStack.getItemDamage() == 32767) {
 						if (inputStack.getItem() == stack.getItem()) {
 							valid.add(recipe);
 						}
 					}
-					if (!StackHelper.isNull(inputStack) && inputStack.isItemEqual(stack)) {
+					if (inputStack.isItemEqual(stack)) {
 						valid.add(recipe);
 					}
 				} else if (input instanceof List) {
@@ -81,7 +81,6 @@ public class TileCompressor extends TileEntity implements ISidedInventory, ITick
 			ItemStack output = this.getStackInSlot(0);
 			ItemStack input = this.getStackInSlot(1);
 
-			
 			if (!input.isEmpty()) {
 				if (this.materialStack.isEmpty()) {
 					this.materialStack = input.copy();
@@ -178,7 +177,7 @@ public class TileCompressor extends TileEntity implements ISidedInventory, ITick
 	}
 	
 	private boolean process(CompressorRecipe recipe) {
-		int extract = ModConfig.confCompressorRFRate;
+		int extract = recipe.getPowerRate();
 		int difference = recipe.getPowerCost() - this.progress;
 		if (difference < extract) {
 			extract = difference;

@@ -8,6 +8,7 @@ import com.blakebr0.cucumber.item.ItemBase;
 import com.blakebr0.cucumber.lib.Colors;
 import com.blakebr0.cucumber.util.Utils;
 import com.blakebr0.extendedcrafting.ExtendedCrafting;
+import com.blakebr0.extendedcrafting.config.ModConfig;
 import com.blakebr0.extendedcrafting.crafting.table.TableRecipeManager;
 
 import net.minecraft.client.util.ITooltipFlag;
@@ -91,6 +92,9 @@ public class ItemSingularityUltimate extends ItemBase {
 	}
 
 	public void initRecipe() {
+		if (ModConfig.confUltimateSingularityRecipe) {
+			return;
+		}
 		TableRecipeManager.getInstance().addShapeless(4, StackHelper.to(ModItems.itemSingularityUltimate, 1, 0), singularities.toArray());
 	}
 

@@ -40,7 +40,7 @@ public class ItemSingularity extends ItemMeta {
 	@Override
 	public void init() {
 		addSingularity(0, "coal", StackHelper.to(Items.COAL), 0x1B1B1B);
-		addSingularity(1, "iron", StackHelper.to(Items.IRON_INGOT), 0x969696);
+		addSingularity(1, "iron", "ingotIron", 0x969696);
 		addSingularity(2, "lapis_lazuli", StackHelper.to(Items.DYE, 1, 4), 0x345EC3);
 		addSingularity(3, "redstone", StackHelper.to(Items.REDSTONE), 0x720000);
 		addSingularity(4, "glowstone", StackHelper.to(Items.GLOWSTONE_DUST), 0x868600);
@@ -119,14 +119,17 @@ public class ItemSingularity extends ItemMeta {
 				ItemStack stack = (ItemStack) value;
 				if (!StackHelper.isNull(stack)) {
 					CompressorRecipeManager.getInstance().addRecipe(StackHelper.to(this, 1, meta), stack.copy(), ModConfig.confSingularityAmount, ModItems.itemMaterial.itemUltimateCatalyst, false, ModConfig.confSingularityRF);
-				} else if (value instanceof String) {
-					String name = (String) value;
-					if (OreDictionary.doesOreNameExist(name)) {
-						if (!OreDictionary.getOres(name).isEmpty()) {
-							// TODO: OreDict support for the compressor input
-						}
+				}
+			} else if (value instanceof String) {
+				String name = (String) value;
+				if (OreDictionary.doesOreNameExist(name)) {
+					if (!OreDictionary.getOres(name).isEmpty()) {
+						CompressorRecipeManager.getInstance().addRecipe(StackHelper.to(this, 1, meta), name, ModConfig.confSingularityAmount, ModItems.itemMaterial.itemUltimateCatalyst, false, ModConfig.confSingularityRF);
 					}
 				}
+			} else {
+				ExtendedCrafting.LOGGER.error("Invalid material for singularity: " + value.toString());
+				continue;
 			}
 		}
 	}

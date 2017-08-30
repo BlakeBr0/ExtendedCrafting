@@ -89,7 +89,6 @@ public class TileCompressor extends TileEntity implements ISidedInventory, ITick
 						mark = true;
 					}
 				}
-				System.out.println(this.materialStack.toString());
 				if (input.isItemEqual(this.materialStack)) {
 					StackHelper.decrease(input, 1, false);
 					this.materialCount++;

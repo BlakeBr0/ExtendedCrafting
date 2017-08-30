@@ -53,11 +53,11 @@ public class ItemSingularityCustom extends ItemMeta implements IModelHelper {
 						+ "\n- 'meta' must be different for each, and should not be changed."
 						+ "\n- 'name' should be lower case with underscores for spaces. Singularity is added automatically."
 						+ "\n- Example: 'lots_of_spaghetti' would show 'Lots Of Spaghetti Singularity'."
-						+ "\n- 'material' is an item id. This is for the generic crafting recipe."
+						+ "\n- 'material' is an item id or ore dictionary entry. This is for the generic crafting recipe."
 						+ "\n- Note: if you plan on adding your own recipe with the CraftTweaker integration, put 'none'."
-						+ "\n- Examples: 'minecraft:stone'."
+						+ "\n- Examples: 'minecraft:stone' for stone, 'ore:ingotIron' for the ore dictionary entry 'ingotIron'."
 						+ "\n- Note: you can also specify meta for item ids, by adding them to the end of the item id."
-						+ "\n- Example: minecraft:stone:3 for a meta of 3."
+						+ "\n- Example: minecraft:stone:3 for a meta of 3. Make the meta 32767 for wildcard value."
 						+ "\n- 'color' the color of the singularity as a hex value. http://htmlcolorcodes.com/"
 						+ "\n- Example: 123456 would color it as whatever that color is.");
 
@@ -81,7 +81,7 @@ public class ItemSingularityCustom extends ItemMeta implements IModelHelper {
 				ExtendedCrafting.LOGGER.error("Invalid custom singularity syntax ints: " + value);
 				continue;
 			}
-
+			
 			singularities.add(new CustomSingularity(meta, name, material, color));
 		} 
 	}
@@ -114,6 +114,9 @@ public class ItemSingularityCustom extends ItemMeta implements IModelHelper {
 			Item item = null;
 			ItemStack stack = ItemStack.EMPTY;
 			if (value instanceof String) {
+				if ("none".equalsIgnoreCase((String) value)) {
+					continue;
+				}
 				String[] parts = ((String) value).split(":");
 				int matMeta = 0;
 				if (parts.length == 3) {
@@ -130,7 +133,12 @@ public class ItemSingularityCustom extends ItemMeta implements IModelHelper {
 					}
 				} else if (parts.length == 2) {
 					if (((String) value).startsWith("ore:")) {
-						// TODO: OreDictionary support for the compressor input
+						String ore = ((String) value).substring(4);
+						if (OreDictionary.doesOreNameExist(ore)) {
+							if (!OreDictionary.getOres(ore).isEmpty()) {
+								CompressorRecipeManager.getInstance().addRecipe(StackHelper.to(this, 1, meta), ore, ModConfig.confSingularityAmount, ModItems.itemMaterial.itemUltimateCatalyst, false, ModConfig.confSingularityRF);
+							}
+						}
 					} else {
 						item = ForgeRegistries.ITEMS.getValue(new ResourceLocation(parts[0], parts[1]));
 						stack = StackHelper.to(item);

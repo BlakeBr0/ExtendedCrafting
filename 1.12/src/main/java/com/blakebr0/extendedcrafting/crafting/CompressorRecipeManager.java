@@ -13,9 +13,13 @@ public class CompressorRecipeManager {
 	public static final CompressorRecipeManager getInstance() {
 		return INSTANCE;
 	}
-
+	
 	public void addRecipe(ItemStack output, Object input, int inputCount, ItemStack catalyst, boolean consumeCatalyst, int powerCost) {
 		recipes.add(new CompressorRecipe(output, input, inputCount, catalyst, consumeCatalyst, powerCost));
+	}
+
+	public void addRecipe(ItemStack output, Object input, int inputCount, ItemStack catalyst, boolean consumeCatalyst, int powerCost, int powerRate) {
+		recipes.add(new CompressorRecipe(output, input, inputCount, catalyst, consumeCatalyst, powerCost, powerRate));
 	}
 
 	public ArrayList<CompressorRecipe> getRecipes() {

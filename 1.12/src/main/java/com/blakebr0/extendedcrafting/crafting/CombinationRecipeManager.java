@@ -13,6 +13,10 @@ public class CombinationRecipeManager {
 	public static final CombinationRecipeManager getInstance() {
 		return INSTANCE;
 	}
+	
+	public void addRecipe(ItemStack output, int cost, ItemStack input, Object... pedestals) {
+		recipes.add(new CombinationRecipe(output, cost, input, pedestals));
+	}
 
 	public void addRecipe(ItemStack output, int cost, int perTick, ItemStack input, Object... pedestals) {
 		recipes.add(new CombinationRecipe(output, cost, perTick, input, pedestals));

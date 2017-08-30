@@ -20,6 +20,11 @@ import stanhebben.zenscript.annotations.ZenMethod;
 
 @ZenClass("mods.extendedcrafting.CombinationCrafting")
 public class CombinationCrafting {
+	
+	@ZenMethod
+	public static void addRecipe(IItemStack output, int cost, IItemStack input, IIngredient[] ingredients) {
+		CraftTweakerAPI.apply(new Add(new CombinationRecipe(toStack(output), cost, toStack(input), toObjects(ingredients))));
+	}
 
 	@ZenMethod
 	public static void addRecipe(IItemStack output, int cost, int perTick, IItemStack input, IIngredient[] ingredients) {

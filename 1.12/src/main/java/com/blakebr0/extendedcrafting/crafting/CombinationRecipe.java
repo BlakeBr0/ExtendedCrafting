@@ -3,6 +3,8 @@ package com.blakebr0.extendedcrafting.crafting;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.blakebr0.extendedcrafting.config.ModConfig;
+
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -15,6 +17,10 @@ public class CombinationRecipe {
 	protected int perTick;
 	protected ItemStack input;
 	protected ArrayList<Object> pedestals = new ArrayList<Object>();
+	
+	public CombinationRecipe(ItemStack output, int cost, ItemStack input, Object... pedestals) {
+		this(output, cost, ModConfig.confCraftingCoreRFRate, input, pedestals);
+	}
 
 	public CombinationRecipe(ItemStack output, int cost, int perTick, ItemStack input, Object... pedestals) {
 		this.output = output;

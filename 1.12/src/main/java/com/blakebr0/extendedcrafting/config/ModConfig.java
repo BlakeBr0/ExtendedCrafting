@@ -15,9 +15,9 @@ public class ModConfig {
 	public static ModConfig instance;
 
 	public static int confCraftingCoreRFCapacity;
+	public static int confCraftingCoreRFRate;
 	public static int confCompressorRFCapacity;
 	public static int confCompressorRFRate;
-	public static int confCompressorSpeed;
 	
 	public static int confSingularityAmount;
 	public static int confSingularityRF;
@@ -44,9 +44,9 @@ public class ModConfig {
 		category = "settings";
 		config.setCategoryComment(category, "Settings for Extended Crafting content.");
 		confCraftingCoreRFCapacity = config.getInt("crafting_core_rf_capacity", category, 5000000, 0, Integer.MAX_VALUE, "How much RF/FE the Crafting Core should hold.");
+		confCraftingCoreRFRate = config.getInt("crafting_core_rf_rate", category, 500, 0, Integer.MAX_VALUE, "How much RF/t the Crafting Core should use when crafting by default.");
 		confCompressorRFCapacity = config.getInt("compressor_rf_capacity", category, 10000000, 0, Integer.MAX_VALUE, "How much RF/FE the Quantum Compressor should hold.");
 		confCompressorRFRate = config.getInt("compressor_rf_rate", category, 5000, 0, Integer.MAX_VALUE, "How much RF/t the Quantum Compressor should use when crafting by default.");
-		//confCompressorSpeed = config.getInt("compressor_speed", category, 200, 0, Integer.MAX_VALUE, "How many ticks the crafting stage of the Quantum Compressor should take.");
 		
 		category = "singularity";
 		config.setCategoryComment(category, "High end crafting components.");

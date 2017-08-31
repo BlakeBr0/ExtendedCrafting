@@ -406,21 +406,16 @@ public class TileCompressor extends TileEntity implements ISidedInventory, ITick
 		return index == 0;
 	}
 
-	IItemHandler handlerTop = new SidedInvWrapper(this, EnumFacing.UP);
-	IItemHandler handlerBottom = new SidedInvWrapper(this, EnumFacing.DOWN);
-	IItemHandler handlerSide = new SidedInvWrapper(this, EnumFacing.WEST);
-
+	@Override
+	public boolean hasCapability(@Nonnull Capability<?> capability, @Nonnull EnumFacing side) {
+		return this.getCapability(capability, side) != null;
+	}
+	
 	@Nonnull
 	@Override
 	public <T> T getCapability(@Nonnull Capability<T> capability, @Nonnull EnumFacing facing) {
-		if (facing != null && capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
-			if (facing == EnumFacing.DOWN) {
-				return (T) handlerBottom;
-			} else if (facing == EnumFacing.UP) {
-				return (T) handlerTop;
-			} else {
-				return (T) handlerSide;
-			}
+		if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
+			return (T) new SidedInvWrapper(this, facing);
 		} else if (capability == CapabilityEnergy.ENERGY) {
 			return CapabilityEnergy.ENERGY.cast(energy);
 		}

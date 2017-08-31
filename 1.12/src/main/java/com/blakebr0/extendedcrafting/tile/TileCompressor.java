@@ -393,7 +393,7 @@ public class TileCompressor extends TileEntity implements ISidedInventory, ITick
 
 	@Override
 	public int[] getSlotsForFace(EnumFacing side) {
-		return side == EnumFacing.DOWN ? new int[] { 0 } : new int[] { 1 };
+		return side == EnumFacing.DOWN ? new int[] { 0 } : side == EnumFacing.UP ? new int[] { 1 } : new int[] { 0, 1 };
 	}
 
 	@Override

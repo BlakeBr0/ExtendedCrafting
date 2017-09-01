@@ -180,8 +180,8 @@ public class TableRecipeShaped implements IRecipe, ITieredRecipe {
 			return this.tier;
 		}
 		int tier = (this.width < 4 && this.height < 4) ? 1
-				 : (this.width > 3 || this.height > 3 && this.width < 6 && this.height < 6) ? 2
-				 : (this.width > 5 || this.height > 5 && this.width < 8 && this.height < 8) ? 3
+				 : ((this.width > 3 || this.height > 3) && this.width < 6 && this.height < 6) ? 2
+				 : ((this.width > 5 || this.height > 5) && this.width < 8 && this.height < 8) ? 3
 				 : 4;
 		return tier;
 	}

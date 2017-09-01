@@ -45,9 +45,10 @@ public class TableCrafting {
 				width = row.length;
 			}
 		}
-				
-		int i = 0;
+			
 		NonNullList<Ingredient> input = NonNullList.withSize(height * width, Ingredient.EMPTY);
+		
+		int i = 0;
 		for (int a = 0; a < height; a++) {
 			for (int b = 0; b < ingredients[a].length; b++) {
 				Ingredient ing = CraftingHelper.getIngredient(toActualObject(ingredients[a][b]));

@@ -14,7 +14,7 @@ import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraftforge.common.crafting.CraftingHelper;
-
+// TODO: Cleanup
 public class TableRecipeShapeless implements IRecipe, ITieredRecipe {
 
 	@Nonnull
@@ -124,24 +124,21 @@ public class TableRecipeShapeless implements IRecipe, ITieredRecipe {
 	private int getTierFromGridSize(InventoryCrafting inv) {
 		int size = inv.getSizeInventory();
 		int tier = size < 10 ? 1
-				: size < 26 && size > 9 ? 2
-						: size < 50 && size > 25 ? 3
-								// : this.input.size() < 82 && this.input.size()
-								// > 49 ? 4
-								: 4;
+				 : size < 26 && size > 9 ? 2
+				 : size < 50 && size > 25 ? 3
+				 : 4;
 		return tier;
 	}
 
 	@Override
 	public int getTier() {
-		if (this.tier > 0)
+		if (this.tier > 0) {
 			return this.tier;
+		}
 		int tier = this.input.size() < 10 ? 1
-				: this.input.size() < 26 && this.input.size() > 9 ? 2
-						: this.input.size() < 50 && this.input.size() > 25 ? 3
-								// : this.input.size() < 82 && this.input.size()
-								// > 49 ? 4
-								: 4;
+				 : this.input.size() < 26 && this.input.size() > 9 ? 2
+				 : this.input.size() < 50 && this.input.size() > 25 ? 3
+				 : 4;
 		return tier;
 	}
 }

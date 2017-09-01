@@ -15,7 +15,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraftforge.common.crafting.CraftingHelper;
 import net.minecraftforge.common.crafting.CraftingHelper.ShapedPrimer;
-
+// TODO: Cleanup
 public class TableRecipeShaped implements IRecipe, ITieredRecipe {
 
 	public static final int MAX_CRAFT_GRID_WIDTH = 9;
@@ -168,22 +168,21 @@ public class TableRecipeShaped implements IRecipe, ITieredRecipe {
 	private int getTierFromGridSize(InventoryCrafting inv) {
 		int size = inv.getSizeInventory();
 		int tier = size < 10 ? 1
-				: size < 26 && size > 9 ? 2
-						: size < 50 && size > 25 ? 3
-								// : this.input.size() < 82 && this.input.size()
-								// > 49 ? 4
-								: 4;
+				 : size < 26 && size > 9 ? 2
+				 : size < 50 && size > 25 ? 3
+				 : 4;
 		return tier;
 	}
 
 	@Override
 	public int getTier() {
+		if (this.tier > 0) {
+			return this.tier;
+		}
 		int tier = (this.width < 4 && this.height < 4) ? 1
-				: (this.width > 3 && this.height > 3 && this.width < 6 && this.height < 6) ? 2
-						: (this.width > 5 && this.height > 5 && this.width < 8 && this.height < 8) ? 3
-								// : (this.width > 7 && this.height > 7 &&
-								// this.width < 10 && this.height < 10) ? 4
-								: 4;
+				 : (this.width > 3 || this.height > 3 && this.width < 6 && this.height < 6) ? 2
+				 : (this.width > 5 || this.height > 5 && this.width < 8 && this.height < 8) ? 3
+				 : 4;
 		return tier;
 	}
 }

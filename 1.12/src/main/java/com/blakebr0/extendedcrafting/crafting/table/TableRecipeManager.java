@@ -101,8 +101,7 @@ public class TableRecipeManager {
 	 * Gets all the recipes for the specified tier Basic is tier 1, Advanced
 	 * tier 2, etc
 	 * 
-	 * @param tier
-	 *            the tier of the recipe
+	 * @param tier the tier of the recipe
 	 * @return a list of recipes for this tier
 	 */
 	public List getRecipesTiered(int tier) {

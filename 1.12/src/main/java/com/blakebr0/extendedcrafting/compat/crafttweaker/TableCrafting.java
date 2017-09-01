@@ -3,6 +3,7 @@ package com.blakebr0.extendedcrafting.compat.crafttweaker;
 import java.util.Arrays;
 import java.util.List;
 
+import com.blakebr0.extendedcrafting.ExtendedCrafting;
 import com.blakebr0.extendedcrafting.compat.jei.CompatJEI;
 import com.blakebr0.extendedcrafting.crafting.table.TableRecipeManager;
 import com.blakebr0.extendedcrafting.crafting.table.TableRecipeShaped;
@@ -45,16 +46,17 @@ public class TableCrafting {
 				width = row.length;
 			}
 		}
-
-		NonNullList<Ingredient> input = NonNullList.withSize(height * width, Ingredient.EMPTY);
+				
 		int i = 0;
+		NonNullList<Ingredient> input = NonNullList.withSize(height * width, Ingredient.EMPTY);
 		for (int a = 0; a < height; a++) {
-			for (int b = 0; b < width; b++) {
+			for (int b = 0; b < ingredients[a].length; b++) {
 				Ingredient ing = CraftingHelper.getIngredient(toActualObject(ingredients[a][b]));
 				if (ing == null) {
 					ing = Ingredient.EMPTY;
 				}
-				input.set(i++, ing);
+				i = a * width + b;
+				input.set(i, ing);
 			}
 		}
 

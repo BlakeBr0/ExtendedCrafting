@@ -52,8 +52,7 @@ public class TableRecipeShaped implements IRecipe, ITieredRecipe {
 		this.tier = tier;
 	}
 
-	public TableRecipeShaped(int tier, @Nonnull ItemStack result, int width, int height,
-			NonNullList<Ingredient> ingredients) {
+	public TableRecipeShaped(int tier, @Nonnull ItemStack result, int width, int height, NonNullList<Ingredient> ingredients) {
 		this.group = RecipeHelper.EMPTY_GROUP;
 		output = result.copy();
 		this.width = width;

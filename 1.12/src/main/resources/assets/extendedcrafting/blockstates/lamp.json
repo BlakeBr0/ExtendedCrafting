@@ -1,0 +1,6 @@
+{
+	"variants": {
+		"variant=glowstone": { "model": "extendedcrafting:lamp_glowstone" },
+		"variant=luminessence": { "model": "extendedcrafting:lamp_luminessence" }
+	}
+}

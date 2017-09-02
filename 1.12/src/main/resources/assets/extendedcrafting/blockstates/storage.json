@@ -1,5 +1,6 @@
 {
 	"variants": {
-		"variant=black_iron": { "model": "extendedcrafting:storage_black_iron" }
+		"variant=black_iron": { "model": "extendedcrafting:storage_black_iron" },
+		"variant=luminessence": { "model": "extendedcrafting:storage_luminessence" }
 	}
 }

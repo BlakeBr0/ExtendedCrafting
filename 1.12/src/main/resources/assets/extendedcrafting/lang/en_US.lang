@@ -3,7 +3,10 @@ itemGroup.ec.extended_crafting=Extended Crafting
 
 # BLOCKS
 tile.ec.storage_black_iron.name=Block of Black Iron
+tile.ec.storage_luminessence.name=Block of Luminessence
 tile.ec.frame.name=Black Iron Frame
+tile.ec.lamp_glowstone.name=Black Iron Lamp
+tile.ec.lamp_luminessence.name=Black Iron Lamp
 tile.ec.trimmed_iron.name=Block of Black Iron
 tile.ec.trimmed_gold.name=Block of Black Iron
 tile.ec.trimmed_diamond.name=Block of Black Iron
@@ -60,6 +63,8 @@ jei.ec.compressor=Quantum Compression
 
 # TOOLTIPS
 tooltip.ec.crafting_table=Holds it's inventory.
+tooltip.ec.lamp_glowstone=Glowstone
+tooltip.ec.lamp_luminessence=Luminessence
 tooltip.ec.trimmed_iron=Iron Trimmed
 tooltip.ec.trimmed_gold=Gold Trimmed
 tooltip.ec.trimmed_diamond=Diamond Trimmed

@@ -11,6 +11,7 @@ public class ModBlocks {
 
 	public static BlockStorage blockStorage = new BlockStorage();
 	public static BlockFrame blockFrame = new BlockFrame();
+	public static BlockLamp blockLamp = new BlockLamp();
 	public static BlockTrimmed blockTrimmed = new BlockTrimmed();
 
 	public static BlockCraftingTable blockCraftingTable = new BlockCraftingTable();
@@ -30,6 +31,7 @@ public class ModBlocks {
 
 		registry.register(blockStorage, "storage", new ItemBlockStorage(blockStorage));
 		registry.register(blockFrame, "frame");
+		registry.register(blockLamp, "lamp", new ItemBlockLamp(blockLamp));
 		registry.register(blockTrimmed, "trimmed", new ItemBlockTrimmed(blockTrimmed));
 
 		registry.register(blockCraftingTable, "crafting_table");

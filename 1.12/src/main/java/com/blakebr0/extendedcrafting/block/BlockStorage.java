@@ -45,11 +45,10 @@ public class BlockStorage extends BlockBase implements IModelHelper {
 		}
 	}
 
+	@Override
 	public void initModels() {
 		for (Type type : Type.values()) {
-			ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(this), type.getMetadata(),
-					new ModelResourceLocation(
-							getRegistryName().toString() + "_" + type.byMetadata(type.getMetadata()).getName()));
+			ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(this), type.getMetadata(), new ModelResourceLocation(getRegistryName().toString() + "_" + type.byMetadata(type.getMetadata()).getName()));
 		}
 	}
 
@@ -70,7 +69,8 @@ public class BlockStorage extends BlockBase implements IModelHelper {
 
 	public static enum Type implements IStringSerializable {
 
-		BLACK_IRON(0, "black_iron");
+		BLACK_IRON(0, "black_iron"),
+		LUMINESSENCE(1, "luminessence");
 
 		private static final Type[] META_LOOKUP = new Type[values().length];
 		private final int meta;

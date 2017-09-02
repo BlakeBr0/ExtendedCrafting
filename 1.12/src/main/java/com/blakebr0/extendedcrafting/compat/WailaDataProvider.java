@@ -6,6 +6,7 @@ import com.blakebr0.cucumber.helper.StackHelper;
 import com.blakebr0.cucumber.util.Utils;
 import com.blakebr0.extendedcrafting.block.BlockCompressor;
 import com.blakebr0.extendedcrafting.block.BlockCraftingCore;
+import com.blakebr0.extendedcrafting.block.BlockLamp;
 import com.blakebr0.extendedcrafting.block.BlockPedestal;
 import com.blakebr0.extendedcrafting.block.BlockTrimmed;
 import com.blakebr0.extendedcrafting.tile.TileCompressor;
@@ -26,6 +27,7 @@ import net.minecraft.world.World;
 public class WailaDataProvider implements IWailaDataProvider {
 
 	public static void callbackRegister(IWailaRegistrar registrar) {
+		registrar.registerBodyProvider(new WailaDataProvider(), BlockLamp.class);
 		registrar.registerBodyProvider(new WailaDataProvider(), BlockTrimmed.class);
 		registrar.registerBodyProvider(new WailaDataProvider(), BlockPedestal.class);
 		registrar.registerBodyProvider(new WailaDataProvider(), BlockCraftingCore.class);
@@ -39,6 +41,10 @@ public class WailaDataProvider implements IWailaDataProvider {
 
 	@Override
 	public List<String> getWailaBody(ItemStack arg0, List<String> arg1, IWailaDataAccessor arg2, IWailaConfigHandler arg3) {
+		if (arg2.getBlock() instanceof BlockLamp) {
+			arg1.add(Utils.localize("tooltip.ec.lamp_" + BlockLamp.Type.byMetadata(arg2.getMetadata()).getName()));
+		}
+		
 		if (arg2.getBlock() instanceof BlockTrimmed) {
 			arg1.add(Utils.localize("tooltip.ec.trimmed_" + BlockTrimmed.Type.byMetadata(arg2.getMetadata()).getName()));
 		}

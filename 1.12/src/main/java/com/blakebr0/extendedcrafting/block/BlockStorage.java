@@ -12,10 +12,13 @@ import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.entity.Entity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.NonNullList;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 import net.minecraftforge.client.model.ModelLoader;
 
 public class BlockStorage extends BlockBase implements IModelHelper {
@@ -33,6 +36,16 @@ public class BlockStorage extends BlockBase implements IModelHelper {
 
 	}
 
+	@Override
+	public SoundType getSoundType(IBlockState state, World world, BlockPos pos, Entity entity) {
+		return this.getMetaFromState(state) == 1 ? SoundType.STONE : SoundType.METAL;
+	}
+	
+	@Override
+	public Material getMaterial(IBlockState state) {
+		return this.getMetaFromState(state) == 1 ? Material.ROCK : Material.IRON;
+	}
+	
 	@Override
 	public int damageDropped(IBlockState state) {
 		return ((Type) state.getValue(VARIANT)).getMetadata();

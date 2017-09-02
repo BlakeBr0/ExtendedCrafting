@@ -1,0 +1,18 @@
+{
+  "type": "forge:ore_shapeless",
+  "ingredients": [
+    {
+      "item": "extendedcrafting:frame",
+      "data": 0
+    },
+    {
+      "item": "minecraft:glowstone_dust",
+      "data": 0
+    }
+  ],
+  "result": {
+    "item": "extendedcrafting:lamp",
+	"count": 1,
+    "data": 0
+  }
+}

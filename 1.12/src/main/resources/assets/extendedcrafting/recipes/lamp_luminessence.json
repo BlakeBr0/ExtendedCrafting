@@ -1,0 +1,18 @@
+{
+  "type": "forge:ore_shapeless",
+  "ingredients": [
+    {
+      "item": "extendedcrafting:frame",
+      "data": 0
+    },
+    {
+      "item": "extendedcrafting:material",
+      "data": 7
+    }
+  ],
+  "result": {
+    "item": "extendedcrafting:lamp",
+	"count": 1,
+    "data": 1
+  }
+}

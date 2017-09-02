@@ -3,7 +3,7 @@
   "modid": "extendedcrafting",
   "name": "Extended Crafting",
   "description": "Adds some new ways to craft items, as well as extra crafting items and utilities.",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "mcversion": "${mcversion}",
   "url": "https://minecraft.curseforge.com/projects/extended-crafting",
   "updateUrl": "",

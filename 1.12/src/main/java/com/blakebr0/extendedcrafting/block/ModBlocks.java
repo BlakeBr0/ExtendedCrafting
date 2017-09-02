@@ -10,9 +10,10 @@ import com.blakebr0.extendedcrafting.block.craftingtable.BlockUltimateTable;
 public class ModBlocks {
 
 	public static BlockStorage blockStorage = new BlockStorage();
+	public static BlockFrame blockFrame = new BlockFrame();
+	public static BlockTrimmed blockTrimmed = new BlockTrimmed();
 
 	public static BlockCraftingTable blockCraftingTable = new BlockCraftingTable();
-	public static BlockFrame blockFrame = new BlockFrame();
 
 	public static BlockPedestal blockPedestal = new BlockPedestal();
 	public static BlockCraftingCore blockCraftingCore = new BlockCraftingCore();
@@ -29,6 +30,7 @@ public class ModBlocks {
 
 		registry.register(blockStorage, "storage", new ItemBlockStorage(blockStorage));
 		registry.register(blockFrame, "frame");
+		registry.register(blockTrimmed, "trimmed", new ItemBlockTrimmed(blockTrimmed));
 
 		registry.register(blockCraftingTable, "crafting_table");
 

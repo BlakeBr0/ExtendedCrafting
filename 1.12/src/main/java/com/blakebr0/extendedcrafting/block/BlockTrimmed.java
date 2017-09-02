@@ -1,7 +1,10 @@
 package com.blakebr0.extendedcrafting.block;
 
+import java.util.List;
+
 import com.blakebr0.cucumber.block.BlockBase;
 import com.blakebr0.cucumber.iface.IModelHelper;
+import com.blakebr0.cucumber.util.Utils;
 import com.blakebr0.extendedcrafting.ExtendedCrafting;
 
 import net.minecraft.block.SoundType;
@@ -11,21 +14,23 @@ import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.NonNullList;
+import net.minecraft.world.World;
 import net.minecraftforge.client.model.ModelLoader;
 
-public class BlockStorage extends BlockBase implements IModelHelper {
+public class BlockTrimmed extends BlockBase implements IModelHelper {
 
 	public static final PropertyEnum<Type> VARIANT = PropertyEnum.<Type> create("variant", Type.class);
 
-	public BlockStorage() {
-		super("ec.storage", Material.IRON, SoundType.METAL, 5.0F, 10.0F);
+	public BlockTrimmed() {
+		super("ec.trimmed", Material.IRON, SoundType.METAL, 5.0F, 10.0F);
 		this.setCreativeTab(ExtendedCrafting.tabExtendedCrafting);
-		this.setDefaultState(this.blockState.getBaseState().withProperty(VARIANT, Type.BLACK_IRON));
+		this.setDefaultState(this.blockState.getBaseState().withProperty(VARIANT, Type.IRON_TRIMMED));
 	}
 
 	@Override
@@ -47,9 +52,7 @@ public class BlockStorage extends BlockBase implements IModelHelper {
 
 	public void initModels() {
 		for (Type type : Type.values()) {
-			ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(this), type.getMetadata(),
-					new ModelResourceLocation(
-							getRegistryName().toString() + "_" + type.byMetadata(type.getMetadata()).getName()));
+			ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(this), type.getMetadata(), new ModelResourceLocation(getRegistryName().toString() + "_" + type.byMetadata(type.getMetadata()).getName()));
 		}
 	}
 
@@ -67,10 +70,21 @@ public class BlockStorage extends BlockBase implements IModelHelper {
 	protected BlockStateContainer createBlockState() {
 		return new BlockStateContainer(this, new IProperty[] { VARIANT });
 	}
+	
+	@Override
+	public void addInformation(ItemStack stack, World world, List<String> tooltip, ITooltipFlag advanced) {
+		int meta = stack.getMetadata();
+		if (meta < 4) {
+			tooltip.add(Utils.localize("tooltip.ec.trimmed_" + Type.byMetadata(meta).getName()));
+		}
+	}
 
 	public static enum Type implements IStringSerializable {
 
-		BLACK_IRON(0, "black_iron");
+		IRON_TRIMMED(0, "iron"),
+		GOLD_TRIMMED(1, "gold"),
+		DIAMOND_TRIMMED(2, "diamond"),
+		EMERALD_TRIMMED(3, "emerald");
 
 		private static final Type[] META_LOOKUP = new Type[values().length];
 		private final int meta;

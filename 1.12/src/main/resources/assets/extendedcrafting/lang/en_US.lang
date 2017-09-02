@@ -1,9 +1,13 @@
 # CREATIVE TAB
 itemGroup.ec.extended_crafting=Extended Crafting
 
-# BLOCKS §e
+# BLOCKS
 tile.ec.storage_black_iron.name=Block of Black Iron
 tile.ec.frame.name=Black Iron Frame
+tile.ec.trimmed_iron.name=Block of Black Iron
+tile.ec.trimmed_gold.name=Block of Black Iron
+tile.ec.trimmed_diamond.name=Block of Black Iron
+tile.ec.trimmed_emerald.name=Block of Black Iron
 
 tile.ec.crafting_table.name=Crafting Table
 
@@ -54,7 +58,13 @@ jei.ec.compressor=Quantum Compression
 
 # TOOLTIPS
 tooltip.ec.crafting_table=Holds it's inventory.
+tooltip.ec.trimmed_iron=Iron Trimmed
+tooltip.ec.trimmed_gold=Gold Trimmed
+tooltip.ec.trimmed_diamond=Diamond Trimmed
+tooltip.ec.trimmed_emerald=Emerald Trimmed
+
 tooltip.ec.singularity_ultimate=With our powers combined...
+
 tooltip.ec.empty=Empty
 tooltip.ec.eject=Eject
 tooltip.ec.ejecting=Ejecting...

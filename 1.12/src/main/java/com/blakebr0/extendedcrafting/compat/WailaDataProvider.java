@@ -7,6 +7,7 @@ import com.blakebr0.cucumber.util.Utils;
 import com.blakebr0.extendedcrafting.block.BlockCompressor;
 import com.blakebr0.extendedcrafting.block.BlockCraftingCore;
 import com.blakebr0.extendedcrafting.block.BlockPedestal;
+import com.blakebr0.extendedcrafting.block.BlockTrimmed;
 import com.blakebr0.extendedcrafting.tile.TileCompressor;
 import com.blakebr0.extendedcrafting.tile.TileCraftingCore;
 import com.blakebr0.extendedcrafting.tile.TilePedestal;
@@ -25,6 +26,7 @@ import net.minecraft.world.World;
 public class WailaDataProvider implements IWailaDataProvider {
 
 	public static void callbackRegister(IWailaRegistrar registrar) {
+		registrar.registerBodyProvider(new WailaDataProvider(), BlockTrimmed.class);
 		registrar.registerBodyProvider(new WailaDataProvider(), BlockPedestal.class);
 		registrar.registerBodyProvider(new WailaDataProvider(), BlockCraftingCore.class);
 		registrar.registerBodyProvider(new WailaDataProvider(), BlockCompressor.class);
@@ -37,12 +39,17 @@ public class WailaDataProvider implements IWailaDataProvider {
 
 	@Override
 	public List<String> getWailaBody(ItemStack arg0, List<String> arg1, IWailaDataAccessor arg2, IWailaConfigHandler arg3) {
+		if (arg2.getBlock() instanceof BlockTrimmed) {
+			arg1.add(Utils.localize("tooltip.ec.trimmed_" + BlockTrimmed.Type.byMetadata(arg2.getMetadata()).getName()));
+		}
+		
 		if (arg2.getBlock() instanceof BlockPedestal && arg2.getTileEntity() instanceof TilePedestal && !arg2.getTileEntity().isInvalid()) {
 			TilePedestal pedestal = (TilePedestal) arg2.getTileEntity();
 			if (!StackHelper.isNull(pedestal.getInventory().getStackInSlot(0))) {
 				arg1.add(pedestal.getInventory().getStackInSlot(0).getDisplayName());
 			}
 		}
+		
 		if (arg2.getBlock() instanceof BlockCraftingCore && arg2.getTileEntity() instanceof TileCraftingCore && !arg2.getTileEntity().isInvalid()) {
 			TileCraftingCore core = (TileCraftingCore) arg2.getTileEntity();
 			arg1.add(Utils.format(core.getEnergy().getEnergyStored()) + " RF");

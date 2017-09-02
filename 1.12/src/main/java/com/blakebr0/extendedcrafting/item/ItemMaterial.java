@@ -10,7 +10,6 @@ public class ItemMaterial extends ItemMeta {
 	public static ItemStack itemBlackIron;
 	public static ItemStack itemBlackIronNugget;
 	public static ItemStack itemBlackIronSlate;
-	public static ItemStack itemBlackIronRod;
 
 	public static ItemStack itemLuminessence;
 
@@ -23,6 +22,9 @@ public class ItemMaterial extends ItemMeta {
 	public static ItemStack itemAdvancedComponent;
 	public static ItemStack itemEliteComponent;
 	public static ItemStack itemUltimateComponent;
+	
+	public static ItemStack itemDiamondNugget;
+	public static ItemStack itemEmeraldNugget;
 
 	public ItemMaterial() {
 		super("ec.material", ExtendedCrafting.REGISTRY);
@@ -34,7 +36,6 @@ public class ItemMaterial extends ItemMeta {
 		itemBlackIron = addItem(0, "black_iron", "ingotBlackIron");
 		itemBlackIronNugget = addItem(1, "black_iron_nugget", "nuggetBlackIron");
 		itemBlackIronSlate = addItem(2, "black_iron_slate");
-		//itemBlackIronRod = addItem(3, "black_iron_rod");
 
 		itemLuminessence = addItem(7, "luminessence");
 
@@ -47,5 +48,8 @@ public class ItemMaterial extends ItemMeta {
 		itemAdvancedComponent = addItem(15, "advanced_component");
 		itemEliteComponent = addItem(16, "elite_component");
 		itemUltimateComponent = addItem(17, "ultimate_component");
+		
+		itemDiamondNugget = addItem(128, "diamond_nugget", "nuggetDiamond");
+		itemEmeraldNugget = addItem(129, "emerald_nugget", "nuggetEmerald");
 	}
 }

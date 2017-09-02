@@ -34,6 +34,8 @@ item.ec.material_basic_component.name=Basic Crafting Component
 item.ec.material_advanced_component.name=Advanced Crafting Component
 item.ec.material_elite_component.name=Elite Crafting Component
 item.ec.material_ultimate_component.name=Ultimate Crafting Component
+item.ec.material_diamond_nugget.name=Diamond Nugget
+item.ec.material_emerald_nugget.name=Emerald Nugget
 
 item.ec.handheld_table.name=Handheld Crafting Table
 

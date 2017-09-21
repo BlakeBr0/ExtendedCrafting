@@ -24,6 +24,7 @@ public class ExtendedCrafting {
 	public static final String NAME = "Extended Crafting";
 	public static final String VERSION = "1.0.1";
 	public static final String GUI_FACTORY = "com.blakebr0.extendedcrafting.config.GuiFactory";
+	public static final String DEPENDENCIES = "required-after:cucumber@[1.0.2,)";
 
 	public static final ModRegistry REGISTRY = new ModRegistry(MOD_ID);
 	public static final Logger LOGGER = LogManager.getLogger(MOD_ID);

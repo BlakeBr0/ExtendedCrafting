@@ -1,7 +1,11 @@
 package com.blakebr0.extendedcrafting.block;
 
+import java.util.List;
+
 import com.blakebr0.cucumber.block.BlockBase;
 import com.blakebr0.cucumber.iface.IModelHelper;
+import com.blakebr0.cucumber.lib.Colors;
+import com.blakebr0.cucumber.util.Utils;
 import com.blakebr0.extendedcrafting.ExtendedCrafting;
 
 import net.minecraft.block.SoundType;
@@ -11,6 +15,7 @@ import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.Item;
@@ -79,11 +84,21 @@ public class BlockStorage extends BlockBase implements IModelHelper {
 	protected BlockStateContainer createBlockState() {
 		return new BlockStateContainer(this, new IProperty[] { VARIANT });
 	}
+	
+	@Override
+	public void addInformation(ItemStack stack, World world, List<String> tooltip, ITooltipFlag advanced) {
+		if (stack.getMetadata() == 4) {
+			tooltip.add(Colors.ITALICS + Utils.localize("tooltip.ec.ultimate_block"));
+		}
+	}
 
 	public static enum Type implements IStringSerializable {
 
 		BLACK_IRON(0, "black_iron"),
-		LUMINESSENCE(1, "luminessence");
+		LUMINESSENCE(1, "luminessence"),
+		NETHER_STAR(2, "nether_star"),
+		CRYSTALTINE(3, "crystaltine"),
+		ULTIMATE(4, "ultimate");
 
 		private static final Type[] META_LOOKUP = new Type[values().length];
 		private final int meta;

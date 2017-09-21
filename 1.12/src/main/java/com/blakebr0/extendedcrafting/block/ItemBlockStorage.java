@@ -1,6 +1,7 @@
 package com.blakebr0.extendedcrafting.block;
 
 import net.minecraft.block.Block;
+import net.minecraft.item.EnumRarity;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 
@@ -20,5 +21,15 @@ public class ItemBlockStorage extends ItemBlock {
 	@Override
 	public int getMetadata(int damage) {
 		return damage;
+	}
+	
+	@Override
+	public EnumRarity getRarity(ItemStack stack) {
+		return stack.getMetadata() == 4 ? EnumRarity.EPIC : EnumRarity.COMMON;
+	}
+	
+	@Override
+	public boolean hasEffect(ItemStack stack) {
+		return stack.getMetadata() == 4;
 	}
 }

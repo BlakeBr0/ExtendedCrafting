@@ -75,7 +75,7 @@ public class BlockTrimmed extends BlockBase implements IModelHelper {
 	@Override
 	public void addInformation(ItemStack stack, World world, List<String> tooltip, ITooltipFlag advanced) {
 		int meta = stack.getMetadata();
-		if (meta < 4) {
+		if (meta < 6) {
 			tooltip.add(Utils.localize("tooltip.ec.trimmed_" + Type.byMetadata(meta).getName()));
 		}
 	}
@@ -85,7 +85,9 @@ public class BlockTrimmed extends BlockBase implements IModelHelper {
 		IRON_TRIMMED(0, "iron"),
 		GOLD_TRIMMED(1, "gold"),
 		DIAMOND_TRIMMED(2, "diamond"),
-		EMERALD_TRIMMED(3, "emerald");
+		EMERALD_TRIMMED(3, "emerald"),
+		CRYSTALTINE_TRIMMED(4, "crystaltine"),
+		ULTIMATE_TRIMMED(5, "ultimate");
 
 		private static final Type[] META_LOOKUP = new Type[values().length];
 		private final int meta;

@@ -3,6 +3,8 @@
 		"variant=iron": { "model": "extendedcrafting:trimmed_iron" },
 		"variant=gold": { "model": "extendedcrafting:trimmed_gold" },
 		"variant=diamond": { "model": "extendedcrafting:trimmed_diamond" },
-		"variant=emerald": { "model": "extendedcrafting:trimmed_emerald" }
+		"variant=emerald": { "model": "extendedcrafting:trimmed_emerald" },
+		"variant=crystaltine": { "model": "extendedcrafting:trimmed_crystaltine" },
+		"variant=ultimate": { "model": "extendedcrafting:trimmed_ultimate" }
 	}
 }

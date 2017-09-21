@@ -4,6 +4,9 @@ itemGroup.ec.extended_crafting=Extended Crafting
 # BLOCKS
 tile.ec.storage_black_iron.name=Block of Black Iron
 tile.ec.storage_luminessence.name=Block of Luminessence
+tile.ec.storage_nether_star.name=Block of Nether Stars
+tile.ec.storage_crystaltine.name=Block of Crystaltine
+tile.ec.storage_ultimate.name=Block of Ultimate
 tile.ec.frame.name=Black Iron Frame
 tile.ec.lamp_glowstone.name=Black Iron Lamp
 tile.ec.lamp_luminessence.name=Black Iron Lamp
@@ -11,6 +14,8 @@ tile.ec.trimmed_iron.name=Block of Black Iron
 tile.ec.trimmed_gold.name=Block of Black Iron
 tile.ec.trimmed_diamond.name=Block of Black Iron
 tile.ec.trimmed_emerald.name=Block of Black Iron
+tile.ec.trimmed_crystaltine.name=Block of Black Iron
+tile.ec.trimmed_ultimate.name=Block of Black Iron
 
 tile.ec.crafting_table.name=Crafting Table
 
@@ -28,6 +33,7 @@ tile.ec.compressor.name=Quantum Compressor
 item.ec.material_black_iron.name=Black Iron Ingot
 item.ec.material_black_iron_nugget.name=Black Iron Nugget
 item.ec.material_black_iron_slate.name=Black Iron Slate
+item.ec.material_black_iron_rod.name=Black Iron Rod
 item.ec.material_luminessence.name=Luminessence
 item.ec.material_basic_catalyst.name=Basic Crafting Catalyst
 item.ec.material_advanced_catalyst.name=Advanced Crafting Catalyst
@@ -37,8 +43,17 @@ item.ec.material_basic_component.name=Basic Crafting Component
 item.ec.material_advanced_component.name=Advanced Crafting Component
 item.ec.material_elite_component.name=Elite Crafting Component
 item.ec.material_ultimate_component.name=Ultimate Crafting Component
+item.ec.material_crystaltine_ingot.name=Crystaltine Ingot
+item.ec.material_crystaltine_nugget.name=Crystaltine Nugget
+item.ec.material_crystaltine_catalyst.name=Crystaltine Crafting Catalyst
+item.ec.material_crystaltine_component.name=Crystaltine Crafting Component
+item.ec.material_ultimate_ingot.name=Ultimate Ingot
+item.ec.material_ultimate_nugget.name=Ultimate Nugget
+item.ec.material_ultimater_catalyst.name=Ultimate Catalyst
+item.ec.material_ultimater_component.name=Ultimate Component
 item.ec.material_diamond_nugget.name=Diamond Nugget
 item.ec.material_emerald_nugget.name=Emerald Nugget
+item.ec.material_nether_star_nugget.name=Nether Star Nugget
 
 item.ec.handheld_table.name=Handheld Crafting Table
 
@@ -69,7 +84,14 @@ tooltip.ec.trimmed_iron=Iron Trimmed
 tooltip.ec.trimmed_gold=Gold Trimmed
 tooltip.ec.trimmed_diamond=Diamond Trimmed
 tooltip.ec.trimmed_emerald=Emerald Trimmed
+tooltip.ec.trimmed_crystaltine=Crystaltine Trimmed
+tooltip.ec.trimmed_ultimate=Ultimate Trimmed
 
+tooltip.ec.ultimate_block=I am the one, don't weigh a ton...
+tooltip.ec.ultimate_catalyst=I'm the real ultimate catalyst...
+tooltip.ec.ultimate_component=There is none better than I...
+tooltip.ec.ultimate_ingot=With great power comes great...
+tooltip.ec.ultimate_nugget=Baby steps...
 tooltip.ec.singularity_ultimate=With our powers combined...
 
 tooltip.ec.empty=Empty

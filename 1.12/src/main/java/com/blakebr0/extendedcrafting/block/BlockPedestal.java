@@ -45,8 +45,7 @@ public class BlockPedestal extends BlockBase implements ITileEntityProvider {
 						world.playSound(null, pos, SoundEvents.ENTITY_ITEM_PICKUP, SoundCategory.BLOCKS, 1.0F, 1.0F);
 					}
 				} else {
-					EntityItem item = new EntityItem(world, player.posX, player.posY, player.posZ,
-							tile.getInventory().getStackInSlot(0));
+					EntityItem item = new EntityItem(world, player.posX, player.posY, player.posZ, tile.getInventory().getStackInSlot(0));
 					item.setNoPickupDelay();
 					world.spawnEntity(item);
 					tile.getInventory().setStackInSlot(0, StackHelper.getNull());

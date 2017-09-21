@@ -21,4 +21,9 @@ public class ItemBlockTrimmed extends ItemBlock {
 	public int getMetadata(int damage) {
 		return damage;
 	}
+	
+	@Override
+	public boolean hasEffect(ItemStack stack) {
+		return stack.getMetadata() == 5;
+	}
 }

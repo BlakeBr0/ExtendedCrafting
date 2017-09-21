@@ -1,6 +1,9 @@
 {
 	"variants": {
 		"variant=black_iron": { "model": "extendedcrafting:storage_black_iron" },
-		"variant=luminessence": { "model": "extendedcrafting:storage_luminessence" }
+		"variant=luminessence": { "model": "extendedcrafting:storage_luminessence" },
+		"variant=nether_star": { "model": "extendedcrafting:storage_nether_star" },
+		"variant=crystaltine": { "model": "extendedcrafting:storage_crystaltine" },
+		"variant=ultimate": { "model": "extendedcrafting:storage_ultimate" }
 	}
 }

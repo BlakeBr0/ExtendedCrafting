@@ -48,7 +48,6 @@ public class CommonProxy {
 	}
 
 	public void init(FMLInitializationEvent event) {
-		ExtendedCrafting.REGISTRY.addOre(ModBlocks.blockCraftingTable, "workbench"); // TODO: oredict stuff in cucumber
 		NetworkThingy.init();
 		NetworkRegistry.INSTANCE.registerGuiHandler(ExtendedCrafting.instance, new GuiHandler());
 		FMLInterModComms.sendMessage("waila", "register", "com.blakebr0.extendedcrafting.compat.WailaDataProvider.callbackRegister");

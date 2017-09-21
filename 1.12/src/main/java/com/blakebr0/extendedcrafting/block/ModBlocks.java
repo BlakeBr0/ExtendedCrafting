@@ -1,6 +1,7 @@
 package com.blakebr0.extendedcrafting.block;
 
 import com.blakebr0.cucumber.registry.ModRegistry;
+import com.blakebr0.cucumber.registry.Ore;
 import com.blakebr0.extendedcrafting.ExtendedCrafting;
 import com.blakebr0.extendedcrafting.block.craftingtable.BlockAdvancedTable;
 import com.blakebr0.extendedcrafting.block.craftingtable.BlockBasicTable;
@@ -29,12 +30,14 @@ public class ModBlocks {
 	public static void init() {
 		final ModRegistry registry = ExtendedCrafting.REGISTRY;
 
-		registry.register(blockStorage, "storage", new ItemBlockStorage(blockStorage));
+		registry.register(blockStorage, "storage", new ItemBlockStorage(blockStorage), 
+				Ore.of(0, "blockBlackIron"), Ore.of(1, "blockLuminessence"), Ore.of(2, "blockNetherStar"),
+				Ore.of(3, "blockCrystaltine"), Ore.of(4, "blockUltimate"));
 		registry.register(blockFrame, "frame");
 		registry.register(blockLamp, "lamp", new ItemBlockLamp(blockLamp));
 		registry.register(blockTrimmed, "trimmed", new ItemBlockTrimmed(blockTrimmed));
 
-		registry.register(blockCraftingTable, "crafting_table");
+		registry.register(blockCraftingTable, "crafting_table", Ore.of(0, "workbench"));
 
 		registry.register(blockPedestal, "pedestal");
 		registry.register(blockCraftingCore, "crafting_core");

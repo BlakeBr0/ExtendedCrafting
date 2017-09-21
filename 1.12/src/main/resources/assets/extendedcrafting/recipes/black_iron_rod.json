@@ -1,0 +1,17 @@
+{
+  "type": "forge:ore_shaped",
+  "pattern": [
+	"I",
+	"I"
+  ],
+  "key": {
+    "I": {
+    "item": "extendedcrafting:material",
+    "data": 0
+    }
+  },
+  "result": {
+    "item": "extendedcrafting:material",
+    "data": 3
+  }
+}

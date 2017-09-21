@@ -1,0 +1,14 @@
+{
+  "type": "forge:ore_shapeless",
+  "ingredients": [
+    {
+      "item": "extendedcrafting:storage",
+      "data": 2
+    }
+  ],
+  "result": {
+    "item": "minecraft:nether_star",
+	"count": 9,
+    "data": 0
+  }
+}

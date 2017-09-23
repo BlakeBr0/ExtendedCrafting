@@ -25,4 +25,13 @@ public class CombinationRecipeManager {
 	public ArrayList<CombinationRecipe> getRecipes() {
 		return recipes;
 	}
+	
+	public void removeRecipe(ItemStack stack) {
+		for (CombinationRecipe recipe : getRecipes()) {
+			if (recipe.getOutput().isItemEqual(stack)) {
+				this.recipes.remove(recipe);
+				break;
+			}
+		}
+	}
 }

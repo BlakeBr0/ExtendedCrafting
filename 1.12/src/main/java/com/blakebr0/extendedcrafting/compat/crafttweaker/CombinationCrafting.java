@@ -64,13 +64,7 @@ public class CombinationCrafting {
 
 		@Override
 		public void apply() {
-			for (CombinationRecipe recipe : CombinationRecipeManager.getInstance().getRecipes()) {
-				if (recipe.getOutput().isItemEqual(remove)) {
-					this.recipe = recipe;
-					CombinationRecipeManager.getInstance().getRecipes().remove(recipe);
-					break;
-				}
-			}
+			CombinationRecipeManager.getInstance().removeRecipe(remove);
 		}
 
 		@Override

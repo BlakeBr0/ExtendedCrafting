@@ -25,4 +25,13 @@ public class CompressorRecipeManager {
 	public ArrayList<CompressorRecipe> getRecipes() {
 		return recipes;
 	}
+	
+	public void removeRecipe(ItemStack stack) {
+		for (CompressorRecipe recipe : getRecipes()) {
+			if (recipe.getOutput().isItemEqual(stack)) {
+				this.recipes.remove(recipe);
+				break;
+			}
+		}
+	}
 }

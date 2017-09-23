@@ -56,7 +56,6 @@ public class CompressionCrafting {
 	}
 
 	private static class Remove implements IAction {
-		CompressorRecipe recipe = null;
 		ItemStack remove;
 
 		public Remove(ItemStack remove) {
@@ -65,13 +64,7 @@ public class CompressionCrafting {
 
 		@Override
 		public void apply() {
-			for (CompressorRecipe recipe : CompressorRecipeManager.getInstance().getRecipes()) {
-				if (recipe.getOutput().isItemEqual(remove)) {
-					this.recipe = recipe;
-					CombinationRecipeManager.getInstance().getRecipes().remove(recipe);
-					break;
-				}
-			}
+			CompressorRecipeManager.getInstance().removeRecipe(remove);
 		}
 
 		@Override

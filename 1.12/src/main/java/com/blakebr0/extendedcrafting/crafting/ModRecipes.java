@@ -16,7 +16,7 @@ public class ModRecipes {
 		// TODO: Ultimate Ingot
 //		TableRecipeManager.getInstance().addShaped(ModItems.itemMaterial.itemUltimateIngot, 
 //				"XXXXXXXXX", "XXXXXXXXX", "XXXXXXXXX");
-		
+
 		ModItems.itemSingularity.initRecipes();
 		ModItems.itemSingularityUltimate.initRecipe();
 	}

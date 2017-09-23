@@ -85,6 +85,18 @@ public class TableRecipeManager {
 	public List getRecipes() {
 		return this.recipes;
 	}
+	
+	public void removeRecipe(ItemStack stack) {
+		for (Object obj : getRecipes()) {
+			if (obj instanceof IRecipe) {
+				IRecipe recipe = (IRecipe)obj;
+				if (recipe.getRecipeOutput().isItemEqual(stack)) {
+					this.recipes.remove(obj);
+					break;
+				}
+			}
+		}
+	}
 
 	public List getRecipes(int size) {
 		List recipes = new ArrayList<>();

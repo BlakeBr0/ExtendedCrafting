@@ -102,7 +102,6 @@ public class TableCrafting {
 	}
 
 	private static class Remove implements IAction {
-		IRecipe recipe = null;
 		ItemStack remove;
 
 		public Remove(ItemStack remove) {
@@ -111,16 +110,7 @@ public class TableCrafting {
 
 		@Override
 		public void apply() {
-			for (Object obj : TableRecipeManager.getInstance().getRecipes()) {
-				if (obj instanceof IRecipe) {
-					IRecipe recipe = (IRecipe) obj;
-					if (recipe.getRecipeOutput().isItemEqual(remove)) {
-						this.recipe = recipe;
-						TableRecipeManager.getInstance().getRecipes().remove(recipe);
-						break;
-					}
-				}
-			}
+			TableRecipeManager.getInstance().removeRecipe(remove);
 		}
 
 		@Override

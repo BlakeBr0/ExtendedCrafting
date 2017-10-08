@@ -78,6 +78,7 @@ public class TileCompressor extends TileEntity implements ISidedInventory, ITick
 			CompressorRecipe recipe = this.getRecipe();
 			ItemStack output = this.getStackInSlot(0);
 			ItemStack input = this.getStackInSlot(1);
+			int consumeAmount;
 
 			if (!input.isEmpty()) {
 				if (this.materialStack.isEmpty()) {
@@ -87,8 +88,9 @@ public class TileCompressor extends TileEntity implements ISidedInventory, ITick
 					}
 				}
 				if (input.isItemEqual(this.materialStack)) {
-					StackHelper.decrease(input, 1, false);
-					this.materialCount++;
+					consumeAmount = input.getCount() < ModConfig.confCompressorItemRate ? input.getCount() : ModConfig.confCompressorItemRate;
+					StackHelper.decrease(input, consumeAmount, false);
+					this.materialCount += consumeAmount;
 					if (!mark) {
 						mark = true;
 					}
@@ -119,9 +121,10 @@ public class TileCompressor extends TileEntity implements ISidedInventory, ITick
 			if (this.ejecting) {
 				if (this.materialCount > 0 && !this.materialStack.isEmpty()) {
 					ItemStack toAdd = this.materialStack.copy();
-					toAdd.setCount(1);
+					int addCount = this.materialCount < ModConfig.confCompressorItemRate ? this.materialCount : ModConfig.confCompressorItemRate;
+					toAdd.setCount(addCount);
 					if (this.addStackToSlot(0, toAdd)) {
-						--this.materialCount;
+						this.materialCount -= addCount;
 						if (this.materialCount < 1) {
 							this.materialStack = ItemStack.EMPTY;
 							this.ejecting = false;

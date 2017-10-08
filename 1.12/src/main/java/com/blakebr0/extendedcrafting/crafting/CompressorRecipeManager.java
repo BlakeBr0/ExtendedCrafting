@@ -1,8 +1,13 @@
 package com.blakebr0.extendedcrafting.crafting;
 
 import java.util.ArrayList;
+import java.util.stream.Collectors;
 
+import akka.util.Collections;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.NonNullList;
+import net.minecraftforge.oredict.OreDictionary;
+import scala.actors.threadpool.Arrays;
 
 public class CompressorRecipeManager {
 
@@ -23,6 +28,18 @@ public class CompressorRecipeManager {
 	}
 
 	public ArrayList<CompressorRecipe> getRecipes() {
+		return recipes;
+	}
+	
+	public ArrayList<CompressorRecipe> getValidRecipes() {
+		ArrayList recipes = new ArrayList<>();
+		for (CompressorRecipe recipe : getRecipes()) {
+			if (recipe.getInput() instanceof NonNullList<?> && ((NonNullList<?>) recipe.getInput()).isEmpty()) {
+				continue;
+			} else {
+				recipes.add(recipe);
+			}
+		}
 		return recipes;
 	}
 	

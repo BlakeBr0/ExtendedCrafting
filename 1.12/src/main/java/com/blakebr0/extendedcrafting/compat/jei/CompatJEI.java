@@ -50,6 +50,7 @@ import mezz.jei.api.recipe.transfer.IRecipeTransferRegistry;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.oredict.OreDictionary;
 
 @JEIPlugin
 public class CompatJEI implements IModPlugin {
@@ -128,7 +129,7 @@ public class CompatJEI implements IModPlugin {
 		registry.addRecipes(TableRecipeManager.getInstance().getRecipesTiered(3), EliteTableCategory.UID);
 		registry.addRecipes(TableRecipeManager.getInstance().getRecipesTiered(4), UltimateTableCategory.UID);
 
-		registry.addRecipes(CompressorRecipeManager.getInstance().getRecipes(), CompressorCraftingCategory.UID);
+		registry.addRecipes(CompressorRecipeManager.getInstance().getValidRecipes(), CompressorCraftingCategory.UID);
 	}
 
 	@Override

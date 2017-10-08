@@ -39,8 +39,7 @@ public class ItemSingularityCustom extends ItemMeta implements IModelHelper {
 
 	@Override
 	public String getItemStackDisplayName(ItemStack stack) {
-		String name = items.containsKey(stack.getMetadata())
-				? items.get(stack.getMetadata()).getName().replace("_", " ") : "Dummy";
+		String name = items.containsKey(stack.getMetadata()) ? items.get(stack.getMetadata()).getName().replace("_", " ") : "Dummy";
 		return WordUtils.capitalize(name) + " " + Utils.localize("item.ec.singularity.name");
 	}
 

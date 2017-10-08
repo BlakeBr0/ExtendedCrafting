@@ -1,13 +1,9 @@
 package com.blakebr0.extendedcrafting.crafting;
 
 import java.util.ArrayList;
-import java.util.stream.Collectors;
 
-import akka.util.Collections;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
-import net.minecraftforge.oredict.OreDictionary;
-import scala.actors.threadpool.Arrays;
 
 public class CompressorRecipeManager {
 

@@ -8,7 +8,6 @@ import com.blakebr0.cucumber.block.BlockBase;
 import com.blakebr0.cucumber.iface.IModelHelper;
 import com.blakebr0.cucumber.util.Utils;
 import com.blakebr0.extendedcrafting.ExtendedCrafting;
-import com.blakebr0.extendedcrafting.block.BlockStorage.Type;
 
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;

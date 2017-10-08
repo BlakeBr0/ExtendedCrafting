@@ -9,7 +9,6 @@ import com.blakebr0.cucumber.item.ItemMeta;
 import com.blakebr0.cucumber.lib.Colors;
 import com.blakebr0.cucumber.util.Utils;
 import com.blakebr0.extendedcrafting.ExtendedCrafting;
-import com.google.common.collect.Lists;
 
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.EnumRarity;

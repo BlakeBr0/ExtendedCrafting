@@ -25,8 +25,7 @@ import net.minecraft.util.text.translation.I18n;
 
 public class GuiCompressor extends GuiContainer {
 
-	private static final ResourceLocation GUI = new ResourceLocation(ExtendedCrafting.MOD_ID,
-			"textures/gui/compressor.png");
+	private static final ResourceLocation GUI = new ResourceLocation(ExtendedCrafting.MOD_ID, "textures/gui/compressor.png");
 
 	private TileCompressor tile;
 

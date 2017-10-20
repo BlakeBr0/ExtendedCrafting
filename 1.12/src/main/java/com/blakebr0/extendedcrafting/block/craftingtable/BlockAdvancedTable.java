@@ -34,16 +34,14 @@ public class BlockAdvancedTable extends BlockBase implements ITileEntityProvider
 	}
 
 	@Override
-	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand,
-			EnumFacing side, float hitX, float hitY, float hitZ) {
+	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
 		if (world.isRemote) {
 			return true;
 		} else {
 			TileEntity tileentity = world.getTileEntity(pos);
 
 			if (tileentity instanceof TileAdvancedCraftingTable) {
-				player.openGui(ExtendedCrafting.instance, GuiHandler.ADVANCED_TABLE, world, pos.getX(), pos.getY(),
-						pos.getZ());
+				player.openGui(ExtendedCrafting.instance, GuiHandler.ADVANCED_TABLE, world, pos.getX(), pos.getY(), pos.getZ());
 			}
 			return true;
 		}

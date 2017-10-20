@@ -45,7 +45,7 @@ public class BlockCraftingCore extends BlockBase implements ITileEntityProvider 
 						EntityItem item = new EntityItem(world, player.posX, player.posY, player.posZ, tile.getInventory().getStackInSlot(0));
 						item.setNoPickupDelay();
 						world.spawnEntity(item);
-						tile.getInventory().setStackInSlot(0, StackHelper.getNull());
+						tile.getInventory().setStackInSlot(0, ItemStack.EMPTY);
 					}
 				} else {
 					player.openGui(ExtendedCrafting.instance, GuiHandler.CRAFTING_CORE, world, pos.getX(), pos.getY(), pos.getZ());

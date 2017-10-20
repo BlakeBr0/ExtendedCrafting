@@ -22,6 +22,8 @@ tile.ec.crafting_table.name=Crafting Table
 tile.ec.pedestal.name=Pedestal
 tile.ec.crafting_core.name=Crafting Core
 
+tile.ec.interface.name=Automation Interface
+
 tile.ec.table_basic.name=Basic Crafting Table
 tile.ec.table_advanced.name=Advanced Crafting Table
 tile.ec.table_elite.name=Elite Crafting Table

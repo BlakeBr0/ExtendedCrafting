@@ -9,6 +9,8 @@ public class ModTiles {
 
 		GameRegistry.registerTileEntity(TilePedestal.class, "EC_Pedestal");
 		GameRegistry.registerTileEntity(TileCraftingCore.class, "EC_Crafting_Core");
+		
+		GameRegistry.registerTileEntity(TileAutomationInterface.class, "EC_Automation_Interface");
 
 		GameRegistry.registerTileEntity(TileBasicCraftingTable.class, "EC_Basic_Table");
 		GameRegistry.registerTileEntity(TileAdvancedCraftingTable.class, "EC_Advanced_Table");

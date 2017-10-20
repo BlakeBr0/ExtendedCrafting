@@ -10,8 +10,7 @@ import net.minecraft.util.ResourceLocation;
 
 public class GuiBasicTable extends GuiContainer {
 
-	private static final ResourceLocation GUI = new ResourceLocation(ExtendedCrafting.MOD_ID,
-			"textures/gui/basic_table.png");
+	private static final ResourceLocation GUI = new ResourceLocation(ExtendedCrafting.MOD_ID, "textures/gui/basic_table.png");
 
 	public GuiBasicTable(TileBasicCraftingTable tileEntity, ContainerBasicTable container) {
 		super(container);

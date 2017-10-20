@@ -1,20 +1,29 @@
 package com.blakebr0.extendedcrafting.client.container;
 
 import com.blakebr0.extendedcrafting.crafting.CombinationRecipe;
+import com.blakebr0.extendedcrafting.tile.TileAutomationInterface;
 import com.blakebr0.extendedcrafting.tile.TileCraftingCore;
+import com.blakebr0.extendedcrafting.util.VanillaPacketDispatcher;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.NonNullList;
+import net.minecraftforge.items.ItemStackHandler;
+import net.minecraftforge.items.SlotItemHandler;
 
-public class ContainerCraftingCore extends Container {
+public class ContainerAutomationInterface extends Container {
 
-	private TileCraftingCore tile;
+	public TileAutomationInterface tile;
 
-	public ContainerCraftingCore(InventoryPlayer player, TileCraftingCore tile) {
+	public ContainerAutomationInterface(InventoryPlayer player, TileAutomationInterface tile) {
 		this.tile = tile;
+		
+		this.addSlotToContainer(new SlotItemHandler(tile.getInventory(), 0, 34, 41));
+		this.addSlotToContainer(new SlotItemHandler(tile.getInventory(), 1, 143, 41));
 
 		for (int i = 0; i < 3; ++i) {
 			for (int j = 0; j < 9; ++j) {
@@ -27,7 +36,7 @@ public class ContainerCraftingCore extends Container {
 		}
 	}
 
-	@Override
+	@Override // TODO: bump up 2
 	public ItemStack transferStackInSlot(EntityPlayer player, int slotNumber) {
 		ItemStack itemstack = ItemStack.EMPTY;
 		Slot slot = this.inventorySlots.get(slotNumber);

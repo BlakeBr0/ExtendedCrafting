@@ -15,6 +15,7 @@ public class EjectModeSwitchPacket implements IMessage {
 	private long pos;
 
 	public EjectModeSwitchPacket() {
+		
 	}
 
 	public EjectModeSwitchPacket(long pos) {

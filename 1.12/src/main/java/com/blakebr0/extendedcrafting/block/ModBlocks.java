@@ -19,6 +19,8 @@ public class ModBlocks {
 
 	public static BlockPedestal blockPedestal = new BlockPedestal();
 	public static BlockCraftingCore blockCraftingCore = new BlockCraftingCore();
+	
+	public static BlockAutomationInterface blockAutomationInterface = new BlockAutomationInterface();
 
 	public static BlockBasicTable blockBasicTable = new BlockBasicTable();
 	public static BlockAdvancedTable blockAdvancedTable = new BlockAdvancedTable();
@@ -42,6 +44,8 @@ public class ModBlocks {
 		registry.register(blockPedestal, "pedestal");
 		registry.register(blockCraftingCore, "crafting_core");
 
+		registry.register(blockAutomationInterface, "interface");
+		
 		registry.register(blockBasicTable, "table_basic");
 		registry.register(blockAdvancedTable, "table_advanced");
 		registry.register(blockEliteTable, "table_elite");

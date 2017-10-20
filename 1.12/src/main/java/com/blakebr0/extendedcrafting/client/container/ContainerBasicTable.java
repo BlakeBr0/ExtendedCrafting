@@ -57,8 +57,7 @@ public class ContainerBasicTable extends Container {
 	}
 
 	public void onCraftMatrixChanged(IInventory matrix) {
-		this.result.setInventorySlotContents(0,
-				TableRecipeManager.getInstance().findMatchingRecipe(this.matrix, this.tile.getWorld()));
+		this.result.setInventorySlotContents(0, TableRecipeManager.getInstance().findMatchingRecipe(this.matrix, this.tile.getWorld()));
 		this.tile.markDirty();
 	}
 

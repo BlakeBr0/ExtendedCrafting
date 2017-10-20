@@ -41,6 +41,7 @@ public class TileAutomationInterface extends TileEntity implements ITickable {
 	private final ItemStackHandler recipe = new FakeRecipeHandler();
 	private final CustomEnergyStorage energy = new CustomEnergyStorage(1000000);
 	private int oldEnergy;
+	private ItemStack result = ItemStack.EMPTY;
 	private boolean hasRecipe = false;
 	private int autoInsert = -1;
 	private int autoExtract = -1;
@@ -51,6 +52,10 @@ public class TileAutomationInterface extends TileEntity implements ITickable {
 	
 	public ItemStackHandler getRecipe() {
 		return recipe;
+	}
+	
+	public ItemStack getResult() {
+		return result;
 	}
 	
 	public CustomEnergyStorage getEnergy() {
@@ -122,6 +127,7 @@ public class TileAutomationInterface extends TileEntity implements ITickable {
 		for (int i = 0; i < matrix.getSlots(); i++) {
 			recipe.setStackInSlot(i, matrix.getStackInSlot(i).copy());
 		}
+		this.result = this.getTable().getResult();
 		this.setHasRecipe(true);
 		this.markDirty();
 	}
@@ -129,6 +135,7 @@ public class TileAutomationInterface extends TileEntity implements ITickable {
 	public void clearRecipe() {
 		ItemStackHandler recipe = this.getRecipe();
 		recipe.setSize(1);
+		this.result = ItemStack.EMPTY;
 		this.setHasRecipe(false);
 		this.markDirty();
 	}
@@ -156,6 +163,7 @@ public class TileAutomationInterface extends TileEntity implements ITickable {
 		tag.merge(inventory.serializeNBT());
 		tag.merge(recipe.serializeNBT());
 		tag.setInteger("Energy", this.energy.getEnergyStored());
+		tag.setTag("Result", this.result.serializeNBT());
 		tag.setBoolean("HasRecipe", this.hasRecipe);
 		return tag;
 	}
@@ -166,6 +174,7 @@ public class TileAutomationInterface extends TileEntity implements ITickable {
 		inventory.deserializeNBT(tag);
 		recipe.deserializeNBT(tag);
 		energy.setEnergy(tag.getInteger("Energy"));
+		this.result = new ItemStack(tag.getCompoundTag("Result"));
 		this.hasRecipe = tag.getBoolean("HasRecipe");
 	}
 

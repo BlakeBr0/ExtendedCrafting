@@ -18,6 +18,7 @@ public class TileAdvancedCraftingTable extends TileEntity implements IExtendedTa
 	public final TableCraftingStackHandler matrix = new TableCraftingStackHandler(25, this);
 	private ItemStack result;
 
+	@Override
 	public ItemStack getResult() {
 		return result;
 	}

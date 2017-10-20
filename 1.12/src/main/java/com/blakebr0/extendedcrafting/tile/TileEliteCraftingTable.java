@@ -16,6 +16,7 @@ public class TileEliteCraftingTable extends TileEntity implements IExtendedTable
 	public EliteStackHandler matrix = new EliteStackHandler(49, this);
 	private ItemStack result;
 
+	@Override
 	public ItemStack getResult() {
 		return result;
 	}

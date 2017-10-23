@@ -163,7 +163,7 @@ public class TableCrafting {
 			return null;
 		else {
 			if (ingredient instanceof IOreDictEntry) {
-				return OreDictionary.getOres(toString((IOreDictEntry) ingredient));
+				return toString((IOreDictEntry) ingredient);
 			} else if (ingredient instanceof IItemStack) {
 				return toStack((IItemStack) ingredient);
 			} else

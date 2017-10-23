@@ -18,8 +18,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class RenderPedestal extends TileEntitySpecialRenderer<TilePedestal> {
 
 	@Override
-	public void render(TilePedestal tile, double x, double y, double z, float partialTick, int destroyStage,
-			float alpha) {
+	public void render(TilePedestal tile, double x, double y, double z, float partialTick, int destroyStage, float alpha) {
 		IBlockState state = tile.getWorld().getBlockState(tile.getPos());
 
 		if (state == null || state.getBlock() != ModBlocks.blockPedestal) {
@@ -38,8 +37,7 @@ public class RenderPedestal extends TileEntitySpecialRenderer<TilePedestal> {
 			GlStateManager.pushAttrib();
 			RenderHelper.enableStandardItemLighting();
 			GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
-			Minecraft.getMinecraft().getRenderItem().renderItem(tile.getInventory().getStackInSlot(0),
-					TransformType.FIXED);
+			Minecraft.getMinecraft().getRenderItem().renderItem(tile.getInventory().getStackInSlot(0), TransformType.FIXED);
 			RenderHelper.disableStandardItemLighting();
 			GlStateManager.popAttrib();
 			GlStateManager.enableLighting();

@@ -1,4 +1,4 @@
-package com.blakebr0.extendedcrafting.client.gui;
+package com.blakebr0.extendedcrafting.client.gui.automationinterface;
 
 import java.io.IOException;
 import java.util.Collections;
@@ -11,6 +11,7 @@ import com.blakebr0.extendedcrafting.util.InterfaceRecipeChangePacket;
 import com.blakebr0.extendedcrafting.util.NetworkThingy;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.inventory.GuiContainer;
@@ -27,8 +28,8 @@ import net.minecraftforge.items.SlotItemHandler;
 
 public class GuiAutomationInterface extends GuiContainer {
 
-	private static final ResourceLocation GUI = new ResourceLocation(ExtendedCrafting.MOD_ID, "textures/gui/automation_interface.png");
-	private TileAutomationInterface tile;
+	protected static final ResourceLocation GUI = new ResourceLocation(ExtendedCrafting.MOD_ID, "textures/gui/automation_interface.png");
+	protected TileAutomationInterface tile;
 	
 	public GuiAutomationInterface(ContainerAutomationInterface container) {
 		super(container);
@@ -37,7 +38,7 @@ public class GuiAutomationInterface extends GuiContainer {
 		this.ySize = 184;
 	}
 	
-	private int getEnergyBarScaled(int pixels) {
+	protected int getEnergyBarScaled(int pixels) {
 		int i = this.tile.getEnergy().getEnergyStored();
 		int j = this.tile.getEnergy().getMaxEnergyStored();
 		return j != 0 && i != 0 ? i * pixels / j : 0;
@@ -62,18 +63,24 @@ public class GuiAutomationInterface extends GuiContainer {
 	@Override
 	public void initGui() {
 		super.initGui();
-		this.buttonList.add(new GuiButton(0, (this.width - this.xSize) / 2 + 30, (this.height - this.ySize) / 2, 100, 10, "Save Recipe"));
-		this.buttonList.add(new GuiButton(1, (this.width - this.xSize) / 2 + 30, (this.height - this.ySize) / 2 + 15, 100, 10, "Clear Recipe"));
+		this.buttonList.add(new SmallButton(0, (this.width - this.xSize) / 2 + 24, (this.height - this.ySize) / 2 + 6, 70, 12, "Save Recipe"));
+		this.buttonList.add(new SmallButton(1, (this.width - this.xSize) / 2 + 100, (this.height - this.ySize) / 2 + 6, 70, 12, "Clear Recipe"));
 		
-		//this.buttonList.add(new GuiButton(10, this.guiLeft + 40, this.guiTop + 10, 80, 20, "Auto-Insert: None"));
+		this.buttonList.add(new SmallButton(10, (this.width - this.xSize) / 2 + 129, (this.height - this.ySize) / 2 + 85, 40, 12, "CONFIG"));
 	}
 	
 	@Override
 	protected void actionPerformed(GuiButton button) throws IOException {
 		if (button.id == 0) {
 			NetworkThingy.THINGY.sendToServer(new InterfaceRecipeChangePacket(this.tile.getPos().toLong(), 0));
+			this.buttonList.get(0).enabled = false;
+			this.buttonList.get(1).enabled = true;
 		} else if (button.id == 1) {
 			NetworkThingy.THINGY.sendToServer(new InterfaceRecipeChangePacket(this.tile.getPos().toLong(), 1));
+			this.buttonList.get(0).enabled = true;
+			this.buttonList.get(1).enabled = false;
+		} else if (button.id == 10) {
+			Minecraft.getMinecraft().displayGuiScreen(new GuiInterfaceConfig(this));
 		}
 	}
 	
@@ -82,6 +89,8 @@ public class GuiAutomationInterface extends GuiContainer {
 		super.updateScreen();
 		//this.buttonList.get(0).enabled = !this.tile.hasRecipe(); // TODO: requires gui reopenining for some reason
 		//this.buttonList.get(0).displayString = !this.tile.hasRecipe() ? "Save Recipe" : "Clear Recipe"; // TODO: localize
+		this.buttonList.get(0).enabled = !this.tile.hasRecipe();
+		this.buttonList.get(1).enabled = this.tile.hasRecipe();
 	}
 	
 	@Override
@@ -114,5 +123,40 @@ public class GuiAutomationInterface extends GuiContainer {
         this.zLevel = 0.0F;
         this.itemRender.zLevel = 0.0F;
         GlStateManager.popMatrix();
+    }
+    
+    public class SmallButton extends GuiButton {
+
+		public SmallButton(int id, int x, int y, int width, int height, String text) {
+			super(id, x, y, width, height, text);
+		}
+    	
+		@Override
+	    public void drawButton(Minecraft mc, int mouseX, int mouseY, float partialTicks) {
+	        if (this.visible) {
+	            FontRenderer fontrenderer = mc.fontRenderer;
+	            mc.getTextureManager().bindTexture(GUI);
+	            GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+	            this.hovered = mouseX >= this.x && mouseY >= this.y && mouseX < this.x + this.width && mouseY < this.y + this.height;
+	            int i = this.getHoverState(this.hovered);
+	            GlStateManager.enableBlend();
+	            GlStateManager.tryBlendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
+	            GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
+	            this.drawTexturedModalRect(this.x, this.y, 0, 185 + i * 12, this.width / 2, this.height);
+	            this.drawTexturedModalRect(this.x + this.width / 2, this.y, 200 - this.width / 2, 185 + i * 12, this.width / 2, this.height);
+	            this.mouseDragged(mc, mouseX, mouseY);
+	            int j = 14737632;
+
+	            if (this.packedFGColour != 0) {
+	                j = packedFGColour;
+	            } else if (!this.enabled) {
+	                j = 10526880;
+	            } else if (this.hovered) {
+	                j = 16777120;
+	            }
+
+	            this.drawCenteredString(fontrenderer, this.displayString, this.x + this.width / 2, (this.y + (this.height - 9) / 2) + 1, j);
+	        }
+	    }
     }
 }

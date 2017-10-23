@@ -2,8 +2,8 @@ package com.blakebr0.extendedcrafting.block;
 
 import com.blakebr0.cucumber.block.BlockBase;
 import com.blakebr0.extendedcrafting.ExtendedCrafting;
-import com.blakebr0.extendedcrafting.client.gui.GuiAutomationInterface;
 import com.blakebr0.extendedcrafting.client.gui.GuiHandler;
+import com.blakebr0.extendedcrafting.client.gui.automationinterface.GuiAutomationInterface;
 import com.blakebr0.extendedcrafting.tile.TileAutomationInterface;
 
 import net.minecraft.block.ITileEntityProvider;

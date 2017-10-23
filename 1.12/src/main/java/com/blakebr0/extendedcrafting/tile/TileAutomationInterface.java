@@ -127,7 +127,10 @@ public class TileAutomationInterface extends TileEntity implements ITickable {
 		for (int i = 0; i < matrix.getSlots(); i++) {
 			recipe.setStackInSlot(i, matrix.getStackInSlot(i).copy());
 		}
-		this.result = this.getTable().getResult();
+		ItemStack result = this.getTable().getResult();
+		if (result != null) {
+			this.result = result;
+		}
 		this.setHasRecipe(true);
 		this.markDirty();
 	}

@@ -70,6 +70,9 @@ ec.ccore.progress=Progress:
 ec.ccore.no_recipe=No recipe found.
 ec.ccore.no_power=Not enough power.
 
+ec.interface.auto_insert=Auto Insert
+ec.interface.auto_extract=Auto Extract
+
 # JEI
 jei.ec.table_crafting_3x3=Basic Crafting
 jei.ec.table_crafting_5x5=Advanced Crafting

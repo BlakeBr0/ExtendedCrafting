@@ -1,5 +1,7 @@
 package com.blakebr0.extendedcrafting.render;
 
+import javax.annotation.Nullable;
+
 import com.blakebr0.extendedcrafting.block.ModBlocks;
 import com.blakebr0.extendedcrafting.tile.TileCompressor;
 
@@ -12,8 +14,10 @@ import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms.TransformType;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
+import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -39,8 +43,7 @@ public class RenderCompressor extends TileEntitySpecialRenderer<TileCompressor> 
 			GlStateManager.rotate((float) (((tick * 40.0D) % 360)), 0, 1, 0);
 			GlStateManager.disableLighting();
 			RenderHelper.enableStandardItemLighting();
-			GlStateManager.color(1.0F, 1.0F, 1.0F, 0.1F);
-			GlStateManager.alphaFunc(516, .9F);
+			GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 			Minecraft.getMinecraft().getRenderItem().renderItem(stack, TransformType.FIXED);
 			RenderHelper.disableStandardItemLighting();
 			GlStateManager.enableLighting();

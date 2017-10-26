@@ -23,7 +23,7 @@ public class ContainerAutomationInterface extends Container {
 		this.tile = tile;
 		
 		this.addSlotToContainer(new SlotItemHandler(tile.getInventory(), 0, 34, 41));
-		this.addSlotToContainer(new SlotItemHandler(tile.getInventory(), 1, 143, 41));
+		this.addSlotToContainer(new SlotItemHandler(tile.getInventory(), 1, 144, 41));
 
 		for (int i = 0; i < 3; ++i) {
 			for (int j = 0; j < 9; ++j) {

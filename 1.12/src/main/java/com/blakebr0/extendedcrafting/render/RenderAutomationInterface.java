@@ -29,8 +29,8 @@ public class RenderAutomationInterface extends TileEntitySpecialRenderer<TileAut
 			return;
 		}
 
-		if (tile.getRecipe() != null) {
-			ItemStack stack = tile.getRecipe().getStackInSlot(0);
+		if (tile.hasRecipe()) {
+			ItemStack stack = tile.getResult();
 			GlStateManager.pushMatrix();
 			GlStateManager.translate(x + 0.5D, y + 0.6D, z + 0.5D);
 			float scale = (float) (stack.getItem() instanceof ItemBlock ? 0.55F : 0.35F);

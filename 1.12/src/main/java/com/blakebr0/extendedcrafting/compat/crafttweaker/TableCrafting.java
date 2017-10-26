@@ -51,7 +51,7 @@ public class TableCrafting {
 		int i = 0;
 		for (int a = 0; a < height; a++) {
 			for (int b = 0; b < ingredients[a].length; b++) {
-				Ingredient ing = CraftingHelper.getIngredient(toActualObject(ingredients[a][b]));
+				Ingredient ing = CraftingHelper.getIngredient(toObject(ingredients[a][b]));
 				if (ing == null) {
 					ing = Ingredient.EMPTY;
 				}
@@ -139,36 +139,25 @@ public class TableCrafting {
 				return toString((IOreDictEntry) ingredient);
 			} else if (ingredient instanceof IItemStack) {
 				return toStack((IItemStack) ingredient);
-			} else
+			} else {
 				return null;
+			}
 		}
 	}
 
 	private static Object[] toObjects(IIngredient[] list) {
-		if (list == null)
+		if (list == null) {
 			return null;
+		}
 		Object[] ingredients = new Object[list.length];
 		for (int x = 0; x < list.length; x++) {
-			ingredients[x] = toActualObject(list[x]);
+			ingredients[x] = toObject(list[x]);
 		}
 		return ingredients;
 	}
 
 	private static List toList(IIngredient[] list) {
 		return Arrays.asList(toObjects(list));
-	}
-
-	private static Object toActualObject(IIngredient ingredient) {
-		if (ingredient == null)
-			return null;
-		else {
-			if (ingredient instanceof IOreDictEntry) {
-				return toString((IOreDictEntry) ingredient);
-			} else if (ingredient instanceof IItemStack) {
-				return toStack((IItemStack) ingredient);
-			} else
-				return null;
-		}
 	}
 
 	private static String toString(IOreDictEntry entry) {

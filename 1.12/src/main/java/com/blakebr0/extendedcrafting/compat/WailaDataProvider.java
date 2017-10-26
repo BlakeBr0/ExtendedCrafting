@@ -4,11 +4,13 @@ import java.util.List;
 
 import com.blakebr0.cucumber.helper.StackHelper;
 import com.blakebr0.cucumber.util.Utils;
+import com.blakebr0.extendedcrafting.block.BlockAutomationInterface;
 import com.blakebr0.extendedcrafting.block.BlockCompressor;
 import com.blakebr0.extendedcrafting.block.BlockCraftingCore;
 import com.blakebr0.extendedcrafting.block.BlockLamp;
 import com.blakebr0.extendedcrafting.block.BlockPedestal;
 import com.blakebr0.extendedcrafting.block.BlockTrimmed;
+import com.blakebr0.extendedcrafting.tile.TileAutomationInterface;
 import com.blakebr0.extendedcrafting.tile.TileCompressor;
 import com.blakebr0.extendedcrafting.tile.TileCraftingCore;
 import com.blakebr0.extendedcrafting.tile.TilePedestal;
@@ -31,6 +33,7 @@ public class WailaDataProvider implements IWailaDataProvider {
 		registrar.registerBodyProvider(new WailaDataProvider(), BlockTrimmed.class);
 		registrar.registerBodyProvider(new WailaDataProvider(), BlockPedestal.class);
 		registrar.registerBodyProvider(new WailaDataProvider(), BlockCraftingCore.class);
+		registrar.registerBodyProvider(new WailaDataProvider(), BlockAutomationInterface.class);
 		registrar.registerBodyProvider(new WailaDataProvider(), BlockCompressor.class);
 	}
 
@@ -59,6 +62,14 @@ public class WailaDataProvider implements IWailaDataProvider {
 		if (arg2.getBlock() instanceof BlockCraftingCore && arg2.getTileEntity() instanceof TileCraftingCore && !arg2.getTileEntity().isInvalid()) {
 			TileCraftingCore core = (TileCraftingCore) arg2.getTileEntity();
 			arg1.add(Utils.format(core.getEnergy().getEnergyStored()) + " RF");
+		}
+		
+		if (arg2.getBlock() instanceof BlockAutomationInterface && arg2.getTileEntity() instanceof TileAutomationInterface && !arg2.getTileEntity().isInvalid()) {
+			TileAutomationInterface auto = (TileAutomationInterface) arg2.getTileEntity();
+			arg1.add(Utils.format(auto.getEnergy().getEnergyStored()) + " RF");
+			if (!auto.getResult().isEmpty()) {
+				arg1.add(auto.getResult().getDisplayName());
+			}
 		}
 		
 		if (arg2.getBlock() instanceof BlockCompressor && arg2.getTileEntity() instanceof TileCompressor && !arg2.getTileEntity().isInvalid()) {

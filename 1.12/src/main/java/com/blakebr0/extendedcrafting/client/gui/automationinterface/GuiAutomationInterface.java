@@ -30,6 +30,7 @@ public class GuiAutomationInterface extends GuiContainer {
 
 	protected static final ResourceLocation GUI = new ResourceLocation(ExtendedCrafting.MOD_ID, "textures/gui/automation_interface.png");
 	protected TileAutomationInterface tile;
+	private int infoTicks = 0;
 	
 	public GuiAutomationInterface(ContainerAutomationInterface container) {
 		super(container);
@@ -53,20 +54,16 @@ public class GuiAutomationInterface extends GuiContainer {
 		if (mouseX > this.guiLeft + 7 && mouseX < this.guiLeft + 20 && mouseY > this.guiTop + 7 && mouseY < this.guiTop + 84) {
 			this.drawHoveringText(Collections.singletonList(Utils.format(this.tile.getEnergy().getEnergyStored()) + " RF"), mouseX, mouseY);
 		}
-		
-		ItemStackHandler recipe = this.tile.getRecipe();
-		for (int i = 0; i < recipe.getSlots(); i++) {
-			this.drawItemStack(recipe.getStackInSlot(i), Utils.randInt(100, 200), Utils.randInt(100, 200));
-		}
 	}
 	
 	@Override
 	public void initGui() {
-		super.initGui();
-		this.buttonList.add(new SmallButton(0, (this.width - this.xSize) / 2 + 24, (this.height - this.ySize) / 2 + 6, 70, 12, "Save Recipe"));
-		this.buttonList.add(new SmallButton(1, (this.width - this.xSize) / 2 + 100, (this.height - this.ySize) / 2 + 6, 70, 12, "Clear Recipe"));
+		super.initGui(); // TODO localize
+		this.buttonList.add(new SmallButton(0, (this.width - this.xSize) / 2 + 62, (this.height - this.ySize) / 2 + 47, 71, 12, "Save Recipe"));
+		this.buttonList.add(new SmallButton(1, (this.width - this.xSize) / 2 + 62, (this.height - this.ySize) / 2 + 59, 71, 12, "Clear Recipe"));
+		this.buttonList.add(new SmallButton(5, (this.width - this.xSize) / 2 + 62, (this.height - this.ySize) / 2 + 71, 71, 12, "View Recipe"));
 		
-		this.buttonList.add(new SmallButton(10, (this.width - this.xSize) / 2 + 129, (this.height - this.ySize) / 2 + 85, 40, 12, "CONFIG"));
+		this.buttonList.add(new SmallButton(10, (this.width - this.xSize) / 2 + 129, (this.height - this.ySize) / 2 + 87, 40, 12, "CONFIG"));
 	}
 	
 	@Override
@@ -75,10 +72,15 @@ public class GuiAutomationInterface extends GuiContainer {
 			NetworkThingy.THINGY.sendToServer(new InterfaceRecipeChangePacket(this.tile.getPos().toLong(), 0));
 			this.buttonList.get(0).enabled = false;
 			this.buttonList.get(1).enabled = true;
+			this.buttonList.get(2).enabled = true;
 		} else if (button.id == 1) {
 			NetworkThingy.THINGY.sendToServer(new InterfaceRecipeChangePacket(this.tile.getPos().toLong(), 1));
 			this.buttonList.get(0).enabled = true;
 			this.buttonList.get(1).enabled = false;
+			this.buttonList.get(2).enabled = false;
+		} else if (button.id == 5) {
+			RecipeGuiSize size = this.getSizeForGrid();
+			Minecraft.getMinecraft().displayGuiScreen(new GuiViewRecipe(this, size.x, size.y, (int) Math.sqrt(this.tile.getRecipe().getSlots())));
 		} else if (button.id == 10) {
 			Minecraft.getMinecraft().displayGuiScreen(new GuiInterfaceConfig(this));
 		}
@@ -87,16 +89,23 @@ public class GuiAutomationInterface extends GuiContainer {
 	@Override
 	public void updateScreen() {
 		super.updateScreen();
-		//this.buttonList.get(0).enabled = !this.tile.hasRecipe(); // TODO: requires gui reopenining for some reason
-		//this.buttonList.get(0).displayString = !this.tile.hasRecipe() ? "Save Recipe" : "Clear Recipe"; // TODO: localize
-		this.buttonList.get(0).enabled = !this.tile.hasRecipe();
+		this.buttonList.get(0).enabled = !this.tile.hasRecipe() && this.tile.hasTable();
 		this.buttonList.get(1).enabled = this.tile.hasRecipe();
+		this.buttonList.get(2).enabled = this.tile.hasRecipe();
 	}
 	
 	@Override
 	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
 		super.drawGuiContainerForegroundLayer(mouseX, mouseY);
 		this.fontRenderer.drawString(Utils.localize("container.inventory"), 8, this.ySize - 94, 4210752);
+		GlStateManager.pushMatrix();
+		GlStateManager.scale(0.75F, 0.75F, 0.75F);
+		this.fontRenderer.drawString("Has Table: " + String.valueOf(this.tile.hasTable()), 83, 14, -1);
+		this.fontRenderer.drawString("Has Recipe: " + String.valueOf(this.tile.hasRecipe()), 83, 24, -1);
+		if (this.infoTicks > 0) {
+			this.fontRenderer.drawString("No recipe found.", 83, 38, 16744576);
+		}
+		GlStateManager.popMatrix();
 	}
 
 	@Override
@@ -106,6 +115,9 @@ public class GuiAutomationInterface extends GuiContainer {
 		int x = (this.width - this.xSize) / 2;
 		int y = (this.height - this.ySize) / 2;
 		this.drawTexturedModalRect(x, y, 0, 0, this.xSize, this.ySize);
+		
+//		this.mc.renderEngine.bindTexture(GRID);
+//		this.drawTexturedModalRect(x, y, 0, 0, (this.width - this.xSize) / 2 + 61, (this.height - this.ySize) / 2 + 58);
 		
 		int i1 = this.getEnergyBarScaled(78);
 		this.drawTexturedModalRect(x + 7, y + 85 - i1, 178, 78 - i1, 15, i1 + 1);
@@ -124,6 +136,33 @@ public class GuiAutomationInterface extends GuiContainer {
         this.itemRender.zLevel = 0.0F;
         GlStateManager.popMatrix();
     }
+    
+    private RecipeGuiSize getSizeForGrid() {
+    	int size = (int) Math.sqrt(this.tile.getRecipe().getSlots());
+    	switch (size) {
+    	case 3:
+    		return new RecipeGuiSize(78, 87);
+    	case 5:
+    		return new RecipeGuiSize(114, 123);
+    	case 7:
+    		return new RecipeGuiSize(150, 159);
+    	case 9:
+    		return new RecipeGuiSize(186, 195);
+    	default:
+    		return new RecipeGuiSize(186, 195);
+    	}
+    }
+    
+	public class RecipeGuiSize {
+		
+		public int x;
+		public int y;
+		
+		public RecipeGuiSize(int x, int y) {
+			this.x = x;
+			this.y = y;
+		}
+	}
     
     public class SmallButton extends GuiButton {
 

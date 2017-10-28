@@ -8,6 +8,7 @@ import javax.annotation.Nonnull;
 import org.apache.commons.lang3.text.WordUtils;
 
 import com.blakebr0.cucumber.lib.CustomEnergyStorage;
+import com.blakebr0.extendedcrafting.config.ModConfig;
 import com.blakebr0.extendedcrafting.crafting.CombinationRecipe;
 import com.blakebr0.extendedcrafting.crafting.table.ITieredRecipe;
 import com.blakebr0.extendedcrafting.crafting.table.TableRecipeManager;
@@ -39,7 +40,7 @@ public class TileAutomationInterface extends TileEntity implements ITickable {
 	
 	private final ItemStackHandler inventory = new StackHandler(2);
 	private final ItemStackHandler recipe = new FakeRecipeHandler();
-	private final CustomEnergyStorage energy = new CustomEnergyStorage(1000000);
+	private final CustomEnergyStorage energy = new CustomEnergyStorage(ModConfig.confInterfaceRFCapacity);
 	private int oldEnergy;
 	private ItemStack result = ItemStack.EMPTY;
 	private boolean hasRecipe = false;
@@ -62,31 +63,14 @@ public class TileAutomationInterface extends TileEntity implements ITickable {
 		return energy;
 	}
 	
-	@Override // TODO: even distribution
-	public void update() { // TODO: limit the speed this shit happens holy fuck calm down my guy
+	@Override
+	public void update() {
 		boolean mark = false;
 		if (!this.getWorld().isRemote) {
 			ItemStack input = this.getInventory().getStackInSlot(0);
 			if (!input.isEmpty()) {
-				if (this.hasTable()) {
-					IExtendedTable table = this.getTable();
-					IItemHandlerModifiable matrix = table.getMatrix();
-					for (int i = 0; i < matrix.getSlots(); i++) {
-						ItemStack slot = matrix.getStackInSlot(i);
-						ItemStack nextSlot = matrix.getStackInSlot(i < matrix.getSlots() - 1 ? i + 1 : 0);
-						if (!slot.isItemEqual(input)) {
-							continue;
-						}
-						if (slot.getCount() >= slot.getMaxStackSize()) {
-							continue;
-						}
-						if (slot.getCount() <= nextSlot.getCount() || nextSlot.isEmpty()) {
-							ItemStack toAdd = input.copy();
-							toAdd.setCount(1);
-							matrix.insertItem(i, toAdd, false);
-							input.shrink(1);
-						}
-					}
+				if (this.hasTable() && this.hasRecipe() && this.getEnergy().getEnergyStored() >= ModConfig.confInterfaceRFRate) {
+					this.handleInput(input);
 				}
 			}
 		}
@@ -99,6 +83,38 @@ public class TileAutomationInterface extends TileEntity implements ITickable {
 		}
 		
 		if (mark) {
+			this.markDirty();
+		}
+	}
+	
+	private void handleInput(ItemStack input) {
+		IExtendedTable table = this.getTable();
+		IItemHandlerModifiable matrix = table.getMatrix();
+		ItemStackHandler recipe = this.getRecipe();
+		
+		int slotToPut = -1;
+		ItemStack stackToPut = ItemStack.EMPTY;
+		for (int i = 0; i < matrix.getSlots(); i++) {
+			ItemStack slot = matrix.getStackInSlot(i);
+			ItemStack recipeStack = recipe.getStackInSlot(i);
+			if ((slot.isEmpty() || slot.isItemEqual(input)) && input.isItemEqual(recipeStack)) {
+				if (slot.isEmpty() || slot.getCount() < slot.getMaxStackSize()) {
+					if (slot.isEmpty()) {
+						slotToPut = i;
+						break;
+					} else if (stackToPut.isEmpty() || (!stackToPut.isEmpty() && slot.getCount() < stackToPut.getCount())) {
+						slotToPut = i;
+						stackToPut = slot.copy();
+					}
+				}
+			}
+		}
+		
+		if (slotToPut > -1) {
+			ItemStack toInsert = input.copy(); toInsert.setCount(1);
+			matrix.insertItem(slotToPut, toInsert, false);
+			input.shrink(1);
+			this.getEnergy().extractEnergy(ModConfig.confInterfaceRFRate, false);
 			this.markDirty();
 		}
 	}

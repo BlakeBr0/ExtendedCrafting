@@ -61,7 +61,7 @@ public class TableRecipeShapeless implements IRecipe, ITieredRecipe {
 		required.addAll(input);
 
 		if (tier != 0) {
-			if (!(this.tier == this.getTierFromGridSize(var1))) {
+			if (!(this.tier == this.getTierFromSize(var1.getSizeInventory()))) {
 				return false;
 			}
 		}
@@ -122,8 +122,7 @@ public class TableRecipeShapeless implements IRecipe, ITieredRecipe {
 		return null;
 	}
 
-	private int getTierFromGridSize(InventoryCrafting inv) {
-		int size = inv.getSizeInventory();
+	private int getTierFromSize(int size) {
 		int tier = size < 10 ? 1
 				 : size < 26 && size > 9 ? 2
 				 : size < 50 && size > 25 ? 3
@@ -145,7 +144,36 @@ public class TableRecipeShapeless implements IRecipe, ITieredRecipe {
 
 	@Override
 	public boolean matches(IItemHandlerModifiable grid) {
-		// TODO Auto-generated method stub
-		return false;
+		NonNullList<Ingredient> required = NonNullList.create();
+		required.addAll(input);
+
+		if (tier != 0) {
+			if (!(this.tier == this.getTierFromSize(grid.getSlots()))) {
+				return false;
+			}
+		}
+
+		for (int x = 0; x < grid.getSlots(); x++) {
+			ItemStack slot = grid.getStackInSlot(x);
+
+			if (!slot.isEmpty()) {
+				boolean inRecipe = false;
+				Iterator<Ingredient> req = required.iterator();
+
+				while (req.hasNext()) {
+					if (req.next().apply(slot)) {
+						inRecipe = true;
+						req.remove();
+						break;
+					}
+				}
+
+				if (!inRecipe) {
+					return false;
+				}
+			}
+		}
+
+		return required.isEmpty();
 	}
 }

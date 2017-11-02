@@ -40,7 +40,7 @@ public class GuiInterfaceConfig extends GuiContainer {
 		super.initGui();
 		this.buttonList.add(new SmallButton(0, (this.width - this.xSize) / 2 + 62, (this.height - this.ySize) / 2 + 28, 70, 12, parent.tile.getInserterFaceName()));
 		this.buttonList.add(new SmallButton(1, (this.width - this.xSize) / 2 + 62, (this.height - this.ySize) / 2 + 58, 70, 12, parent.tile.getExtractorFaceName()));
-		this.buttonList.add(new SmallButton(10, (this.width - this.xSize) / 2 + 129, (this.height - this.ySize) / 2 + 87, 40, 12, "BACK")); // TODO localize
+		this.buttonList.add(new SmallButton(10, (this.width - this.xSize) / 2 + 129, (this.height - this.ySize) / 2 + 87, 40, 12, Utils.localize("ec.interface.back")));
 	}
 	
 	@Override

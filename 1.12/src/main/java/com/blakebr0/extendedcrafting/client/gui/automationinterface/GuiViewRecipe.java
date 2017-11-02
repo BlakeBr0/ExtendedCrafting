@@ -2,6 +2,7 @@ package com.blakebr0.extendedcrafting.client.gui.automationinterface;
 
 import java.io.IOException;
 
+import com.blakebr0.cucumber.util.Utils;
 import com.blakebr0.extendedcrafting.ExtendedCrafting;
 
 import net.minecraft.client.Minecraft;
@@ -65,7 +66,7 @@ public class GuiViewRecipe extends GuiContainer {
 	@Override
 	public void initGui() {
 		super.initGui();
-		this.buttonList.add(new SmallButton(0, ((this.width - this.xSize) / 2) + 12, ((this.height - this.ySize) / 2) + 7, 40, 12, "BACK"));
+		this.buttonList.add(new SmallButton(0, ((this.width - this.xSize) / 2) + 12, ((this.height - this.ySize) / 2) + 7, 40, 12, Utils.localize("ec.interface.back")));
 	}
 	
 	@Override

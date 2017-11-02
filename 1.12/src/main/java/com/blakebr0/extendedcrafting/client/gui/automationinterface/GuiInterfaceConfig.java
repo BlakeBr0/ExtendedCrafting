@@ -2,8 +2,11 @@ package com.blakebr0.extendedcrafting.client.gui.automationinterface;
 
 import java.io.IOException;
 import java.util.Collections;
+import java.util.Locale;
 
 import com.blakebr0.cucumber.util.Utils;
+import com.blakebr0.extendedcrafting.util.InterfaceAutoChangePacket;
+import com.blakebr0.extendedcrafting.util.NetworkThingy;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
@@ -11,6 +14,7 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.inventory.Container;
+import net.minecraft.util.EnumFacing;
 import net.minecraftforge.items.ItemStackHandler;
 
 public class GuiInterfaceConfig extends GuiContainer {
@@ -22,6 +26,13 @@ public class GuiInterfaceConfig extends GuiContainer {
 		this.parent = parent;
 		this.xSize = parent.getXSize();
 		this.ySize = parent.getYSize();
+	}
+	
+	@Override
+	public void updateScreen() {
+		super.updateScreen();
+		this.buttonList.get(0).displayString = this.parent.tile.getInserterFaceName();
+		this.buttonList.get(1).displayString = this.parent.tile.getExtractorFaceName();
 	}
 	
 	@Override
@@ -38,8 +49,8 @@ public class GuiInterfaceConfig extends GuiContainer {
 	@Override
 	public void initGui() {
 		super.initGui();
-		this.buttonList.add(new SmallButton(0, (this.width - this.xSize) / 2 + 62, (this.height - this.ySize) / 2 + 28, 70, 12, parent.tile.getInserterFaceName()));
-		this.buttonList.add(new SmallButton(1, (this.width - this.xSize) / 2 + 62, (this.height - this.ySize) / 2 + 58, 70, 12, parent.tile.getExtractorFaceName()));
+		this.buttonList.add(new SmallButton(0, (this.width - this.xSize) / 2 + 62, (this.height - this.ySize) / 2 + 28, 70, 12, this.parent.tile.getInserterFaceName()));
+		this.buttonList.add(new SmallButton(1, (this.width - this.xSize) / 2 + 62, (this.height - this.ySize) / 2 + 58, 70, 12, this.parent.tile.getExtractorFaceName()));
 		this.buttonList.add(new SmallButton(10, (this.width - this.xSize) / 2 + 129, (this.height - this.ySize) / 2 + 87, 40, 12, Utils.localize("ec.interface.back")));
 	}
 	
@@ -47,9 +58,13 @@ public class GuiInterfaceConfig extends GuiContainer {
 	protected void actionPerformed(GuiButton button) throws IOException {
 		if (button.id == 10) {
 			Minecraft.getMinecraft().displayGuiScreen(parent);
+		} else if (button.id == 0) {
+			NetworkThingy.THINGY.sendToServer(new InterfaceAutoChangePacket(this.parent.tile.getPos().toLong(), 0));
+		} else if (button.id == 1) {
+			NetworkThingy.THINGY.sendToServer(new InterfaceAutoChangePacket(this.parent.tile.getPos().toLong(), 1));
 		}
 	}
-
+	
 	@Override
 	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
 		super.drawGuiContainerForegroundLayer(mouseX, mouseY);

@@ -77,6 +77,7 @@ ec.interface.auto_insert=Auto Insert
 ec.interface.auto_extract=Auto Extract
 ec.interface.config=CONFIG
 ec.interface.back=BACK
+ec.interface.none=NONE
 
 # JEI
 jei.ec.table_crafting_3x3=Basic Crafting

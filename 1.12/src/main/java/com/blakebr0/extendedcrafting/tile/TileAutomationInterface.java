@@ -6,6 +6,7 @@ import javax.annotation.Nonnull;
 
 import com.blakebr0.cucumber.helper.StackHelper;
 import com.blakebr0.cucumber.lib.CustomEnergyStorage;
+import com.blakebr0.cucumber.util.Utils;
 import com.blakebr0.extendedcrafting.config.ModConfig;
 import com.blakebr0.extendedcrafting.lib.FakeRecipeHandler;
 import com.blakebr0.extendedcrafting.lib.IExtendedTable;
@@ -22,6 +23,7 @@ import net.minecraft.util.ITickable;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.items.ItemStackHandler;
 
@@ -33,8 +35,8 @@ public class TileAutomationInterface extends TileEntity implements ITickable {
 	private int oldEnergy;
 	private ItemStack result = ItemStack.EMPTY;
 	private boolean hasRecipe = false;
-	private int autoInsert = -1;
-	private int autoExtract = -1;
+	public int autoInsert = -1;
+	public int autoExtract = -1;
 		
 	public IItemHandlerModifiable getInventory() {
 		return inventory;
@@ -64,7 +66,49 @@ public class TileAutomationInterface extends TileEntity implements ITickable {
 						this.handleInput(input);
 					}
 				}
-				this.handleOutput(output);
+				
+				if (this.getEnergy().getEnergyStored() >= ModConfig.confInterfaceRFRate) {
+					this.handleOutput(output);
+				}
+			}
+			
+			if (this.getInserterFace() != null && this.getEnergy().getEnergyStored() >= ModConfig.confInterfaceRFRate) {
+				TileEntity tile = this.getWorld().getTileEntity(this.getPos().offset(this.getInserterFace()));
+				if (tile != null && tile.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, EnumFacing.DOWN)) {
+					IItemHandler handler = tile.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, EnumFacing.DOWN);
+					for (int i = 0; i < handler.getSlots(); i++) {
+						ItemStack stack = handler.getStackInSlot(i);
+						//if (((FakeRecipeHandler) this.getRecipe()).getStacks().contains(stack)) {
+						if (!stack.isEmpty()) {
+							if (input.isEmpty() || (input.isItemEqual(stack) && input.getCount() < input.getMaxStackSize())) {
+								ItemStack toInsert = stack.copy(); toInsert.setCount(1);
+								this.getInventory().insertItem(0, toInsert, false);
+								handler.extractItem(i, 1, false);
+								this.getEnergy().extractEnergy(ModConfig.confInterfaceRFRate, false);
+								break;
+							}
+						}
+					}
+				}
+			}
+			
+			if (this.getExtractorFace() != null && this.getEnergy().getEnergyStored() >= ModConfig.confInterfaceRFRate) {
+				TileEntity tile = this.getWorld().getTileEntity(this.getPos().offset(this.getExtractorFace()));
+				if (tile != null && tile.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, EnumFacing.UP)) {
+					IItemHandler handler = tile.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, EnumFacing.UP);
+					for (int i = 0; i < handler.getSlots(); i++) {
+						ItemStack stack = handler.getStackInSlot(i);
+						if (!output.isEmpty()) {
+							if (stack.isEmpty() || (stack.isItemEqual(output) && stack.getCount() < stack.getMaxStackSize())) {
+								ItemStack toInsert = output.copy(); toInsert.setCount(1);
+								handler.insertItem(i, toInsert, false);
+								output.shrink(1);
+								this.getEnergy().extractEnergy(ModConfig.confInterfaceRFRate, false);
+								break;
+							}
+						}
+					}
+				}
 			}
 		}
 		
@@ -175,19 +219,43 @@ public class TileAutomationInterface extends TileEntity implements ITickable {
 	}
 	
 	public EnumFacing getInserterFace() {
-		return this.autoInsert > -1 && this.autoInsert < 6 ? EnumFacing.values()[this.autoInsert] : null;
+		return this.autoInsert > -1 && this.autoInsert < EnumFacing.values().length ? EnumFacing.values()[this.autoInsert] : null;
 	}
 	
 	public EnumFacing getExtractorFace() {
-		return this.autoExtract > -1 && this.autoExtract < 6 ? EnumFacing.values()[this.autoExtract] : null;
+		return this.autoExtract > -1 && this.autoExtract < EnumFacing.values().length ? EnumFacing.values()[this.autoExtract] : null;
 	}
 	
 	public String getInserterFaceName() {
-		return this.getInserterFace() != null ? this.getInserterFace().getName().toUpperCase(Locale.ROOT) : "NONE"; // TODO: localize
+		return this.getInserterFace() != null ? this.getInserterFace().getName().toUpperCase(Locale.ROOT) : Utils.localize("ec.interface.none");
 	}
 	
 	public String getExtractorFaceName() {
-		return this.getExtractorFace() != null ? this.getExtractorFace().getName().toUpperCase(Locale.ROOT) : "NONE"; // TODO: localize
+		return this.getExtractorFace() != null ? this.getExtractorFace().getName().toUpperCase(Locale.ROOT) : Utils.localize("ec.interface.none");
+	}
+	
+	public void switchInserter() {
+		if (this.autoInsert >= EnumFacing.values().length - 1) {
+			this.autoInsert = -1;
+		} else {
+			this.autoInsert++;
+			if (this.autoInsert == EnumFacing.DOWN.getIndex()) {
+				this.autoInsert++;
+			}
+		}
+		this.markDirty();
+	}
+	
+	public void switchExtractor() {
+		if (this.autoExtract >= EnumFacing.values().length - 1) {
+			this.autoExtract = -1;
+		} else {
+			this.autoExtract++;
+			if (this.autoExtract == EnumFacing.DOWN.getIndex()) {
+				this.autoExtract++;
+			}
+		}
+		this.markDirty();
 	}
 		
 	@Nonnull
@@ -199,6 +267,8 @@ public class TileAutomationInterface extends TileEntity implements ITickable {
 		tag.setInteger("Energy", this.energy.getEnergyStored());
 		tag.setTag("Result", this.result.serializeNBT());
 		tag.setBoolean("HasRecipe", this.hasRecipe);
+		tag.setInteger("AutoInsert", this.autoInsert);
+		tag.setInteger("AutoExtract", this.autoExtract);
 		return tag;
 	}
 	
@@ -210,6 +280,8 @@ public class TileAutomationInterface extends TileEntity implements ITickable {
 		energy.setEnergy(tag.getInteger("Energy"));
 		this.result = new ItemStack(tag.getCompoundTag("Result"));
 		this.hasRecipe = tag.getBoolean("HasRecipe");
+		this.autoInsert = tag.getInteger("AutoInsert");
+		this.autoExtract = tag.getInteger("AutoExtract");
 	}
 
 	@Override

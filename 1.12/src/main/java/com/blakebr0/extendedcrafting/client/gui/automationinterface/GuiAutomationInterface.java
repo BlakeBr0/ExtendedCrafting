@@ -116,9 +116,6 @@ public class GuiAutomationInterface extends GuiContainer {
 		int y = (this.height - this.ySize) / 2;
 		this.drawTexturedModalRect(x, y, 0, 0, this.xSize, this.ySize);
 		
-//		this.mc.renderEngine.bindTexture(GRID);
-//		this.drawTexturedModalRect(x, y, 0, 0, (this.width - this.xSize) / 2 + 61, (this.height - this.ySize) / 2 + 58);
-		
 		int i1 = this.getEnergyBarScaled(78);
 		this.drawTexturedModalRect(x + 7, y + 85 - i1, 178, 78 - i1, 15, i1 + 1);
 	}

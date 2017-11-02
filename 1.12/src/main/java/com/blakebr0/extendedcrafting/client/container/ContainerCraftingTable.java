@@ -78,9 +78,8 @@ public class ContainerCraftingTable extends Container {
 	}
 
 	@Override
-	public boolean canInteractWith(EntityPlayer playerIn) {
-		return playerIn.getDistanceSq((double) this.pos.getX() + 0.5D, (double) this.pos.getY() + 0.5D,
-				(double) this.pos.getZ() + 0.5D) <= 64.0D;
+	public boolean canInteractWith(EntityPlayer player) {
+		return player.getDistanceSq((double) this.pos.getX() + 0.5D, (double) this.pos.getY() + 0.5D, (double) this.pos.getZ() + 0.5D) <= 64.0D;
 	}
 
 	@Override
@@ -139,8 +138,7 @@ public class ContainerCraftingTable extends Container {
 	}
 
 	@Override
-	protected void slotChangedCraftingGrid(World world, EntityPlayer player, InventoryCrafting inventory,
-			InventoryCraftResult result) {
+	protected void slotChangedCraftingGrid(World world, EntityPlayer player, InventoryCrafting inventory, InventoryCraftResult result) {
 		if (!world.isRemote) {
 			EntityPlayerMP entityplayermp = (EntityPlayerMP) player;
 			ItemStack itemstack = ItemStack.EMPTY;

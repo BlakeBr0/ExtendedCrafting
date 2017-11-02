@@ -4,16 +4,20 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.blakebr0.cucumber.helper.StackHelper;
+import com.blakebr0.extendedcrafting.lib.IExtendedTable;
 
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
+import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.world.World;
+import net.minecraftforge.items.IItemHandlerModifiable;
 
 public class TableRecipeManager {
 
 	private static final TableRecipeManager INSTANCE = new TableRecipeManager();
+	private static final InventoryCrafting DUMMY_INVENTORY = new InventoryCrafting(null, 0, 0);
 	private List recipes = new ArrayList();
 
 	public static final TableRecipeManager getInstance() {
@@ -76,6 +80,50 @@ public class TableRecipeManager {
 				IRecipe recipe = (IRecipe) this.recipes.get(j);
 				if (recipe.matches(grid, world)) {
 					return recipe.getCraftingResult(grid);
+				}
+			}
+			return ItemStack.EMPTY;
+		}
+	}
+	
+	public ItemStack findMatchingRecipe(IItemHandlerModifiable grid) {
+		int i = 0;
+		ItemStack stack = ItemStack.EMPTY;
+		ItemStack stack1 = ItemStack.EMPTY;
+		int j;
+
+		for (j = 0; j < grid.getSlots(); ++j) {
+			ItemStack stack2 = grid.getStackInSlot(j);
+			if (!StackHelper.isNull(stack2)) {
+				if (i == 0) {
+					stack = stack2;
+				}
+				if (i == 1) {
+					stack1 = stack2;
+				}
+				++i;
+			}
+		}
+
+		if (i == 2 && stack.getItem() == stack1.getItem() && stack.getCount() == 1 && stack1.getCount() == 1 && stack.getItem().isRepairable()) {
+			Item item = stack.getItem();
+			int j1 = item.getMaxDamage() - stack.getItemDamage();
+			int k = item.getMaxDamage() - stack1.getItemDamage();
+			int l = j1 + k + item.getMaxDamage() * 5 / 100;
+			int i1 = item.getMaxDamage() - l;
+
+			if (i1 < 0) {
+				i1 = 0;
+			}
+			return new ItemStack(stack.getItem(), 1, i1);
+		} else {
+			for (j = 0; j < this.recipes.size(); ++j) {
+				IRecipe recipe = (IRecipe) this.recipes.get(j);
+				if (recipe instanceof ITieredRecipe) {
+					if (((ITieredRecipe) recipe).matches(grid)) {
+						// Pass through a dummy crafting inventory because it doesn't actually need one
+						return recipe.getCraftingResult(DUMMY_INVENTORY);
+					}
 				}
 			}
 			return ItemStack.EMPTY;

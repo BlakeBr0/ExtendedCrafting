@@ -1,6 +1,7 @@
 package com.blakebr0.extendedcrafting.tile;
 
 import com.blakebr0.cucumber.util.VanillaPacketDispatcher;
+import com.blakebr0.extendedcrafting.crafting.table.TableRecipeManager;
 import com.blakebr0.extendedcrafting.crafting.table.basic.BasicStackHandler;
 import com.blakebr0.extendedcrafting.lib.IExtendedTable;
 
@@ -15,10 +16,13 @@ import net.minecraftforge.items.ItemStackHandler;
 public class TileBasicCraftingTable extends TileEntity implements IExtendedTable {
 
 	public BasicStackHandler matrix = new BasicStackHandler(9, this);
-	private ItemStack result;
+	private ItemStack result = ItemStack.EMPTY;
 
 	@Override
 	public ItemStack getResult() {
+		if (result.isEmpty()) {
+			//result = TableRecipeManager.getInstance().findMatchingRecipe(matrix.crafting, this.getWorld());
+		}
 		return result;
 	}
 

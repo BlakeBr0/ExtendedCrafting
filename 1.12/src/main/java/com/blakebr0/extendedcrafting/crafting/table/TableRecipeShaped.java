@@ -15,6 +15,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraftforge.common.crafting.CraftingHelper;
 import net.minecraftforge.common.crafting.CraftingHelper.ShapedPrimer;
+import net.minecraftforge.items.IItemHandlerModifiable;
 // TODO: Cleanup
 public class TableRecipeShaped implements IRecipe, ITieredRecipe {
 
@@ -119,6 +120,55 @@ public class TableRecipeShaped implements IRecipe, ITieredRecipe {
 
 		return true;
 	}
+	
+	@Override
+	public boolean matches(IItemHandlerModifiable grid) {
+		if (tier != 0) {
+			if (!(this.tier == this.getTierFromSize(grid.getSlots()))) {
+				return false;
+			}
+		}
+
+		int size = (int) Math.sqrt(grid.getSlots());
+		for (int x = 0; x <= size - width; x++) {
+			for (int y = 0; y <= size - height; ++y) {
+				if (checkMatch(grid, x, y, false)) {
+					return true;
+				}
+
+				if (mirrored && checkMatch(grid, x, y, true)) {
+					return true;
+				}
+			}
+		}
+
+		return false;
+	}
+	
+	protected boolean checkMatch(IItemHandlerModifiable inv, int startX, int startY, boolean mirror) {
+		int size = (int) Math.sqrt(inv.getSlots());
+		for (int x = 0; x < size; x++) {
+			for (int y = 0; y < size; y++) {
+				int subX = x - startX;
+				int subY = y - startY;
+				Ingredient target = Ingredient.EMPTY;
+
+				if (subX >= 0 && subY >= 0 && subX < width && subY < height) {
+					if (mirror) {
+						target = input.get(width - subX - 1 + subY * width);
+					} else {
+						target = input.get(subX + subY * width);
+					}
+				}
+
+				if (!target.apply(inv.getStackInSlot(x + y * size))) {
+					return false;
+				}
+			}
+		}
+
+		return true;
+	}
 
 	public TableRecipeShaped setMirrored(boolean mirror) {
 		mirrored = mirror;
@@ -163,6 +213,14 @@ public class TableRecipeShaped implements IRecipe, ITieredRecipe {
 	@Override
 	public Class<IRecipe> getRegistryType() {
 		return null;
+	}
+	
+	private int getTierFromSize(int size) {
+		int tier = size < 10 ? 1
+				 : size < 26 && size > 9 ? 2
+				 : size < 50 && size > 25 ? 3
+				 : 4;
+		return tier;
 	}
 
 	private int getTierFromGridSize(InventoryCrafting inv) {

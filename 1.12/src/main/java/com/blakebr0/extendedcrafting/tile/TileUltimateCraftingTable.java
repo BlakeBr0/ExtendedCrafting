@@ -14,7 +14,7 @@ import net.minecraftforge.items.ItemStackHandler;
 public class TileUltimateCraftingTable extends TileEntity implements IExtendedTable {
 
 	public UltimateStackHandler matrix = new UltimateStackHandler(81, this);
-	private ItemStack result;
+	private ItemStack result = ItemStack.EMPTY;
 
 	@Override
 	public ItemStack getResult() {

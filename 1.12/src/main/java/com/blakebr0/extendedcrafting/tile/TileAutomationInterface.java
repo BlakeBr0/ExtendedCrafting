@@ -7,6 +7,7 @@ import javax.annotation.Nonnull;
 
 import org.apache.commons.lang3.text.WordUtils;
 
+import com.blakebr0.cucumber.helper.StackHelper;
 import com.blakebr0.cucumber.lib.CustomEnergyStorage;
 import com.blakebr0.extendedcrafting.config.ModConfig;
 import com.blakebr0.extendedcrafting.crafting.CombinationRecipe;
@@ -68,9 +69,33 @@ public class TileAutomationInterface extends TileEntity implements ITickable {
 		boolean mark = false;
 		if (!this.getWorld().isRemote) {
 			ItemStack input = this.getInventory().getStackInSlot(0);
-			if (!input.isEmpty()) {
-				if (this.hasTable() && this.hasRecipe() && this.getEnergy().getEnergyStored() >= ModConfig.confInterfaceRFRate) {
-					this.handleInput(input);
+			ItemStack output = this.getInventory().getStackInSlot(1);
+			if (this.hasTable()) {
+				if (!input.isEmpty()) {
+					if (this.hasRecipe() && this.getEnergy().getEnergyStored() >= ModConfig.confInterfaceRFRate) {
+						this.handleInput(input);
+					}
+				} // TODO: cleanup
+				ItemStack result = this.getTable().getResult();
+				IItemHandlerModifiable matrix = this.getTable().getMatrix();
+				if (!result.isEmpty() && (output.isEmpty() || (output.isItemEqual(result) && output.getCount() < result.getMaxStackSize()))) {				
+					if (this.getEnergy().getEnergyStored() >= ModConfig.confInterfaceRFRate) {
+						ItemStack toInsert = result.copy(); toInsert.setCount(1);
+						result.shrink(1);
+						for (int i = 0; i < matrix.getSlots(); i++) {
+							ItemStack slotStack = matrix.getStackInSlot(i);
+							if (!slotStack.isEmpty()) {
+								if (slotStack.getItem().hasContainerItem(slotStack) && slotStack.getCount() == 1) {
+									matrix.setStackInSlot(i, slotStack.getItem().getContainerItem(slotStack));
+								} else {
+									matrix.setStackInSlot(i, StackHelper.decrease(slotStack.copy(), 1, false));
+								}
+							}
+						}
+						this.getInventory().insertItem(1, toInsert, false);
+						this.getEnergy().extractEnergy(ModConfig.confInterfaceRFRate, false);
+						this.markDirty();
+					}
 				}
 			}
 		}

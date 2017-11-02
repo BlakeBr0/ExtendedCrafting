@@ -14,6 +14,7 @@ import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraftforge.common.crafting.CraftingHelper;
+import net.minecraftforge.items.IItemHandlerModifiable;
 // TODO: Cleanup
 public class TableRecipeShapeless implements IRecipe, ITieredRecipe {
 
@@ -140,5 +141,11 @@ public class TableRecipeShapeless implements IRecipe, ITieredRecipe {
 				 : this.input.size() < 50 && this.input.size() > 25 ? 3
 				 : 4;
 		return tier;
+	}
+
+	@Override
+	public boolean matches(IItemHandlerModifiable grid) {
+		// TODO Auto-generated method stub
+		return false;
 	}
 }

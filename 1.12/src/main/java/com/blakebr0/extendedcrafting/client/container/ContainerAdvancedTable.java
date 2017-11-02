@@ -64,7 +64,6 @@ public class ContainerAdvancedTable extends Container {
 	@Override
 	public void onContainerClosed(EntityPlayer player) {
 		super.onContainerClosed(player);
-
 	}
 
 	@Override

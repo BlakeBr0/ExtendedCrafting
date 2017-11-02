@@ -18,8 +18,7 @@ public class TableCraftResultHandler extends Slot {
 	private final EntityPlayer player;
 	private final ItemStackHandler matrix;
 
-	public TableCraftResultHandler(EntityPlayer player, InventoryCrafting craftingInventory, IInventory inventory,
-			int slot, int x, int y) {
+	public TableCraftResultHandler(EntityPlayer player, InventoryCrafting craftingInventory, IInventory inventory, int slot, int x, int y) {
 		super(inventory, slot, x, y);
 		this.crafting = (AdvancedCrafting) craftingInventory;
 		this.player = player;
@@ -29,6 +28,11 @@ public class TableCraftResultHandler extends Slot {
 	@Override
 	public boolean isItemValid(@Nullable ItemStack stack) {
 		return false;
+	}
+	
+	@Override // TODO: make it so you cant take anything from the output if there is an interface (or something)
+	public boolean canTakeStack(EntityPlayer player) {
+		return super.canTakeStack(player);
 	}
 
 	@Override

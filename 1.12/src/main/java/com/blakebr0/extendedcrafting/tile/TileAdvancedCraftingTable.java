@@ -1,6 +1,9 @@
 package com.blakebr0.extendedcrafting.tile;
 
+import com.blakebr0.extendedcrafting.client.container.ContainerAdvancedTable;
 import com.blakebr0.extendedcrafting.crafting.table.TableCraftingStackHandler;
+import com.blakebr0.extendedcrafting.crafting.table.TableRecipeManager;
+import com.blakebr0.extendedcrafting.crafting.table.advanced.AdvancedCrafting;
 import com.blakebr0.extendedcrafting.lib.IExtendedTable;
 
 import net.minecraft.entity.player.EntityPlayer;
@@ -16,10 +19,13 @@ import net.minecraftforge.items.ItemStackHandler;
 public class TileAdvancedCraftingTable extends TileEntity implements IExtendedTable {
 
 	public final TableCraftingStackHandler matrix = new TableCraftingStackHandler(25, this);
-	private ItemStack result;
+	private ItemStack result = ItemStack.EMPTY;
 
 	@Override
 	public ItemStack getResult() {
+		if (result.isEmpty()) {
+			result = TableRecipeManager.getInstance().findMatchingRecipe(matrix);
+		}
 		return result;
 	}
 

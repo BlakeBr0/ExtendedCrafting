@@ -71,7 +71,7 @@ public class TileAutomationInterface extends TileEntity implements ITickable, IS
 					}
 				}
 				
-				if (this.getEnergy().getEnergyStored() >= ModConfig.confInterfaceRFRate && ticks % 10 == 0) {
+				if (this.hasRecipe() && this.getEnergy().getEnergyStored() >= ModConfig.confInterfaceRFRate && ticks % 10 == 0) {
 					this.handleOutput(output);
 				}
 			}

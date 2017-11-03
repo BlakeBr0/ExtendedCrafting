@@ -21,7 +21,7 @@ public class TileBasicCraftingTable extends TileEntity implements IExtendedTable
 	@Override
 	public ItemStack getResult() {
 		if (result.isEmpty()) {
-			//result = TableRecipeManager.getInstance().findMatchingRecipe(matrix.crafting, this.getWorld());
+			result = TableRecipeManager.getInstance().findMatchingRecipe(matrix);
 		}
 		return result;
 	}

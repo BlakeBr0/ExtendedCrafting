@@ -1,5 +1,6 @@
 package com.blakebr0.extendedcrafting.tile;
 
+import com.blakebr0.extendedcrafting.crafting.table.TableRecipeManager;
 import com.blakebr0.extendedcrafting.crafting.table.elite.EliteStackHandler;
 import com.blakebr0.extendedcrafting.lib.IExtendedTable;
 
@@ -18,6 +19,9 @@ public class TileEliteCraftingTable extends TileEntity implements IExtendedTable
 
 	@Override
 	public ItemStack getResult() {
+		if (result.isEmpty()) {
+			result = TableRecipeManager.getInstance().findMatchingRecipe(matrix);
+		}
 		return result;
 	}
 

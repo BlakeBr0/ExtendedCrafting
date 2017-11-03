@@ -62,7 +62,8 @@ public class ContainerAutomationInterface extends Container {
                 }
                 slot.onSlotChange(itemstack1, itemstack);
             } else if (slotNumber != 0) {
-                if (this.inventorySlots.get(1).getStack().isEmpty() || this.inventorySlots.get(1).getStack().getCount() < this.inventorySlots.get(1).getStack().getMaxStackSize()) {
+            	ItemStack inputStack = this.inventorySlots.get(0).getStack();
+                if (inputStack.isEmpty() || (inputStack.isItemEqual(itemstack1) && inputStack.getCount() < inputStack.getMaxStackSize())) {
                     if (!this.mergeItemStack(itemstack1, 0, 1, false)) {
                         return ItemStack.EMPTY;
                     }

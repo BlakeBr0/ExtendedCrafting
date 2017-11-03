@@ -13,6 +13,6 @@ public class ModRenders {
 		ClientRegistry.bindTileEntitySpecialRenderer(TilePedestal.class, new RenderPedestal());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileCraftingCore.class, new RenderCraftingCore());
 		//ClientRegistry.bindTileEntitySpecialRenderer(TileCompressor.class, new RenderCompressor());
-		ClientRegistry.bindTileEntitySpecialRenderer(TileAutomationInterface.class, new RenderAutomationInterface());
+		//ClientRegistry.bindTileEntitySpecialRenderer(TileAutomationInterface.class, new RenderAutomationInterface());
 	}
 }

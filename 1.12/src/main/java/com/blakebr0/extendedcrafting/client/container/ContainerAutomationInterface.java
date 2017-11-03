@@ -1,6 +1,7 @@
 package com.blakebr0.extendedcrafting.client.container;
 
 import com.blakebr0.extendedcrafting.crafting.CombinationRecipe;
+import com.blakebr0.extendedcrafting.lib.FakeRecipeHandler;
 import com.blakebr0.extendedcrafting.tile.TileAutomationInterface;
 import com.blakebr0.extendedcrafting.tile.TileCraftingCore;
 import com.blakebr0.extendedcrafting.util.VanillaPacketDispatcher;
@@ -22,8 +23,18 @@ public class ContainerAutomationInterface extends Container {
 	public ContainerAutomationInterface(InventoryPlayer player, TileAutomationInterface tile) {
 		this.tile = tile;
 		
-		this.addSlotToContainer(new SlotItemHandler(tile.getInventory(), 0, 34, 41));
-		this.addSlotToContainer(new SlotItemHandler(tile.getInventory(), 1, 144, 41));
+		this.addSlotToContainer(new SlotItemHandler(tile.getInventory(), 0, 34, 41) {
+			@Override
+			public boolean isItemValid(ItemStack stack) {
+				return super.isItemValid(stack)/* tile.hasRecipe() ? ((FakeRecipeHandler) tile.getRecipe()).getStacks().stream().anyMatch(s -> s.isItemEqual(stack)) : false */;
+			}
+		});
+		this.addSlotToContainer(new SlotItemHandler(tile.getInventory(), 1, 144, 41) {
+			@Override
+			public boolean isItemValid(ItemStack stack) {
+				return false;
+			}
+		});
 
 		for (int i = 0; i < 3; ++i) {
 			for (int j = 0; j < 9; ++j) {

@@ -13,6 +13,7 @@ import com.blakebr0.extendedcrafting.lib.IExtendedTable;
 import com.blakebr0.extendedcrafting.util.VanillaPacketDispatcher;
 
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
@@ -26,8 +27,9 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.items.ItemStackHandler;
+import net.minecraftforge.items.wrapper.SidedInvWrapper;
 
-public class TileAutomationInterface extends TileEntity implements ITickable {
+public class TileAutomationInterface extends TileEntity implements ITickable, ISidedInventory {
 	
 	private final ItemStackHandler inventory = new StackHandler(2);
 	private final ItemStackHandler recipe = new FakeRecipeHandler();
@@ -319,7 +321,7 @@ public class TileAutomationInterface extends TileEntity implements ITickable {
 	@Override
 	public <T> T getCapability(@Nonnull Capability<T> capability, @Nonnull EnumFacing side) {
 		if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
-			return CapabilityItemHandler.ITEM_HANDLER_CAPABILITY.cast(inventory);
+			return (T) new SidedInvWrapper(this, side);
 		} else if (capability == CapabilityEnergy.ENERGY) {
 			return CapabilityEnergy.ENERGY.cast(energy);
 		}
@@ -340,5 +342,125 @@ public class TileAutomationInterface extends TileEntity implements ITickable {
 		public void onContentsChanged(int slot) {
 			TileAutomationInterface.this.markDirty();
 		}
+	}
+
+	@Override
+	public int getSizeInventory() {
+		return inventory.getSlots();
+	}
+
+	@Override
+	public boolean isEmpty() {
+		for (int i = 0; i < inventory.getSlots(); i++) {
+			if (!inventory.getStackInSlot(i).isEmpty()) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+	@Override
+	public ItemStack getStackInSlot(int index) {
+		return inventory.getStackInSlot(index);
+	}
+
+	@Override
+	public ItemStack decrStackSize(int index, int count) {
+		return index >= 0 && index < inventory.getSlots() && !inventory.getStackInSlot(index).isEmpty() && count > 0 ? inventory.getStackInSlot(index).splitStack(count) : ItemStack.EMPTY;
+	}
+
+	@Override
+	public ItemStack removeStackFromSlot(int index) {
+		if (index >= 0 && index < inventory.getSlots()) {
+			inventory.setStackInSlot(index, ItemStack.EMPTY);
+			return ItemStack.EMPTY;
+		} else {
+			return ItemStack.EMPTY;
+		}
+	}
+
+	@Override
+	public void setInventorySlotContents(int index, ItemStack stack) {
+		ItemStack itemstack = (ItemStack) this.inventory.getStackInSlot(index);
+		boolean flag = !stack.isEmpty() && stack.isItemEqual(itemstack) && ItemStack.areItemStackTagsEqual(stack, itemstack);
+		this.inventory.setStackInSlot(index, stack);
+
+		if (stack.getCount() > this.getInventoryStackLimit()) {
+			stack.setCount(this.getInventoryStackLimit());
+		}
+
+		if (index == 0 && !flag) {
+			this.markDirty();
+		}		
+	}
+
+	@Override
+	public int getInventoryStackLimit() {
+		return 64;
+	}
+
+	@Override
+	public boolean isUsableByPlayer(EntityPlayer player) {
+		return this.isUseableByPlayer(player);
+	}
+
+	@Override
+	public void openInventory(EntityPlayer player) {
+		
+	}
+
+	@Override
+	public void closeInventory(EntityPlayer player) {
+		
+	}
+
+	@Override
+	public boolean isItemValidForSlot(int index, ItemStack stack) {
+		return true;
+	}
+
+	@Override
+	public int getField(int id) {
+		return 0;
+	}
+
+	@Override
+	public void setField(int id, int value) {
+		
+	}
+
+	@Override
+	public int getFieldCount() {
+		return 0;
+	}
+
+	@Override
+	public void clear() {
+		
+	}
+
+	@Override
+	public String getName() {
+		return null;
+	}
+
+	@Override
+	public boolean hasCustomName() {
+		return false;
+	}
+
+	@Override
+	public int[] getSlotsForFace(EnumFacing side) {
+		return new int[] { 0, 1 };
+	}
+
+	@Override
+	public boolean canInsertItem(int index, ItemStack itemStackIn, EnumFacing direction) {
+		return index == 0;
+	}
+
+	@Override
+	public boolean canExtractItem(int index, ItemStack stack, EnumFacing direction) {
+		return index == 1;
 	}
 }

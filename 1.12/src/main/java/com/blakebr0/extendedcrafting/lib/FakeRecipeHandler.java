@@ -3,6 +3,7 @@ package com.blakebr0.extendedcrafting.lib;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraft.util.NonNullList;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.items.ItemStackHandler;
 
@@ -10,6 +11,10 @@ public class FakeRecipeHandler extends ItemStackHandler {
 	
 	public FakeRecipeHandler() {
 		super();
+	}
+	
+	public NonNullList<ItemStack> getStacks() {
+		return this.stacks;
 	}
 	
     @Override

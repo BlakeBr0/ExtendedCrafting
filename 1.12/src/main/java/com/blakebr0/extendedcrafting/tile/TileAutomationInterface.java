@@ -37,6 +37,7 @@ public class TileAutomationInterface extends TileEntity implements ITickable {
 	private boolean hasRecipe = false;
 	public int autoInsert = -1;
 	public int autoExtract = -1;
+	private int ticks = 0;
 		
 	public IItemHandlerModifiable getInventory() {
 		return inventory;
@@ -57,6 +58,7 @@ public class TileAutomationInterface extends TileEntity implements ITickable {
 	@Override
 	public void update() {
 		boolean mark = false;
+		ticks++;
 		if (!this.getWorld().isRemote) {
 			ItemStack input = this.getInventory().getStackInSlot(0);
 			ItemStack output = this.getInventory().getStackInSlot(1);
@@ -67,19 +69,18 @@ public class TileAutomationInterface extends TileEntity implements ITickable {
 					}
 				}
 				
-				if (this.getEnergy().getEnergyStored() >= ModConfig.confInterfaceRFRate) {
+				if (this.getEnergy().getEnergyStored() >= ModConfig.confInterfaceRFRate && ticks % 10 == 0) {
 					this.handleOutput(output);
 				}
 			}
 			
-			if (this.getInserterFace() != null && this.getEnergy().getEnergyStored() >= ModConfig.confInterfaceRFRate) {
+			if (this.getInserterFace() != null && this.getEnergy().getEnergyStored() >= ModConfig.confInterfaceRFRate && ticks % 4 == 0) {
 				TileEntity tile = this.getWorld().getTileEntity(this.getPos().offset(this.getInserterFace()));
 				if (tile != null && tile.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, EnumFacing.DOWN)) {
 					IItemHandler handler = tile.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, EnumFacing.DOWN);
 					for (int i = 0; i < handler.getSlots(); i++) {
 						ItemStack stack = handler.getStackInSlot(i);
-						//if (((FakeRecipeHandler) this.getRecipe()).getStacks().contains(stack)) {
-						if (!stack.isEmpty()) {
+						if (!stack.isEmpty() && ((FakeRecipeHandler) this.getRecipe()).getStacks().stream().anyMatch(s -> s.isItemEqual(stack))) {
 							if (input.isEmpty() || (input.isItemEqual(stack) && input.getCount() < input.getMaxStackSize())) {
 								ItemStack toInsert = stack.copy(); toInsert.setCount(1);
 								this.getInventory().insertItem(0, toInsert, false);
@@ -92,7 +93,7 @@ public class TileAutomationInterface extends TileEntity implements ITickable {
 				}
 			}
 			
-			if (this.getExtractorFace() != null && this.getEnergy().getEnergyStored() >= ModConfig.confInterfaceRFRate) {
+			if (this.getExtractorFace() != null && this.getEnergy().getEnergyStored() >= ModConfig.confInterfaceRFRate && ticks % 4 == 0) {
 				TileEntity tile = this.getWorld().getTileEntity(this.getPos().offset(this.getExtractorFace()));
 				if (tile != null && tile.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, EnumFacing.UP)) {
 					IItemHandler handler = tile.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, EnumFacing.UP);
@@ -117,6 +118,10 @@ public class TileAutomationInterface extends TileEntity implements ITickable {
 			if (!mark) {
 				mark = true;
 			}
+		}
+		
+		if (ticks > 100) {
+			ticks = 0;
 		}
 		
 		if (mark) {

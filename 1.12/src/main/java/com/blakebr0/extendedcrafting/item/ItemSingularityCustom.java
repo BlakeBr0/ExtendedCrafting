@@ -128,21 +128,21 @@ public class ItemSingularityCustom extends ItemMeta implements IModelHelper {
 					item = ForgeRegistries.ITEMS.getValue(new ResourceLocation(parts[0], parts[1]));
 					stack = StackHelper.to(item, 1, matMeta);
 					if (!StackHelper.isNull(stack)) {
-						CompressorRecipeManager.getInstance().addRecipe(StackHelper.to(this, 1, meta), stack.copy(), ModConfig.confSingularityAmount, ModItems.itemMaterial.itemUltimateCatalyst, false, ModConfig.confSingularityRF);
+						CompressorRecipeManager.getInstance().addRecipe(StackHelper.to(this, 1, meta), stack.copy(), ModConfig.confSingularityAmount, ModItems.itemMaterial.itemUltimateCraftingCatalyst, false, ModConfig.confSingularityRF);
 					}
 				} else if (parts.length == 2) {
 					if (((String) value).startsWith("ore:")) {
 						String ore = ((String) value).substring(4);
 						if (OreDictionary.doesOreNameExist(ore)) {
 							if (!OreDictionary.getOres(ore).isEmpty()) {
-								CompressorRecipeManager.getInstance().addRecipe(StackHelper.to(this, 1, meta), ore, ModConfig.confSingularityAmount, ModItems.itemMaterial.itemUltimateCatalyst, false, ModConfig.confSingularityRF);
+								CompressorRecipeManager.getInstance().addRecipe(StackHelper.to(this, 1, meta), ore, ModConfig.confSingularityAmount, ModItems.itemMaterial.itemUltimateCraftingCatalyst, false, ModConfig.confSingularityRF);
 							}
 						}
 					} else {
 						item = ForgeRegistries.ITEMS.getValue(new ResourceLocation(parts[0], parts[1]));
 						stack = StackHelper.to(item);
 						if (!StackHelper.isNull(stack)) {
-							CompressorRecipeManager.getInstance().addRecipe(StackHelper.to(this, 1, meta), stack.copy(), ModConfig.confSingularityAmount, ModItems.itemMaterial.itemUltimateCatalyst, false, ModConfig.confSingularityRF);
+							CompressorRecipeManager.getInstance().addRecipe(StackHelper.to(this, 1, meta), stack.copy(), ModConfig.confSingularityAmount, ModItems.itemMaterial.itemUltimateCraftingCatalyst, false, ModConfig.confSingularityRF);
 						}
 					}
 				} else {

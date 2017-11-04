@@ -314,7 +314,7 @@ public class TileAutomationInterface extends TileEntity implements ITickable, IS
 
 	@Override
 	public boolean hasCapability(@Nonnull Capability<?> capability, @Nonnull EnumFacing side) {
-		return capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY || super.hasCapability(capability, side);
+		return this.getCapability(capability, side) != null;
 	}
 
 	@Nonnull

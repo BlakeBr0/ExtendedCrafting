@@ -5,8 +5,6 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 public class ModTiles {
 
 	public static void init() {
-		GameRegistry.registerTileEntity(TileCraftingTable.class, "EC_Crafting_Table");
-
 		GameRegistry.registerTileEntity(TilePedestal.class, "EC_Pedestal");
 		GameRegistry.registerTileEntity(TileCraftingCore.class, "EC_Crafting_Core");
 		

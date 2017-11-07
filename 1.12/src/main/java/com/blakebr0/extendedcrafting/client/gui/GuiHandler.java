@@ -5,7 +5,6 @@ import com.blakebr0.extendedcrafting.client.container.ContainerAutomationInterfa
 import com.blakebr0.extendedcrafting.client.container.ContainerBasicTable;
 import com.blakebr0.extendedcrafting.client.container.ContainerCompressor;
 import com.blakebr0.extendedcrafting.client.container.ContainerCraftingCore;
-import com.blakebr0.extendedcrafting.client.container.ContainerCraftingTable;
 import com.blakebr0.extendedcrafting.client.container.ContainerEliteTable;
 import com.blakebr0.extendedcrafting.client.container.ContainerHandheldTable;
 import com.blakebr0.extendedcrafting.client.container.ContainerUltimateTable;
@@ -15,7 +14,6 @@ import com.blakebr0.extendedcrafting.tile.TileAutomationInterface;
 import com.blakebr0.extendedcrafting.tile.TileBasicCraftingTable;
 import com.blakebr0.extendedcrafting.tile.TileCompressor;
 import com.blakebr0.extendedcrafting.tile.TileCraftingCore;
-import com.blakebr0.extendedcrafting.tile.TileCraftingTable;
 import com.blakebr0.extendedcrafting.tile.TileEliteCraftingTable;
 import com.blakebr0.extendedcrafting.tile.TileUltimateCraftingTable;
 
@@ -28,7 +26,6 @@ public class GuiHandler implements IGuiHandler {
 
 	public static final int CRAFTING_CORE = 0;
 
-	public static final int CRAFTING_TABLE = 3;
 	public static final int HANDHELD_TABLE = 4;
 
 	public static final int AUTOMATION_INTERFACE = 6;
@@ -44,9 +41,6 @@ public class GuiHandler implements IGuiHandler {
 	public Object getClientGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
 		if (ID == CRAFTING_CORE) {
 			return new GuiCraftingCore((TileCraftingCore) world.getTileEntity(new BlockPos(x, y, z)), new ContainerCraftingCore(player.inventory, (TileCraftingCore) world.getTileEntity(new BlockPos(x, y, z))));
-		}
-		if (ID == CRAFTING_TABLE) {
-			return new GuiCraftingTable(new ContainerCraftingTable(player.inventory, (TileCraftingTable) world.getTileEntity(new BlockPos(x, y, z)), world, new BlockPos(x, y, z)));
 		}
 		if (ID == HANDHELD_TABLE) {
 			return new GuiHandheldTable(new ContainerHandheldTable(player.inventory, world, new BlockPos(x, y, z)));
@@ -76,9 +70,6 @@ public class GuiHandler implements IGuiHandler {
 	public Object getServerGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
 		if (ID == CRAFTING_CORE) {
 			return new ContainerCraftingCore(player.inventory, (TileCraftingCore) world.getTileEntity(new BlockPos(x, y, z)));
-		}
-		if (ID == CRAFTING_TABLE) {
-			return new ContainerCraftingTable(player.inventory, (TileCraftingTable) world.getTileEntity(new BlockPos(x, y, z)), world, new BlockPos(x, y, z));
 		}
 		if (ID == HANDHELD_TABLE) {
 			return new ContainerHandheldTable(player.inventory, world, new BlockPos(x, y, z));

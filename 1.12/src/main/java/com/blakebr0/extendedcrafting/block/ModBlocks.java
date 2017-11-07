@@ -8,6 +8,9 @@ import com.blakebr0.extendedcrafting.block.craftingtable.BlockBasicTable;
 import com.blakebr0.extendedcrafting.block.craftingtable.BlockEliteTable;
 import com.blakebr0.extendedcrafting.block.craftingtable.BlockUltimateTable;
 
+import net.minecraft.block.SoundType;
+import net.minecraft.block.material.Material;
+
 public class ModBlocks {
 
 	public static BlockStorage blockStorage = new BlockStorage();
@@ -15,10 +18,10 @@ public class ModBlocks {
 	public static BlockLamp blockLamp = new BlockLamp();
 	public static BlockTrimmed blockTrimmed = new BlockTrimmed();
 
-	public static BlockCraftingTable blockCraftingTable = new BlockCraftingTable();
-
 	public static BlockPedestal blockPedestal = new BlockPedestal();
 	public static BlockCraftingCore blockCraftingCore = new BlockCraftingCore();
+	
+	public static BlockBasic blockCraftingTable = new BlockBasic("ec.crafting_table", Material.WOOD, SoundType.WOOD, 2.5F, 10.0F);
 	
 	public static BlockAutomationInterface blockAutomationInterface = new BlockAutomationInterface();
 
@@ -38,8 +41,8 @@ public class ModBlocks {
 		registry.register(blockFrame, "frame");
 		registry.register(blockLamp, "lamp", new ItemBlockLamp(blockLamp));
 		registry.register(blockTrimmed, "trimmed", new ItemBlockTrimmed(blockTrimmed));
-
-		registry.register(blockCraftingTable, "crafting_table", Ore.of(0, "workbench"));
+		
+		registry.register(blockCraftingTable, "crafting_table");
 
 		registry.register(blockPedestal, "pedestal");
 		registry.register(blockCraftingCore, "crafting_core");

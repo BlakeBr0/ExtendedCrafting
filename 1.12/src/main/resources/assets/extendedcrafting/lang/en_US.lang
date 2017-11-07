@@ -88,7 +88,7 @@ jei.ec.combination_crafting=Combination Crafting
 jei.ec.compressor=Quantum Compression
 
 # TOOLTIPS
-tooltip.ec.crafting_table=Holds it's inventory.
+tooltip.ec.crafting_table=Decoration
 tooltip.ec.lamp_glowstone=Glowstone
 tooltip.ec.lamp_luminessence=Luminessence
 tooltip.ec.trimmed_iron=Iron Trimmed

@@ -7,7 +7,6 @@ import com.blakebr0.cucumber.helper.StackHelper;
 import com.blakebr0.extendedcrafting.block.ModBlocks;
 import com.blakebr0.extendedcrafting.client.container.ContainerAdvancedTable;
 import com.blakebr0.extendedcrafting.client.container.ContainerBasicTable;
-import com.blakebr0.extendedcrafting.client.container.ContainerCraftingTable;
 import com.blakebr0.extendedcrafting.client.container.ContainerEliteTable;
 import com.blakebr0.extendedcrafting.client.container.ContainerHandheldTable;
 import com.blakebr0.extendedcrafting.client.container.ContainerUltimateTable;
@@ -15,7 +14,6 @@ import com.blakebr0.extendedcrafting.client.gui.GuiAdvancedTable;
 import com.blakebr0.extendedcrafting.client.gui.GuiBasicTable;
 import com.blakebr0.extendedcrafting.client.gui.GuiCompressor;
 import com.blakebr0.extendedcrafting.client.gui.GuiCraftingCore;
-import com.blakebr0.extendedcrafting.client.gui.GuiCraftingTable;
 import com.blakebr0.extendedcrafting.client.gui.GuiEliteTable;
 import com.blakebr0.extendedcrafting.client.gui.GuiHandheldTable;
 import com.blakebr0.extendedcrafting.client.gui.GuiUltimateTable;
@@ -81,7 +79,6 @@ public class CompatJEI implements IModPlugin {
 		registry.addRecipeCategories(new UltimateTableCategory(guiHelper));
 		registry.addRecipeCategories(new CompressorCraftingCategory(guiHelper));
 
-		registry.addRecipeCatalyst(StackHelper.to(ModBlocks.blockCraftingTable), VanillaRecipeCategoryUid.CRAFTING);
 		registry.addRecipeCatalyst(StackHelper.to(ModItems.itemHandheldTable), VanillaRecipeCategoryUid.CRAFTING);
 		
 		registry.addRecipeCatalyst(StackHelper.to(ModBlocks.blockCraftingCore), CombinationCraftingCategory.UID);
@@ -104,7 +101,6 @@ public class CompatJEI implements IModPlugin {
 
 		registry.handleRecipes(CompressorRecipe.class, recipe -> new CompressorCraftingWrapper(jeiHelpers, recipe), CompressorCraftingCategory.UID);
 
-		registry.addRecipeClickArea(GuiCraftingTable.class, 88, 32, 28, 23, VanillaRecipeCategoryUid.CRAFTING);
 		registry.addRecipeClickArea(GuiHandheldTable.class, 88, 32, 28, 23, VanillaRecipeCategoryUid.CRAFTING);
 		registry.addRecipeClickArea(GuiCraftingCore.class, 117, 37, 21, 14, CombinationCraftingCategory.UID);
 		registry.addRecipeClickArea(GuiBasicTable.class, 91, 34, 21, 14, BasicTableCategory.UID);
@@ -115,7 +111,6 @@ public class CompatJEI implements IModPlugin {
 
 		IRecipeTransferRegistry transferRegistry = registry.getRecipeTransferRegistry();
 
-		transferRegistry.addRecipeTransferHandler(ContainerCraftingTable.class, VanillaRecipeCategoryUid.CRAFTING, 1, 9, 10, 36);
 		transferRegistry.addRecipeTransferHandler(ContainerHandheldTable.class, VanillaRecipeCategoryUid.CRAFTING, 1, 9, 10, 36);
 		transferRegistry.addRecipeTransferHandler(ContainerBasicTable.class, BasicTableCategory.UID, 1, 9, 10, 36);
 		transferRegistry.addRecipeTransferHandler(ContainerAdvancedTable.class, AdvancedTableCategory.UID, 1, 25, 26, 36);

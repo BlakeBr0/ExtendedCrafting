@@ -52,11 +52,11 @@ public class BlockBasicTable extends BlockBase implements ITileEntityProvider {
 	@Override
 	public void breakBlock(World world, BlockPos pos, IBlockState state) {
 		TileBasicCraftingTable tile = (TileBasicCraftingTable) world.getTileEntity(pos);
-		if (tile instanceof TileBasicCraftingTable) {
+		if (tile != null) {
 			for (int i = 0; i < tile.matrix.getSlots(); i++) {
 				ItemStack stack = tile.matrix.getStackInSlot(i);
-				if (!StackHelper.isNull(stack)) {
-					world.spawnEntity(new EntityItem(world, pos.getX(), pos.getY(), pos.getZ(), stack));
+				if (!stack.isEmpty()) {
+					this.spawnAsEntity(world, pos, stack);
 				}
 			}
 		}

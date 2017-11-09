@@ -34,16 +34,14 @@ public class BlockUltimateTable extends BlockBase implements ITileEntityProvider
 	}
 
 	@Override
-	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand,
-			EnumFacing side, float hitX, float hitY, float hitZ) {
+	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
 		if (world.isRemote) {
 			return true;
 		} else {
 			TileEntity tile = world.getTileEntity(pos);
 
 			if (tile instanceof TileUltimateCraftingTable) {
-				player.openGui(ExtendedCrafting.instance, GuiHandler.ULTIMATE_TABLE, world, pos.getX(), pos.getY(),
-						pos.getZ());
+				player.openGui(ExtendedCrafting.instance, GuiHandler.ULTIMATE_TABLE, world, pos.getX(), pos.getY(), pos.getZ());
 			}
 			return true;
 		}
@@ -52,11 +50,11 @@ public class BlockUltimateTable extends BlockBase implements ITileEntityProvider
 	@Override
 	public void breakBlock(World world, BlockPos pos, IBlockState state) {
 		TileUltimateCraftingTable tile = (TileUltimateCraftingTable) world.getTileEntity(pos);
-		if (tile instanceof TileUltimateCraftingTable) {
+		if (tile != null) {
 			for (int i = 0; i < tile.matrix.getSlots(); i++) {
 				ItemStack stack = tile.matrix.getStackInSlot(i);
-				if (!StackHelper.isNull(stack)) {
-					world.spawnEntity(new EntityItem(world, pos.getX(), pos.getY(), pos.getZ(), stack));
+				if (!stack.isEmpty()) {
+					this.spawnAsEntity(world, pos, stack);
 				}
 			}
 		}

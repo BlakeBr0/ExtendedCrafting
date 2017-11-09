@@ -58,11 +58,10 @@ public class BlockPedestal extends BlockBase implements ITileEntityProvider {
 	@Override
 	public void breakBlock(World world, BlockPos pos, IBlockState state) {
 		TilePedestal tile = (TilePedestal) world.getTileEntity(pos);
-		if (tile instanceof TilePedestal) {
+		if (tile != null) {
 			ItemStack stack = tile.getInventory().getStackInSlot(0);
-			if (!StackHelper.isNull(stack)) {
-				EntityItem item = new EntityItem(world, pos.getX(), pos.getY(), pos.getZ(), stack);
-				world.spawnEntity(item);
+			if (!stack.isEmpty()) {
+				this.spawnAsEntity(world, pos, stack);
 			}
 		}
 		super.breakBlock(world, pos, state);

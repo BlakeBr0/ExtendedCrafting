@@ -59,11 +59,11 @@ public class BlockCompressor extends BlockBase implements ITileEntityProvider {
 	@Override
 	public void breakBlock(World world, BlockPos pos, IBlockState state) {
 		TileCompressor tile = (TileCompressor) world.getTileEntity(pos);
-		if (tile instanceof TileCompressor) {
+		if (tile != null) {
 			for (int i = 0; i < tile.getSizeInventory(); i++) {
 				ItemStack stack = tile.getStackInSlot(i);
-				if (!StackHelper.isNull(stack)) {
-					world.spawnEntity(new EntityItem(world, pos.getX(), pos.getY(), pos.getZ(), stack));
+				if (!stack.isEmpty()) {
+					this.spawnAsEntity(world, pos, stack);
 				}
 			}
 		}

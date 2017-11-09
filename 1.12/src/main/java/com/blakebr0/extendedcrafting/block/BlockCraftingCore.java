@@ -63,11 +63,10 @@ public class BlockCraftingCore extends BlockBase implements ITileEntityProvider 
 	@Override
 	public void breakBlock(World world, BlockPos pos, IBlockState state) {
 		TileCraftingCore tile = (TileCraftingCore) world.getTileEntity(pos);
-		if (tile instanceof TileCraftingCore) {
+		if (tile != null) {
 			ItemStack stack = tile.getInventory().getStackInSlot(0);
-			if (!StackHelper.isNull(stack)) {
-				EntityItem item = new EntityItem(world, pos.getX(), pos.getY(), pos.getZ(), stack);
-				world.spawnEntity(item);
+			if (!stack.isEmpty()) {
+				this.spawnAsEntity(world, pos, stack);
 			}
 		}
 		super.breakBlock(world, pos, state);

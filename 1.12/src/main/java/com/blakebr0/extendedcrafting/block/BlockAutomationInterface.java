@@ -34,11 +34,11 @@ public class BlockAutomationInterface extends BlockBase implements ITileEntityPr
 	@Override
 	public void breakBlock(World world, BlockPos pos, IBlockState state) {
 		TileAutomationInterface tile = (TileAutomationInterface) world.getTileEntity(pos);
-		if (tile instanceof TileAutomationInterface) {
+		if (tile != null) {
 			for (int i = 0; i < tile.getSizeInventory(); i++) {
 				ItemStack stack = tile.getStackInSlot(i);
 				if (!stack.isEmpty()) {
-					world.spawnEntity(new EntityItem(world, pos.getX(), pos.getY(), pos.getZ(), stack));
+					this.spawnAsEntity(world, pos, stack);
 				}
 			}
 		}

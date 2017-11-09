@@ -53,9 +53,7 @@ public class BlockUltimateTable extends BlockBase implements ITileEntityProvider
 		if (tile != null) {
 			for (int i = 0; i < tile.matrix.getSlots(); i++) {
 				ItemStack stack = tile.matrix.getStackInSlot(i);
-				if (!stack.isEmpty()) {
-					this.spawnAsEntity(world, pos, stack);
-				}
+				this.spawnAsEntity(world, pos, stack);
 			}
 		}
 		super.breakBlock(world, pos, state);

@@ -65,9 +65,7 @@ public class BlockCraftingCore extends BlockBase implements ITileEntityProvider 
 		TileCraftingCore tile = (TileCraftingCore) world.getTileEntity(pos);
 		if (tile != null) {
 			ItemStack stack = tile.getInventory().getStackInSlot(0);
-			if (!stack.isEmpty()) {
-				this.spawnAsEntity(world, pos, stack);
-			}
+			this.spawnAsEntity(world, pos, stack);
 		}
 		super.breakBlock(world, pos, state);
 	}

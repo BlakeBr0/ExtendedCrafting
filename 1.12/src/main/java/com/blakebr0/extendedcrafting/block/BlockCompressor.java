@@ -62,9 +62,7 @@ public class BlockCompressor extends BlockBase implements ITileEntityProvider {
 		if (tile != null) {
 			for (int i = 0; i < tile.getSizeInventory(); i++) {
 				ItemStack stack = tile.getStackInSlot(i);
-				if (!stack.isEmpty()) {
-					this.spawnAsEntity(world, pos, stack);
-				}
+				this.spawnAsEntity(world, pos, stack);
 			}
 		}
 		super.breakBlock(world, pos, state);

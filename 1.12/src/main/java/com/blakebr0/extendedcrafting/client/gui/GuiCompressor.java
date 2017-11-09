@@ -21,6 +21,7 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.translation.I18n;
 
 public class GuiCompressor extends GuiContainer {
@@ -43,7 +44,7 @@ public class GuiCompressor extends GuiContainer {
 	}
 
 	private int getMaterialBarScaled(int pixels) {
-		int i = this.tile.getMaterialCount();
+		int i = MathHelper.clamp(this.tile.getMaterialCount(), 0, this.tile.getRecipe().getInputCount());
 		int j = this.tile.getRecipe().getInputCount();
 		return j != 0 && i != 0 ? i * pixels / j : 0;
 	}

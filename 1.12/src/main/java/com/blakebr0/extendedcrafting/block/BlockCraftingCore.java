@@ -35,14 +35,15 @@ public class BlockCraftingCore extends BlockBase implements ITileEntityProvider 
 			TileCraftingCore tile = (TileCraftingCore) world.getTileEntity(pos);
 			if (tile != null) {
 				if (facing == EnumFacing.UP) {
-					if (StackHelper.isNull(tile.getInventory().getStackInSlot(0))) {
-						if (!StackHelper.isNull(held)) {
+					ItemStack stack = tile.getInventory().getStackInSlot(0);
+					if (stack.isEmpty()) {
+						if (!held.isEmpty()) {
 							tile.getInventory().setStackInSlot(0, StackHelper.withSize(held.copy(), 1, false));
 							player.setHeldItem(hand, StackHelper.decrease(held, 1, false));
 							world.playSound(null, pos, SoundEvents.ENTITY_ITEM_PICKUP, SoundCategory.BLOCKS, 1.0F, 1.0F);
 						}
 					} else {
-						EntityItem item = new EntityItem(world, player.posX, player.posY, player.posZ, tile.getInventory().getStackInSlot(0));
+						EntityItem item = new EntityItem(world, player.posX, player.posY, player.posZ, stack);
 						item.setNoPickupDelay();
 						world.spawnEntity(item);
 						tile.getInventory().setStackInSlot(0, ItemStack.EMPTY);

@@ -23,7 +23,7 @@ public class CombinationCraftingCategory implements IRecipeCategory<CombinationC
 
 	public CombinationCraftingCategory(IGuiHelper helper) {
 		ResourceLocation texture = new ResourceLocation(ExtendedCrafting.MOD_ID, "textures/jei/combination_crafting.png");
-		this.background = helper.createDrawable(texture, 6, 14, 158, 92);
+		this.background = helper.createDrawable(texture, 6, 10, 158, 170);
 	}
 
 	@Override
@@ -45,12 +45,12 @@ public class CombinationCraftingCategory implements IRecipeCategory<CombinationC
 	public void setRecipe(IRecipeLayout layout, CombinationCraftingWrapper wrapper, IIngredients ingredients) {
 		IGuiItemStackGroup stacks = layout.getItemStacks();
 
-		layout.getItemStacks().init(0, true, 51, 39);
+		layout.getItemStacks().init(0, true, 78, 43);
 		layout.getItemStacks().set(0, wrapper.getInput());
 
 		int index = 1;
 		double angleBetweenEach = 360.0 / ingredients.getInputs(ItemStack.class).size();
-		Point point = new Point(51, 5), center = new Point(51, 39);
+		Point point = new Point(55, 3), center = new Point(74, 45);
 
 		for (List<ItemStack> o : ingredients.getInputs(ItemStack.class)) {
 			layout.getItemStacks().init(index, true, point.x, point.y);
@@ -59,7 +59,7 @@ public class CombinationCraftingCategory implements IRecipeCategory<CombinationC
 			point = rotatePoint(point, center, angleBetweenEach);
 		}
 
-		layout.getItemStacks().init(index, false, 135, 39);
+		layout.getItemStacks().init(index, false, 77, 149);
 		layout.getItemStacks().set(index, ingredients.getOutputs(ItemStack.class).get(0));
 	}
 

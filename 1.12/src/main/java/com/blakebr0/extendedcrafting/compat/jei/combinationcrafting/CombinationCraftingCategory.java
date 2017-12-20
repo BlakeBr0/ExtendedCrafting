@@ -50,7 +50,7 @@ public class CombinationCraftingCategory implements IRecipeCategory<CombinationC
 
 		int index = 1;
 		double angleBetweenEach = 360.0 / ingredients.getInputs(ItemStack.class).size();
-		Point point = new Point(55, 3), center = new Point(74, 45);
+		Point point = new Point(57, 4), center = new Point(78, 43);
 
 		for (List<ItemStack> o : ingredients.getInputs(ItemStack.class)) {
 			layout.getItemStacks().init(index, true, point.x, point.y);

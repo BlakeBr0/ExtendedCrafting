@@ -135,8 +135,10 @@ public class TileCraftingCore extends TileEntity implements ITickable {
 						Iterator<ItemStack> itr = ((List<ItemStack>) next).iterator();
 						while (itr.hasNext()) {
 							match = OreDictionary.itemMatches(itr.next(), stack, false);
+							if (match) break;
 						}
 					}
+					
 					if (match) {
 						pedestals.add(pedestal);
 						remaining.remove(next);

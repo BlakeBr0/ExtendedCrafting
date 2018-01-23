@@ -6,12 +6,12 @@ import java.util.List;
 
 import javax.annotation.Nonnull;
 
+import com.blakebr0.cucumber.energy.EnergyStorageCustom;
 import com.blakebr0.cucumber.helper.StackHelper;
 import com.blakebr0.extendedcrafting.block.BlockPedestal;
 import com.blakebr0.extendedcrafting.config.ModConfig;
 import com.blakebr0.extendedcrafting.crafting.CombinationRecipe;
 import com.blakebr0.extendedcrafting.crafting.CombinationRecipeManager;
-import com.blakebr0.extendedcrafting.lib.CustomEnergyStorage;
 import com.blakebr0.extendedcrafting.util.VanillaPacketDispatcher;
 
 import net.minecraft.block.Block;
@@ -36,7 +36,7 @@ import net.minecraftforge.oredict.OreDictionary;
 public class TileCraftingCore extends TileEntity implements ITickable {
 
 	private final ItemStackHandler inventory = new StackHandler(1);
-	private final CustomEnergyStorage energy = new CustomEnergyStorage(ModConfig.confCraftingCoreRFCapacity);
+	private final EnergyStorageCustom energy = new EnergyStorageCustom(ModConfig.confCraftingCoreRFCapacity);
 
 	public CombinationRecipe activeRecipe;
 	private int progress;
@@ -195,7 +195,7 @@ public class TileCraftingCore extends TileEntity implements ITickable {
 		return inventory;
 	}
 
-	public CustomEnergyStorage getEnergy() {
+	public EnergyStorageCustom getEnergy() {
 		return energy;
 	}
 

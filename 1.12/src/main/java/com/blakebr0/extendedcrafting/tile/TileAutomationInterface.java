@@ -4,8 +4,8 @@ import java.util.Locale;
 
 import javax.annotation.Nonnull;
 
+import com.blakebr0.cucumber.energy.EnergyStorageCustom;
 import com.blakebr0.cucumber.helper.StackHelper;
-import com.blakebr0.cucumber.lib.CustomEnergyStorage;
 import com.blakebr0.cucumber.util.Utils;
 import com.blakebr0.extendedcrafting.config.ModConfig;
 import com.blakebr0.extendedcrafting.lib.FakeRecipeHandler;
@@ -33,7 +33,7 @@ public class TileAutomationInterface extends TileEntity implements ITickable, IS
 	
 	private final ItemStackHandler inventory = new StackHandler(2);
 	private final ItemStackHandler recipe = new FakeRecipeHandler();
-	private final CustomEnergyStorage energy = new CustomEnergyStorage(ModConfig.confInterfaceRFCapacity);
+	private final EnergyStorageCustom energy = new EnergyStorageCustom(ModConfig.confInterfaceRFCapacity);
 	private int oldEnergy;
 	private ItemStack result = ItemStack.EMPTY;
 	private boolean hasRecipe = false;
@@ -53,7 +53,7 @@ public class TileAutomationInterface extends TileEntity implements ITickable, IS
 		return result;
 	}
 	
-	public CustomEnergyStorage getEnergy() {
+	public EnergyStorageCustom getEnergy() {
 		return energy;
 	}
 	

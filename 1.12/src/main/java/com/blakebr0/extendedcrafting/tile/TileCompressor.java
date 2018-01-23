@@ -6,8 +6,8 @@ import java.util.List;
 
 import javax.annotation.Nonnull;
 
+import com.blakebr0.cucumber.energy.EnergyStorageCustom;
 import com.blakebr0.cucumber.helper.StackHelper;
-import com.blakebr0.cucumber.lib.CustomEnergyStorage;
 import com.blakebr0.cucumber.util.VanillaPacketDispatcher;
 import com.blakebr0.extendedcrafting.config.ModConfig;
 import com.blakebr0.extendedcrafting.crafting.CompressorRecipe;
@@ -32,7 +32,7 @@ import net.minecraftforge.items.wrapper.SidedInvWrapper;
 public class TileCompressor extends TileEntity implements ISidedInventory, ITickable {
 
 	private NonNullList<ItemStack> inventoryStacks = NonNullList.<ItemStack> withSize(3, ItemStack.EMPTY);
-	private final CustomEnergyStorage energy = new CustomEnergyStorage(ModConfig.confCompressorRFCapacity);
+	private final EnergyStorageCustom energy = new EnergyStorageCustom(ModConfig.confCompressorRFCapacity);
 	private ItemStack materialStack = ItemStack.EMPTY;
 	private int materialCount;
 	private int progress;
@@ -259,7 +259,7 @@ public class TileCompressor extends TileEntity implements ISidedInventory, ITick
 		return this.writeToNBT(new NBTTagCompound());
 	}
 
-	public CustomEnergyStorage getEnergy() {
+	public EnergyStorageCustom getEnergy() {
 		return this.energy;
 	}
 

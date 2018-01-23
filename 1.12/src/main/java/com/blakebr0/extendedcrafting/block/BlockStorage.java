@@ -98,7 +98,10 @@ public class BlockStorage extends BlockBase implements IModelHelper {
 		LUMINESSENCE(1, "luminessence"),
 		NETHER_STAR(2, "nether_star"),
 		CRYSTALTINE(3, "crystaltine"),
-		ULTIMATE(4, "ultimate");
+		ULTIMATE(4, "ultimate"),
+		ENDER(5, "ender"),
+		ENDER_STAR(6, "ender_star"),
+		ENHANCED_ENDER(7, "enhanced_ender");
 
 		private static final Type[] META_LOOKUP = new Type[values().length];
 		private final int meta;

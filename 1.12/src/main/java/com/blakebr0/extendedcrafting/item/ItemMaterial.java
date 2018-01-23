@@ -17,7 +17,7 @@ import net.minecraft.world.World;
 
 public class ItemMaterial extends ItemMeta {
 	
-	public static Set<Integer> ultimateMetas = new HashSet<>(Arrays.asList(13, 19, 32, 33));
+	public static Set<Integer> ultimateMetas = new HashSet<>(Arrays.asList(13, 19, 32, 33, 40, 41, 48, 49));
 
 	public static ItemStack itemBlackIron;
 	public static ItemStack itemBlackIronNugget;
@@ -46,9 +46,17 @@ public class ItemMaterial extends ItemMeta {
 	public static ItemStack itemUltimateCatalyst;
 	public static ItemStack itemUltimateComponent;
 	
+	public static ItemStack itemEnderIngot;
+	public static ItemStack itemEnderNugget;
+	
+	public static ItemStack itemEnderStar;
+	public static ItemStack itemEnderStarNugget;
+	
+	public static ItemStack itemEnhancedEnderIngot;
+	public static ItemStack itemEnhancedEnderNugget;
+	
 	public static ItemStack itemDiamondNugget;
 	public static ItemStack itemEmeraldNugget;
-	
 	public static ItemStack itemNetherStarNugget;
 
 	public ItemMaterial() {
@@ -85,9 +93,17 @@ public class ItemMaterial extends ItemMeta {
 		itemUltimateIngot = addItem(32, "ultimate_ingot", "ingotUltimate");
 		itemUltimateNugget = addItem(33, "ultimate_nugget", "nuggetUltimate");
 		
+		itemEnderIngot = addItem(36, "ender_ingot", "ingotEnder");
+		itemEnderNugget = addItem(37, "ender_nugget", "nuggetEnder");
+		
+		itemEnderStar = addItem(40, "ender_star");
+		itemEnderStarNugget = addItem(41, "ender_star_nugget", "nuggetEnderStar");
+		
+		itemEnhancedEnderIngot = addItem(48, "enhanced_ender_ingot", "ingotEnderEnhanced");
+		itemEnhancedEnderNugget = addItem(49, "enhanced_ender_nugget", "nuggetEnderEnhanced");
+				
 		itemDiamondNugget = addItem(128, "diamond_nugget", "nuggetDiamond");
 		itemEmeraldNugget = addItem(129, "emerald_nugget", "nuggetEmerald");
-		
 		itemNetherStarNugget = addItem(140, "nether_star_nugget", "nuggetNetherStar");
 	}
 	

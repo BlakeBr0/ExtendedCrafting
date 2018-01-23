@@ -25,11 +25,11 @@ public class ItemBlockStorage extends ItemBlock {
 	
 	@Override
 	public EnumRarity getRarity(ItemStack stack) {
-		return stack.getMetadata() == 4 ? EnumRarity.EPIC : EnumRarity.COMMON;
+		return stack.getMetadata() == 4 || stack.getMetadata() == 6 || stack.getMetadata() == 7 ? EnumRarity.EPIC : EnumRarity.COMMON;
 	}
 	
 	@Override
 	public boolean hasEffect(ItemStack stack) {
-		return stack.getMetadata() == 4;
+		return stack.getMetadata() == 4 || stack.getMetadata() == 6 || stack.getMetadata() == 7;
 	}
 }

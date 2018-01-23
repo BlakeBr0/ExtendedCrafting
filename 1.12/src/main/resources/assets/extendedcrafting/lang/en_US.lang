@@ -7,6 +7,9 @@ tile.ec.storage_luminessence.name=Block of Luminessence
 tile.ec.storage_nether_star.name=Block of Nether Stars
 tile.ec.storage_crystaltine.name=Block of Crystaltine
 tile.ec.storage_ultimate.name=Block of Ultimate
+tile.ec.storage_ender.name=Block of Ender
+tile.ec.storage_ender_star.name=Block of Ender Stars
+tile.ec.storage_enhanced_ender.name=Block of Enhanced Ender
 tile.ec.frame.name=Black Iron Frame
 tile.ec.lamp_glowstone.name=Black Iron Lamp
 tile.ec.lamp_luminessence.name=Black Iron Lamp
@@ -31,6 +34,9 @@ tile.ec.table_ultimate.name=Ultimate Crafting Table
 
 tile.ec.compressor.name=Quantum Compressor
 
+tile.ec.ender_alternator.name=Ender Alternator
+tile.ec.ender_crafter.name=Ender Crafter
+
 # ITEMS
 item.ec.material_black_iron.name=Black Iron Ingot
 item.ec.material_black_iron_nugget.name=Black Iron Nugget
@@ -53,6 +59,12 @@ item.ec.material_ultimate_ingot.name=Ultimate Ingot
 item.ec.material_ultimate_nugget.name=Ultimate Nugget
 item.ec.material_ultimater_catalyst.name=Ultimate Catalyst
 item.ec.material_ultimater_component.name=Ultimate Component
+item.ec.material_ender_ingot.name=Ender Ingot
+item.ec.material_ender_nugget.name=Ender Nugget
+item.ec.material_ender_star.name=Ender Star
+item.ec.material_ender_star_nugget.name=Ender Star Nugget
+item.ec.material_enhanced_ender_ingot.name=Enhanced Ender Ingot
+item.ec.material_enhanced_ender_nugget.name=Enhanced Ender Nugget
 item.ec.material_diamond_nugget.name=Diamond Nugget
 item.ec.material_emerald_nugget.name=Emerald Nugget
 item.ec.material_nether_star_nugget.name=Nether Star Nugget

@@ -10,11 +10,14 @@ import com.blakebr0.extendedcrafting.compat.crafttweaker.CompressionCrafting;
 import com.blakebr0.extendedcrafting.compat.crafttweaker.TableCrafting;
 import com.blakebr0.extendedcrafting.config.ModConfig;
 import com.blakebr0.extendedcrafting.crafting.ModRecipes;
+import com.blakebr0.extendedcrafting.endercrafter.EnderCrafterRecipeManager;
 import com.blakebr0.extendedcrafting.item.ModItems;
 import com.blakebr0.extendedcrafting.tile.ModTiles;
 import com.blakebr0.extendedcrafting.util.NetworkThingy;
 
 import crafttweaker.CraftTweakerAPI;
+import net.minecraft.init.Items;
+import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegistryEvent;
@@ -50,6 +53,7 @@ public class CommonProxy {
 		NetworkThingy.init();
 		NetworkRegistry.INSTANCE.registerGuiHandler(ExtendedCrafting.instance, new GuiHandler());
 		FMLInterModComms.sendMessage("waila", "register", "com.blakebr0.extendedcrafting.compat.WailaDataProvider.callbackRegister");
+		EnderCrafterRecipeManager.getInstance().addShapeless(new ItemStack(Items.APPLE), Items.STICK);
 		//ModRecipes.init();
 /*		CombinationRecipeManager.getInstance().addRecipe(new ItemStack(Items.DIAMOND), 50000, 100,
 				new ItemStack(Items.COAL), new ItemStack(Items.STICK), new ItemStack(Items.LAVA_BUCKET), "ingotIron",

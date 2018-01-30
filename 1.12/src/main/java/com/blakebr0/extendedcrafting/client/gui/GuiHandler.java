@@ -6,6 +6,7 @@ import com.blakebr0.extendedcrafting.client.container.ContainerBasicTable;
 import com.blakebr0.extendedcrafting.client.container.ContainerCompressor;
 import com.blakebr0.extendedcrafting.client.container.ContainerCraftingCore;
 import com.blakebr0.extendedcrafting.client.container.ContainerEliteTable;
+import com.blakebr0.extendedcrafting.client.container.ContainerEnderCrafter;
 import com.blakebr0.extendedcrafting.client.container.ContainerHandheldTable;
 import com.blakebr0.extendedcrafting.client.container.ContainerUltimateTable;
 import com.blakebr0.extendedcrafting.client.gui.automationinterface.GuiAutomationInterface;
@@ -15,6 +16,7 @@ import com.blakebr0.extendedcrafting.tile.TileBasicCraftingTable;
 import com.blakebr0.extendedcrafting.tile.TileCompressor;
 import com.blakebr0.extendedcrafting.tile.TileCraftingCore;
 import com.blakebr0.extendedcrafting.tile.TileEliteCraftingTable;
+import com.blakebr0.extendedcrafting.tile.TileEnderCrafter;
 import com.blakebr0.extendedcrafting.tile.TileUltimateCraftingTable;
 
 import net.minecraft.entity.player.EntityPlayer;
@@ -36,6 +38,8 @@ public class GuiHandler implements IGuiHandler {
 	public static final int ULTIMATE_TABLE = 10;
 
 	public static final int COMPRESSOR = 13;
+	
+	public static final int ENDER_CRAFTER = 19;
 
 	@Override
 	public Object getClientGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
@@ -62,6 +66,9 @@ public class GuiHandler implements IGuiHandler {
 		}
 		if (ID == COMPRESSOR) {
 			return new GuiCompressor((TileCompressor) world.getTileEntity(new BlockPos(x, y, z)), new ContainerCompressor(player.inventory, (TileCompressor) world.getTileEntity(new BlockPos(x, y, z))));
+		}
+		if (ID == ENDER_CRAFTER) {
+			return new GuiEnderCrafter((TileEnderCrafter) world.getTileEntity(new BlockPos(x, y, z)), new ContainerEnderCrafter(player.inventory, (TileEnderCrafter) world.getTileEntity(new BlockPos(x, y, z)), world));
 		}
 		return null;
 	}
@@ -91,6 +98,9 @@ public class GuiHandler implements IGuiHandler {
 		}
 		if (ID == COMPRESSOR) {
 			return new ContainerCompressor(player.inventory, (TileCompressor) world.getTileEntity(new BlockPos(x, y, z)));
+		}
+		if (ID == ENDER_CRAFTER) {
+			return new ContainerEnderCrafter(player.inventory, (TileEnderCrafter) world.getTileEntity(new BlockPos(x, y, z)), world);
 		}
 		return null;
 	}

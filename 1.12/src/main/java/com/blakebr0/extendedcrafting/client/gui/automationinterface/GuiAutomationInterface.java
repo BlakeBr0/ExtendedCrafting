@@ -8,6 +8,7 @@ import org.apache.commons.lang3.StringUtils;
 import com.blakebr0.cucumber.util.Utils;
 import com.blakebr0.extendedcrafting.ExtendedCrafting;
 import com.blakebr0.extendedcrafting.client.container.ContainerAutomationInterface;
+import com.blakebr0.extendedcrafting.config.ModConfig;
 import com.blakebr0.extendedcrafting.tile.TileAutomationInterface;
 import com.blakebr0.extendedcrafting.util.InterfaceRecipeChangePacket;
 import com.blakebr0.extendedcrafting.util.NetworkThingy;
@@ -64,7 +65,9 @@ public class GuiAutomationInterface extends GuiContainer {
 		this.buttonList.add(new SmallButton(1, (this.width - this.xSize) / 2 + 62, (this.height - this.ySize) / 2 + 59, 71, 12, Utils.localize("ec.interface.clear")));
 		this.buttonList.add(new SmallButton(5, (this.width - this.xSize) / 2 + 62, (this.height - this.ySize) / 2 + 71, 71, 12, Utils.localize("ec.interface.view")));
 		
-		this.buttonList.add(new SmallButton(10, (this.width - this.xSize) / 2 + 129, (this.height - this.ySize) / 2 + 87, 40, 12, Utils.localize("ec.interface.config")));
+		if (ModConfig.confInterfaceAutoIO) {
+			this.buttonList.add(new SmallButton(10, (this.width - this.xSize) / 2 + 129, (this.height - this.ySize) / 2 + 87, 40, 12, Utils.localize("ec.interface.config")));
+		}
 	}
 	
 	@Override

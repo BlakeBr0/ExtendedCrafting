@@ -3,6 +3,8 @@ package com.blakebr0.extendedcrafting.client.gui.automationinterface;
 import java.io.IOException;
 import java.util.Collections;
 
+import org.apache.commons.lang3.StringUtils;
+
 import com.blakebr0.cucumber.util.Utils;
 import com.blakebr0.extendedcrafting.ExtendedCrafting;
 import com.blakebr0.extendedcrafting.client.container.ContainerAutomationInterface;
@@ -30,7 +32,6 @@ public class GuiAutomationInterface extends GuiContainer {
 
 	protected static final ResourceLocation GUI = new ResourceLocation(ExtendedCrafting.MOD_ID, "textures/gui/automation_interface.png");
 	protected TileAutomationInterface tile;
-	private int infoTicks = 0;
 	
 	public GuiAutomationInterface(ContainerAutomationInterface container) {
 		super(container);
@@ -100,11 +101,8 @@ public class GuiAutomationInterface extends GuiContainer {
 		this.fontRenderer.drawString(Utils.localize("container.inventory"), 8, this.ySize - 94, 4210752);
 		GlStateManager.pushMatrix();
 		GlStateManager.scale(0.75F, 0.75F, 0.75F);
-		this.fontRenderer.drawString("Has Table: " + String.valueOf(this.tile.hasTable()), 83, 14, -1);
-		this.fontRenderer.drawString("Has Recipe: " + String.valueOf(this.tile.hasRecipe()), 83, 24, -1);
-		if (this.infoTicks > 0) {
-			this.fontRenderer.drawString("No recipe found.", 83, 38, 16744576);
-		}
+		this.fontRenderer.drawString(Utils.localize("ec.interface.table") + StringUtils.capitalize(String.valueOf(this.tile.hasTable())), 83, 14, -1);
+		this.fontRenderer.drawString(Utils.localize("ec.interface.recipe") + StringUtils.capitalize(String.valueOf(this.tile.hasRecipe())), 83, 24, -1);
 		GlStateManager.popMatrix();
 	}
 
@@ -125,7 +123,7 @@ public class GuiAutomationInterface extends GuiContainer {
         GlStateManager.translate(0.0F, 0.0F, 32.0F);
         this.zLevel = 200.0F;
         this.itemRender.zLevel = 200.0F;
-        net.minecraft.client.gui.FontRenderer font = stack.getItem().getFontRenderer(stack);
+        FontRenderer font = stack.getItem().getFontRenderer(stack);
         if (font == null) font = fontRenderer;
         this.itemRender.renderItemAndEffectIntoGUI(stack, x, y);
         this.itemRender.renderItemOverlayIntoGUI(font, stack, x, y, (String) null);

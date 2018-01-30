@@ -66,7 +66,7 @@ public class GuiViewRecipe extends GuiContainer {
 	@Override
 	public void initGui() {
 		super.initGui();
-		this.buttonList.add(new SmallButton(0, ((this.width - this.xSize) / 2) + 12, ((this.height - this.ySize) / 2) + 7, 40, 12, Utils.localize("ec.interface.back")));
+		this.buttonList.add(new SmallButton(0, (this.width / 2) - 20, ((this.height - this.ySize) / 2) + 5, 40, 12, Utils.localize("ec.interface.back")));
 	}
 	
 	@Override
@@ -101,7 +101,7 @@ public class GuiViewRecipe extends GuiContainer {
         GlStateManager.translate(0.0F, 0.0F, 32.0F);
         this.zLevel = 200.0F;
         this.itemRender.zLevel = 200.0F;
-        net.minecraft.client.gui.FontRenderer font = stack.getItem().getFontRenderer(stack);
+        FontRenderer font = stack.getItem().getFontRenderer(stack);
         if (font == null) font = fontRenderer;
         GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
         this.itemRender.renderItemAndEffectIntoGUI(stack, x, y);

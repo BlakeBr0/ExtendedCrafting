@@ -1,5 +1,5 @@
 {
 	"variants": {
-		"normal": { "model": "extendedcrafting:frame" }
+		"normal": { "model": "extendedcrafting:ender_crafter" }
 	}
 }

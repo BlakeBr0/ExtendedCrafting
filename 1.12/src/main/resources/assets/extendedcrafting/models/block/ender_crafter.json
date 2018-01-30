@@ -1,12 +1,12 @@
 {
     "parent": "block/cube",
     "textures": {
-        "particle": "blocks/crafting_table_front",
-        "down": "blocks/planks_oak",
-        "up": "blocks/crafting_table_top",
-        "north": "blocks/crafting_table_front",
-        "east": "blocks/crafting_table_side",
-        "south": "blocks/crafting_table_side",
-        "west": "blocks/crafting_table_front"
+        "particle": "extendedcrafting:blocks/storage_ender",
+        "down": "extendedcrafting:blocks/storage_ender",
+        "up": "extendedcrafting:blocks/ender_crafter_top",
+        "north": "extendedcrafting:blocks/ender_crafter_side",
+        "east": "extendedcrafting:blocks/ender_crafter_side",
+        "south": "extendedcrafting:blocks/ender_crafter_side",
+        "west": "extendedcrafting:blocks/ender_crafter_side"
     }
 }

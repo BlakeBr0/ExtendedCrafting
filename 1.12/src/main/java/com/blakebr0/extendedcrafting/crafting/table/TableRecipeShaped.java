@@ -16,7 +16,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.crafting.CraftingHelper;
 import net.minecraftforge.common.crafting.CraftingHelper.ShapedPrimer;
 import net.minecraftforge.items.IItemHandlerModifiable;
-// TODO: Cleanup
+
 public class TableRecipeShaped implements IRecipe, ITieredRecipe {
 
 	public static final int MAX_CRAFT_GRID_WIDTH = 9;

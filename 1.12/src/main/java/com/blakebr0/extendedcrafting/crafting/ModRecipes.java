@@ -9,13 +9,9 @@ import net.minecraft.init.Items;
 public class ModRecipes {
 	
 	public static void init() {
-		// Crystaltine Ingot
 		TableRecipeManager.getInstance().addShaped(ModItems.itemMaterial.itemCrystaltineIngot,
 				"DLLLLLD", "DNIGIND", "DNIGIND", "DLLLLLD", 
 				'D', "gemDiamond", 'L', StackHelper.to(Items.DYE, 1, 4), 'N', ModItems.itemMaterial.itemNetherStarNugget, 'I', "ingotIron", 'G', "ingotGold");
-		// TODO: Ultimate Ingot
-//		TableRecipeManager.getInstance().addShaped(ModItems.itemMaterial.itemUltimateIngot, 
-//				"XXXXXXXXX", "XXXXXXXXX", "XXXXXXXXX");
 
 		ModItems.itemSingularity.initRecipes();
 		ModItems.itemSingularityUltimate.initRecipe();

@@ -29,11 +29,6 @@ public class TableCraftResultHandler extends Slot {
 	public boolean isItemValid(@Nullable ItemStack stack) {
 		return false;
 	}
-	
-	@Override // TODO: make it so you cant take anything from the output if there is an interface (or something)
-	public boolean canTakeStack(EntityPlayer player) {
-		return super.canTakeStack(player);
-	}
 
 	@Override
 	public ItemStack onTake(EntityPlayer player, ItemStack stack) {

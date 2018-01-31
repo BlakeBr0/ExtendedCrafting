@@ -15,7 +15,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraftforge.common.crafting.CraftingHelper;
 import net.minecraftforge.items.IItemHandlerModifiable;
-// TODO: Cleanup
+
 public class TableRecipeShapeless implements IRecipe, ITieredRecipe {
 
 	@Nonnull

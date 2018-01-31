@@ -98,7 +98,7 @@ public class CommonProxy {
 		ModRecipes.post();
 	}
 	
-	@SubscribeEvent // TODO: figure out why crafttweaker sucks
+	@SubscribeEvent
 	public void registerRecipes(RegistryEvent.Register<IRecipe> event) {
 		ModRecipes.init();
 	}

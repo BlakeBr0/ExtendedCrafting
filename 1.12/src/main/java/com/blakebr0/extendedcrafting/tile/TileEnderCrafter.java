@@ -39,7 +39,8 @@ public class TileEnderCrafter extends TileEntityBase implements IExtendedTable, 
 	public void update() {
 		if (!this.getWorld().isRemote) {
 			ItemStack result = EnderCrafterRecipeManager.getInstance().findMatchingRecipe(matrix);
-			if (!result.isEmpty()) {
+			ItemStack output = this.getResult();
+			if (!result.isEmpty() && output.isEmpty() || (output.isItemEqual(result) && output.getCount() + result.getCount() <= output.getMaxStackSize())) {
 				List<BlockPos> alternators = this.getAlternatorPositions();
 
 				this.progress(alternators.size());
@@ -72,8 +73,8 @@ public class TileEnderCrafter extends TileEntityBase implements IExtendedTable, 
 	public NBTTagCompound writeToNBT(NBTTagCompound tag) {
 		tag = super.writeToNBT(tag);
 		tag.merge(matrix.serializeNBT());
-		if (!result.getStackInSlot(0).isEmpty()) {
-			tag.setTag("Result", result.getStackInSlot(0).writeToNBT(new NBTTagCompound()));
+		if (!this.getResult().isEmpty()) {
+			tag.setTag("Result", this.getResult().serializeNBT());
 		} else {
 			tag.removeTag("Result");
 		}
@@ -106,10 +107,10 @@ public class TileEnderCrafter extends TileEntityBase implements IExtendedTable, 
 	}
 	
 	public void updateResult(ItemStack result) {
-		if (this.result.getStackInSlot(0).isEmpty()) {
+		if (this.getResult().isEmpty()) {
 			this.setResult(result);
 		} else {
-			this.result.getStackInSlot(0).grow(result.getCount());
+			this.getResult().grow(result.getCount());
 		}
 	}
 

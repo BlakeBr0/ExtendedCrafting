@@ -34,27 +34,6 @@ public class TileEnderCrafter extends TileEntityBase implements IExtendedTable, 
 	public ItemStackHandler matrix = new ItemStackHandler(9);
 	public InventoryCraftResult result = new InventoryCraftResult();
 	private int progress;
-
-	@Override
-	public ItemStack getResult() {
-		return result.getStackInSlot(0);
-	}
-
-	public void setResult(ItemStack result) {
-		this.result.setInventorySlotContents(0, result);
-	}
-	
-	public void updateResult(ItemStack result) {
-		if (this.result.getStackInSlot(0).isEmpty()) {
-			this.setResult(result);
-		} else {
-			this.result.getStackInSlot(0).grow(result.getCount());
-		}
-	}
-
-	public void setInventorySlotContents(int slot, ItemStack stack) {
-		matrix.setStackInSlot(slot, stack);
-	}
 	
 	@Override
 	public void update() {
@@ -111,6 +90,32 @@ public class TileEnderCrafter extends TileEntityBase implements IExtendedTable, 
 		}
 		progress = tag.getInteger("Progress");
 	}
+	
+	@Override
+	public ItemStack getResult() {
+		return result.getStackInSlot(0);
+	}
+	
+	@Override
+	public ItemStackHandler getMatrix() {
+		return this.matrix;
+	}
+
+	public void setResult(ItemStack result) {
+		this.result.setInventorySlotContents(0, result);
+	}
+	
+	public void updateResult(ItemStack result) {
+		if (this.result.getStackInSlot(0).isEmpty()) {
+			this.setResult(result);
+		} else {
+			this.result.getStackInSlot(0).grow(result.getCount());
+		}
+	}
+
+	public void setInventorySlotContents(int slot, ItemStack stack) {
+		matrix.setStackInSlot(slot, stack);
+	}
 
 	public boolean isUseableByPlayer(EntityPlayer player) {
 		return this.getWorld().getTileEntity(this.getPos()) == this && player.getDistanceSq(this.pos.add(0.5, 0.5, 0.5)) <= 64;
@@ -134,11 +139,5 @@ public class TileEnderCrafter extends TileEntityBase implements IExtendedTable, 
 	
 	private void progress(int alternators) {
 		this.progress++;
-
-	}
-
-	@Override
-	public ItemStackHandler getMatrix() {
-		return this.matrix;
 	}
 }

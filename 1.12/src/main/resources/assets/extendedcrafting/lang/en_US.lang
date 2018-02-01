@@ -100,6 +100,7 @@ jei.ec.table_crafting_7x7=Elite Crafting
 jei.ec.table_crafting_9x9=Ultimate Crafting
 jei.ec.combination_crafting=Combination Crafting
 jei.ec.compressor=Quantum Compression
+jei.ec.ender_crafting=Ender Crafting
 
 # TOOLTIPS
 tooltip.ec.crafting_table=Decoration

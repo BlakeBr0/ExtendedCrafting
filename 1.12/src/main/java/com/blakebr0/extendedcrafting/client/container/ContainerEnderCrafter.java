@@ -35,7 +35,12 @@ public class ContainerEnderCrafter extends Container {
 		this.tile = tile;
 		this.handler = tile.matrix;
 		this.result = new EnderCraftResult(tile);
-		this.addSlotToContainer(new Slot(tile.result, 0, 124, 35));
+		this.addSlotToContainer(new Slot(tile.result, 0, 124, 35) {
+			@Override
+			public boolean isItemValid(ItemStack stack) {
+				return false;
+			}
+		});
 		int wy;
 		int ex;
 

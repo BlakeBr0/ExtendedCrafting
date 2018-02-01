@@ -34,35 +34,40 @@ public class TileEnderCrafter extends TileEntityBase implements IExtendedTable, 
 	public ItemStackHandler matrix = new ItemStackHandler(9);
 	public InventoryCraftResult result = new InventoryCraftResult();
 	private int progress;
+	private int progressReq;
 	
 	@Override
 	public void update() {
 		if (!this.getWorld().isRemote) {
 			ItemStack result = EnderCrafterRecipeManager.getInstance().findMatchingRecipe(matrix);
 			ItemStack output = this.getResult();
-			if (!result.isEmpty() && output.isEmpty() || (output.isItemEqual(result) && output.getCount() + result.getCount() <= output.getMaxStackSize())) {
+			if (!result.isEmpty() && (output.isEmpty() || (output.isItemEqual(result) && output.getCount() + result.getCount() <= output.getMaxStackSize()))) {
 				List<BlockPos> alternators = this.getAlternatorPositions();
+				int alternatorCount = alternators.size();
 
-				this.progress(alternators.size());
-				
-				for (BlockPos pos : alternators) {
-					if (this.getWorld().isAirBlock(pos.up())) {
-						((WorldServer) this.getWorld()).spawnParticle(EnumParticleTypes.PORTAL, false, pos.getX() + 0.5D, pos.getY() + 1.0D, pos.getZ() + 0.5D, 1, 0, 0, 0, 0.1D);
+				if (alternatorCount > 0) {
+					this.progress(alternatorCount);
+					
+					for (BlockPos pos : alternators) {
+						if (this.getWorld().isAirBlock(pos.up())) {
+							((WorldServer) this.getWorld()).spawnParticle(EnumParticleTypes.PORTAL, false, pos.getX() + 0.5D, pos.getY() + 1.0D, pos.getZ() + 0.5D, 1, 0, 0, 0, 0.1D);
+						}
 					}
-				}
-				
-				if (this.progress >= 100) {
-					for (int i = 0; i < matrix.getSlots(); i++) {
-						this.matrix.extractItem(i, 1, false);
+					
+					if (this.progress >= this.progressReq) {
+						for (int i = 0; i < matrix.getSlots(); i++) {
+							this.matrix.extractItem(i, 1, false);
+						}
+						this.updateResult(result);
+						this.progress = 0;
 					}
-					this.updateResult(result);
-					this.progress = 0;
+					
+					markDirty();
 				}
-				
-				markDirty();
 			} else {
-				if (this.progress > 0) {
+				if (this.progress > 0 || this.progressReq > 0) {
 					this.progress = 0;
+					this.progressReq = 0;
 					markDirty();
 				}
 			}
@@ -72,24 +77,26 @@ public class TileEnderCrafter extends TileEntityBase implements IExtendedTable, 
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound tag) {
 		tag = super.writeToNBT(tag);
-		tag.merge(matrix.serializeNBT());
+		tag.merge(this.matrix.serializeNBT());
 		if (!this.getResult().isEmpty()) {
 			tag.setTag("Result", this.getResult().serializeNBT());
 		} else {
 			tag.removeTag("Result");
 		}
-		tag.setInteger("Progress", progress);
+		tag.setInteger("Progress", this.progress);
+		tag.setInteger("ProgressReq", this.progressReq);
 		return tag;
 	}
 
 	@Override
 	public void readFromNBT(NBTTagCompound tag) {
 		super.readFromNBT(tag);
-		matrix.deserializeNBT(tag);
+		this.matrix.deserializeNBT(tag);
 		if (tag.hasKey("Result")) {
-			result.setInventorySlotContents(0, new ItemStack(tag.getCompoundTag("Result")));
+			this.result.setInventorySlotContents(0, new ItemStack(tag.getCompoundTag("Result")));
 		}
-		progress = tag.getInteger("Progress");
+		this.progress = tag.getInteger("Progress");
+		this.progressReq = tag.getInteger("ProgressReq");
 	}
 	
 	@Override
@@ -115,15 +122,11 @@ public class TileEnderCrafter extends TileEntityBase implements IExtendedTable, 
 	}
 
 	public void setInventorySlotContents(int slot, ItemStack stack) {
-		matrix.setStackInSlot(slot, stack);
+		this.matrix.setStackInSlot(slot, stack);
 	}
 
 	public boolean isUseableByPlayer(EntityPlayer player) {
-		return this.getWorld().getTileEntity(this.getPos()) == this && player.getDistanceSq(this.pos.add(0.5, 0.5, 0.5)) <= 64;
-	}
-	
-	public int getProgress() {
-		return this.progress;
+		return this.getWorld().getTileEntity(this.getPos()) == this && player.getDistanceSq(this.getPos().add(0.5, 0.5, 0.5)) <= 64;
 	}
 	
 	public List<BlockPos> getAlternatorPositions() {
@@ -138,7 +141,16 @@ public class TileEnderCrafter extends TileEntityBase implements IExtendedTable, 
 		return alternators;
 	}
 	
+	public int getProgress() {
+		return this.progress;
+	}
+	
 	private void progress(int alternators) {
 		this.progress++;
+		this.progressReq = alternators > 1 ? 600 - ((alternators / 4) * 20) : 600; // TODO: Improve algorithmsmsmmssmms
+	}
+	
+	public int getProgressRequired() {
+		return this.progressReq;
 	}
 }

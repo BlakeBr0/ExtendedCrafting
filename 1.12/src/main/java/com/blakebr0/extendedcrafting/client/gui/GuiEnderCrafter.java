@@ -25,7 +25,7 @@ public class GuiEnderCrafter extends GuiContainer {
 	
 	private int getProgressBarScaled(int pixels) {
 		int i = this.tile.getProgress();
-		int j = 100;
+		int j = this.tile.getProgressRequired();
 		return j != 0 && i != 0 ? i * pixels / j : 0;
 	}
 

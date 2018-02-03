@@ -10,6 +10,7 @@ import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
@@ -34,5 +35,18 @@ public class BlockEnderCrafter extends BlockBase implements ITileEntityProvider 
 	@Override
 	public TileEntity createNewTileEntity(World world, int meta) {
 		return new TileEnderCrafter();
+	}
+	
+	@Override
+	public void breakBlock(World world, BlockPos pos, IBlockState state) {
+		TileEnderCrafter tile = (TileEnderCrafter) world.getTileEntity(pos);
+		if (tile != null) {
+			for (int i = 0; i < tile.getMatrix().getSlots(); i++) {
+				ItemStack stack = tile.getMatrix().getStackInSlot(i);
+				this.spawnAsEntity(world, pos, stack);
+			}
+			this.spawnAsEntity(world, pos, tile.getResult());
+		}
+		super.breakBlock(world, pos, state);
 	}
 }

@@ -147,7 +147,7 @@ public class TileEnderCrafter extends TileEntityBase implements IExtendedTable, 
 	
 	private void progress(int alternators) {
 		this.progress++;
-		this.progressReq = alternators > 1 ? 600 - ((alternators / 4) * 20) : 600; // TODO: Improve algorithmsmsmmssmms
+		this.progressReq = Math.max(623 - alternators * 3, 20);
 	}
 	
 	public int getProgressRequired() {

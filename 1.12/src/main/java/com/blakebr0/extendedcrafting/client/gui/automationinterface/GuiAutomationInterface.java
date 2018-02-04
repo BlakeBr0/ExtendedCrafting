@@ -65,9 +65,7 @@ public class GuiAutomationInterface extends GuiContainer {
 		this.buttonList.add(new SmallButton(1, (this.width - this.xSize) / 2 + 62, (this.height - this.ySize) / 2 + 59, 71, 12, Utils.localize("ec.interface.clear")));
 		this.buttonList.add(new SmallButton(5, (this.width - this.xSize) / 2 + 62, (this.height - this.ySize) / 2 + 71, 71, 12, Utils.localize("ec.interface.view")));
 		
-		if (ModConfig.confInterfaceAutoIO) {
-			this.buttonList.add(new SmallButton(10, (this.width - this.xSize) / 2 + 129, (this.height - this.ySize) / 2 + 87, 40, 12, Utils.localize("ec.interface.config")));
-		}
+		this.buttonList.add(new SmallButton(10, (this.width - this.xSize) / 2 + 129, (this.height - this.ySize) / 2 + 87, 40, 12, Utils.localize("ec.interface.config")));
 	}
 	
 	@Override

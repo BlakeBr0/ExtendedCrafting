@@ -21,7 +21,6 @@ public class ModConfig {
 	public static int confCompressorItemRate;
 	public static int confInterfaceRFCapacity;
 	public static int confInterfaceRFRate;
-	public static boolean confInterfaceAutoIO;
 	
 	public static int confSingularityAmount;
 	public static int confSingularityRF;
@@ -54,9 +53,6 @@ public class ModConfig {
 		confCompressorItemRate = config.getInt("compressor_item_rate", category, 4, 1, 64, "How many items/t the Quantum Compressor should consume/eject.");
 		confInterfaceRFCapacity = config.getInt("interface_rf_capacity", category, 1000000, 0, Integer.MAX_VALUE, "How much RF/FE the Automation Interface should hold.");
 		confInterfaceRFRate = config.getInt("interface_rf_rate", category, 80, 0, 100000, "How much RF the Automation Interface should use when moving items.");
-		confInterfaceAutoIO = config.getBoolean("interface_auto_io", category, true, "Should the auto insert/extract ability of the Automation Interface be enabled? "
-				+ "\nDisabling this is good if you want to require using other forms of item transfer, like Itemducts.");
-		
 		
 		category = "singularity";
 		config.setCategoryComment(category, "High end crafting components.");

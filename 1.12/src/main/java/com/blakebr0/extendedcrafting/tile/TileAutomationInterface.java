@@ -77,40 +77,38 @@ public class TileAutomationInterface extends TileEntity implements ITickable, IS
 				}
 			}
 			
-			if (ModConfig.confInterfaceAutoIO) {
-				if (this.getInserterFace() != null && this.getEnergy().getEnergyStored() >= ModConfig.confInterfaceRFRate && ticks % 4 == 0) {
-					TileEntity tile = this.getWorld().getTileEntity(this.getPos().offset(this.getInserterFace()));
-					if (tile != null && tile.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, EnumFacing.DOWN)) {
-						IItemHandler handler = tile.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, EnumFacing.DOWN);
-						for (int i = 0; i < handler.getSlots(); i++) {
-							ItemStack stack = handler.getStackInSlot(i);
-							if (!stack.isEmpty() && ((FakeRecipeHandler) this.getRecipe()).getStacks().stream().anyMatch(s -> s.isItemEqual(stack))) {
-								if (input.isEmpty() || (input.isItemEqual(stack) && input.getCount() < input.getMaxStackSize())) {
-									ItemStack toInsert = stack.copy(); toInsert.setCount(1);
-									this.getInventory().insertItem(0, toInsert, false);
-									handler.extractItem(i, 1, false);
-									this.getEnergy().extractEnergy(ModConfig.confInterfaceRFRate, false);
-									break;
-								}
+			if (this.getInserterFace() != null && this.getEnergy().getEnergyStored() >= ModConfig.confInterfaceRFRate && ticks % 4 == 0) {
+				TileEntity tile = this.getWorld().getTileEntity(this.getPos().offset(this.getInserterFace()));
+				if (tile != null && tile.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, EnumFacing.DOWN)) {
+					IItemHandler handler = tile.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, EnumFacing.DOWN);
+					for (int i = 0; i < handler.getSlots(); i++) {
+						ItemStack stack = handler.getStackInSlot(i);
+						if (!stack.isEmpty() && ((FakeRecipeHandler) this.getRecipe()).getStacks().stream().anyMatch(s -> s.isItemEqual(stack))) {
+							if (input.isEmpty() || (input.isItemEqual(stack) && input.getCount() < input.getMaxStackSize())) {
+								ItemStack toInsert = stack.copy(); toInsert.setCount(1);
+								this.getInventory().insertItem(0, toInsert, false);
+								handler.extractItem(i, 1, false);
+								this.getEnergy().extractEnergy(ModConfig.confInterfaceRFRate, false);
+								break;
 							}
 						}
 					}
 				}
-				
-				if (this.getExtractorFace() != null && this.getEnergy().getEnergyStored() >= ModConfig.confInterfaceRFRate && ticks % 4 == 0) {
-					TileEntity tile = this.getWorld().getTileEntity(this.getPos().offset(this.getExtractorFace()));
-					if (tile != null && tile.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, EnumFacing.UP)) {
-						IItemHandler handler = tile.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, EnumFacing.UP);
-						for (int i = 0; i < handler.getSlots(); i++) {
-							ItemStack stack = handler.getStackInSlot(i);
-							if (!output.isEmpty()) {
-								if (stack.isEmpty() || (stack.isItemEqual(output) && stack.getCount() < stack.getMaxStackSize())) {
-									ItemStack toInsert = output.copy(); toInsert.setCount(1);
-									handler.insertItem(i, toInsert, false);
-									output.shrink(1);
-									this.getEnergy().extractEnergy(ModConfig.confInterfaceRFRate, false);
-									break;
-								}
+			}
+			
+			if (this.getExtractorFace() != null && this.getEnergy().getEnergyStored() >= ModConfig.confInterfaceRFRate && ticks % 4 == 0) {
+				TileEntity tile = this.getWorld().getTileEntity(this.getPos().offset(this.getExtractorFace()));
+				if (tile != null && tile.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, EnumFacing.UP)) {
+					IItemHandler handler = tile.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, EnumFacing.UP);
+					for (int i = 0; i < handler.getSlots(); i++) {
+						ItemStack stack = handler.getStackInSlot(i);
+						if (!output.isEmpty()) {
+							if (stack.isEmpty() || (stack.isItemEqual(output) && stack.getCount() < stack.getMaxStackSize())) {
+								ItemStack toInsert = output.copy(); toInsert.setCount(1);
+								handler.insertItem(i, toInsert, false);
+								output.shrink(1);
+								this.getEnergy().extractEnergy(ModConfig.confInterfaceRFRate, false);
+								break;
 							}
 						}
 					}

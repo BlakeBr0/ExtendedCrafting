@@ -33,6 +33,7 @@ public class GuiInterfaceConfig extends GuiContainer {
 		super.updateScreen();
 		this.buttonList.get(0).displayString = this.parent.tile.getInserterFaceName();
 		this.buttonList.get(1).displayString = this.parent.tile.getExtractorFaceName();
+		this.buttonList.get(2).displayString = this.parent.tile.getAutoEject() ? "ON" : "OFF";
 	}
 	
 	@Override
@@ -42,15 +43,16 @@ public class GuiInterfaceConfig extends GuiContainer {
 		this.renderHoveredToolTip(mouseX, mouseY);
 		
 		if (mouseX > this.guiLeft + 7 && mouseX < this.guiLeft + 20 && mouseY > this.guiTop + 7 && mouseY < this.guiTop + 84) {
-			this.drawHoveringText(Collections.singletonList(Utils.format(parent.tile.getEnergy().getEnergyStored()) + " RF"), mouseX, mouseY);
+			this.drawHoveringText(Utils.format(parent.tile.getEnergy().getEnergyStored()) + " RF", mouseX, mouseY);
 		}
 	}
 	
 	@Override
 	public void initGui() {
 		super.initGui();
-		this.buttonList.add(new SmallButton(0, (this.width - this.xSize) / 2 + 62, (this.height - this.ySize) / 2 + 28, 70, 12, this.parent.tile.getInserterFaceName()));
-		this.buttonList.add(new SmallButton(1, (this.width - this.xSize) / 2 + 62, (this.height - this.ySize) / 2 + 58, 70, 12, this.parent.tile.getExtractorFaceName()));
+		this.buttonList.add(new SmallButton(0, (this.width - this.xSize) / 2 + 62, (this.height - this.ySize) / 2 + 21, 70, 12, this.parent.tile.getInserterFaceName()));
+		this.buttonList.add(new SmallButton(1, (this.width - this.xSize) / 2 + 62, (this.height - this.ySize) / 2 + 46, 70, 12, this.parent.tile.getExtractorFaceName()));
+		this.buttonList.add(new SmallButton(2, (this.width - this.xSize) / 2 + 62, (this.height - this.ySize) / 2 + 70, 70, 12, this.parent.tile.getAutoEject() ? "ON" : "OFF"));
 		this.buttonList.add(new SmallButton(10, (this.width - this.xSize) / 2 + 129, (this.height - this.ySize) / 2 + 87, 40, 12, Utils.localize("ec.interface.back")));
 	}
 	
@@ -62,6 +64,8 @@ public class GuiInterfaceConfig extends GuiContainer {
 			NetworkThingy.THINGY.sendToServer(new InterfaceAutoChangePacket(this.parent.tile.getPos().toLong(), 0));
 		} else if (button.id == 1) {
 			NetworkThingy.THINGY.sendToServer(new InterfaceAutoChangePacket(this.parent.tile.getPos().toLong(), 1));
+		} else if (button.id == 2) {
+			NetworkThingy.THINGY.sendToServer(new InterfaceAutoChangePacket(this.parent.tile.getPos().toLong(), 2));
 		}
 	}
 	
@@ -69,8 +73,9 @@ public class GuiInterfaceConfig extends GuiContainer {
 	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
 		super.drawGuiContainerForegroundLayer(mouseX, mouseY);
 		this.fontRenderer.drawString(Utils.localize("container.inventory"), 8, this.ySize - 94, 4210752);
-		this.fontRenderer.drawString(Utils.localize("ec.interface.auto_insert"), this.xSize / 2 - 20, 19, -1);
-		this.fontRenderer.drawString(Utils.localize("ec.interface.auto_extract"), this.xSize / 2 - 23, 49, -1);
+		this.fontRenderer.drawString(Utils.localize("ec.interface.auto_insert"), this.xSize / 2 - 20, 12, -1);
+		this.fontRenderer.drawString(Utils.localize("ec.interface.auto_extract"), this.xSize / 2 - 23, 36, -1);
+		this.fontRenderer.drawString(Utils.localize("Auto Eject"), this.xSize / 2 - 18, 61, -1);
 	}
 
 	@Override

@@ -52,12 +52,12 @@ public class InterfaceAutoChangePacket implements IMessage {
 			TileEntity tile = ctx.getServerHandler().player.world.getTileEntity(BlockPos.fromLong(message.pos));
 			if (tile instanceof TileAutomationInterface) {
 				TileAutomationInterface machine = (TileAutomationInterface) tile;
-				if (machine.hasTable()) {
-					if (message.mode == 0) {
-						machine.switchInserter();
-					} else if (message.mode == 1) {
-						machine.switchExtractor();
-					}
+				if (message.mode == 0) {
+					machine.switchInserter();
+				} else if (message.mode == 1) {
+					machine.switchExtractor();
+				} else if (message.mode == 2) {
+					machine.toggleAutoEject();
 				}
 			}
 		}

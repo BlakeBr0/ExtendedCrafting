@@ -39,6 +39,7 @@ public class TileAutomationInterface extends TileEntity implements ITickable, IS
 	private boolean hasRecipe = false;
 	public int autoInsert = -1;
 	public int autoExtract = -1;
+	private boolean autoEject = false;
 	private int ticks = 0;
 		
 	public IItemHandlerModifiable getInventory() {
@@ -161,6 +162,11 @@ public class TileAutomationInterface extends TileEntity implements ITickable, IS
 			matrix.insertItem(slotToPut, toInsert, false);
 			input.shrink(1);
 			this.getEnergy().extractEnergy(ModConfig.confInterfaceRFRate, false);
+		} else if (this.getAutoEject()) {
+			ItemStack toInsert = input.copy(); toInsert.setCount(1);
+			this.getInventory().insertItem(1, toInsert, false);
+			input.shrink(1);
+			this.getEnergy().extractEnergy(ModConfig.confInterfaceRFRate, false);
 		}
 	}
 	
@@ -266,31 +272,42 @@ public class TileAutomationInterface extends TileEntity implements ITickable, IS
 		}
 		this.markDirty();
 	}
+	
+	public boolean getAutoEject() {
+		return this.autoEject;
+	}
+	
+	public void toggleAutoEject() {
+		this.autoEject = !this.autoEject;
+		this.markDirty();
+	}
 		
 	@Nonnull
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound tag) {
 		tag = super.writeToNBT(tag);
-		tag.merge(inventory.serializeNBT());
-		tag.merge(recipe.serializeNBT());
+		tag.merge(this.inventory.serializeNBT());
+		tag.merge(this.recipe.serializeNBT());
 		tag.setInteger("Energy", this.energy.getEnergyStored());
 		tag.setTag("Result", this.result.serializeNBT());
 		tag.setBoolean("HasRecipe", this.hasRecipe);
 		tag.setInteger("AutoInsert", this.autoInsert);
 		tag.setInteger("AutoExtract", this.autoExtract);
+		tag.setBoolean("AutoEject", this.autoEject);
 		return tag;
 	}
 	
 	@Override
 	public void readFromNBT(NBTTagCompound tag) {
 		super.readFromNBT(tag);
-		inventory.deserializeNBT(tag);
-		recipe.deserializeNBT(tag);
-		energy.setEnergy(tag.getInteger("Energy"));
+		this.inventory.deserializeNBT(tag);
+		this.recipe.deserializeNBT(tag);
+		this.energy.setEnergy(tag.getInteger("Energy"));
 		this.result = new ItemStack(tag.getCompoundTag("Result"));
 		this.hasRecipe = tag.getBoolean("HasRecipe");
 		this.autoInsert = tag.getInteger("AutoInsert");
 		this.autoExtract = tag.getInteger("AutoExtract");
+		this.autoEject = tag.getBoolean("AutoEject");
 	}
 
 	@Override

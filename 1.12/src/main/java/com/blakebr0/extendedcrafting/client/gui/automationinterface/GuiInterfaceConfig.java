@@ -33,7 +33,7 @@ public class GuiInterfaceConfig extends GuiContainer {
 		super.updateScreen();
 		this.buttonList.get(0).displayString = this.parent.tile.getInserterFaceName();
 		this.buttonList.get(1).displayString = this.parent.tile.getExtractorFaceName();
-		this.buttonList.get(2).displayString = this.parent.tile.getAutoEject() ? "ON" : "OFF";
+		this.buttonList.get(2).displayString = this.parent.tile.getAutoEject() ? Utils.localize("ec.interface.on") : Utils.localize("ec.interface.off");
 	}
 	
 	@Override
@@ -52,7 +52,7 @@ public class GuiInterfaceConfig extends GuiContainer {
 		super.initGui();
 		this.buttonList.add(new SmallButton(0, (this.width - this.xSize) / 2 + 62, (this.height - this.ySize) / 2 + 21, 70, 12, this.parent.tile.getInserterFaceName()));
 		this.buttonList.add(new SmallButton(1, (this.width - this.xSize) / 2 + 62, (this.height - this.ySize) / 2 + 46, 70, 12, this.parent.tile.getExtractorFaceName()));
-		this.buttonList.add(new SmallButton(2, (this.width - this.xSize) / 2 + 62, (this.height - this.ySize) / 2 + 70, 70, 12, this.parent.tile.getAutoEject() ? "ON" : "OFF"));
+		this.buttonList.add(new SmallButton(2, (this.width - this.xSize) / 2 + 62, (this.height - this.ySize) / 2 + 70, 70, 12, this.parent.tile.getAutoEject() ? Utils.localize("ec.interface.on") : Utils.localize("ec.interface.off")));
 		this.buttonList.add(new SmallButton(10, (this.width - this.xSize) / 2 + 129, (this.height - this.ySize) / 2 + 87, 40, 12, Utils.localize("ec.interface.back")));
 	}
 	
@@ -75,7 +75,7 @@ public class GuiInterfaceConfig extends GuiContainer {
 		this.fontRenderer.drawString(Utils.localize("container.inventory"), 8, this.ySize - 94, 4210752);
 		this.fontRenderer.drawString(Utils.localize("ec.interface.auto_insert"), this.xSize / 2 - 20, 12, -1);
 		this.fontRenderer.drawString(Utils.localize("ec.interface.auto_extract"), this.xSize / 2 - 23, 36, -1);
-		this.fontRenderer.drawString(Utils.localize("Auto Eject"), this.xSize / 2 - 18, 61, -1);
+		this.fontRenderer.drawString(Utils.localize("ec.interface.auto_eject"), this.xSize / 2 - 18, 61, -1);
 	}
 
 	@Override

@@ -82,7 +82,7 @@ public class TileCraftingCore extends TileEntity implements ITickable {
 					}
 				}
 			} else {
-				progress = 0;
+				this.progress = 0;
 			}
 		}
 

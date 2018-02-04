@@ -78,12 +78,8 @@ public class GuiCompressor extends GuiContainer {
 	}
 
 	private void drawFakeItemStackTooltip(ItemStack stack, int xOffset, int yOffset, int mouseX, int mouseY) {
-		if (mouseX > this.guiLeft + xOffset - 1 && mouseX < guiLeft + xOffset + 16 && mouseY > this.guiTop + yOffset - 1
-				&& mouseY < this.guiTop + yOffset + 16) {
-			if (!StackHelper.isNull(stack)) {
-				// this.drawRect(this.guiLeft + xOffset, this.guiTop + yOffset,
-				// this.guiLeft + xOffset + 16, this.guiTop + yOffset + 16,
-				// 2130706433);
+		if (mouseX > this.guiLeft + xOffset - 1 && mouseX < guiLeft + xOffset + 16 && mouseY > this.guiTop + yOffset - 1 && mouseY < this.guiTop + yOffset + 16) {
+			if (!stack.isEmpty()) {
 				this.renderToolTip(stack, mouseX, mouseY);
 			}
 		}

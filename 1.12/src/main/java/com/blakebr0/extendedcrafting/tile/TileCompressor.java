@@ -200,9 +200,7 @@ public class TileCompressor extends TileEntity implements ISidedInventory, ITick
 			this.materialStack = ItemStack.EMPTY;
 		}
 		if (!this.materialStack.isEmpty()) {
-			NBTTagCompound matStack = new NBTTagCompound();
-			this.materialStack.writeToNBT(matStack);
-			compound.setTag("MaterialStack", matStack);
+			compound.setTag("MaterialStack", this.materialStack.serializeNBT());
 		}
 		compound.setInteger("Progress", this.progress);
 		compound.setBoolean("Ejecting", this.ejecting);

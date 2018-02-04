@@ -1,0 +1,27 @@
+{
+  "type": "forge:ore_shaped",
+  "pattern": [
+	"EEE",
+	"ICI",
+	"III"
+  ],
+  "key": {
+	"E": {
+      "item": "minecraft:ender_eye",
+	  "data": 0
+    },
+    "I": {
+      "item": "extendedcrafting:material",
+      "data": 36
+    },
+    "C": {
+      "type": "forge:ore_dict",
+      "ore": "workbench"
+    }
+  },
+  "result": {
+    "item": "extendedcrafting:ender_crafter",
+    "count": 1,
+	"data": 0
+  }
+}

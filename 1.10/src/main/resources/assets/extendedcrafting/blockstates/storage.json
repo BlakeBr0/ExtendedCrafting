@@ -1,9 +1,0 @@
-{
-	"variants": {
-		"variant=black_iron": { "model": "extendedcrafting:storage_black_iron" },
-		"variant=luminous_iron": { "model": "extendedcrafting:storage_luminous_iron" },
-		"variant=luminous_gold": { "model": "extendedcrafting:storage_luminous_gold" },
-		"variant=luminous_diamond": { "model": "extendedcrafting:storage_luminous_diamond" },
-		"variant=luminous_emerald": { "model": "extendedcrafting:storage_luminous_emerald" }
-	}
-}

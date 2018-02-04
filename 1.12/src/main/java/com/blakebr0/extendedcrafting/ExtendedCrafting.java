@@ -17,7 +17,7 @@ import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 
-@Mod(modid = ExtendedCrafting.MOD_ID, name = ExtendedCrafting.NAME, version = ExtendedCrafting.VERSION, guiFactory = ExtendedCrafting.GUI_FACTORY)
+@Mod(modid = ExtendedCrafting.MOD_ID, name = ExtendedCrafting.NAME, version = ExtendedCrafting.VERSION, dependencies = ExtendedCrafting.DEPENDENCIES, guiFactory = ExtendedCrafting.GUI_FACTORY)
 public class ExtendedCrafting {
 
 	public static final String MOD_ID = "extendedcrafting";

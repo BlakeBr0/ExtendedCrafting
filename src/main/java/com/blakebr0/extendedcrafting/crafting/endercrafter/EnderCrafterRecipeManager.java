@@ -1,4 +1,4 @@
-package com.blakebr0.extendedcrafting.endercrafter;
+package com.blakebr0.extendedcrafting.crafting.endercrafter;
 
 import java.util.ArrayList;
 import java.util.List;

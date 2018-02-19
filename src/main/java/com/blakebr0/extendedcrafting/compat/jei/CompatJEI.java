@@ -46,6 +46,7 @@ import mezz.jei.api.IModPlugin;
 import mezz.jei.api.IModRegistry;
 import mezz.jei.api.IRecipeRegistry;
 import mezz.jei.api.JEIPlugin;
+import mezz.jei.api.recipe.IRecipeCategoryRegistration;
 import mezz.jei.api.recipe.VanillaRecipeCategoryUid;
 import mezz.jei.api.recipe.transfer.IRecipeTransferRegistry;
 import net.minecraft.block.Block;
@@ -62,14 +63,7 @@ public class CompatJEI implements IModPlugin {
 	public static IJeiHelpers jeiHelpers;
 	
 	@Override
-	public void register(IModRegistry registry) {
-		for (Block block : blocks) {
-			registry.addIngredientInfo(new ItemStack(block), ItemStack.class, "desc." + block.getUnlocalizedName());
-		}
-		for (Item item : items) {
-			registry.addIngredientInfo(new ItemStack(item), ItemStack.class, "desc." + item.getUnlocalizedName());
-		}
-
+	public void registerCategories(IRecipeCategoryRegistration registry) {
 		IJeiHelpers jeiHelpers = registry.getJeiHelpers();
 		this.jeiHelpers = jeiHelpers;
 		IGuiHelper guiHelper = jeiHelpers.getGuiHelper();
@@ -81,6 +75,20 @@ public class CompatJEI implements IModPlugin {
 		registry.addRecipeCategories(new UltimateTableCategory(guiHelper));
 		registry.addRecipeCategories(new CompressorCraftingCategory(guiHelper));
 		registry.addRecipeCategories(new EnderCrafterCategory(guiHelper));
+	}
+	
+	@Override
+	public void register(IModRegistry registry) {
+		for (Block block : blocks) {
+			registry.addIngredientInfo(new ItemStack(block), ItemStack.class, "desc." + block.getUnlocalizedName());
+		}
+		
+		for (Item item : items) {
+			registry.addIngredientInfo(new ItemStack(item), ItemStack.class, "desc." + item.getUnlocalizedName());
+		}
+
+		IJeiHelpers jeiHelpers = registry.getJeiHelpers();
+		this.jeiHelpers = jeiHelpers;
 
 		registry.addRecipeCatalyst(new ItemStack(ModItems.itemHandheldTable), VanillaRecipeCategoryUid.CRAFTING);
 		

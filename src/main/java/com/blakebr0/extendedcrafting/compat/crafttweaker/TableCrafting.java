@@ -115,7 +115,7 @@ public class TableCrafting {
 
 		@Override
 		public String describe() {
-			return "Removing an Advanced Crafting recipe for " + remove.getDisplayName();
+			return "Removing a Table Crafting recipe for " + remove.getDisplayName();
 		}
 	}
 

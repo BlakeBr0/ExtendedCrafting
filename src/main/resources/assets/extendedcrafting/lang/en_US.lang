@@ -71,6 +71,8 @@ item.ec.material_nether_star_nugget.name=Nether Star Nugget
 
 item.ec.handheld_table.name=Handheld Crafting Table
 
+item.ec.recipe_maker.name=Recipe Maker
+
 item.ec.singularity.name=Singularity
 item.ec.singularity_ultimate.name=Ultimate Singularity
 

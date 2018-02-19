@@ -42,8 +42,7 @@ public class BlockEliteTable extends BlockBase implements ITileEntityProvider {
 			TileEntity tile = world.getTileEntity(pos);
 
 			if (tile instanceof TileEliteCraftingTable) {
-				player.openGui(ExtendedCrafting.instance, GuiHandler.ELITE_TABLE, world, pos.getX(), pos.getY(),
-						pos.getZ());
+				player.openGui(ExtendedCrafting.instance, GuiHandler.ELITE_TABLE, world, pos.getX(), pos.getY(), pos.getZ());
 			}
 			return true;
 		}

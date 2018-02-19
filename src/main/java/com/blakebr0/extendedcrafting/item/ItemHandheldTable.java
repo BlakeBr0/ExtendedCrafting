@@ -23,8 +23,7 @@ public class ItemHandheldTable extends ItemBase {
 	public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, EnumHand hand) {
 		BlockPos pos = player.getPosition();
 		if (!world.isRemote) {
-			player.openGui(ExtendedCrafting.instance, GuiHandler.HANDHELD_TABLE, world, pos.getX(), pos.getY(),
-					pos.getZ());
+			player.openGui(ExtendedCrafting.instance, GuiHandler.HANDHELD_TABLE, world, pos.getX(), pos.getY(), pos.getZ());
 		}
 		return super.onItemRightClick(world, player, hand);
 	}

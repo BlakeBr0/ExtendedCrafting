@@ -7,6 +7,7 @@ import java.awt.datatransfer.StringSelection;
 
 import com.blakebr0.cucumber.item.ItemBase;
 import com.blakebr0.extendedcrafting.ExtendedCrafting;
+import com.blakebr0.extendedcrafting.compat.jei.CompatJEI;
 import com.blakebr0.extendedcrafting.lib.IExtendedTable;
 import com.blakebr0.extendedcrafting.tile.TileEnderCrafter;
 import com.blakebr0.extendedcrafting.util.NetworkThingy;
@@ -36,6 +37,7 @@ public class ItemRecipeMaker extends ItemBase {
 		this.setCreativeTab(ExtendedCrafting.tabExtendedCrafting);
 		this.setMaxStackSize(1);
 		this.setHasSubtypes(true);
+		CompatJEI.items.add(this);
 	}
 	
 	@Override
@@ -138,7 +140,7 @@ public class ItemRecipeMaker extends ItemBase {
 			
 			if (i + 1 == sr || (i + 1) % sr == 0) {
 				string += "]";
-				if (i + 1 != matrix.getSlots()) {
+				if (i + 1 < matrix.getSlots()) {
 					string += ", ";
 				}
 			}

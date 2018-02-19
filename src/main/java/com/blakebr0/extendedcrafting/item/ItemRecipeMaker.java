@@ -27,6 +27,7 @@ import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.oredict.OreDictionary;
 
@@ -37,7 +38,10 @@ public class ItemRecipeMaker extends ItemBase {
 		this.setCreativeTab(ExtendedCrafting.tabExtendedCrafting);
 		this.setMaxStackSize(1);
 		this.setHasSubtypes(true);
-		CompatJEI.items.add(this);
+		
+		if (Loader.isModLoaded("jei")) {
+			CompatJEI.items.add(this);
+		}
 	}
 	
 	@Override

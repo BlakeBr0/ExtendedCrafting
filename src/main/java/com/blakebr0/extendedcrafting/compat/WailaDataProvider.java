@@ -7,12 +7,14 @@ import com.blakebr0.cucumber.util.Utils;
 import com.blakebr0.extendedcrafting.block.BlockAutomationInterface;
 import com.blakebr0.extendedcrafting.block.BlockCompressor;
 import com.blakebr0.extendedcrafting.block.BlockCraftingCore;
+import com.blakebr0.extendedcrafting.block.BlockEnderCrafter;
 import com.blakebr0.extendedcrafting.block.BlockLamp;
 import com.blakebr0.extendedcrafting.block.BlockPedestal;
 import com.blakebr0.extendedcrafting.block.BlockTrimmed;
 import com.blakebr0.extendedcrafting.tile.TileAutomationInterface;
 import com.blakebr0.extendedcrafting.tile.TileCompressor;
 import com.blakebr0.extendedcrafting.tile.TileCraftingCore;
+import com.blakebr0.extendedcrafting.tile.TileEnderCrafter;
 import com.blakebr0.extendedcrafting.tile.TilePedestal;
 
 import mcp.mobius.waila.api.IWailaConfigHandler;
@@ -34,6 +36,7 @@ public class WailaDataProvider implements IWailaDataProvider {
 		registrar.registerBodyProvider(new WailaDataProvider(), BlockPedestal.class);
 		registrar.registerBodyProvider(new WailaDataProvider(), BlockCraftingCore.class);
 		registrar.registerBodyProvider(new WailaDataProvider(), BlockAutomationInterface.class);
+		registrar.registerBodyProvider(new WailaDataProvider(), BlockEnderCrafter.class);
 		registrar.registerBodyProvider(new WailaDataProvider(), BlockCompressor.class);
 	}
 
@@ -69,6 +72,13 @@ public class WailaDataProvider implements IWailaDataProvider {
 			arg1.add(Utils.format(auto.getEnergy().getEnergyStored()) + " RF");
 			if (!auto.getResult().isEmpty()) {
 				arg1.add(auto.getResult().getDisplayName());
+			}
+		}
+		
+		if (arg2.getBlock() instanceof BlockEnderCrafter && arg2.getTileEntity() instanceof TileEnderCrafter && !arg2.getTileEntity().isInvalid()) {
+			TileEnderCrafter crafter = (TileEnderCrafter) arg2.getTileEntity();
+			if (!crafter.getResult().isEmpty()) {
+				arg1.add(Utils.localize("tooltip.ec.output") + crafter.getResult().getCount() + "x " + crafter.getResult().getDisplayName());
 			}
 		}
 		

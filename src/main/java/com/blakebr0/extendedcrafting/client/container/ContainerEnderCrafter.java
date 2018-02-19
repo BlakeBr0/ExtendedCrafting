@@ -2,13 +2,12 @@ package com.blakebr0.extendedcrafting.client.container;
 
 import javax.annotation.Nullable;
 
+import com.blakebr0.extendedcrafting.crafting.endercrafter.EnderCraftResult;
 import com.blakebr0.extendedcrafting.crafting.table.TableRecipeManager;
 import com.blakebr0.extendedcrafting.crafting.table.basic.BasicCraftResult;
 import com.blakebr0.extendedcrafting.crafting.table.basic.BasicCrafting;
 import com.blakebr0.extendedcrafting.crafting.table.basic.BasicResultHandler;
 import com.blakebr0.extendedcrafting.crafting.table.basic.BasicStackHandler;
-import com.blakebr0.extendedcrafting.endercrafter.EnderCraftResult;
-import com.blakebr0.extendedcrafting.endercrafter.SlotEnderOutput;
 import com.blakebr0.extendedcrafting.tile.TileBasicCraftingTable;
 import com.blakebr0.extendedcrafting.tile.TileEnderCrafter;
 

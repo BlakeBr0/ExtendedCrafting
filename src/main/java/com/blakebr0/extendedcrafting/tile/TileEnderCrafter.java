@@ -7,9 +7,9 @@ import com.blakebr0.cucumber.tile.TileEntityBase;
 import com.blakebr0.cucumber.util.VanillaPacketDispatcher;
 import com.blakebr0.extendedcrafting.block.BlockEnderAlternator;
 import com.blakebr0.extendedcrafting.block.BlockPedestal;
+import com.blakebr0.extendedcrafting.crafting.endercrafter.EnderCrafterRecipeManager;
 import com.blakebr0.extendedcrafting.crafting.table.TableRecipeManager;
 import com.blakebr0.extendedcrafting.crafting.table.basic.BasicStackHandler;
-import com.blakebr0.extendedcrafting.endercrafter.EnderCrafterRecipeManager;
 import com.blakebr0.extendedcrafting.lib.IExtendedTable;
 
 import net.minecraft.block.Block;

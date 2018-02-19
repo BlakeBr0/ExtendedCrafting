@@ -33,10 +33,10 @@ import com.blakebr0.extendedcrafting.crafting.CombinationRecipe;
 import com.blakebr0.extendedcrafting.crafting.CombinationRecipeManager;
 import com.blakebr0.extendedcrafting.crafting.CompressorRecipe;
 import com.blakebr0.extendedcrafting.crafting.CompressorRecipeManager;
+import com.blakebr0.extendedcrafting.crafting.endercrafter.EnderCrafterRecipeManager;
 import com.blakebr0.extendedcrafting.crafting.table.TableRecipeManager;
 import com.blakebr0.extendedcrafting.crafting.table.TableRecipeShaped;
 import com.blakebr0.extendedcrafting.crafting.table.TableRecipeShapeless;
-import com.blakebr0.extendedcrafting.endercrafter.EnderCrafterRecipeManager;
 import com.blakebr0.extendedcrafting.item.ModItems;
 
 import mezz.jei.api.IGuiHelper;

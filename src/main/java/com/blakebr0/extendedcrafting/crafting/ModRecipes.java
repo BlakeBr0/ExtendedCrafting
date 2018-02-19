@@ -1,7 +1,7 @@
 package com.blakebr0.extendedcrafting.crafting;
 
+import com.blakebr0.extendedcrafting.crafting.endercrafter.EnderCrafterRecipeManager;
 import com.blakebr0.extendedcrafting.crafting.table.TableRecipeManager;
-import com.blakebr0.extendedcrafting.endercrafter.EnderCrafterRecipeManager;
 import com.blakebr0.extendedcrafting.item.ModItems;
 
 import net.minecraft.init.Items;

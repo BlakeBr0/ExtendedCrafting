@@ -11,7 +11,7 @@ import com.blakebr0.extendedcrafting.compat.crafttweaker.EnderCrafting;
 import com.blakebr0.extendedcrafting.compat.crafttweaker.TableCrafting;
 import com.blakebr0.extendedcrafting.config.ModConfig;
 import com.blakebr0.extendedcrafting.crafting.ModRecipes;
-import com.blakebr0.extendedcrafting.endercrafter.EnderCrafterRecipeManager;
+import com.blakebr0.extendedcrafting.crafting.endercrafter.EnderCrafterRecipeManager;
 import com.blakebr0.extendedcrafting.item.ModItems;
 import com.blakebr0.extendedcrafting.tile.ModTiles;
 import com.blakebr0.extendedcrafting.util.NetworkThingy;

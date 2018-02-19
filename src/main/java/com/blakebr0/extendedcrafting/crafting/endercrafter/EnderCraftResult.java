@@ -1,4 +1,4 @@
-package com.blakebr0.extendedcrafting.endercrafter;
+package com.blakebr0.extendedcrafting.crafting.endercrafter;
 
 import com.blakebr0.cucumber.helper.StackHelper;
 import com.blakebr0.extendedcrafting.tile.TileEnderCrafter;

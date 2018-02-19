@@ -4,10 +4,10 @@ import java.util.Arrays;
 import java.util.List;
 
 import com.blakebr0.extendedcrafting.compat.jei.CompatJEI;
+import com.blakebr0.extendedcrafting.crafting.endercrafter.EnderCrafterRecipeManager;
 import com.blakebr0.extendedcrafting.crafting.table.TableRecipeManager;
 import com.blakebr0.extendedcrafting.crafting.table.TableRecipeShaped;
 import com.blakebr0.extendedcrafting.crafting.table.TableRecipeShapeless;
-import com.blakebr0.extendedcrafting.endercrafter.EnderCrafterRecipeManager;
 
 import crafttweaker.CraftTweakerAPI;
 import crafttweaker.IAction;

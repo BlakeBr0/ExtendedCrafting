@@ -127,7 +127,7 @@ public class ItemRecipeMaker extends ItemBase {
 			if (item.isEmpty()) {
 				String reg = stack.getItem().getRegistryName().toString();
 				item = stack.isEmpty() ? "null" : reg;
-				if (stack.getMetadata() > 0) {
+				if (!stack.isEmpty() && stack.getMetadata() > 0) {
 					item += ":" + stack.getMetadata();
 				}
 			}
@@ -165,7 +165,7 @@ public class ItemRecipeMaker extends ItemBase {
 				} else {
 					String reg = stack.getItem().getRegistryName().toString();
 					item = stack.isEmpty() ? "null" : reg;
-					if (stack.getMetadata() > 0) {
+					if (!stack.isEmpty() && stack.getMetadata() > 0) {
 						item += ":" + stack.getMetadata();
 					}
 				}

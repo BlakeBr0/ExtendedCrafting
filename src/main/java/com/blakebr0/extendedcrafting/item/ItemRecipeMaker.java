@@ -4,6 +4,7 @@ import java.awt.Desktop;
 import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
+import java.util.ArrayList;
 
 import com.blakebr0.cucumber.item.ItemBase;
 import com.blakebr0.extendedcrafting.ExtendedCrafting;
@@ -155,28 +156,37 @@ public class ItemRecipeMaker extends ItemBase {
 	private String makeItemArrayShapeless(IExtendedTable table) {
 		String string = "";
 		IItemHandlerModifiable matrix = table.getMatrix();
+		ArrayList<Integer> slots = new ArrayList<>();
+		int lastSlot = 0;
 		for (int i = 0; i < matrix.getSlots(); i++) {
 			ItemStack stack = matrix.getStackInSlot(i);
 			if (!stack.isEmpty()) {
-				int[] oreIds = OreDictionary.getOreIDs(stack);
-				String item = "";
-				if (oreIds.length > 0) {
-					item = "ore:" + OreDictionary.getOreName(oreIds[0]);
-				} else {
-					String reg = stack.getItem().getRegistryName().toString();
-					item = stack.isEmpty() ? "null" : reg;
-					if (!stack.isEmpty() && stack.getMetadata() > 0) {
-						item += ":" + stack.getMetadata();
-					}
-				}
-					
-				string += "<" + item + ">";
-				
-				if (i + 1 < matrix.getSlots()) {
-					string += ", ";
-				}
+				slots.add(i);
+				lastSlot = i;
 			}
 		}
+		
+		for (int i : slots) {
+			ItemStack stack = matrix.getStackInSlot(i);
+			int[] oreIds = OreDictionary.getOreIDs(stack);
+			String item = "";
+			if (oreIds.length > 0) {
+				item = "ore:" + OreDictionary.getOreName(oreIds[0]);
+			} else {
+				String reg = stack.getItem().getRegistryName().toString();
+				item = stack.isEmpty() ? "null" : reg;
+				if (!stack.isEmpty() && stack.getMetadata() > 0) {
+					item += ":" + stack.getMetadata();
+				}
+			}
+					
+			string += "<" + item + ">";
+			
+			if (i != lastSlot) {
+				string += ", ";
+			}
+		}
+		
 		return string;
 	}
 	

@@ -33,6 +33,8 @@ import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.oredict.OreDictionary;
 
 public class ItemRecipeMaker extends ItemBase {
+	
+	private static final String NEW_LINE = System.lineSeparator() + "\t";
 
 	public ItemRecipeMaker() {
 		super("ec.recipe_maker");
@@ -95,7 +97,7 @@ public class ItemRecipeMaker extends ItemBase {
 			if (isShapeless(stack)) {
 				string += ".addShapeless(0, <>, [" + makeItemArrayShapeless((IExtendedTable) table);
 			} else {
-				string += ".addShaped(0, <>, [" + makeItemArrayShaped((IExtendedTable) table);
+				string += ".addShaped(0, <>, [" + NEW_LINE + makeItemArrayShaped((IExtendedTable) table);
 			}
 			
 			string += "]);";
@@ -147,6 +149,9 @@ public class ItemRecipeMaker extends ItemBase {
 				string += "]";
 				if (i + 1 < matrix.getSlots()) {
 					string += ", ";
+					string += NEW_LINE;
+				} else {
+					string += System.lineSeparator();
 				}
 			}
 		}

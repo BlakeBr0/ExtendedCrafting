@@ -155,12 +155,14 @@ public class TileAutomationInterface extends TileEntity implements ITickable, IS
 			}
 		}
 		
+		ItemStack output = this.getInventory().getStackInSlot(1);
+		
 		if (slotToPut > -1) {
 			ItemStack toInsert = input.copy(); toInsert.setCount(1);
 			matrix.insertItem(slotToPut, toInsert, false);
 			input.shrink(1);
 			this.getEnergy().extractEnergy(ModConfig.confInterfaceRFRate, false);
-		} else if (this.getAutoEject()) {
+		} else if (this.getAutoEject() && (output.isEmpty() || (output.isItemEqual(input) && output.getCount() < output.getMaxStackSize()))) {
 			ItemStack toInsert = input.copy(); toInsert.setCount(1);
 			this.getInventory().insertItem(1, toInsert, false);
 			input.shrink(1);

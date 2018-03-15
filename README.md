@@ -1,5 +1,2 @@
-# ExtendedCrafting
+# Extended Crafting [![](http://cf.way2muchnoise.eu/full_268387_downloads.svg)](https://minecraft.curseforge.com/projects/extended-crafting) [![](http://cf.way2muchnoise.eu/versions/268387.svg)](https://minecraft.curseforge.com/projects/extended-crafting)
 Adds some new ways to craft items, as well as extra crafting items and utilities.
-
-All Rights Reserved.
-(The Singularity texture is licensed under MIT)

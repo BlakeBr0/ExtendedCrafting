@@ -26,25 +26,25 @@ public class ItemMaterial extends ItemMeta {
 
 	public static ItemStack itemLuminessence;
 
-	public static ItemStack itemBasicCraftingCatalyst;
-	public static ItemStack itemAdvancedCraftingCatalyst;
-	public static ItemStack itemEliteCraftingCatalyst;
-	public static ItemStack itemUltimateCraftingCatalyst;
+	public static ItemStack itemBasicCatalyst;
+	public static ItemStack itemAdvancedCatalyst;
+	public static ItemStack itemEliteCatalyst;
+	public static ItemStack itemUltimateCatalyst;
+	public static ItemStack itemCrystaltineCatalyst;
+	public static ItemStack itemTheUltimateCatalyst;
 
-	public static ItemStack itemBasicCraftingComponent;
-	public static ItemStack itemAdvancedCraftingComponent;
-	public static ItemStack itemEliteCraftingComponent;
-	public static ItemStack itemUltimateCraftingComponent;
-	
+	public static ItemStack itemBasicComponent;
+	public static ItemStack itemAdvancedComponent;
+	public static ItemStack itemEliteComponent;
+	public static ItemStack itemUltimateComponent;
+	public static ItemStack itemCrystaltineComponent;
+	public static ItemStack itemTheUltimateComponent;
+
 	public static ItemStack itemCrystaltineIngot;
 	public static ItemStack itemCrystaltineNugget;
-	public static ItemStack itemCrystaltineCatalyst;
-	public static ItemStack itemCrystaltineComponent;
 	
-	public static ItemStack itemUltimateIngot;
-	public static ItemStack itemUltimateNugget;
-	public static ItemStack itemUltimateCatalyst;
-	public static ItemStack itemUltimateComponent;
+	public static ItemStack itemTheUltimateIngot;
+	public static ItemStack itemTheUltimateNugget;
 	
 	public static ItemStack itemEnderIngot;
 	public static ItemStack itemEnderNugget;
@@ -73,25 +73,25 @@ public class ItemMaterial extends ItemMeta {
 
 		itemLuminessence = addItem(7, "luminessence");
 
-		itemBasicCraftingCatalyst = addItem(8, "basic_catalyst");
-		itemAdvancedCraftingCatalyst = addItem(9, "advanced_catalyst");
-		itemEliteCraftingCatalyst = addItem(10, "elite_catalyst");
-		itemUltimateCraftingCatalyst = addItem(11, "ultimate_catalyst");
+		itemBasicCatalyst = addItem(8, "basic_catalyst");
+		itemAdvancedCatalyst = addItem(9, "advanced_catalyst");
+		itemEliteCatalyst = addItem(10, "elite_catalyst");
+		itemUltimateCatalyst = addItem(11, "ultimate_catalyst");
 		itemCrystaltineCatalyst = addItem(12, "crystaltine_catalyst");
-		itemUltimateCatalyst = addItem(13, "ultimater_catalyst");
+		itemTheUltimateCatalyst = addItem(13, "ultimater_catalyst");
 
-		itemBasicCraftingComponent = addItem(14, "basic_component");
-		itemAdvancedCraftingComponent = addItem(15, "advanced_component");
-		itemEliteCraftingComponent = addItem(16, "elite_component");
-		itemUltimateCraftingComponent = addItem(17, "ultimate_component");
+		itemBasicComponent = addItem(14, "basic_component");
+		itemAdvancedComponent = addItem(15, "advanced_component");
+		itemEliteComponent = addItem(16, "elite_component");
+		itemUltimateComponent = addItem(17, "ultimate_component");
 		itemCrystaltineComponent = addItem(18, "crystaltine_component");
-		itemUltimateComponent = addItem(19, "ultimater_component");
+		itemTheUltimateComponent = addItem(19, "ultimater_component");
 
 		itemCrystaltineIngot = addItem(24, "crystaltine_ingot", "ingotCrystaltine");
 		itemCrystaltineNugget = addItem(25, "crystaltine_nugget", "nuggetCrystaltine");
 		
-		itemUltimateIngot = addItem(32, "ultimate_ingot", "ingotUltimate");
-		itemUltimateNugget = addItem(33, "ultimate_nugget", "nuggetUltimate");
+		itemTheUltimateIngot = addItem(32, "ultimate_ingot", "ingotUltimate");
+		itemTheUltimateNugget = addItem(33, "ultimate_nugget", "nuggetUltimate");
 		
 		itemEnderIngot = addItem(36, "ender_ingot", "ingotEnder");
 		itemEnderNugget = addItem(37, "ender_nugget", "nuggetEnder");

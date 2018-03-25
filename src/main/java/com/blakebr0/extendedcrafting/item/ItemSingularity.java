@@ -127,11 +127,11 @@ public class ItemSingularity extends ItemMeta {
 			if (value instanceof ItemStack) {
 				ItemStack stack = (ItemStack) value;
 				if (!StackHelper.isNull(stack)) {
-					CompressorRecipeManager.getInstance().addRecipe(new ItemStack(this, 1, meta), stack.copy(), ModConfig.confSingularityAmount, ModItems.itemMaterial.itemUltimateCraftingCatalyst, false, ModConfig.confSingularityRF);
+					CompressorRecipeManager.getInstance().addRecipe(new ItemStack(this, 1, meta), stack.copy(), ModConfig.confSingularityAmount, ModItems.itemMaterial.itemUltimateCatalyst, false, ModConfig.confSingularityRF);
 				}
 			} else if (value instanceof String) {
 				String name = (String) value;
-				CompressorRecipeManager.getInstance().addRecipe(new ItemStack(this, 1, meta), name, ModConfig.confSingularityAmount, ModItems.itemMaterial.itemUltimateCraftingCatalyst, false, ModConfig.confSingularityRF);
+				CompressorRecipeManager.getInstance().addRecipe(new ItemStack(this, 1, meta), name, ModConfig.confSingularityAmount, ModItems.itemMaterial.itemUltimateCatalyst, false, ModConfig.confSingularityRF);
 			} else {
 				ExtendedCrafting.LOGGER.error("Invalid material for singularity: " + value.toString());
 				continue;

@@ -44,7 +44,7 @@ public class GuiAutomationInterface extends GuiContainer {
 	protected int getEnergyBarScaled(int pixels) {
 		int i = this.tile.getEnergy().getEnergyStored();
 		int j = this.tile.getEnergy().getMaxEnergyStored();
-		return j != 0 && i != 0 ? i * pixels / j : 0;
+		return (int) (j != 0 && i != 0 ? (long) i * pixels / j : 0);
 	}
 	
 	@Override

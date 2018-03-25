@@ -6,13 +6,15 @@ tile.ec.storage_black_iron.name=Block of Black Iron
 tile.ec.storage_luminessence.name=Block of Luminessence
 tile.ec.storage_nether_star.name=Block of Nether Stars
 tile.ec.storage_crystaltine.name=Block of Crystaltine
-tile.ec.storage_ultimate.name=Block of Ultimate
+tile.ec.storage_ultimate.name=Block of The Ultimate
 tile.ec.storage_ender.name=Block of Ender
 tile.ec.storage_ender_star.name=Block of Ender Stars
 tile.ec.storage_enhanced_ender.name=Block of Enhanced Ender
+
 tile.ec.frame.name=Black Iron Frame
 tile.ec.lamp_glowstone.name=Black Iron Lamp
 tile.ec.lamp_luminessence.name=Black Iron Lamp
+
 tile.ec.trimmed_iron.name=Block of Black Iron
 tile.ec.trimmed_gold.name=Block of Black Iron
 tile.ec.trimmed_diamond.name=Block of Black Iron

@@ -12,7 +12,7 @@ public class ModRenders {
 	public static void init() {
 		ClientRegistry.bindTileEntitySpecialRenderer(TilePedestal.class, new RenderPedestal());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileCraftingCore.class, new RenderCraftingCore());
-		//ClientRegistry.bindTileEntitySpecialRenderer(TileCompressor.class, new RenderCompressor());
+		ClientRegistry.bindTileEntitySpecialRenderer(TileCompressor.class, new RenderCompressor());
 		//ClientRegistry.bindTileEntitySpecialRenderer(TileAutomationInterface.class, new RenderAutomationInterface());
 	}
 }

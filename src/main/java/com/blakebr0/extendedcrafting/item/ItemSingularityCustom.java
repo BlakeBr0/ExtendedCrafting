@@ -16,6 +16,7 @@ import com.blakebr0.extendedcrafting.crafting.CompressorRecipeManager;
 
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.renderer.color.IItemColor;
+import net.minecraft.item.EnumRarity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
@@ -41,6 +42,11 @@ public class ItemSingularityCustom extends ItemMeta implements IModelHelper {
 	public String getItemStackDisplayName(ItemStack stack) {
 		String name = items.containsKey(stack.getMetadata()) ? items.get(stack.getMetadata()).getName().replace("_", " ") : "Dummy";
 		return WordUtils.capitalize(name) + " " + Utils.localize("item.ec.singularity.name");
+	}
+	
+	@Override
+	public EnumRarity getRarity(ItemStack stack) {
+		return EnumRarity.UNCOMMON;
 	}
 
 	public void configure(Configuration config) {
@@ -102,7 +108,7 @@ public class ItemSingularityCustom extends ItemMeta implements IModelHelper {
 	public ItemStack addSingularity(int meta, String name, String material, int color) {
 		singularityColors.put(meta, color);
 		singularityMaterials.put(meta, material);
-		ItemSingularityUltimate.addSingularityToRecipe(StackHelper.to(this, 1, meta));
+		ItemSingularityUltimate.addSingularityToRecipe(new ItemStack(this, 1, meta));
 		return addItem(meta, name, true);
 	}
 	
@@ -126,7 +132,7 @@ public class ItemSingularityCustom extends ItemMeta implements IModelHelper {
 						continue;
 					}
 					item = ForgeRegistries.ITEMS.getValue(new ResourceLocation(parts[0], parts[1]));
-					stack = StackHelper.to(item, 1, matMeta);
+					stack = new ItemStack(item, 1, matMeta);
 					if (!StackHelper.isNull(stack)) {
 						CompressorRecipeManager.getInstance().addRecipe(StackHelper.to(this, 1, meta), stack.copy(), ModConfig.confSingularityAmount, ModItems.itemMaterial.itemUltimateCraftingCatalyst, false, ModConfig.confSingularityRF);
 					}

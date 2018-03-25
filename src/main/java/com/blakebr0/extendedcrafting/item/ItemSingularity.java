@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.apache.commons.lang3.text.WordUtils;
 
+import com.blakebr0.cucumber.helper.ResourceHelper;
 import com.blakebr0.cucumber.helper.StackHelper;
 import com.blakebr0.cucumber.item.ItemMeta;
 import com.blakebr0.cucumber.util.Utils;
@@ -15,6 +16,7 @@ import com.blakebr0.extendedcrafting.crafting.CompressorRecipeManager;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.renderer.color.IItemColor;
 import net.minecraft.init.Items;
+import net.minecraft.item.EnumRarity;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.common.config.Configuration;
@@ -37,12 +39,17 @@ public class ItemSingularity extends ItemMeta {
 	}
 
 	@Override
+	public EnumRarity getRarity(ItemStack stack) {
+		return EnumRarity.UNCOMMON;
+	}
+	
+	@Override
 	public void init() {
-		addSingularity(0, "coal", StackHelper.to(Items.COAL), 0x1B1B1B);
+		addSingularity(0, "coal", new ItemStack(Items.COAL), 0x1B1B1B);
 		addSingularity(1, "iron", "ingotIron", 0x969696);
-		addSingularity(2, "lapis_lazuli", StackHelper.to(Items.DYE, 1, 4), 0x345EC3);
-		addSingularity(3, "redstone", StackHelper.to(Items.REDSTONE), 0x720000);
-		addSingularity(4, "glowstone", StackHelper.to(Items.GLOWSTONE_DUST), 0x868600);
+		addSingularity(2, "lapis_lazuli", new ItemStack(Items.DYE, 1, 4), 0x345EC3);
+		addSingularity(3, "redstone", new ItemStack(Items.REDSTONE), 0x720000);
+		addSingularity(4, "glowstone", new ItemStack(Items.GLOWSTONE_DUST), 0x868600);
 		addSingularity(5, "gold", "ingotGold", 0xDEDE00);
 		addSingularity(6, "diamond", "gemDiamond", 0x2CCDB1);
 		addSingularity(7, "emerald", "gemEmerald", 0x00A835);
@@ -80,7 +87,7 @@ public class ItemSingularity extends ItemMeta {
 	@Override
 	public void initModels() {
 		for (Map.Entry<Integer, MetaItem> item : items.entrySet()) {
-			ModelLoader.setCustomModelResourceLocation(this, item.getKey(), new ModelResourceLocation(ExtendedCrafting.MOD_ID + ":singularity", "inventory"));
+			ModelLoader.setCustomModelResourceLocation(this, item.getKey(), ResourceHelper.getModelResource(ExtendedCrafting.MOD_ID, "singularity", "inventory"));
 		}
 	}
 
@@ -92,7 +99,7 @@ public class ItemSingularity extends ItemMeta {
 		if (enabled) {
 			singularityColors.put(meta, color);
 			singularityMaterials.put(meta, material);
-			ItemSingularityUltimate.addSingularityToRecipe(StackHelper.to(this, 1, meta));
+			ItemSingularityUltimate.addSingularityToRecipe(new ItemStack(this, 1, meta));
 		}
 		return addItem(meta, name, enabled);
 	}
@@ -105,7 +112,7 @@ public class ItemSingularity extends ItemMeta {
 		if (enabled) {
 			singularityColors.put(meta, color);
 			singularityMaterials.put(meta, oreName);
-			ItemSingularityUltimate.addSingularityToRecipe(StackHelper.to(this, 1, meta));
+			ItemSingularityUltimate.addSingularityToRecipe(new ItemStack(this, 1, meta));
 		}
 		return addItem(meta, name, enabled);
 	}
@@ -120,11 +127,11 @@ public class ItemSingularity extends ItemMeta {
 			if (value instanceof ItemStack) {
 				ItemStack stack = (ItemStack) value;
 				if (!StackHelper.isNull(stack)) {
-					CompressorRecipeManager.getInstance().addRecipe(StackHelper.to(this, 1, meta), stack.copy(), ModConfig.confSingularityAmount, ModItems.itemMaterial.itemUltimateCraftingCatalyst, false, ModConfig.confSingularityRF);
+					CompressorRecipeManager.getInstance().addRecipe(new ItemStack(this, 1, meta), stack.copy(), ModConfig.confSingularityAmount, ModItems.itemMaterial.itemUltimateCraftingCatalyst, false, ModConfig.confSingularityRF);
 				}
 			} else if (value instanceof String) {
 				String name = (String) value;
-				CompressorRecipeManager.getInstance().addRecipe(StackHelper.to(this, 1, meta), name, ModConfig.confSingularityAmount, ModItems.itemMaterial.itemUltimateCraftingCatalyst, false, ModConfig.confSingularityRF);
+				CompressorRecipeManager.getInstance().addRecipe(new ItemStack(this, 1, meta), name, ModConfig.confSingularityAmount, ModItems.itemMaterial.itemUltimateCraftingCatalyst, false, ModConfig.confSingularityRF);
 			} else {
 				ExtendedCrafting.LOGGER.error("Invalid material for singularity: " + value.toString());
 				continue;

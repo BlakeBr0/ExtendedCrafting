@@ -1,9 +1,13 @@
 package com.blakebr0.extendedcrafting.item;
 
+import com.blakebr0.cucumber.guide.ItemGuide;
 import com.blakebr0.cucumber.registry.ModRegistry;
 import com.blakebr0.extendedcrafting.ExtendedCrafting;
+import com.blakebr0.extendedcrafting.lib.ModGuide;
 
 public class ModItems {
+	
+	public static ItemGuide itemGuide = new ItemGuide("extendedcrafting", ExtendedCrafting.tabExtendedCrafting, ModGuide.GUIDE);
 
 	public static ItemMaterial itemMaterial = new ItemMaterial();
 
@@ -17,6 +21,8 @@ public class ModItems {
 
 	public static void init() {
 		final ModRegistry registry = ExtendedCrafting.REGISTRY;
+		
+		registry.register(itemGuide, "guide");
 
 		registry.register(itemMaterial, "material");
 

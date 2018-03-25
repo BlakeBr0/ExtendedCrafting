@@ -13,6 +13,7 @@ import com.blakebr0.extendedcrafting.config.ModConfig;
 import com.blakebr0.extendedcrafting.crafting.ModRecipes;
 import com.blakebr0.extendedcrafting.crafting.endercrafter.EnderCrafterRecipeManager;
 import com.blakebr0.extendedcrafting.item.ModItems;
+import com.blakebr0.extendedcrafting.lib.ModGuide;
 import com.blakebr0.extendedcrafting.tile.ModTiles;
 import com.blakebr0.extendedcrafting.util.NetworkThingy;
 
@@ -97,6 +98,7 @@ public class CommonProxy {
 
 	public void postInit(FMLPostInitializationEvent event) {
 		ModRecipes.post();
+		ModGuide.setup();
 	}
 	
 	@SubscribeEvent

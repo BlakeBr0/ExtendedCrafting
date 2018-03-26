@@ -2,6 +2,7 @@ package com.blakebr0.extendedcrafting.client.gui;
 
 import java.util.List;
 
+import com.blakebr0.cucumber.helper.ResourceHelper;
 import com.blakebr0.cucumber.helper.StackHelper;
 import com.blakebr0.cucumber.util.Utils;
 import com.blakebr0.extendedcrafting.ExtendedCrafting;
@@ -17,7 +18,7 @@ import net.minecraft.util.ResourceLocation;
 
 public class GuiCraftingCore extends GuiContainer {
 
-	private static final ResourceLocation GUI = new ResourceLocation(ExtendedCrafting.MOD_ID, "textures/gui/crafting_core.png");
+	private static final ResourceLocation GUI = ResourceHelper.getResource(ExtendedCrafting.MOD_ID, "textures/gui/crafting_core.png");
 
 	private TileCraftingCore tile;
 
@@ -25,7 +26,7 @@ public class GuiCraftingCore extends GuiContainer {
 		super(container);
 		this.tile = tile;
 		this.xSize = 176;
-		this.ySize = 184;
+		this.ySize = 194;
 	}
 
 	private int getEnergyBarScaled(int pixels) {
@@ -97,20 +98,21 @@ public class GuiCraftingCore extends GuiContainer {
 
 	@Override
 	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
-		super.drawGuiContainerForegroundLayer(mouseX, mouseY);
-		GlStateManager.pushMatrix();
+		String s = Utils.localize("container.ec.crafting_core");
+		this.fontRenderer.drawString(s, this.xSize / 2 - this.fontRenderer.getStringWidth(s) / 2, 6, 4210752);
 		this.fontRenderer.drawString(Utils.localize("container.inventory"), 8, this.ySize - 94, 4210752);
+		GlStateManager.pushMatrix();
 		GlStateManager.scale(0.75F, 0.75F, 0.75F);
-		this.fontRenderer.drawString(Utils.localize("ec.ccore.pedestals") + " " + this.tile.getPedestalCount(), 36, 23, -1);
+		this.fontRenderer.drawString(Utils.localize("ec.ccore.pedestals") + " " + this.tile.getPedestalCount(), 36, 36, -1);
 		CombinationRecipe recipe = this.tile.getRecipe();
 		if (recipe == null) {
-			this.fontRenderer.drawString(Utils.localize("ec.ccore.no_recipe"), 36, 43, -1);
+			this.fontRenderer.drawString(Utils.localize("ec.ccore.no_recipe"), 36, 56, -1);
 		} else {
-			this.fontRenderer.drawString(Utils.localize("ec.ccore.rf_cost") + " " + Utils.format(recipe.getCost()) + " RF", 36, 43, -1);
-			this.fontRenderer.drawString(Utils.localize("ec.ccore.rf_rate") + " " + Utils.format(recipe.getPerTick()) + " RF/t", 36, 53, -1);
+			this.fontRenderer.drawString(Utils.localize("ec.ccore.rf_cost") + " " + Utils.format(recipe.getCost()) + " RF", 36, 56, -1);
+			this.fontRenderer.drawString(Utils.localize("ec.ccore.rf_rate") + " " + Utils.format(recipe.getPerTick()) + " RF/t", 36, 66, -1);
 			//this.fontRenderer.drawString(Utils.localize("ec.ccore.progress") + " " + this.tile.getProgress() + " " + recipe.getCost() + "%", 36, 63, -1);
 			if (this.tile.getEnergy().getEnergyStored() < recipe.getPerTick()) {
-				this.fontRenderer.drawString(Utils.localize("ec.ccore.no_power"), 36, 73, -1);
+				this.fontRenderer.drawString(Utils.localize("ec.ccore.no_power"), 36, 86, -1);
 			}
 		}
 		GlStateManager.popMatrix();
@@ -127,11 +129,11 @@ public class GuiCraftingCore extends GuiContainer {
 		
 		if (this.tile.getRecipe() != null) {
 			ItemStack output = this.tile.getRecipe().getOutput();
-			this.drawFakeItemStack(output, 148, 37, mouseX, mouseY);
-			this.drawFakeItemStackTooltip(output, 148, 37, mouseX, mouseY);
+			this.drawFakeItemStack(output, 148, 47, mouseX, mouseY);
+			this.drawFakeItemStackTooltip(output, 148, 47, mouseX, mouseY);
 		}
 
-		if (mouseX > left + 7 && mouseX < guiLeft + 20 && mouseY > this.guiTop + 7 && mouseY < this.guiTop + 84) {
+		if (mouseX > left + 7 && mouseX < guiLeft + 20 && mouseY > this.guiTop + 17 && mouseY < this.guiTop + 94) {
 			this.drawHoveringText(Utils.asList(Utils.format(this.tile.getEnergy().getEnergyStored()) + " RF"), mouseX, mouseY);
 		}
 	}
@@ -145,12 +147,12 @@ public class GuiCraftingCore extends GuiContainer {
 		this.drawTexturedModalRect(x, y, 0, 0, this.xSize, this.ySize);
 
 		int i1 = this.getEnergyBarScaled(78);
-		this.drawTexturedModalRect(x + 7, y + 85 - i1, 178, 78 - i1, 15, i1 + 1);
+		this.drawTexturedModalRect(x + 7, y + 95 - i1, 178, 78 - i1, 15, i1 + 1);
 
 		if (this.tile != null && this.tile.getRecipe() != null) {
 			if (this.tile.getProgress() > 0 && this.tile.getRecipe().getCost() > 0) {
 				int i2 = getProgressBarScaled(24);
-				this.drawTexturedModalRect(x + 116, y + 37, 194, 0, i2 + 1, 16);
+				this.drawTexturedModalRect(x + 116, y + 47, 194, 0, i2 + 1, 16);
 			}
 		}
 	}

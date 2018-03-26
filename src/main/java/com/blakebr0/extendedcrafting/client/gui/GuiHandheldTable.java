@@ -12,8 +12,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class GuiHandheldTable extends GuiContainer {
 
-	private static final ResourceLocation CRAFTING_TABLE_GUI_TEXTURES = new ResourceLocation(
-			"textures/gui/container/crafting_table.png");
+	private static final ResourceLocation CRAFTING_TABLE_GUI_TEXTURES = new ResourceLocation("textures/gui/container/crafting_table.png");
 
 	public GuiHandheldTable(Container container) {
 		super(container);

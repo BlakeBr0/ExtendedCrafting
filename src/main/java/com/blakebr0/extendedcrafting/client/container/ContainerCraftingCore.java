@@ -18,12 +18,12 @@ public class ContainerCraftingCore extends Container {
 
 		for (int i = 0; i < 3; ++i) {
 			for (int j = 0; j < 9; ++j) {
-				this.addSlotToContainer(new Slot(player, j + i * 9 + 9, 8 + j * 18, 102 + i * 18));
+				this.addSlotToContainer(new Slot(player, j + i * 9 + 9, 8 + j * 18, 112 + i * 18));
 			}
 		}
 
 		for (int i = 0; i < 9; ++i) {
-			this.addSlotToContainer(new Slot(player, i, 8 + i * 18, 160));
+			this.addSlotToContainer(new Slot(player, i, 8 + i * 18, 170));
 		}
 	}
 

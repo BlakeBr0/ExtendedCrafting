@@ -34,7 +34,7 @@ public class ContainerEnderCrafter extends Container {
 		this.tile = tile;
 		this.handler = tile.matrix;
 		this.result = new EnderCraftResult(tile);
-		this.addSlotToContainer(new Slot(tile.result, 0, 124, 35) {
+		this.addSlotToContainer(new Slot(tile.result, 0, 124, 36) {
 			@Override
 			public boolean isItemValid(ItemStack stack) {
 				return false;
@@ -45,25 +45,19 @@ public class ContainerEnderCrafter extends Container {
 
 		for (wy = 0; wy < 3; ++wy) {
 			for (ex = 0; ex < 3; ++ex) {
-				this.addSlotToContainer(new SlotItemHandler(handler, ex + wy * 3, 30 + ex * 18, 17 + wy * 18));
+				this.addSlotToContainer(new SlotItemHandler(handler, ex + wy * 3, 30 + ex * 18, 18 + wy * 18));
 			}
 		}
 
 		for (wy = 0; wy < 3; ++wy) {
 			for (ex = 0; ex < 9; ++ex) {
-				this.addSlotToContainer(new Slot(player, ex + wy * 9 + 9, 8 + ex * 18, 84 + wy * 18));
+				this.addSlotToContainer(new Slot(player, ex + wy * 9 + 9, 8 + ex * 18, 88 + wy * 18));
 			}
 		}
 
 		for (ex = 0; ex < 9; ++ex) {
-			this.addSlotToContainer(new Slot(player, ex, 8 + ex * 18, 142));
+			this.addSlotToContainer(new Slot(player, ex, 8 + ex * 18, 146));
 		}
-	}
-
-	@Override
-	public void onContainerClosed(EntityPlayer player) {
-		super.onContainerClosed(player);
-
 	}
 
 	@Override

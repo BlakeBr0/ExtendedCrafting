@@ -17,14 +17,14 @@ public class ContainerCompressor extends Container {
 	public ContainerCompressor(InventoryPlayer player, TileCompressor tile) {
 		this.tile = tile;
 
-		this.addSlotToContainer(new Slot(tile, 0, 135, 38) {
+		this.addSlotToContainer(new Slot(tile, 0, 135, 48) {
 			@Override
 			public boolean isItemValid(ItemStack stack) {
 				return false;
 			}
 		});
-		this.addSlotToContainer(new Slot(tile, 1, 65, 38));
-		this.addSlotToContainer(new Slot(tile, 2, 38, 38) {
+		this.addSlotToContainer(new Slot(tile, 1, 65, 48));
+		this.addSlotToContainer(new Slot(tile, 2, 38, 48) {
 			@Override
 			public int getSlotStackLimit() {
 				return 1;
@@ -33,12 +33,12 @@ public class ContainerCompressor extends Container {
 
 		for (int i = 0; i < 3; ++i) {
 			for (int j = 0; j < 9; ++j) {
-				this.addSlotToContainer(new Slot(player, j + i * 9 + 9, 8 + j * 18, 102 + i * 18));
+				this.addSlotToContainer(new Slot(player, j + i * 9 + 9, 8 + j * 18, 112 + i * 18));
 			}
 		}
 
 		for (int i = 0; i < 9; ++i) {
-			this.addSlotToContainer(new Slot(player, i, 8 + i * 18, 160));
+			this.addSlotToContainer(new Slot(player, i, 8 + i * 18, 170));
 		}
 	}
 

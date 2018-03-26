@@ -1,5 +1,7 @@
 package com.blakebr0.extendedcrafting.client.gui;
 
+import com.blakebr0.cucumber.helper.ResourceHelper;
+import com.blakebr0.cucumber.util.Utils;
 import com.blakebr0.extendedcrafting.ExtendedCrafting;
 import com.blakebr0.extendedcrafting.client.container.ContainerBasicTable;
 import com.blakebr0.extendedcrafting.client.container.ContainerEnderCrafter;
@@ -13,14 +15,14 @@ import net.minecraft.util.ResourceLocation;
 
 public class GuiEnderCrafter extends GuiContainer {
 
-	private static final ResourceLocation GUI = new ResourceLocation(ExtendedCrafting.MOD_ID, "textures/gui/ender_crafter.png");
+	private static final ResourceLocation GUI = ResourceHelper.getResource(ExtendedCrafting.MOD_ID, "textures/gui/ender_crafter.png");
 	private TileEnderCrafter tile;
 
 	public GuiEnderCrafter(TileEnderCrafter tile, ContainerEnderCrafter container) {
 		super(container);
 		this.tile = tile;
 		this.xSize = 176;
-		this.ySize = 166;
+		this.ySize = 170;
 	}
 	
 	private int getProgressBarScaled(int pixels) {
@@ -38,7 +40,9 @@ public class GuiEnderCrafter extends GuiContainer {
 
 	@Override
 	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
-		this.fontRenderer.drawString(I18n.format("container.inventory"), 8, this.ySize - 96 + 2, 4210752);
+		String s = Utils.localize("container.ec.ender_crafter");
+		this.fontRenderer.drawString(s, this.xSize / 2 - this.fontRenderer.getStringWidth(s) / 2, 6, 4210752);
+		this.fontRenderer.drawString(Utils.localize("container.inventory"), 8, this.ySize - 94, 4210752);
 	}
 
 	@Override
@@ -51,7 +55,7 @@ public class GuiEnderCrafter extends GuiContainer {
 		if (this.tile != null) {
 			if (this.tile.getProgress() > 0) {
 				int i2 = getProgressBarScaled(24);
-				this.drawTexturedModalRect(x + 89, y + 35, 194, 0, i2 + 1, 16);
+				this.drawTexturedModalRect(x + 89, y + 45, 194, 0, i2 + 1, 16);
 			}
 		}
 	}

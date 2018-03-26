@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import com.blakebr0.cucumber.helper.ResourceHelper;
 import com.blakebr0.cucumber.helper.StackHelper;
 import com.blakebr0.cucumber.util.Utils;
 import com.blakebr0.extendedcrafting.ExtendedCrafting;
@@ -26,7 +27,7 @@ import net.minecraft.util.text.translation.I18n;
 
 public class GuiCompressor extends GuiContainer {
 
-	private static final ResourceLocation GUI = new ResourceLocation(ExtendedCrafting.MOD_ID, "textures/gui/compressor.png");
+	private static final ResourceLocation GUI = ResourceHelper.getResource(ExtendedCrafting.MOD_ID, "textures/gui/compressor.png");
 
 	private TileCompressor tile;
 
@@ -34,7 +35,7 @@ public class GuiCompressor extends GuiContainer {
 		super(container);
 		this.tile = tile;
 		this.xSize = 176;
-		this.ySize = 184;
+		this.ySize = 194;
 	}
 
 	private int getEnergyBarScaled(int pixels) {
@@ -97,8 +98,9 @@ public class GuiCompressor extends GuiContainer {
 
 	@Override
 	protected void drawGuiContainerForegroundLayer(int p_146979_1_, int p_146979_2_) {
-		this.fontRenderer.drawString(I18n.translateToLocal("container.inventory"), 8, this.ySize - 94, 4210752);
-	}
+		String s = Utils.localize("container.ec.compressor");
+		this.fontRenderer.drawString(s, this.xSize / 2 - this.fontRenderer.getStringWidth(s) / 2, 6, 4210752);
+		this.fontRenderer.drawString(Utils.localize("container.inventory"), 8, this.ySize - 94, 4210752);	}
 
 	@Override
 	public void actionPerformed(GuiButton button) throws IOException {
@@ -127,11 +129,11 @@ public class GuiCompressor extends GuiContainer {
 		super.drawScreen(mouseX, mouseY, partialTicks);
 		this.renderHoveredToolTip(mouseX, mouseY);
 
-		if (mouseX > left + 7 && mouseX < guiLeft + 20 && mouseY > this.guiTop + 7 && mouseY < this.guiTop + 84) {
+		if (mouseX > left + 7 && mouseX < guiLeft + 20 && mouseY > this.guiTop + 17 && mouseY < this.guiTop + 94) {
 			this.drawHoveringText(Collections.singletonList(Utils.format(this.tile.getEnergy().getEnergyStored()) + " RF"), mouseX, mouseY);
 		}
 
-		if (mouseX > left + 60 && mouseX < guiLeft + 85 && mouseY > this.guiTop + 64 && mouseY < this.guiTop + 73) {
+		if (mouseX > left + 60 && mouseX < guiLeft + 85 && mouseY > this.guiTop + 74 && mouseY < this.guiTop + 83) {
 			List<String> l = new ArrayList<String>();
 			if (this.tile.getMaterialCount() < 1) {
 				l.add(Utils.localize("tooltip.ec.empty"));
@@ -144,7 +146,7 @@ public class GuiCompressor extends GuiContainer {
 			this.drawHoveringText(l, mouseX, mouseY);
 		}
 
-		if (mouseX > guiLeft + 68 && mouseX < guiLeft + 79 && mouseY > guiTop + 18 && mouseY < guiTop + 29) {
+		if (mouseX > guiLeft + 68 && mouseX < guiLeft + 79 && mouseY > guiTop + 28 && mouseY < guiTop + 39) {
 			if (this.tile.isEjecting()) {
 				this.drawHoveringText(Utils.localize("tooltip.ec.ejecting"), mouseX, mouseY);
 			} else {
@@ -162,25 +164,25 @@ public class GuiCompressor extends GuiContainer {
 		this.drawTexturedModalRect(x, y, 0, 0, this.xSize, this.ySize);
 
 		int i1 = this.getEnergyBarScaled(78);
-		this.drawTexturedModalRect(x + 7, y + 85 - i1, 178, 78 - i1, 15, i1 + 1);
+		this.drawTexturedModalRect(x + 7, y + 95 - i1, 178, 78 - i1, 15, i1 + 1);
 
 		if (this.tile != null && this.tile.getRecipe() != null) {
 			if (this.tile.getMaterialCount() > 0 && this.tile.getRecipe().getInputCount() > 0) {
 				int i2 = getMaterialBarScaled(26);
-				this.drawTexturedModalRect(x + 60, y + 64, 194, 19, i2 + 1, 10);
+				this.drawTexturedModalRect(x + 60, y + 74, 194, 19, i2 + 1, 10);
 			}
 			if (this.tile.getProgress() > 0 && this.tile.getRecipe().getPowerCost() > 0) {
 				int i2 = getProgressBarScaled(24);
-				this.drawTexturedModalRect(x + 96, y + 37, 194, 0, i2 + 1, 16);
+				this.drawTexturedModalRect(x + 96, y + 47, 194, 0, i2 + 1, 16);
 			}
 		}
 
-		if (mouseX > guiLeft + 68 && mouseX < guiLeft + 79 && mouseY > guiTop + 18 && mouseY < guiTop + 29) {
-			this.drawTexturedModalRect(x + 68, y + 20, 194, 32, 11, 9);
+		if (mouseX > guiLeft + 68 && mouseX < guiLeft + 79 && mouseY > guiTop + 28 && mouseY < guiTop + 39) {
+			this.drawTexturedModalRect(x + 68, y + 30, 194, 32, 11, 9);
 		}
 
 		if (this.tile.getRecipe() != null) {
-			this.drawFakeItemStack(this.tile.getRecipe().getOutput(), 135, 14, 0, 0);
+			this.drawFakeItemStack(this.tile.getRecipe().getOutput(), 135, 24, 0, 0);
 		}
 	}
 }

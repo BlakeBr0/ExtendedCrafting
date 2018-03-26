@@ -6,9 +6,11 @@ import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
 import java.util.ArrayList;
 
+import com.blakebr0.cucumber.helper.NBTHelper;
 import com.blakebr0.cucumber.item.ItemBase;
 import com.blakebr0.extendedcrafting.ExtendedCrafting;
 import com.blakebr0.extendedcrafting.compat.jei.CompatJEI;
+import com.blakebr0.extendedcrafting.config.ModConfig;
 import com.blakebr0.extendedcrafting.lib.IExtendedTable;
 import com.blakebr0.extendedcrafting.tile.TileEnderCrafter;
 import com.blakebr0.extendedcrafting.util.NetworkThingy;
@@ -55,17 +57,12 @@ public class ItemRecipeMaker extends ItemBase {
 	@Override
 	public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> items) {
 		if (isInCreativeTab(tab)) {
-			NBTTagCompound tag = new NBTTagCompound();
-			
 			ItemStack shaped = new ItemStack(this);
-			tag.setBoolean("Shapeless", false);
-			shaped.setTagCompound(tag);
+			NBTHelper.setBoolean(shaped, "Shapeless", false);
 			items.add(shaped);
 			
 			ItemStack shapeless = new ItemStack(this);
-			tag = new NBTTagCompound();
-			tag.setBoolean("Shapeless", true);
-			shapeless.setTagCompound(tag);
+			NBTHelper.setBoolean(shapeless, "Shapeless", true);
 			items.add(shapeless);
 		}
 	}
@@ -81,7 +78,7 @@ public class ItemRecipeMaker extends ItemBase {
 		if (tile != null && tile instanceof IExtendedTable) {
 			if (world.isRemote) {
 				setClipboard(tile, stack);
-				player.sendMessage(new TextComponentTranslation("Copied recipe to clipboard"));
+				player.sendMessage(new TextComponentTranslation("message.ec.copied_recipe"));
 			}
 			
 			return EnumActionResult.SUCCESS;
@@ -120,7 +117,7 @@ public class ItemRecipeMaker extends ItemBase {
 			ItemStack stack = matrix.getStackInSlot(i);
 			
 			String item = "";
-			if (!stack.isEmpty()) {
+			if (ModConfig.confRMOredict && !stack.isEmpty()) {
 				int[] oreIds = OreDictionary.getOreIDs(stack);
 				if (oreIds.length > 0) {
 					item = "ore:" + OreDictionary.getOreName(oreIds[0]);
@@ -137,6 +134,10 @@ public class ItemRecipeMaker extends ItemBase {
 			
 			if (!item.equalsIgnoreCase("null")) {
 				string += "<" + item + ">";
+				
+				if (ModConfig.confRMNBT && !stack.isEmpty() && stack.hasTagCompound()) {
+					string += ".withTag(" + stack.getTagCompound().toString() + ")";
+				}
 			} else {
 				string += item;
 			}
@@ -155,6 +156,7 @@ public class ItemRecipeMaker extends ItemBase {
 				}
 			}
 		}
+		
 		return string;
 	}
 	
@@ -175,7 +177,7 @@ public class ItemRecipeMaker extends ItemBase {
 			ItemStack stack = matrix.getStackInSlot(i);
 			int[] oreIds = OreDictionary.getOreIDs(stack);
 			String item = "";
-			if (oreIds.length > 0) {
+			if (ModConfig.confRMOredict && oreIds.length > 0) {
 				item = "ore:" + OreDictionary.getOreName(oreIds[0]);
 			} else {
 				String reg = stack.getItem().getRegistryName().toString();
@@ -186,6 +188,10 @@ public class ItemRecipeMaker extends ItemBase {
 			}
 					
 			string += "<" + item + ">";
+			
+			if (ModConfig.confRMNBT && !stack.isEmpty() && stack.hasTagCompound()) {
+				string += ".withTag(" + stack.getTagCompound().toString() + ")";
+			}
 			
 			if (i != lastSlot) {
 				string += ", ";

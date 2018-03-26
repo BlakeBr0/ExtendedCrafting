@@ -22,6 +22,9 @@ public class ModConfig {
 	public static int confInterfaceRFCapacity;
 	public static int confInterfaceRFRate;
 	
+	public static boolean confRMOredict;
+	public static boolean confRMNBT;
+	
 	public static int confSingularityAmount;
 	public static int confSingularityRF;
 	public static boolean confSingularityRecipes;
@@ -53,6 +56,10 @@ public class ModConfig {
 		confCompressorItemRate = config.getInt("compressor_item_rate", category, 4, 1, 64, "How many items/t the Quantum Compressor should consume/eject.");
 		confInterfaceRFCapacity = config.getInt("interface_rf_capacity", category, 1000000, 0, Integer.MAX_VALUE, "How much RF/FE the Automation Interface should hold.");
 		confInterfaceRFRate = config.getInt("interface_rf_rate", category, 80, 0, 100000, "How much RF the Automation Interface should use when moving items.");
+		
+		category = "recipe_maker";
+		confRMOredict = config.getBoolean("recipe_maker_oredict", category, true, "Should the Recipe Maker use OreDictionary entries when applicable?");
+		confRMNBT = config.getBoolean("recipe_maker_nbt", category, false, "Should the Recipe maker also copy the NBT of the ingredients?");
 		
 		category = "singularity";
 		config.setCategoryComment(category, "High end crafting components.");

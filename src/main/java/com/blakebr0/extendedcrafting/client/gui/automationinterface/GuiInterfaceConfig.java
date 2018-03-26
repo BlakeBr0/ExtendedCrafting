@@ -42,7 +42,7 @@ public class GuiInterfaceConfig extends GuiContainer {
 		super.drawScreen(mouseX, mouseY, partialTicks);
 		this.renderHoveredToolTip(mouseX, mouseY);
 		
-		if (mouseX > this.guiLeft + 7 && mouseX < this.guiLeft + 20 && mouseY > this.guiTop + 7 && mouseY < this.guiTop + 84) {
+		if (mouseX > this.guiLeft + 7 && mouseX < this.guiLeft + 20 && mouseY > this.guiTop + 16 && mouseY < this.guiTop + 93) {
 			this.drawHoveringText(Utils.format(parent.tile.getEnergy().getEnergyStored()) + " RF", mouseX, mouseY);
 		}
 	}
@@ -50,10 +50,10 @@ public class GuiInterfaceConfig extends GuiContainer {
 	@Override
 	public void initGui() {
 		super.initGui();
-		this.buttonList.add(new SmallButton(0, (this.width - this.xSize) / 2 + 62, (this.height - this.ySize) / 2 + 21, 70, 12, this.parent.tile.getInserterFaceName()));
-		this.buttonList.add(new SmallButton(1, (this.width - this.xSize) / 2 + 62, (this.height - this.ySize) / 2 + 46, 70, 12, this.parent.tile.getExtractorFaceName()));
-		this.buttonList.add(new SmallButton(2, (this.width - this.xSize) / 2 + 62, (this.height - this.ySize) / 2 + 70, 70, 12, this.parent.tile.getAutoEject() ? Utils.localize("ec.interface.on") : Utils.localize("ec.interface.off")));
-		this.buttonList.add(new SmallButton(10, (this.width - this.xSize) / 2 + 129, (this.height - this.ySize) / 2 + 87, 40, 12, Utils.localize("ec.interface.back")));
+		this.buttonList.add(new SmallButton(0, (this.width - this.xSize) / 2 + 62, (this.height - this.ySize) / 2 + 30, 70, 12, this.parent.tile.getInserterFaceName()));
+		this.buttonList.add(new SmallButton(1, (this.width - this.xSize) / 2 + 62, (this.height - this.ySize) / 2 + 55, 70, 12, this.parent.tile.getExtractorFaceName()));
+		this.buttonList.add(new SmallButton(2, (this.width - this.xSize) / 2 + 62, (this.height - this.ySize) / 2 + 79, 70, 12, this.parent.tile.getAutoEject() ? Utils.localize("ec.interface.on") : Utils.localize("ec.interface.off")));
+		this.buttonList.add(new SmallButton(10, (this.width - this.xSize) / 2 + 129, (this.height - this.ySize) / 2 + 96, 40, 12, Utils.localize("ec.interface.back")));
 	}
 	
 	@Override
@@ -72,10 +72,12 @@ public class GuiInterfaceConfig extends GuiContainer {
 	@Override
 	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
 		super.drawGuiContainerForegroundLayer(mouseX, mouseY);
+		String s = Utils.localize("container.ec.interface");
+		this.fontRenderer.drawString(s, this.xSize / 2 - this.fontRenderer.getStringWidth(s) / 2, 6, 4210752);
 		this.fontRenderer.drawString(Utils.localize("container.inventory"), 8, this.ySize - 94, 4210752);
-		this.fontRenderer.drawString(Utils.localize("ec.interface.auto_insert"), this.xSize / 2 - 20, 12, -1);
-		this.fontRenderer.drawString(Utils.localize("ec.interface.auto_extract"), this.xSize / 2 - 23, 36, -1);
-		this.fontRenderer.drawString(Utils.localize("ec.interface.auto_eject"), this.xSize / 2 - 18, 61, -1);
+		this.fontRenderer.drawString(Utils.localize("ec.interface.auto_insert"), this.xSize / 2 - 20, 21, -1);
+		this.fontRenderer.drawString(Utils.localize("ec.interface.auto_extract"), this.xSize / 2 - 23, 45, -1);
+		this.fontRenderer.drawString(Utils.localize("ec.interface.auto_eject"), this.xSize / 2 - 18, 70, -1);
 	}
 
 	@Override
@@ -87,7 +89,7 @@ public class GuiInterfaceConfig extends GuiContainer {
 		this.drawTexturedModalRect(x, y, 0, 0, this.xSize, this.ySize);
 		
 		int i1 = parent.getEnergyBarScaled(78);
-		this.drawTexturedModalRect(x + 7, y + 85 - i1, 178, 78 - i1, 15, i1 + 1);
+		this.drawTexturedModalRect(x + 7, y + 94 - i1, 178, 78 - i1, 15, i1 + 1);
 	}
 		
     public class SmallButton extends GuiButton {
@@ -107,8 +109,8 @@ public class GuiInterfaceConfig extends GuiContainer {
 	            GlStateManager.enableBlend();
 	            GlStateManager.tryBlendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
 	            GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
-	            this.drawTexturedModalRect(this.x, this.y, 0, 185 + i * 12, this.width / 2, this.height);
-	            this.drawTexturedModalRect(this.x + this.width / 2, this.y, 200 - this.width / 2, 185 + i * 12, this.width / 2, this.height);
+	            this.drawTexturedModalRect(this.x, this.y, 0, 194 + i * 12, this.width / 2, this.height);
+	            this.drawTexturedModalRect(this.x + this.width / 2, this.y, 200 - this.width / 2, 194 + i * 12, this.width / 2, this.height);
 	            this.mouseDragged(mc, mouseX, mouseY);
 	            int j = 14737632;
 

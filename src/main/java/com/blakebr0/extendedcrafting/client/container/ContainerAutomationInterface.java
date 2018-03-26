@@ -23,13 +23,8 @@ public class ContainerAutomationInterface extends Container {
 	public ContainerAutomationInterface(InventoryPlayer player, TileAutomationInterface tile) {
 		this.tile = tile;
 		
-		this.addSlotToContainer(new SlotItemHandler(tile.getInventory(), 0, 34, 41) {
-			@Override
-			public boolean isItemValid(ItemStack stack) {
-				return super.isItemValid(stack)/* tile.hasRecipe() ? ((FakeRecipeHandler) tile.getRecipe()).getStacks().stream().anyMatch(s -> s.isItemEqual(stack)) : false */;
-			}
-		});
-		this.addSlotToContainer(new SlotItemHandler(tile.getInventory(), 1, 144, 41) {
+		this.addSlotToContainer(new SlotItemHandler(tile.getInventory(), 0, 34, 50));
+		this.addSlotToContainer(new SlotItemHandler(tile.getInventory(), 1, 144, 50) {
 			@Override
 			public boolean isItemValid(ItemStack stack) {
 				return false;
@@ -38,12 +33,12 @@ public class ContainerAutomationInterface extends Container {
 
 		for (int i = 0; i < 3; ++i) {
 			for (int j = 0; j < 9; ++j) {
-				this.addSlotToContainer(new Slot(player, j + i * 9 + 9, 8 + j * 18, 102 + i * 18));
+				this.addSlotToContainer(new Slot(player, j + i * 9 + 9, 8 + j * 18, 111 + i * 18));
 			}
 		}
 
 		for (int i = 0; i < 9; ++i) {
-			this.addSlotToContainer(new Slot(player, i, 8 + i * 18, 160));
+			this.addSlotToContainer(new Slot(player, i, 8 + i * 18, 169));
 		}
 	}
 

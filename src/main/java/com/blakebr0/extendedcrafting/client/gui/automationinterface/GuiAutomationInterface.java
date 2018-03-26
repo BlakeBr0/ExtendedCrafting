@@ -38,7 +38,7 @@ public class GuiAutomationInterface extends GuiContainer {
 		super(container);
 		this.tile = container.tile;
 		this.xSize = 176;
-		this.ySize = 184;
+		this.ySize = 193;
 	}
 	
 	protected int getEnergyBarScaled(int pixels) {
@@ -53,7 +53,7 @@ public class GuiAutomationInterface extends GuiContainer {
 		super.drawScreen(mouseX, mouseY, partialTicks);
 		this.renderHoveredToolTip(mouseX, mouseY);
 		
-		if (mouseX > this.guiLeft + 7 && mouseX < this.guiLeft + 20 && mouseY > this.guiTop + 7 && mouseY < this.guiTop + 84) {
+		if (mouseX > this.guiLeft + 7 && mouseX < this.guiLeft + 20 && mouseY > this.guiTop + 16 && mouseY < this.guiTop + 93) {
 			this.drawHoveringText(Utils.asList(Utils.format(this.tile.getEnergy().getEnergyStored()) + " RF"), mouseX, mouseY);
 		}
 	}
@@ -61,11 +61,11 @@ public class GuiAutomationInterface extends GuiContainer {
 	@Override
 	public void initGui() {
 		super.initGui();
-		this.buttonList.add(new SmallButton(0, (this.width - this.xSize) / 2 + 62, (this.height - this.ySize) / 2 + 47, 71, 12, Utils.localize("ec.interface.save")));
-		this.buttonList.add(new SmallButton(1, (this.width - this.xSize) / 2 + 62, (this.height - this.ySize) / 2 + 59, 71, 12, Utils.localize("ec.interface.clear")));
-		this.buttonList.add(new SmallButton(5, (this.width - this.xSize) / 2 + 62, (this.height - this.ySize) / 2 + 71, 71, 12, Utils.localize("ec.interface.view")));
+		this.buttonList.add(new SmallButton(0, (this.width - this.xSize) / 2 + 62, (this.height - this.ySize) / 2 + 56, 71, 12, Utils.localize("ec.interface.save")));
+		this.buttonList.add(new SmallButton(1, (this.width - this.xSize) / 2 + 62, (this.height - this.ySize) / 2 + 68, 71, 12, Utils.localize("ec.interface.clear")));
+		this.buttonList.add(new SmallButton(5, (this.width - this.xSize) / 2 + 62, (this.height - this.ySize) / 2 + 80, 71, 12, Utils.localize("ec.interface.view")));
 		
-		this.buttonList.add(new SmallButton(10, (this.width - this.xSize) / 2 + 129, (this.height - this.ySize) / 2 + 87, 40, 12, Utils.localize("ec.interface.config")));
+		this.buttonList.add(new SmallButton(10, (this.width - this.xSize) / 2 + 129, (this.height - this.ySize) / 2 + 96, 40, 12, Utils.localize("ec.interface.config")));
 	}
 	
 	@Override
@@ -99,11 +99,13 @@ public class GuiAutomationInterface extends GuiContainer {
 	@Override
 	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
 		super.drawGuiContainerForegroundLayer(mouseX, mouseY);
+		String s = Utils.localize("container.ec.interface");
+		this.fontRenderer.drawString(s, this.xSize / 2 - this.fontRenderer.getStringWidth(s) / 2, 6, 4210752);
 		this.fontRenderer.drawString(Utils.localize("container.inventory"), 8, this.ySize - 94, 4210752);
 		GlStateManager.pushMatrix();
 		GlStateManager.scale(0.75F, 0.75F, 0.75F);
-		this.fontRenderer.drawString(Utils.localize("ec.interface.table") + StringUtils.capitalize(String.valueOf(this.tile.hasTable())), 83, 14, -1);
-		this.fontRenderer.drawString(Utils.localize("ec.interface.recipe") + StringUtils.capitalize(String.valueOf(this.tile.hasRecipe())), 83, 24, -1);
+		this.fontRenderer.drawString(Utils.localize("ec.interface.table") + StringUtils.capitalize(String.valueOf(this.tile.hasTable())), 83, 26, -1);
+		this.fontRenderer.drawString(Utils.localize("ec.interface.recipe") + StringUtils.capitalize(String.valueOf(this.tile.hasRecipe())), 83, 36, -1);
 		GlStateManager.popMatrix();
 	}
 
@@ -116,7 +118,7 @@ public class GuiAutomationInterface extends GuiContainer {
 		this.drawTexturedModalRect(x, y, 0, 0, this.xSize, this.ySize);
 		
 		int i1 = this.getEnergyBarScaled(78);
-		this.drawTexturedModalRect(x + 7, y + 85 - i1, 178, 78 - i1, 15, i1 + 1);
+		this.drawTexturedModalRect(x + 7, y + 94 - i1, 178, 78 - i1, 15, i1 + 1);
 	}
     
     private void drawItemStack(ItemStack stack, int x, int y) {
@@ -177,8 +179,8 @@ public class GuiAutomationInterface extends GuiContainer {
 	            GlStateManager.enableBlend();
 	            GlStateManager.tryBlendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
 	            GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
-	            this.drawTexturedModalRect(this.x, this.y, 0, 185 + i * 12, this.width / 2, this.height);
-	            this.drawTexturedModalRect(this.x + this.width / 2, this.y, 200 - this.width / 2, 185 + i * 12, this.width / 2, this.height);
+	            this.drawTexturedModalRect(this.x, this.y, 0, 194 + i * 12, this.width / 2, this.height);
+	            this.drawTexturedModalRect(this.x + this.width / 2, this.y, 200 - this.width / 2, 194 + i * 12, this.width / 2, this.height);
 	            this.mouseDragged(mc, mouseX, mouseY);
 	            int j = 14737632;
 

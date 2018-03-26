@@ -1,5 +1,7 @@
 package com.blakebr0.extendedcrafting.client.gui;
 
+import com.blakebr0.cucumber.helper.ResourceHelper;
+import com.blakebr0.cucumber.util.Utils;
 import com.blakebr0.extendedcrafting.ExtendedCrafting;
 import com.blakebr0.extendedcrafting.client.container.ContainerAdvancedTable;
 import com.blakebr0.extendedcrafting.tile.TileAdvancedCraftingTable;
@@ -10,12 +12,12 @@ import net.minecraft.util.ResourceLocation;
 
 public class GuiAdvancedTable extends GuiContainer {
 
-	private static final ResourceLocation GUI = new ResourceLocation(ExtendedCrafting.MOD_ID, "textures/gui/advanced_table.png");
+	private static final ResourceLocation GUI = ResourceHelper.getResource(ExtendedCrafting.MOD_ID, "textures/gui/advanced_table.png");
 
 	public GuiAdvancedTable(TileAdvancedCraftingTable tileEntity, ContainerAdvancedTable container) {
 		super(container);
 		this.xSize = 176;
-		this.ySize = 201;
+		this.ySize = 206;
 	}
 
 	@Override
@@ -24,6 +26,13 @@ public class GuiAdvancedTable extends GuiContainer {
 		super.drawScreen(mouseX, mouseY, partialTicks);
 		this.renderHoveredToolTip(mouseX, mouseY);
 	}
+	
+	@Override
+	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
+		String s = Utils.localize("container.ec.table_advanced");
+		this.fontRenderer.drawString(s, this.xSize / 2 - this.fontRenderer.getStringWidth(s) / 2, 6, 4210752);
+		this.fontRenderer.drawString(Utils.localize("container.inventory"), 8, this.ySize - 94, 4210752);
+	}
 
 	@Override
 	protected void drawGuiContainerBackgroundLayer(float par1, int par2, int par3) {
@@ -31,6 +40,6 @@ public class GuiAdvancedTable extends GuiContainer {
 		this.mc.renderEngine.bindTexture(GUI);
 		int x = (this.width - this.xSize) / 2;
 		int y = (this.height - this.ySize) / 2;
-		this.drawTexturedModalRect(x, y, 0, 0, this.ySize, this.ySize);
+		this.drawTexturedModalRect(x, y, 0, 0, this.xSize, this.ySize);
 	}
 }

@@ -5,6 +5,7 @@ import java.util.Collections;
 
 import org.apache.commons.lang3.StringUtils;
 
+import com.blakebr0.cucumber.helper.ResourceHelper;
 import com.blakebr0.cucumber.util.Utils;
 import com.blakebr0.extendedcrafting.ExtendedCrafting;
 import com.blakebr0.extendedcrafting.client.container.ContainerAutomationInterface;
@@ -31,7 +32,7 @@ import net.minecraftforge.items.SlotItemHandler;
 
 public class GuiAutomationInterface extends GuiContainer {
 
-	protected static final ResourceLocation GUI = new ResourceLocation(ExtendedCrafting.MOD_ID, "textures/gui/automation_interface.png");
+	protected static final ResourceLocation GUI = ResourceHelper.getResource(ExtendedCrafting.MOD_ID, "textures/gui/automation_interface.png");
 	protected TileAutomationInterface tile;
 	
 	public GuiAutomationInterface(ContainerAutomationInterface container) {
@@ -98,7 +99,6 @@ public class GuiAutomationInterface extends GuiContainer {
 	
 	@Override
 	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
-		super.drawGuiContainerForegroundLayer(mouseX, mouseY);
 		String s = Utils.localize("container.ec.interface");
 		this.fontRenderer.drawString(s, this.xSize / 2 - this.fontRenderer.getStringWidth(s) / 2, 6, 4210752);
 		this.fontRenderer.drawString(Utils.localize("container.inventory"), 8, this.ySize - 94, 4210752);

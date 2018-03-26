@@ -94,6 +94,10 @@ guide.extendedcrafting.name=Extended Crafting Guide
 
 # CONTAINERS
 container.ec.interface=Automation Interface
+container.ec.table_basic=Basic Crafting Table
+container.ec.table_advanced=Advanced Crafting Table
+container.ec.table_elite=Elite Crafting Table
+container.ec.table_ultimate=Ultimate Crafting Table
 
 ec.ccore.pedestals=Pedestals:
 ec.ccore.rf_cost=RF Cost:

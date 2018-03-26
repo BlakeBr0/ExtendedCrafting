@@ -32,24 +32,24 @@ public class ContainerUltimateTable extends Container {
 		this.handler = tile.matrix;
 		this.matrix = new UltimateCrafting(this, tile);
 		this.result = new UltimateCraftResult(tile);
-		this.addSlotToContainer(new UltimateResultHandler(player.player, this.matrix, this.result, 0, 206, 79));
+		this.addSlotToContainer(new UltimateResultHandler(player.player, this.matrix, this.result, 0, 206, 89));
 		int wy;
 		int ex;
 
 		for (wy = 0; wy < 9; ++wy) {
 			for (ex = 0; ex < 9; ++ex) {
-				this.addSlotToContainer(new SlotItemHandler(handler, ex + wy * 9, 8 + ex * 18, 8 + wy * 18));
+				this.addSlotToContainer(new SlotItemHandler(handler, ex + wy * 9, 8 + ex * 18, 18 + wy * 18));
 			}
 		}
 
 		for (wy = 0; wy < 3; ++wy) {
 			for (ex = 0; ex < 9; ++ex) {
-				this.addSlotToContainer(new Slot(player, ex + wy * 9 + 9, 39 + ex * 18, 174 + wy * 18));
+				this.addSlotToContainer(new Slot(player, ex + wy * 9 + 9, 39 + ex * 18, 196 + wy * 18));
 			}
 		}
 
 		for (ex = 0; ex < 9; ++ex) {
-			this.addSlotToContainer(new Slot(player, ex, 39 + ex * 18, 232));
+			this.addSlotToContainer(new Slot(player, ex, 39 + ex * 18, 254));
 		}
 
 		this.onCraftMatrixChanged(this.matrix);
@@ -57,8 +57,7 @@ public class ContainerUltimateTable extends Container {
 	}
 
 	public void onCraftMatrixChanged(IInventory matrix) {
-		this.result.setInventorySlotContents(0,
-				TableRecipeManager.getInstance().findMatchingRecipe(this.matrix, this.tile.getWorld()));
+		this.result.setInventorySlotContents(0, TableRecipeManager.getInstance().findMatchingRecipe(this.matrix, this.tile.getWorld()));
 		this.tile.markDirty();
 	}
 

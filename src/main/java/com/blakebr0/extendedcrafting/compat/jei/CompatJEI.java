@@ -118,10 +118,10 @@ public class CompatJEI implements IModPlugin {
 
 		registry.addRecipeClickArea(GuiHandheldTable.class, 88, 32, 28, 23, VanillaRecipeCategoryUid.CRAFTING);
 		registry.addRecipeClickArea(GuiCraftingCore.class, 117, 37, 21, 14, CombinationCraftingCategory.UID);
-		registry.addRecipeClickArea(GuiBasicTable.class, 91, 34, 21, 14, BasicTableCategory.UID);
-		registry.addRecipeClickArea(GuiAdvancedTable.class, 109, 51, 21, 14, AdvancedTableCategory.UID);
-		registry.addRecipeClickArea(GuiEliteTable.class, 145, 69, 21, 14, EliteTableCategory.UID);
-		registry.addRecipeClickArea(GuiUltimateTable.class, 174, 80, 21, 14, UltimateTableCategory.UID);
+		registry.addRecipeClickArea(GuiBasicTable.class, 91, 37, 21, 14, BasicTableCategory.UID);
+		registry.addRecipeClickArea(GuiAdvancedTable.class, 109, 54, 21, 14, AdvancedTableCategory.UID);
+		registry.addRecipeClickArea(GuiEliteTable.class, 139, 72, 21, 14, EliteTableCategory.UID);
+		registry.addRecipeClickArea(GuiUltimateTable.class, 174, 90, 21, 14, UltimateTableCategory.UID);
 		registry.addRecipeClickArea(GuiCompressor.class, 97, 37, 21, 14, CompressorCraftingCategory.UID);
 		registry.addRecipeClickArea(GuiEnderCrafter.class, 88, 32, 28, 23, EnderCrafterCategory.UID);
 

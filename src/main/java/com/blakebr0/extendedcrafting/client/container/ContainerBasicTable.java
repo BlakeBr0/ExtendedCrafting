@@ -32,24 +32,24 @@ public class ContainerBasicTable extends Container {
 		this.handler = tile.matrix;
 		this.matrix = new BasicCrafting(this, tile);
 		this.result = new BasicCraftResult(tile);
-		this.addSlotToContainer(new BasicResultHandler(player.player, this.matrix, this.result, 0, 124, 33));
+		this.addSlotToContainer(new BasicResultHandler(player.player, this.matrix, this.result, 0, 124, 36));
 		int wy;
 		int ex;
 
 		for (wy = 0; wy < 3; ++wy) {
 			for (ex = 0; ex < 3; ++ex) {
-				this.addSlotToContainer(new SlotItemHandler(handler, ex + wy * 3, 32 + ex * 18, 15 + wy * 18));
+				this.addSlotToContainer(new SlotItemHandler(handler, ex + wy * 3, 32 + ex * 18, 18 + wy * 18));
 			}
 		}
 
 		for (wy = 0; wy < 3; ++wy) {
 			for (ex = 0; ex < 9; ++ex) {
-				this.addSlotToContainer(new Slot(player, ex + wy * 9 + 9, 8 + ex * 18, 83 + wy * 18));
+				this.addSlotToContainer(new Slot(player, ex + wy * 9 + 9, 8 + ex * 18, 88 + wy * 18));
 			}
 		}
 
 		for (ex = 0; ex < 9; ++ex) {
-			this.addSlotToContainer(new Slot(player, ex, 8 + ex * 18, 141));
+			this.addSlotToContainer(new Slot(player, ex, 8 + ex * 18, 146));
 		}
 
 		this.onCraftMatrixChanged(this.matrix);

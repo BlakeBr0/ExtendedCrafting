@@ -70,13 +70,13 @@ public class EnderCrafterCategory implements IRecipeCategory {
 		List<List<ItemStack>> inputs = ingredients.getInputs(ItemStack.class);
 		List<ItemStack> outputs = ingredients.getOutputs(ItemStack.class).get(0);
 
-		stacks.init(0, false, 99, 23);
+		stacks.init(0, false, 99, 24);
 		stacks.set(0, outputs);
 
 		for (int i = 0; i < 3; i++) {
 			for (int j = 0; j < 3; j++) {
 				int index = 1 + j + (i * 3);
-				stacks.init(index, true, j * 18 + 5, i * 18 + 5);
+				stacks.init(index, true, j * 18 + 5, i * 18 + 6);
 			}
 		}
 

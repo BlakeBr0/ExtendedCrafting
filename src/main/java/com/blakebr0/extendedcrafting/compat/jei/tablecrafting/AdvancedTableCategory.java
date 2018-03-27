@@ -57,13 +57,13 @@ public class AdvancedTableCategory implements IRecipeCategory {
 		List<List<ItemStack>> inputs = ingredients.getInputs(ItemStack.class);
 		List<ItemStack> outputs = ingredients.getOutputs(ItemStack.class).get(0);
 
-		stacks.init(0, false, 131, 35);
+		stacks.init(0, false, 131, 38);
 		stacks.set(0, outputs);
 
 		for (int i = 0; i < 5; i++) {
 			for (int j = 0; j < 5; j++) {
 				int index = 1 + j + (i * 5);
-				stacks.init(index, true, j * 18 + 3, i * 18);
+				stacks.init(index, true, j * 18 + 3, i * 18 + 3);
 			}
 		}
 

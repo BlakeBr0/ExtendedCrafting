@@ -2,8 +2,8 @@
     "textures": {
         "particle": "extendedcrafting:blocks/storage_black_iron",
         "0": "extendedcrafting:blocks/storage_black_iron",
-		"1": "blocks/glowstone",
-		"2": "blocks/glass"
+        "1": "blocks/glowstone",
+        "2": "extendedcrafting:blocks/frame_glass"
     },
     "elements": [
         {
@@ -180,12 +180,12 @@
             "from": [ 2.0, 2.0, 2.0 ], 
             "to": [ 14.0, 14.0, 14.0 ], 
             "faces": {
-                "north": { "texture": "#2", "uv": [ 0.0, 0.0, 12.0, 12.0 ] },
-                "east": { "texture": "#2", "uv": [ 0.0, 0.0, 12.0, 12.0 ] },
-                "south": { "texture": "#2", "uv": [ 0.0, 0.0, 12.0, 12.0 ] },
-                "west": { "texture": "#2", "uv": [ 0.0, 0.0, 12.0, 12.0 ] },
-                "up": { "texture": "#2", "uv": [ 0.0, 0.0, 12.0, 12.0 ] },
-                "down": { "texture": "#2", "uv": [ 0.0, 0.0, 12.0, 12.0 ] }
+                "north": { "texture": "#2", "uv": [ 2.0, 2.0, 14.0, 14.0 ] },
+                "east": { "texture": "#2", "uv": [ 2.0, 2.0, 14.0, 14.0 ] },
+                "south": { "texture": "#2", "uv": [ 2.0, 2.0, 14.0, 14.0 ] },
+                "west": { "texture": "#2", "uv": [ 2.0, 2.0, 14.0, 14.0 ] },
+                "up": { "texture": "#2", "uv": [ 2.0, 2.0, 14.0, 14.0 ] },
+                "down": { "texture": "#2", "uv": [ 2.0, 2.0, 14.0, 14.0 ] }
             }
         }
     ]

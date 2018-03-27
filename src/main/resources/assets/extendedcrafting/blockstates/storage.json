@@ -7,6 +7,6 @@
         "variant=ultimate": { "model": "extendedcrafting:storage_ultimate" },
         "variant=ender": { "model": "extendedcrafting:storage_ender" },
         "variant=ender_star": { "model": "extendedcrafting:storage_ender_star" },
-        "variant=enhanced_ender": { "model": "extendedcrafting:storage_ender" }
+        "variant=enhanced_ender": { "model": "extendedcrafting:storage_enhanced_ender" }
 	}
 }

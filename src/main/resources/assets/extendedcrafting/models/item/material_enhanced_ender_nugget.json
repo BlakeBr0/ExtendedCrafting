@@ -1,6 +1,6 @@
 {
   "parent":"item/generated",
   "textures": {
-    "layer0":"extendedcrafting:items/material_ender_nugget"
+    "layer0":"extendedcrafting:items/material_enhanced_ender_nugget"
   }
 }

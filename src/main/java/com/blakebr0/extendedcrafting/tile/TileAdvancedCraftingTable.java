@@ -1,9 +1,7 @@
 package com.blakebr0.extendedcrafting.tile;
 
-import com.blakebr0.extendedcrafting.client.container.ContainerAdvancedTable;
 import com.blakebr0.extendedcrafting.crafting.table.TableCraftingStackHandler;
 import com.blakebr0.extendedcrafting.crafting.table.TableRecipeManager;
-import com.blakebr0.extendedcrafting.crafting.table.advanced.AdvancedCrafting;
 import com.blakebr0.extendedcrafting.lib.IExtendedTable;
 
 import net.minecraft.entity.player.EntityPlayer;
@@ -12,9 +10,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.items.IItemHandlerModifiable;
-import net.minecraftforge.items.ItemStackHandler;
 
 public class TileAdvancedCraftingTable extends TileEntity implements IExtendedTable {
 

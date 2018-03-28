@@ -1,6 +1,5 @@
 package com.blakebr0.extendedcrafting.render;
 
-import com.blakebr0.extendedcrafting.tile.TileAutomationInterface;
 import com.blakebr0.extendedcrafting.tile.TileCompressor;
 import com.blakebr0.extendedcrafting.tile.TileCraftingCore;
 import com.blakebr0.extendedcrafting.tile.TilePedestal;

@@ -3,7 +3,6 @@ package com.blakebr0.extendedcrafting.block;
 import javax.annotation.Nonnull;
 
 import com.blakebr0.cucumber.block.BlockBase;
-import com.blakebr0.cucumber.helper.StackHelper;
 import com.blakebr0.extendedcrafting.ExtendedCrafting;
 import com.blakebr0.extendedcrafting.client.gui.GuiHandler;
 import com.blakebr0.extendedcrafting.tile.TileCompressor;
@@ -17,7 +16,6 @@ import net.minecraft.block.properties.PropertyDirection;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;

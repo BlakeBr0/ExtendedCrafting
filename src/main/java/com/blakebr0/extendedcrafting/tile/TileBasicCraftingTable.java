@@ -1,6 +1,5 @@
 package com.blakebr0.extendedcrafting.tile;
 
-import com.blakebr0.cucumber.util.VanillaPacketDispatcher;
 import com.blakebr0.extendedcrafting.crafting.table.TableRecipeManager;
 import com.blakebr0.extendedcrafting.crafting.table.basic.BasicStackHandler;
 import com.blakebr0.extendedcrafting.lib.IExtendedTable;

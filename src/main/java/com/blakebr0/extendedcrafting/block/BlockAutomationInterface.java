@@ -1,19 +1,14 @@
 package com.blakebr0.extendedcrafting.block;
 
 import com.blakebr0.cucumber.block.BlockBase;
-import com.blakebr0.cucumber.helper.StackHelper;
 import com.blakebr0.extendedcrafting.ExtendedCrafting;
 import com.blakebr0.extendedcrafting.client.gui.GuiHandler;
-import com.blakebr0.extendedcrafting.client.gui.automationinterface.GuiAutomationInterface;
 import com.blakebr0.extendedcrafting.tile.TileAutomationInterface;
-import com.blakebr0.extendedcrafting.tile.TileCompressor;
 
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.Minecraft;
-import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -21,7 +16,6 @@ import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.World;
 
 public class BlockAutomationInterface extends BlockBase implements ITileEntityProvider {

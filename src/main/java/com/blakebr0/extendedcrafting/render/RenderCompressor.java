@@ -4,6 +4,7 @@ import javax.annotation.Nullable;
 
 import org.lwjgl.opengl.GL14;
 
+import com.blakebr0.cucumber.render.GhostItemRenderer;
 import com.blakebr0.extendedcrafting.block.ModBlocks;
 import com.blakebr0.extendedcrafting.tile.TileCompressor;
 
@@ -48,41 +49,10 @@ public class RenderCompressor extends TileEntitySpecialRenderer<TileCompressor> 
 			GlStateManager.rotate((float) (((tick * 40.0D) % 360)), 0, 1, 0);
 			GlStateManager.disableLighting();
 			RenderHelper.enableStandardItemLighting();
-			//GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
-			renderItemModel(Minecraft.getMinecraft(), Minecraft.getMinecraft().getRenderItem(), stack);
+			GhostItemRenderer.renderItemModel(Minecraft.getMinecraft(), stack, 0.7F);
 			RenderHelper.disableStandardItemLighting();
 			GlStateManager.enableLighting();
 			GlStateManager.popMatrix();
 		}
 	}
-	
-    protected void renderItemModel(Minecraft mc, RenderItem render, ItemStack stack) {
-        if (!stack.isEmpty()) {
-            mc.getTextureManager().bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
-            mc.getTextureManager().getTexture(TextureMap.LOCATION_BLOCKS_TEXTURE).setBlurMipmap(false, false);
-            GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
-            GlStateManager.enableRescaleNormal();
-            GlStateManager.alphaFunc(516, 0.1F);
-            GlStateManager.pushMatrix();
-            
-            IBakedModel bakedmodel = render.getItemModelWithOverrides(stack, null, null);
-            bakedmodel = net.minecraftforge.client.ForgeHooksClient.handleCameraTransforms(bakedmodel, TransformType.NONE, false);
-
-            GlStateManager.enableBlend();
-            GL14.glBlendColor(1, 1, 1, 0.7F);
-            GlStateManager.blendFunc(SourceFactor.CONSTANT_ALPHA, DestFactor.ONE_MINUS_CONSTANT_ALPHA);
-
-            render.renderItem(stack, bakedmodel);
-
-            GL14.glBlendColor(1, 1, 1, 1);
-            GlStateManager.blendFunc(SourceFactor.SRC_ALPHA, DestFactor.ONE_MINUS_SRC_ALPHA);
-            
-            GlStateManager.cullFace(GlStateManager.CullFace.BACK);
-            GlStateManager.popMatrix();
-            GlStateManager.disableRescaleNormal();
-            GlStateManager.disableBlend();
-            mc.getTextureManager().bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
-            mc.getTextureManager().getTexture(TextureMap.LOCATION_BLOCKS_TEXTURE).restoreLastBlurMipmap();
-        }
-    }
 }

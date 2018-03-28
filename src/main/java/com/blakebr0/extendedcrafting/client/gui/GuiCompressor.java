@@ -97,7 +97,7 @@ public class GuiCompressor extends GuiContainer {
 	}
 
 	@Override
-	protected void drawGuiContainerForegroundLayer(int p_146979_1_, int p_146979_2_) {
+	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
 		String s = Utils.localize("container.ec.compressor");
 		this.fontRenderer.drawString(s, this.xSize / 2 - this.fontRenderer.getStringWidth(s) / 2, 6, 4210752);
 		this.fontRenderer.drawString(Utils.localize("container.inventory"), 8, this.ySize - 94, 4210752);	}
@@ -112,7 +112,7 @@ public class GuiCompressor extends GuiContainer {
 	@Override
 	public void initGui() {
 		super.initGui();
-		this.buttonList.add(new GuiButton(1, this.guiLeft + 69, this.guiTop + 19, 11, 9, (String) null) {
+		this.buttonList.add(new GuiButton(1, this.guiLeft + 69, this.guiTop + 29, 11, 9, (String) null) {
 			@Override
 			public void drawButton(Minecraft mc, int mouseX, int mouseY, float partialTicks) {
 
@@ -179,10 +179,6 @@ public class GuiCompressor extends GuiContainer {
 
 		if (mouseX > guiLeft + 68 && mouseX < guiLeft + 79 && mouseY > guiTop + 28 && mouseY < guiTop + 39) {
 			this.drawTexturedModalRect(x + 68, y + 30, 194, 32, 11, 9);
-		}
-
-		if (this.tile.getRecipe() != null) {
-			this.drawFakeItemStack(this.tile.getRecipe().getOutput(), 135, 24, 0, 0);
 		}
 	}
 }

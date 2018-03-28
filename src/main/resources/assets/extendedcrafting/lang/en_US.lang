@@ -89,9 +89,6 @@ item.ec.recipe_maker.name=Recipe Maker
 item.ec.singularity.name=Singularity
 item.ec.singularity_ultimate.name=The Ultimate Singularity
 
-# GUIDE
-guide.extendedcrafting.name=Extended Crafting Guide
-
 # CONTAINERS
 container.ec.crafting_core=Crafting Core
 container.ec.interface=Automation Interface
@@ -160,3 +157,20 @@ tooltip.ec.eject=Eject
 tooltip.ec.ejecting=Ejecting...
 
 tooltip.ec.output=Output: 
+
+# GUIDE
+guide.extendedcrafting.name=Extended Crafting Guide
+
+guide.entry.introduction=Introduction
+
+guide.entry.combination_crafting=Combination Crafting
+
+guide.entry.table_crafting=Table Crafting
+
+guide.entry.quantum_compression=Quantum Compression
+
+guide.entry.ender_crafting=Ender Crafting
+
+guide.entry.interface=Automation Interface
+
+guide.entry.singularity=Singularities

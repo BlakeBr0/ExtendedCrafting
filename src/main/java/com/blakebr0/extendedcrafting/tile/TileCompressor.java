@@ -122,6 +122,7 @@ public class TileCompressor extends TileEntity implements ISidedInventory, ITick
 				if (this.materialCount > 0 && !this.materialStack.isEmpty()) {
 					ItemStack toAdd = this.materialStack.copy();
 					int addCount = this.materialCount < ModConfig.confCompressorItemRate ? this.materialCount : ModConfig.confCompressorItemRate;
+					addCount = Math.min(addCount, toAdd.getMaxStackSize());
 					toAdd.setCount(addCount);
 					if (this.addStackToSlot(0, toAdd)) {
 						this.materialCount -= addCount;

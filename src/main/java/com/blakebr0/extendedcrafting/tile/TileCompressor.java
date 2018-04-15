@@ -87,7 +87,8 @@ public class TileCompressor extends TileEntity implements ISidedInventory, ITick
 						mark = true;
 					}
 				}
-				if (input.isItemEqual(this.materialStack)) {
+				// TODO: properly deal with multiple itemstacks
+				if (input.isItemEqual(this.materialStack) && ItemStack.areItemStackTagsEqual(input, this.materialStack)) {
 					consumeAmount = input.getCount() < ModConfig.confCompressorItemRate ? input.getCount() : ModConfig.confCompressorItemRate;
 					StackHelper.decrease(input, consumeAmount, false);
 					this.materialCount += consumeAmount;
@@ -227,7 +228,7 @@ public class TileCompressor extends TileEntity implements ISidedInventory, ITick
 			this.setInventorySlotContents(slot, stack);
 			return true;
 		} else {
-			if (slotStack.isItemEqual(stack) && slotStack.getCount() + stack.getCount() <= slotStack.getMaxStackSize()) {
+			if (slotStack.isItemEqual(stack) && slotStack.getCount() + stack.getCount() <= slotStack.getMaxStackSize() && ItemStack.areItemStackTagsEqual(stack, slotStack)) {
 				ItemStack newStack = slotStack.copy();
 				newStack.grow(stack.getCount());
 				this.setInventorySlotContents(slot, newStack);

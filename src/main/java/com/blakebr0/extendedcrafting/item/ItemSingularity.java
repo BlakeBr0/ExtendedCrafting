@@ -16,9 +16,11 @@ import com.blakebr0.extendedcrafting.crafting.CompressorRecipeManager;
 import net.minecraft.client.renderer.color.IItemColor;
 import net.minecraft.init.Items;
 import net.minecraft.item.EnumRarity;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.common.config.Configuration;
+import net.minecraftforge.fml.common.registry.ForgeRegistries;
 
 public class ItemSingularity extends ItemMeta {
 
@@ -126,16 +128,30 @@ public class ItemSingularity extends ItemMeta {
 			if (value instanceof ItemStack) {
 				ItemStack stack = (ItemStack) value;
 				if (!StackHelper.isNull(stack)) {
-					CompressorRecipeManager.getInstance().addRecipe(new ItemStack(this, 1, meta), stack.copy(), ModConfig.confSingularityAmount, ModItems.itemMaterial.itemUltimateCatalyst, false, ModConfig.confSingularityRF);
+					CompressorRecipeManager.getInstance().addRecipe(new ItemStack(this, 1, meta), stack.copy(), ModConfig.confSingularityAmount, ItemSingularity.getCatalystStack(), false, ModConfig.confSingularityRF);
 				}
 			} else if (value instanceof String) {
 				String name = (String) value;
-				CompressorRecipeManager.getInstance().addRecipe(new ItemStack(this, 1, meta), name, ModConfig.confSingularityAmount, ModItems.itemMaterial.itemUltimateCatalyst, false, ModConfig.confSingularityRF);
+				CompressorRecipeManager.getInstance().addRecipe(new ItemStack(this, 1, meta), name, ModConfig.confSingularityAmount, ItemSingularity.getCatalystStack(), false, ModConfig.confSingularityRF);
 			} else {
 				ExtendedCrafting.LOGGER.error("Invalid material for singularity: " + value.toString());
 				continue;
 			}
 		}
+	}
+	
+	public static ItemStack getCatalystStack() {
+		String[] parts = ModConfig.confSingularityCatalyst.split(":");
+		if (parts.length != 3) {
+			return ModItems.itemMaterial.itemUltimateCatalyst;
+		}
+		
+		Item item = ForgeRegistries.ITEMS.getValue(ResourceHelper.getResource(parts[0], parts[1]));
+		if (item == null) {
+			return ModItems.itemMaterial.itemUltimateCatalyst;
+		}
+		
+		return new ItemStack(item, 1, Integer.parseInt(parts[2]));
 	}
 
 	public static class ColorHandler implements IItemColor {

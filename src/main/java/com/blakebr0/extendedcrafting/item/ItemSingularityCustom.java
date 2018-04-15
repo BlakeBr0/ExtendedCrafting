@@ -6,6 +6,7 @@ import java.util.Map;
 
 import org.apache.commons.lang3.text.WordUtils;
 
+import com.blakebr0.cucumber.helper.ResourceHelper;
 import com.blakebr0.cucumber.helper.StackHelper;
 import com.blakebr0.cucumber.iface.IModelHelper;
 import com.blakebr0.cucumber.item.ItemMeta;
@@ -101,7 +102,7 @@ public class ItemSingularityCustom extends ItemMeta implements IModelHelper {
 	@Override
 	public void initModels() {
 		for (Map.Entry<Integer, MetaItem> item : items.entrySet()) {
-			ModelLoader.setCustomModelResourceLocation(this, item.getKey(), new ModelResourceLocation(ExtendedCrafting.MOD_ID + ":singularity", "inventory"));
+			ModelLoader.setCustomModelResourceLocation(this, item.getKey(), ResourceHelper.getModelResource(ExtendedCrafting.MOD_ID, "singularity", "inventory"));
 		}
 	}
 
@@ -134,21 +135,21 @@ public class ItemSingularityCustom extends ItemMeta implements IModelHelper {
 					item = ForgeRegistries.ITEMS.getValue(new ResourceLocation(parts[0], parts[1]));
 					stack = new ItemStack(item, 1, matMeta);
 					if (!StackHelper.isNull(stack)) {
-						CompressorRecipeManager.getInstance().addRecipe(new ItemStack(this, 1, meta), stack.copy(), ModConfig.confSingularityAmount, ModItems.itemMaterial.itemUltimateCatalyst, false, ModConfig.confSingularityRF);
+						CompressorRecipeManager.getInstance().addRecipe(new ItemStack(this, 1, meta), stack.copy(), ModConfig.confSingularityAmount, ItemSingularity.getCatalystStack(), false, ModConfig.confSingularityRF);
 					}
 				} else if (parts.length == 2) {
 					if (((String) value).startsWith("ore:")) {
 						String ore = ((String) value).substring(4);
 						if (OreDictionary.doesOreNameExist(ore)) {
 							if (!OreDictionary.getOres(ore).isEmpty()) {
-								CompressorRecipeManager.getInstance().addRecipe(new ItemStack(this, 1, meta), ore, ModConfig.confSingularityAmount, ModItems.itemMaterial.itemUltimateCatalyst, false, ModConfig.confSingularityRF);
+								CompressorRecipeManager.getInstance().addRecipe(new ItemStack(this, 1, meta), ore, ModConfig.confSingularityAmount, ItemSingularity.getCatalystStack(), false, ModConfig.confSingularityRF);
 							}
 						}
 					} else {
 						item = ForgeRegistries.ITEMS.getValue(new ResourceLocation(parts[0], parts[1]));
 						stack = new ItemStack(item);
 						if (!StackHelper.isNull(stack)) {
-							CompressorRecipeManager.getInstance().addRecipe(new ItemStack(this, 1, meta), stack.copy(), ModConfig.confSingularityAmount, ModItems.itemMaterial.itemUltimateCatalyst, false, ModConfig.confSingularityRF);
+							CompressorRecipeManager.getInstance().addRecipe(new ItemStack(this, 1, meta), stack.copy(), ModConfig.confSingularityAmount, ItemSingularity.getCatalystStack(), false, ModConfig.confSingularityRF);
 						}
 					}
 				} else {

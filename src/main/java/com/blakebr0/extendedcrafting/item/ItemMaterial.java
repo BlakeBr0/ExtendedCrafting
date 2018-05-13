@@ -93,14 +93,14 @@ public class ItemMaterial extends ItemMeta {
 		itemTheUltimateIngot = addItem(32, "ultimate_ingot", "ingotUltimate");
 		itemTheUltimateNugget = addItem(33, "ultimate_nugget", "nuggetUltimate");
 		
-		itemEnderIngot = addItem(36, "ender_ingot", "ingotEnder");
-		itemEnderNugget = addItem(37, "ender_nugget", "nuggetEnder");
+		itemEnderIngot = addItem(36, "ender_ingot");
+		itemEnderNugget = addItem(37, "ender_nugget");
 		
 		itemEnderStar = addItem(40, "ender_star");
-		itemEnderStarNugget = addItem(41, "ender_star_nugget", "nuggetEnderStar");
+		itemEnderStarNugget = addItem(41, "ender_star_nugget");
 		
-		itemEnhancedEnderIngot = addItem(48, "enhanced_ender_ingot", "ingotEnderEnhanced");
-		itemEnhancedEnderNugget = addItem(49, "enhanced_ender_nugget", "nuggetEnderEnhanced");
+		itemEnhancedEnderIngot = addItem(48, "enhanced_ender_ingot");
+		itemEnhancedEnderNugget = addItem(49, "enhanced_ender_nugget");
 				
 		itemDiamondNugget = addItem(128, "diamond_nugget", "nuggetDiamond");
 		itemEmeraldNugget = addItem(129, "emerald_nugget", "nuggetEmerald");

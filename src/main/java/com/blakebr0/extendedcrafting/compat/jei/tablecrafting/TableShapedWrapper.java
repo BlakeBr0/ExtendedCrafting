@@ -8,9 +8,10 @@ import mezz.jei.api.IJeiHelpers;
 import mezz.jei.api.ingredients.IIngredients;
 import mezz.jei.api.recipe.IRecipeWrapper;
 import mezz.jei.api.recipe.IStackHelper;
+import mezz.jei.api.recipe.wrapper.IShapedCraftingRecipeWrapper;
 import net.minecraft.item.ItemStack;
 
-public class TableShapedWrapper implements IRecipeWrapper {
+public class TableShapedWrapper implements IShapedCraftingRecipeWrapper {
 
 	private final TableRecipeShaped recipe;
 	private IJeiHelpers helpers;
@@ -29,5 +30,15 @@ public class TableShapedWrapper implements IRecipeWrapper {
 
 		ingredients.setInputLists(ItemStack.class, inputs);
 		ingredients.setOutput(ItemStack.class, output);
+	}
+
+	@Override
+	public int getWidth() {
+		return recipe.getWidth();
+	}
+
+	@Override
+	public int getHeight() {
+		return recipe.getHeight();
 	}
 }

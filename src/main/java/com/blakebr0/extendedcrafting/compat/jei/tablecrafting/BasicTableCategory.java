@@ -67,10 +67,27 @@ public class BasicTableCategory implements IRecipeCategory {
 			}
 		}
 
-		int xd = 1;
-		for (List<ItemStack> stack : inputs) {
-			stacks.set(xd, stack);
-			xd++;
+		if (wrapper instanceof TableShapedWrapper) {
+			TableShapedWrapper shaped = (TableShapedWrapper) wrapper;
+			
+			int stackIndex = 0;
+			for (int i = 0; i < shaped.getHeight(); i++) {
+				for (int j = 0; j < shaped.getWidth(); j++) {
+					int index = 1 + (i * 3) + j;
+					
+					stacks.set(index, inputs.get(stackIndex));
+					
+					stackIndex++;
+				}
+			}
+		} else if (wrapper instanceof TableShapelessWrapper) {
+			int i = 1;
+			for (List<ItemStack> stack : inputs) {
+				stacks.set(i, stack);
+				i++;
+			}
+			
+			layout.setShapeless();
 		}
 
 		layout.setRecipeTransferButton(137, 34);

@@ -15,7 +15,7 @@ public class ModRecipes {
 				'D', "gemDiamond", 'L', new ItemStack(Items.DYE, 1, 4), 'N', ModItems.itemMaterial.itemNetherStarNugget, 'I', "ingotIron", 'G', "ingotGold");
 
 		EnderCrafterRecipeManager.getInstance().addShaped(ModItems.itemMaterial.itemEnderStar, " E ", "ENE", " E ", 'E', Items.ENDER_EYE, 'N', Items.NETHER_STAR);
-		EnderCrafterRecipeManager.getInstance().addShaped(new ItemStack(ModItems.itemMaterial, 4, 48), " I ", "INI", " I ", 'I', "ingotEnder", 'N', ModItems.itemMaterial.itemEnderStar);
+		EnderCrafterRecipeManager.getInstance().addShaped(new ItemStack(ModItems.itemMaterial, 4, 48), " I ", "INI", " I ", 'I', ModItems.itemMaterial.itemEnderIngot, 'N', ModItems.itemMaterial.itemEnderStar);
 		
 		ModItems.itemSingularity.initRecipes();
 		ModItems.itemSingularityUltimate.initRecipe();

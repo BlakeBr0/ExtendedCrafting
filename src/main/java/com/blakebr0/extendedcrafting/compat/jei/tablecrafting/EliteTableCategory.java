@@ -90,10 +90,6 @@ public class EliteTableCategory implements IRecipeCategory {
 			layout.setShapeless();
 		}
 
-		if (wrapper instanceof TableShapelessWrapper) {
-			layout.setShapeless(); // TODO: maybe place this somewhere manually
-		}
-
 		layout.setRecipeTransferButton(102, 151);
 	}
 }

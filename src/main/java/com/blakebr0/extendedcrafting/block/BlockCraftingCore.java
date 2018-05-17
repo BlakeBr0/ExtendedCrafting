@@ -51,11 +51,10 @@ public class BlockCraftingCore extends BlockBase implements ITileEntityProvider 
 				} else {
 					player.openGui(ExtendedCrafting.instance, GuiHandler.CRAFTING_CORE, world, pos.getX(), pos.getY(), pos.getZ());
 				}
-				// TODO: DEBUG, REMOVE OR DIE TY
-			/*	if (player.isSneaking()) {
-					tile.getEnergy().receiveEnergy(100000, false);
-					player.sendMessage(new TextComponentTranslation("Cheaty cheaty Darkosto, back at it again... I'll let it slide though since it's your birthday."));
-				} */
+
+				if (ExtendedCrafting.DEBUG && player.isSneaking()) {
+					tile.getEnergy().receiveEnergy(10000000, false);
+				} 
 			} 
 		}
 		return true;

@@ -28,6 +28,8 @@ public class ExtendedCrafting {
 
 	public static final ModRegistry REGISTRY = ModRegistry.create(MOD_ID);
 	public static final Logger LOGGER = LogManager.getLogger(MOD_ID);
+	
+	public static final boolean DEBUG = false;
 
 	@SidedProxy(clientSide = "com.blakebr0.extendedcrafting.proxy.ClientProxy", serverSide = "com.blakebr0.extendedcrafting.proxy.ServerProxy")
 	public static CommonProxy proxy;

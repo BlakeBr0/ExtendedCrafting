@@ -43,13 +43,11 @@ public class BlockCompressor extends BlockBase implements ITileEntityProvider {
 	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
 		if (!world.isRemote) {
 			player.openGui(ExtendedCrafting.instance, GuiHandler.COMPRESSOR, world, pos.getX(), pos.getY(), pos.getZ());
-		/*	TileEntity tile = world.getTileEntity(pos);
-			if (tile instanceof TileCompressor) { // TODO: DEBUG REMOVE OR DIE
+			TileEntity tile = world.getTileEntity(pos);
+			if (ExtendedCrafting.DEBUG && tile instanceof TileCompressor) {
 				TileCompressor compressor = (TileCompressor) tile;
-				if (compressor.getEnergy().receiveEnergy(100000, false) > 0) {
-					player.sendMessage(new TextComponentString("it worked apparently"));
-				}
-			} */
+				compressor.getEnergy().receiveEnergy(100000, false);
+			} 
 		}
 		return true;
 	}

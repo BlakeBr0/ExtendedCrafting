@@ -47,12 +47,10 @@ public class BlockAutomationInterface extends BlockBase implements ITileEntityPr
 		if (!world.isRemote) {
 			player.openGui(ExtendedCrafting.instance, GuiHandler.AUTOMATION_INTERFACE, world, pos.getX(), pos.getY(), pos.getZ());
 			TileEntity tile = world.getTileEntity(pos);
-			/*if (tile instanceof TileAutomationInterface) { // TODO: DEBUG REMOVE OR DIE
+			if (ExtendedCrafting.DEBUG && tile instanceof TileAutomationInterface) {
 				TileAutomationInterface compressor = (TileAutomationInterface) tile;
-				if (compressor.getEnergy().receiveEnergy(100000, false) > 0) {
-					player.sendMessage(new TextComponentString("it worked apparently"));
-				}
-			} */
+				compressor.getEnergy().receiveEnergy(100000, false);
+			}
 		}
 		return true;
 	}

@@ -5,20 +5,24 @@ import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
 import java.util.ArrayList;
+import java.util.List;
 
 import com.blakebr0.cucumber.helper.NBTHelper;
 import com.blakebr0.cucumber.item.ItemBase;
+import com.blakebr0.cucumber.util.Utils;
 import com.blakebr0.extendedcrafting.ExtendedCrafting;
 import com.blakebr0.extendedcrafting.compat.jei.CompatJEI;
 import com.blakebr0.extendedcrafting.config.ModConfig;
 import com.blakebr0.extendedcrafting.lib.IExtendedTable;
 import com.blakebr0.extendedcrafting.tile.TileEnderCrafter;
 
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
@@ -46,20 +50,11 @@ public class ItemRecipeMaker extends ItemBase {
 	}
 	
 	@Override
-	public String getItemStackDisplayName(ItemStack stack) {
-		return super.getItemStackDisplayName(stack) + " (" + getModeString(stack) + ")";
-	}
-	
-	@Override
 	public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> items) {
 		if (isInCreativeTab(tab)) {
-			ItemStack shaped = new ItemStack(this);
-			NBTHelper.setBoolean(shaped, "Shapeless", false);
-			items.add(shaped);
-			
-			ItemStack shapeless = new ItemStack(this);
-			NBTHelper.setBoolean(shapeless, "Shapeless", true);
-			items.add(shapeless);
+			ItemStack stack = new ItemStack(this);
+			NBTHelper.setBoolean(stack, "Shapeless", false);
+			items.add(stack);
 		}
 	}
 
@@ -81,6 +76,26 @@ public class ItemRecipeMaker extends ItemBase {
 		}
 
 		return EnumActionResult.PASS;
+	}
+	
+	@Override
+	public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, EnumHand hand) {
+		ItemStack stack = player.getHeldItem(hand);
+		
+		if (player.isSneaking()) {
+			NBTHelper.flipBoolean(stack, "Shapeless");
+			
+			if (world.isRemote) {
+				player.sendMessage(new TextComponentTranslation("message.ec.changed_mode", getModeString(stack)));
+			}
+		}
+		
+		return super.onItemRightClick(world, player, hand);
+	}
+	
+	@Override
+	public void addInformation(ItemStack stack, World world, List<String> tooltip, ITooltipFlag flag) {
+		tooltip.add(Utils.localize("tooltip.ec.mode", getModeString(stack)));
 	}
 
 	private void setClipboard(TileEntity table, ItemStack stack) {

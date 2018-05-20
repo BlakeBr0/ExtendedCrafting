@@ -1,7 +1,10 @@
 package com.blakebr0.extendedcrafting.block.craftingtable;
 
+import java.util.List;
+
 import com.blakebr0.cucumber.block.BlockBase;
 import com.blakebr0.cucumber.helper.StackHelper;
+import com.blakebr0.cucumber.util.Utils;
 import com.blakebr0.extendedcrafting.ExtendedCrafting;
 import com.blakebr0.extendedcrafting.client.gui.GuiHandler;
 import com.blakebr0.extendedcrafting.tile.TileEliteCraftingTable;
@@ -11,6 +14,7 @@ import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.BlockFaceShape;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -68,5 +72,10 @@ public class BlockEliteTable extends BlockBase implements ITileEntityProvider {
 	@Override
 	public boolean isOpaqueCube(IBlockState state) {
 		return false;
+	}
+	
+	@Override
+	public void addInformation(ItemStack stack, World world, List<String> tooltip, ITooltipFlag flag) {
+		tooltip.add(Utils.localize("tooltip.ec.tier", 3));
 	}
 }

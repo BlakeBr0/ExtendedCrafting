@@ -2,9 +2,9 @@ package com.blakebr0.extendedcrafting.compat.jei.tablecrafting;
 
 import java.util.List;
 
+import com.blakebr0.cucumber.helper.ResourceHelper;
 import com.blakebr0.cucumber.util.Utils;
 import com.blakebr0.extendedcrafting.ExtendedCrafting;
-import com.blakebr0.extendedcrafting.compat.jei.CompatJEI;
 
 import mezz.jei.api.IGuiHelper;
 import mezz.jei.api.gui.ICraftingGridHelper;
@@ -20,14 +20,14 @@ import net.minecraft.util.ResourceLocation;
 public class BasicTableCategory implements IRecipeCategory {
 
 	public static final String UID = "extendedcrafting:table_crafting_3x3";
-
+	private static final ResourceLocation TEXTURE = ResourceHelper.getResource(ExtendedCrafting.MOD_ID, "textures/gui/basic_table.png");
+	
 	private final IDrawable background;
 	private final ICraftingGridHelper gridHelper;
 
 	public BasicTableCategory(IGuiHelper helper) {
-		ResourceLocation texture = new ResourceLocation(ExtendedCrafting.MOD_ID, "textures/gui/basic_table.png");
-		this.background = helper.createDrawable(texture, 10, 7, 156, 68);
-		this.gridHelper = CompatJEI.jeiHelpers.getGuiHelper().createCraftingGridHelper(1, 0);
+		this.background = helper.createDrawable(TEXTURE, 10, 7, 156, 68);
+		this.gridHelper = helper.createCraftingGridHelper(1, 0);
 	}
 
 	@Override
@@ -47,7 +47,7 @@ public class BasicTableCategory implements IRecipeCategory {
 
 	@Override
 	public IDrawable getBackground() {
-		return background;
+		return this.background;
 	}
 
 	@Override
@@ -90,6 +90,6 @@ public class BasicTableCategory implements IRecipeCategory {
 			layout.setShapeless();
 		}
 
-		layout.setRecipeTransferButton(137, 34);
+		layout.setRecipeTransferButton(148, 30);
 	}
 }

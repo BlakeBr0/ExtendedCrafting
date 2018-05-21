@@ -2,6 +2,7 @@ package com.blakebr0.extendedcrafting.compat.jei.tablecrafting;
 
 import java.util.List;
 
+import com.blakebr0.cucumber.helper.ResourceHelper;
 import com.blakebr0.cucumber.util.Utils;
 import com.blakebr0.extendedcrafting.ExtendedCrafting;
 import com.blakebr0.extendedcrafting.compat.jei.CompatJEI;
@@ -14,20 +15,21 @@ import mezz.jei.api.gui.IRecipeLayout;
 import mezz.jei.api.ingredients.IIngredients;
 import mezz.jei.api.recipe.IRecipeCategory;
 import mezz.jei.api.recipe.IRecipeWrapper;
+import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 
 public class UltimateTableCategory implements IRecipeCategory {
 
 	public static final String UID = "extendedcrafting:table_crafting_9x9";
+	private static final ResourceLocation TEXTURE = ResourceHelper.getResource(ExtendedCrafting.MOD_ID, "textures/jei/ultimate_crafting.png");
 	
     private final IDrawable background;
-	private final ICraftingGridHelper gridHelper;
-
+	private final ICraftingGridHelper gridHelper;	
+	
     public UltimateTableCategory(IGuiHelper helper) {
-        ResourceLocation texture = new ResourceLocation(ExtendedCrafting.MOD_ID, "textures/jei/ultimate_crafting.png");
-        this.background = helper.createDrawable(texture, 33, 5, 168, 200);
-        this.gridHelper = CompatJEI.jeiHelpers.getGuiHelper().createCraftingGridHelper(1, 0);
+        this.background = helper.createDrawable(TEXTURE, 33, 5, 168, 200);
+        this.gridHelper = helper.createCraftingGridHelper(1, 0);
     }
     
 	@Override
@@ -47,7 +49,7 @@ public class UltimateTableCategory implements IRecipeCategory {
 
 	@Override
 	public IDrawable getBackground(){
-		return background;
+		return this.background;
 	}
 
 	@Override
@@ -69,7 +71,6 @@ public class UltimateTableCategory implements IRecipeCategory {
         
 		if (wrapper instanceof TableShapedWrapper) {
 			TableShapedWrapper shaped = (TableShapedWrapper) wrapper;
-			
 			int stackIndex = 0;
 			for (int i = 0; i < shaped.getHeight(); i++) {
 				for (int j = 0; j < shaped.getWidth(); j++) {
@@ -90,6 +91,6 @@ public class UltimateTableCategory implements IRecipeCategory {
 			layout.setShapeless();
 		}
         
-        layout.setRecipeTransferButton(111, 184);
+		layout.setRecipeTransferButton(122, 177);
 	}
 }

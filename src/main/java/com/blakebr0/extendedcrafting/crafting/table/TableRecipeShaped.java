@@ -243,4 +243,8 @@ public class TableRecipeShaped implements IRecipe, ITieredRecipe {
 				 : 4;
 		return tier;
 	}
+	
+	public boolean requiresTier() {
+		return this.tier > 0;
+	}
 }

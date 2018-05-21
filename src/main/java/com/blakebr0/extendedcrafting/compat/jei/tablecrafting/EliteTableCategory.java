@@ -2,6 +2,7 @@ package com.blakebr0.extendedcrafting.compat.jei.tablecrafting;
 
 import java.util.List;
 
+import com.blakebr0.cucumber.helper.ResourceHelper;
 import com.blakebr0.cucumber.util.Utils;
 import com.blakebr0.extendedcrafting.ExtendedCrafting;
 import com.blakebr0.extendedcrafting.compat.jei.CompatJEI;
@@ -20,14 +21,14 @@ import net.minecraft.util.ResourceLocation;
 public class EliteTableCategory implements IRecipeCategory {
 
 	public static final String UID = "extendedcrafting:table_crafting_7x7";
+	private static final ResourceLocation texture = ResourceHelper.getResource(ExtendedCrafting.MOD_ID, "textures/jei/elite_crafting.png");
 
 	private final IDrawable background;
 	private final ICraftingGridHelper gridHelper;
 
 	public EliteTableCategory(IGuiHelper helper) {
-		ResourceLocation texture = new ResourceLocation(ExtendedCrafting.MOD_ID, "textures/jei/elite_crafting.png");
 		this.background = helper.createDrawable(texture, 30, 12, 156, 170);
-		this.gridHelper = CompatJEI.jeiHelpers.getGuiHelper().createCraftingGridHelper(1, 0);
+		this.gridHelper = helper.createCraftingGridHelper(1, 0);
 	}
 
 	@Override
@@ -47,7 +48,7 @@ public class EliteTableCategory implements IRecipeCategory {
 
 	@Override
 	public IDrawable getBackground() {
-		return background;
+		return this.background;
 	}
 
 	@Override
@@ -90,6 +91,6 @@ public class EliteTableCategory implements IRecipeCategory {
 			layout.setShapeless();
 		}
 
-		layout.setRecipeTransferButton(102, 151);
+		layout.setRecipeTransferButton(113, 144);
 	}
 }

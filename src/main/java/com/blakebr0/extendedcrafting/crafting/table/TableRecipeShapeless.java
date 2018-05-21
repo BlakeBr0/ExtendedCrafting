@@ -176,4 +176,8 @@ public class TableRecipeShapeless implements IRecipe, ITieredRecipe {
 
 		return required.isEmpty();
 	}
+	
+	public boolean requiresTier() {
+		return this.tier > 0;
+	}
 }

@@ -3,6 +3,8 @@ package com.blakebr0.extendedcrafting.compat.jei;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.blakebr0.cucumber.helper.ResourceHelper;
+import com.blakebr0.extendedcrafting.ExtendedCrafting;
 import com.blakebr0.extendedcrafting.block.ModBlocks;
 import com.blakebr0.extendedcrafting.client.container.ContainerAdvancedTable;
 import com.blakebr0.extendedcrafting.client.container.ContainerBasicTable;
@@ -52,10 +54,13 @@ import mezz.jei.api.recipe.transfer.IRecipeTransferRegistry;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ResourceLocation;
 
 @JEIPlugin
 public class CompatJEI implements IModPlugin {
 
+	public static final ResourceLocation ICONS = ResourceHelper.getResource(ExtendedCrafting.MOD_ID, "textures/jei/icons.png");
+	
 	public static List<Block> blocks = new ArrayList<Block>();
 	public static List<Item> items = new ArrayList<Item>();
 
@@ -102,14 +107,14 @@ public class CompatJEI implements IModPlugin {
 
 		registry.handleRecipes(CombinationRecipe.class, recipe -> new CombinationCraftingWrapper(jeiHelpers, recipe), CombinationCraftingCategory.UID);
 
-		registry.handleRecipes(TableRecipeShaped.class, recipe -> new TableShapedWrapper(jeiHelpers, recipe), BasicTableCategory.UID);
-		registry.handleRecipes(TableRecipeShapeless.class, recipe -> new TableShapelessWrapper(jeiHelpers, recipe), BasicTableCategory.UID);
-		registry.handleRecipes(TableRecipeShaped.class, recipe -> new TableShapedWrapper(jeiHelpers, recipe), AdvancedTableCategory.UID);
-		registry.handleRecipes(TableRecipeShapeless.class, recipe -> new TableShapelessWrapper(jeiHelpers, recipe), AdvancedTableCategory.UID);
-		registry.handleRecipes(TableRecipeShaped.class, recipe -> new TableShapedWrapper(jeiHelpers, recipe), EliteTableCategory.UID);
-		registry.handleRecipes(TableRecipeShapeless.class, recipe -> new TableShapelessWrapper(jeiHelpers, recipe), EliteTableCategory.UID);
-		registry.handleRecipes(TableRecipeShaped.class, recipe -> new TableShapedWrapper(jeiHelpers, recipe), UltimateTableCategory.UID);
-		registry.handleRecipes(TableRecipeShapeless.class, recipe -> new TableShapelessWrapper(jeiHelpers, recipe), UltimateTableCategory.UID);
+		registry.handleRecipes(TableRecipeShaped.class, recipe -> new TableShapedWrapper(jeiHelpers, recipe, 140, 29), BasicTableCategory.UID);
+		registry.handleRecipes(TableRecipeShapeless.class, recipe -> new TableShapelessWrapper(jeiHelpers, recipe, 140, 29), BasicTableCategory.UID);
+		registry.handleRecipes(TableRecipeShaped.class, recipe -> new TableShapedWrapper(jeiHelpers, recipe, 138, 14), AdvancedTableCategory.UID);
+		registry.handleRecipes(TableRecipeShapeless.class, recipe -> new TableShapelessWrapper(jeiHelpers, recipe, 138, 14), AdvancedTableCategory.UID);
+		registry.handleRecipes(TableRecipeShaped.class, recipe -> new TableShapedWrapper(jeiHelpers, recipe, 105, 143), EliteTableCategory.UID);
+		registry.handleRecipes(TableRecipeShapeless.class, recipe -> new TableShapelessWrapper(jeiHelpers, recipe, 105, 143), EliteTableCategory.UID);
+		registry.handleRecipes(TableRecipeShaped.class, recipe -> new TableShapedWrapper(jeiHelpers, recipe, 114, 176), UltimateTableCategory.UID);
+		registry.handleRecipes(TableRecipeShapeless.class, recipe -> new TableShapelessWrapper(jeiHelpers, recipe, 114, 176), UltimateTableCategory.UID);
 
 		registry.handleRecipes(CompressorRecipe.class, recipe -> new CompressorCraftingWrapper(jeiHelpers, recipe), CompressorCraftingCategory.UID);
 		

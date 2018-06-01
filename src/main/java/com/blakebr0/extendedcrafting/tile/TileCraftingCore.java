@@ -130,7 +130,8 @@ public class TileCraftingCore extends TileEntity implements ITickable {
 					Object next = rem.next();
 					ItemStack stack = pedestal.getInventory().getStackInSlot(0);
 					if (next instanceof ItemStack) {
-						match = OreDictionary.itemMatches((ItemStack) next, stack, false) && (!stack.hasTagCompound() || ItemStack.areItemStackTagsEqual((ItemStack) next, stack));
+						ItemStack nextStack = (ItemStack) next;
+						match = OreDictionary.itemMatches(nextStack, stack, false) && (!nextStack.hasTagCompound() || ItemStack.areItemStackTagsEqual(nextStack, stack));
 					} else if (next instanceof List) {
 						Iterator<ItemStack> itr = ((List<ItemStack>) next).iterator();
 						while (itr.hasNext()) {

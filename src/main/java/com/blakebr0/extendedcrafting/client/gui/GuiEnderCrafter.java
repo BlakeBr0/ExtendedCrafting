@@ -55,7 +55,7 @@ public class GuiEnderCrafter extends GuiContainer {
 		if (this.tile != null) {
 			if (this.tile.getProgress() > 0) {
 				int i2 = getProgressBarScaled(24);
-				this.drawTexturedModalRect(x + 89, y + 45, 194, 0, i2 + 1, 16);
+				this.drawTexturedModalRect(x + 89, y + 36, 194, 0, i2 + 1, 16);
 			}
 		}
 	}

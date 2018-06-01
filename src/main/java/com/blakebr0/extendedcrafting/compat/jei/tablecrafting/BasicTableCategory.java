@@ -86,8 +86,6 @@ public class BasicTableCategory implements IRecipeCategory {
 				stacks.set(i, stack);
 				i++;
 			}
-			
-			layout.setShapeless();
 		}
 
 		layout.setRecipeTransferButton(148, 30);

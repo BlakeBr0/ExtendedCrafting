@@ -108,13 +108,13 @@ public class CompatJEI implements IModPlugin {
 		registry.handleRecipes(CombinationRecipe.class, recipe -> new CombinationCraftingWrapper(jeiHelpers, recipe), CombinationCraftingCategory.UID);
 
 		registry.handleRecipes(TableRecipeShaped.class, recipe -> new TableShapedWrapper(jeiHelpers, recipe, 140, 29), BasicTableCategory.UID);
-		registry.handleRecipes(TableRecipeShapeless.class, recipe -> new TableShapelessWrapper(jeiHelpers, recipe, 140, 29), BasicTableCategory.UID);
+		registry.handleRecipes(TableRecipeShapeless.class, recipe -> new TableShapelessWrapper(jeiHelpers, recipe, 140, 29, 160, 23), BasicTableCategory.UID);
 		registry.handleRecipes(TableRecipeShaped.class, recipe -> new TableShapedWrapper(jeiHelpers, recipe, 138, 14), AdvancedTableCategory.UID);
-		registry.handleRecipes(TableRecipeShapeless.class, recipe -> new TableShapelessWrapper(jeiHelpers, recipe, 138, 14), AdvancedTableCategory.UID);
+		registry.handleRecipes(TableRecipeShapeless.class, recipe -> new TableShapelessWrapper(jeiHelpers, recipe, 138, 14, 196, 10), AdvancedTableCategory.UID);
 		registry.handleRecipes(TableRecipeShaped.class, recipe -> new TableShapedWrapper(jeiHelpers, recipe, 105, 143), EliteTableCategory.UID);
-		registry.handleRecipes(TableRecipeShapeless.class, recipe -> new TableShapelessWrapper(jeiHelpers, recipe, 105, 143), EliteTableCategory.UID);
+		registry.handleRecipes(TableRecipeShapeless.class, recipe -> new TableShapelessWrapper(jeiHelpers, recipe, 105, 143, 256, 265), EliteTableCategory.UID);
 		registry.handleRecipes(TableRecipeShaped.class, recipe -> new TableShapedWrapper(jeiHelpers, recipe, 114, 176), UltimateTableCategory.UID);
-		registry.handleRecipes(TableRecipeShapeless.class, recipe -> new TableShapelessWrapper(jeiHelpers, recipe, 114, 176), UltimateTableCategory.UID);
+		registry.handleRecipes(TableRecipeShapeless.class, recipe -> new TableShapelessWrapper(jeiHelpers, recipe, 114, 176, 306, 335), UltimateTableCategory.UID);
 
 		registry.handleRecipes(CompressorRecipe.class, recipe -> new CompressorCraftingWrapper(jeiHelpers, recipe), CompressorCraftingCategory.UID);
 		

@@ -5,7 +5,6 @@ import java.util.List;
 import com.blakebr0.cucumber.helper.ResourceHelper;
 import com.blakebr0.cucumber.util.Utils;
 import com.blakebr0.extendedcrafting.ExtendedCrafting;
-import com.blakebr0.extendedcrafting.compat.jei.CompatJEI;
 
 import mezz.jei.api.IGuiHelper;
 import mezz.jei.api.gui.ICraftingGridHelper;
@@ -15,7 +14,6 @@ import mezz.jei.api.gui.IRecipeLayout;
 import mezz.jei.api.ingredients.IIngredients;
 import mezz.jei.api.recipe.IRecipeCategory;
 import mezz.jei.api.recipe.IRecipeWrapper;
-import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 
@@ -87,10 +85,8 @@ public class UltimateTableCategory implements IRecipeCategory {
 				stacks.set(i, stack);
 				i++;
 			}
-			
-			layout.setShapeless();
 		}
-        
+		
 		layout.setRecipeTransferButton(122, 177);
 	}
 }

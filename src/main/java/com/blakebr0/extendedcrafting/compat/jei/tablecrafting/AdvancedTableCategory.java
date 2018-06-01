@@ -86,8 +86,6 @@ public class AdvancedTableCategory implements IRecipeCategory {
 				stacks.set(i, stack);
 				i++;
 			}
-			
-			layout.setShapeless();
 		}
 		
 		layout.setRecipeTransferButton(133, 65);

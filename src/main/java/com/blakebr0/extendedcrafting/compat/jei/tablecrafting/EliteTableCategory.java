@@ -5,7 +5,6 @@ import java.util.List;
 import com.blakebr0.cucumber.helper.ResourceHelper;
 import com.blakebr0.cucumber.util.Utils;
 import com.blakebr0.extendedcrafting.ExtendedCrafting;
-import com.blakebr0.extendedcrafting.compat.jei.CompatJEI;
 
 import mezz.jei.api.IGuiHelper;
 import mezz.jei.api.gui.ICraftingGridHelper;
@@ -87,8 +86,6 @@ public class EliteTableCategory implements IRecipeCategory {
 				stacks.set(i, stack);
 				i++;
 			}
-			
-			layout.setShapeless();
 		}
 
 		layout.setRecipeTransferButton(113, 144);

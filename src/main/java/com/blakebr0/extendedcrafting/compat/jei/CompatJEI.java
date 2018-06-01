@@ -60,6 +60,7 @@ import net.minecraft.util.ResourceLocation;
 public class CompatJEI implements IModPlugin {
 
 	public static final ResourceLocation ICONS = ResourceHelper.getResource(ExtendedCrafting.MOD_ID, "textures/jei/icons.png");
+	public static final ResourceLocation JEI_RESOURCES = ResourceHelper.getResource("jei", "textures/gui/recipe_background.png");
 	
 	public static List<Block> blocks = new ArrayList<Block>();
 	public static List<Item> items = new ArrayList<Item>();

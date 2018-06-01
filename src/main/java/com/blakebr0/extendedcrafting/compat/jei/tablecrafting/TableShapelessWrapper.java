@@ -7,7 +7,6 @@ import com.blakebr0.cucumber.util.Utils;
 import com.blakebr0.extendedcrafting.compat.jei.CompatJEI;
 import com.blakebr0.extendedcrafting.crafting.table.TableRecipeShapeless;
 
-import mezz.jei.Internal;
 import mezz.jei.api.IJeiHelpers;
 import mezz.jei.api.gui.IDrawable;
 import mezz.jei.api.ingredients.IIngredients;
@@ -21,8 +20,7 @@ public class TableShapelessWrapper implements IRecipeWrapper {
 
 	private final TableRecipeShapeless recipe;
 	private final IJeiHelpers helpers;
-	private final IDrawable required;
-	private final IDrawable shapeless = Internal.getHelpers().getGuiHelper().getShapelessIcon();
+	private final IDrawable required, shapeless;
 	private int reqX = 0, reqY = 0, slX = 0, slY = 0;
 	private boolean tiered = false;
 	
@@ -30,12 +28,14 @@ public class TableShapelessWrapper implements IRecipeWrapper {
 		this.helpers = helpers;
 		this.recipe = recipe;
 		this.required = helpers.getGuiHelper().createDrawable(CompatJEI.ICONS, 0, 0, 3, 15);
+		this.shapeless = helpers.getGuiHelper().createDrawable(CompatJEI.JEI_RESOURCES, 196, 0, 19, 15);
 	}
 
 	public TableShapelessWrapper(IJeiHelpers helpers, TableRecipeShapeless recipe, int reqX, int reqY, int slX, int slY) {
 		this.helpers = helpers;
 		this.recipe = recipe;
 		this.required = helpers.getGuiHelper().createDrawable(CompatJEI.ICONS, 0, 0, 3, 15);
+		this.shapeless = helpers.getGuiHelper().createDrawable(CompatJEI.JEI_RESOURCES, 196, 0, 19, 15);
 		this.reqX = reqX;
 		this.reqY = reqY;
 		this.slX = slX;

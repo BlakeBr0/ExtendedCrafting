@@ -7,7 +7,6 @@ import com.blakebr0.cucumber.util.Utils;
 import com.blakebr0.extendedcrafting.ExtendedCrafting;
 
 import mezz.jei.api.IGuiHelper;
-import mezz.jei.api.gui.ICraftingGridHelper;
 import mezz.jei.api.gui.IDrawable;
 import mezz.jei.api.gui.IGuiItemStackGroup;
 import mezz.jei.api.gui.IRecipeLayout;
@@ -20,14 +19,12 @@ import net.minecraft.util.ResourceLocation;
 public class EliteTableCategory implements IRecipeCategory {
 
 	public static final String UID = "extendedcrafting:table_crafting_7x7";
-	private static final ResourceLocation texture = ResourceHelper.getResource(ExtendedCrafting.MOD_ID, "textures/jei/elite_crafting.png");
+	private static final ResourceLocation TEXTURE = ResourceHelper.getResource(ExtendedCrafting.MOD_ID, "textures/jei/elite_crafting.png");
 
 	private final IDrawable background;
-	private final ICraftingGridHelper gridHelper;
 
 	public EliteTableCategory(IGuiHelper helper) {
-		this.background = helper.createDrawable(texture, 30, 12, 156, 170);
-		this.gridHelper = helper.createCraftingGridHelper(1, 0);
+		this.background = helper.createDrawable(TEXTURE, 0, 0, 126, 159);
 	}
 
 	@Override
@@ -57,13 +54,13 @@ public class EliteTableCategory implements IRecipeCategory {
 		List<List<ItemStack>> inputs = ingredients.getInputs(ItemStack.class);
 		List<ItemStack> outputs = ingredients.getOutputs(ItemStack.class).get(0);
 
-		stacks.init(0, false, 78, 142);
+		stacks.init(0, false, 65, 137);
 		stacks.set(0, outputs);
 
 		for (int i = 0; i < 7; i++) {
 			for (int j = 0; j < 7; j++) {
 				int index = 1 + j + (i * 7);
-				stacks.init(index, true, j * 18 + 13, i * 18 + 2);
+				stacks.init(index, true, j * 18, i * 18);
 			}
 		}
 
@@ -88,6 +85,6 @@ public class EliteTableCategory implements IRecipeCategory {
 			}
 		}
 
-		layout.setRecipeTransferButton(113, 144);
+		layout.setRecipeTransferButton(113, 146);
 	}
 }

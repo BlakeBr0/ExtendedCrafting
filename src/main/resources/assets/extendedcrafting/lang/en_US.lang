@@ -160,7 +160,8 @@ tooltip.ec.ejecting=Ejecting...
 tooltip.ec.tier=Tier: %s
 tooltip.ec.output=Output: 
 tooltip.ec.mode=Mode: %s
-tooltip.ec.requires_table=Requires a Tier %s table.
+tooltip.ec.num_items=%s Items
+tooltip.ec.requires_table=Requires Tier %s Crafting Table
 
 # GUIDE
 guide.extendedcrafting.name=Extended Crafting Guide

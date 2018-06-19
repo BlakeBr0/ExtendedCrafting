@@ -7,7 +7,6 @@ import com.blakebr0.cucumber.util.Utils;
 import com.blakebr0.extendedcrafting.ExtendedCrafting;
 
 import mezz.jei.api.IGuiHelper;
-import mezz.jei.api.gui.ICraftingGridHelper;
 import mezz.jei.api.gui.IDrawable;
 import mezz.jei.api.gui.IGuiItemStackGroup;
 import mezz.jei.api.gui.IRecipeLayout;
@@ -20,14 +19,12 @@ import net.minecraft.util.ResourceLocation;
 public class BasicTableCategory implements IRecipeCategory {
 
 	public static final String UID = "extendedcrafting:table_crafting_3x3";
-	private static final ResourceLocation TEXTURE = ResourceHelper.getResource(ExtendedCrafting.MOD_ID, "textures/gui/basic_table.png");
+	private static final ResourceLocation TEXTURE = ResourceHelper.getResource(ExtendedCrafting.MOD_ID, "textures/jei/basic_crafting.png");
 	
 	private final IDrawable background;
-	private final ICraftingGridHelper gridHelper;
 
 	public BasicTableCategory(IGuiHelper helper) {
-		this.background = helper.createDrawable(TEXTURE, 10, 7, 156, 68);
-		this.gridHelper = helper.createCraftingGridHelper(1, 0);
+		this.background = helper.createDrawable(TEXTURE, 0, 0, 116, 54);
 	}
 
 	@Override
@@ -57,13 +54,13 @@ public class BasicTableCategory implements IRecipeCategory {
 		List<List<ItemStack>> inputs = ingredients.getInputs(ItemStack.class);
 		List<ItemStack> outputs = ingredients.getOutputs(ItemStack.class).get(0);
 
-		stacks.init(0, false, 113, 28);
+		stacks.init(0, false, 94, 18);
 		stacks.set(0, outputs);
 
 		for (int i = 0; i < 3; i++) {
 			for (int j = 0; j < 3; j++) {
 				int index = 1 + j + (i * 3);
-				stacks.init(index, true, j * 18 + 21, i * 18 + 10);
+				stacks.init(index, true, j * 18, i * 18);
 			}
 		}
 
@@ -88,6 +85,6 @@ public class BasicTableCategory implements IRecipeCategory {
 			}
 		}
 
-		layout.setRecipeTransferButton(148, 30);
+		layout.setRecipeTransferButton(122, 41);
 	}
 }

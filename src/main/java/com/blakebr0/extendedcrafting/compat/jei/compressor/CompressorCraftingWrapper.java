@@ -6,7 +6,6 @@ import java.util.Collections;
 import java.util.List;
 
 import com.blakebr0.cucumber.util.Utils;
-import com.blakebr0.extendedcrafting.config.ModConfig;
 import com.blakebr0.extendedcrafting.crafting.CompressorRecipe;
 
 import mezz.jei.api.IJeiHelpers;
@@ -31,7 +30,7 @@ public class CompressorCraftingWrapper implements IRecipeWrapper {
 			return Arrays.<String> asList(Utils.format(this.recipe.getPowerCost()) + " RF", Utils.format(this.recipe.getPowerRate()) + " RF/t");
 		}
 		if (mouseX > 54 && mouseX < 78 && mouseY > 58 && mouseY < 68) {
-			return Arrays.<String> asList(Utils.format(this.recipe.getInputCount()));
+			return Arrays.<String> asList(Utils.localize("tooltip.ec.num_items", Utils.format(this.recipe.getInputCount())));
 		}
 		return Collections.emptyList();
 	}

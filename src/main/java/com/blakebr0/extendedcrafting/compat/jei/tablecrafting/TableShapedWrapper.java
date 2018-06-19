@@ -13,6 +13,7 @@ import mezz.jei.api.ingredients.IIngredients;
 import mezz.jei.api.recipe.IStackHelper;
 import mezz.jei.api.recipe.wrapper.IShapedCraftingRecipeWrapper;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.item.ItemStack;
 
 public class TableShapedWrapper implements IShapedCraftingRecipeWrapper {
@@ -20,21 +21,21 @@ public class TableShapedWrapper implements IShapedCraftingRecipeWrapper {
 	private final TableRecipeShaped recipe;
 	private final IJeiHelpers helpers;
 	private final IDrawable required;
-	private int reqX = 0, reqY = 0;
+	private int iconsX = 0, iconsY = 0;
 	private boolean tiered = false;
 	
 	public TableShapedWrapper(IJeiHelpers helpers, TableRecipeShaped recipe) {
 		this.helpers = helpers;
 		this.recipe = recipe;
-		this.required = helpers.getGuiHelper().createDrawable(CompatJEI.ICONS, 0, 0, 3, 15);
+		this.required = helpers.getGuiHelper().createDrawable(CompatJEI.ICONS, 0, 0, 15, 15);
 	}
 
-	public TableShapedWrapper(IJeiHelpers helpers, TableRecipeShaped recipe, int reqX, int reqY) {
+	public TableShapedWrapper(IJeiHelpers helpers, TableRecipeShaped recipe, int iconsX, int iconsY) {
 		this.helpers = helpers;
 		this.recipe = recipe;
-		this.required = helpers.getGuiHelper().createDrawable(CompatJEI.ICONS, 0, 0, 3, 15);
-		this.reqX = reqX;
-		this.reqY = reqY;
+		this.required = helpers.getGuiHelper().createDrawable(CompatJEI.ICONS, 0, 0, 15, 15);
+		this.iconsX = iconsX;
+		this.iconsY = iconsY;
 		this.tiered = true;
 	}
 
@@ -52,13 +53,20 @@ public class TableShapedWrapper implements IShapedCraftingRecipeWrapper {
 	@Override
 	public void drawInfo(Minecraft minecraft, int recipeWidth, int recipeHeight, int mouseX, int mouseY) {
 		if (this.tiered && this.recipe.requiresTier()) {
-			this.required.draw(minecraft, this.reqX, this.reqY);
+			GlStateManager.pushMatrix();
+			GlStateManager.scale(0.5, 0.5, 1.0);
+			
+			this.required.draw(minecraft, this.iconsX, this.iconsY);
+			
+			GlStateManager.popMatrix();
 		}
 	}
 	
 	@Override
 	public List getTooltipStrings(int mouseX, int mouseY) {
-		if (this.tiered && this.recipe.requiresTier() && mouseX > this.reqX - 1 && mouseX < this.reqX + 3 && mouseY > this.reqY - 1 && mouseY < this.reqY + 15) {
+		int sX = this.iconsX / 2, sY = this.iconsY / 2;
+		
+		if (this.tiered && this.recipe.requiresTier() && mouseX > sX - 1 && mouseX < sX + 10 && mouseY > sY - 1 && mouseY < sY + 8) {
 			return Utils.asList(Utils.localize("tooltip.ec.requires_table", this.recipe.getTier()));
 		}
 		return Collections.emptyList();

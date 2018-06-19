@@ -1,5 +1,8 @@
 package com.blakebr0.extendedcrafting.compat.jei.compressor;
 
+import java.util.List;
+
+import com.blakebr0.cucumber.helper.ResourceHelper;
 import com.blakebr0.cucumber.util.Utils;
 import com.blakebr0.extendedcrafting.ExtendedCrafting;
 
@@ -15,12 +18,12 @@ import net.minecraft.util.ResourceLocation;
 public class CompressorCraftingCategory implements IRecipeCategory<CompressorCraftingWrapper> {
 
 	public static final String UID = "extendedcrafting:compressor";
+	private static final ResourceLocation TEXTURE = ResourceHelper.getResource(ExtendedCrafting.MOD_ID, "textures/jei/compressor.png");
 
 	private final IDrawable background;
 
 	public CompressorCraftingCategory(IGuiHelper helper) {
-		ResourceLocation texture = new ResourceLocation(ExtendedCrafting.MOD_ID, "textures/jei/compressor.png");
-		this.background = helper.createDrawable(texture, 6, 6, 154, 90);
+		this.background = helper.createDrawable(TEXTURE, 0, 0, 149, 78);
 	}
 
 	@Override
@@ -32,6 +35,11 @@ public class CompressorCraftingCategory implements IRecipeCategory<CompressorCra
 	public String getTitle() {
 		return Utils.localize("jei.ec.compressor");
 	}
+	
+	@Override
+	public String getModName() {
+		return ExtendedCrafting.NAME;
+	}
 
 	@Override
 	public IDrawable getBackground() {
@@ -41,19 +49,16 @@ public class CompressorCraftingCategory implements IRecipeCategory<CompressorCra
 	@Override
 	public void setRecipe(IRecipeLayout layout, CompressorCraftingWrapper wrapper, IIngredients ingredients) {
 		IGuiItemStackGroup stacks = layout.getItemStacks();
+		
+		List<List<ItemStack>> inputs = ingredients.getInputs(ItemStack.class);
+		List<ItemStack> outputs = ingredients.getOutputs(ItemStack.class).get(0);
 
-		layout.getItemStacks().init(0, true, 58, 31);
-		layout.getItemStacks().set(0, ingredients.getInputs(ItemStack.class).get(0));
+		stacks.init(0, true, 57, 30);
+		stacks.init(1, true, 30, 30);
+		stacks.init(2, false, 127, 30);
 
-		layout.getItemStacks().init(1, true, 31, 31);
-		layout.getItemStacks().set(1, ingredients.getInputs(ItemStack.class).get(1));
-
-		layout.getItemStacks().init(2, false, 128, 31);
-		layout.getItemStacks().set(2, ingredients.getOutputs(ItemStack.class).get(0));
-	}
-
-	@Override
-	public String getModName() {
-		return ExtendedCrafting.NAME;
+		stacks.set(0, inputs.get(0));
+		stacks.set(1, inputs.get(1));
+		stacks.set(2, outputs);
 	}
 }

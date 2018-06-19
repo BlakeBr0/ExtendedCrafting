@@ -2,13 +2,12 @@ package com.blakebr0.extendedcrafting.compat.jei.endercrafter;
 
 import java.util.List;
 
+import com.blakebr0.cucumber.helper.ResourceHelper;
 import com.blakebr0.cucumber.util.Utils;
 import com.blakebr0.extendedcrafting.ExtendedCrafting;
-import com.blakebr0.extendedcrafting.compat.jei.CompatJEI;
 import com.blakebr0.extendedcrafting.compat.jei.tablecrafting.TableShapelessWrapper;
 
 import mezz.jei.api.IGuiHelper;
-import mezz.jei.api.gui.ICraftingGridHelper;
 import mezz.jei.api.gui.IDrawable;
 import mezz.jei.api.gui.IDrawableAnimated;
 import mezz.jei.api.gui.IDrawableStatic;
@@ -24,18 +23,16 @@ import net.minecraft.util.ResourceLocation;
 public class EnderCrafterCategory implements IRecipeCategory {
 
 	public static final String UID = "extendedcrafting:ender_crafting";
+	private static final ResourceLocation TEXTURE = ResourceHelper.getResource(ExtendedCrafting.MOD_ID, "textures/jei/ender_crafting.png");
 
 	private final IDrawable background;
-	private final ICraftingGridHelper gridHelper;
 	private final IDrawableAnimated arrow;
 
 	public EnderCrafterCategory(IGuiHelper helper) {
-		ResourceLocation texture = new ResourceLocation(ExtendedCrafting.MOD_ID, "textures/gui/ender_crafter.png");
-		this.background = helper.createDrawable(texture, 24, 11, 126, 64);
-		this.gridHelper = CompatJEI.jeiHelpers.getGuiHelper().createCraftingGridHelper(1, 0);
+		this.background = helper.createDrawable(TEXTURE, 0, 0, 116, 54);
 		
-		IDrawableStatic arrowDrawable = CompatJEI.jeiHelpers.getGuiHelper().createDrawable(texture, 195, 0, 24, 17);
-		this.arrow = CompatJEI.jeiHelpers.getGuiHelper().createAnimatedDrawable(arrowDrawable, 200, IDrawableAnimated.StartDirection.LEFT, false);
+		IDrawableStatic arrowDrawable = helper.createDrawable(TEXTURE, 195, 0, 24, 17);
+		this.arrow = helper.createAnimatedDrawable(arrowDrawable, 200, IDrawableAnimated.StartDirection.LEFT, false);
 	}
 
 	@Override
@@ -55,12 +52,12 @@ public class EnderCrafterCategory implements IRecipeCategory {
 
 	@Override
 	public IDrawable getBackground() {
-		return background;
+		return this.background;
 	}
 	
 	@Override
 	public void drawExtras(Minecraft minecraft) {
-		arrow.draw(minecraft, 66, 24);
+		this.arrow.draw(minecraft, 61, 19);
 	}
 
 	@Override
@@ -70,13 +67,13 @@ public class EnderCrafterCategory implements IRecipeCategory {
 		List<List<ItemStack>> inputs = ingredients.getInputs(ItemStack.class);
 		List<ItemStack> outputs = ingredients.getOutputs(ItemStack.class).get(0);
 
-		stacks.init(0, false, 99, 24);
+		stacks.init(0, false, 94, 18);
 		stacks.set(0, outputs);
 
 		for (int i = 0; i < 3; i++) {
 			for (int j = 0; j < 3; j++) {
 				int index = 1 + j + (i * 3);
-				stacks.init(index, true, j * 18 + 5, i * 18 + 6);
+				stacks.init(index, true, j * 18, i * 18);
 			}
 		}
 
@@ -90,6 +87,6 @@ public class EnderCrafterCategory implements IRecipeCategory {
 			layout.setShapeless();
 		}
 
-		layout.setRecipeTransferButton(105, 47);
+		layout.setRecipeTransferButton(122, 41);
 	}
 }

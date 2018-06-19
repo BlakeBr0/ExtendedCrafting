@@ -3,6 +3,7 @@ package com.blakebr0.extendedcrafting.compat.jei.combinationcrafting;
 import java.awt.Point;
 import java.util.List;
 
+import com.blakebr0.cucumber.helper.ResourceHelper;
 import com.blakebr0.cucumber.util.Utils;
 import com.blakebr0.extendedcrafting.ExtendedCrafting;
 
@@ -18,12 +19,12 @@ import net.minecraft.util.ResourceLocation;
 public class CombinationCraftingCategory implements IRecipeCategory<CombinationCraftingWrapper> {
 
 	public static final String UID = "extendedcrafting:combination_crafting";
+	private static final ResourceLocation TEXTURE = ResourceHelper.getResource(ExtendedCrafting.MOD_ID, "textures/jei/combination_crafting.png");
 
 	private final IDrawable background;
 
 	public CombinationCraftingCategory(IGuiHelper helper) {
-		ResourceLocation texture = new ResourceLocation(ExtendedCrafting.MOD_ID, "textures/jei/combination_crafting.png");
-		this.background = helper.createDrawable(texture, 6, 10, 158, 170);
+		this.background = helper.createDrawable(TEXTURE, 0, 0, 140, 171);
 	}
 
 	@Override
@@ -35,6 +36,11 @@ public class CombinationCraftingCategory implements IRecipeCategory<CombinationC
 	public String getTitle() {
 		return Utils.localize("jei.ec.combination_crafting");
 	}
+	
+	@Override
+	public String getModName() {
+		return ExtendedCrafting.NAME;
+	}
 
 	@Override
 	public IDrawable getBackground() {
@@ -44,23 +50,23 @@ public class CombinationCraftingCategory implements IRecipeCategory<CombinationC
 	@Override
 	public void setRecipe(IRecipeLayout layout, CombinationCraftingWrapper wrapper, IIngredients ingredients) {
 		IGuiItemStackGroup stacks = layout.getItemStacks();
+		
+		List<List<ItemStack>> inputs = ingredients.getInputs(ItemStack.class);
+		List<ItemStack> outputs = ingredients.getOutputs(ItemStack.class).get(0);
 
-		layout.getItemStacks().init(0, true, 78, 43);
-		layout.getItemStacks().set(0, wrapper.getInput());
+		stacks.init(0, false, 76, 149);
+		stacks.init(1, true, 76, 46);
+		stacks.set(0, outputs);
+		stacks.set(1, inputs.get(0));
 
-		int index = 1;
-		double angleBetweenEach = 360.0 / ingredients.getInputs(ItemStack.class).size();
-		Point point = new Point(57, 4), center = new Point(78, 43);
+		double angleBetweenEach = 360.0 / (inputs.size() - 1);
+		Point point = new Point(53, 8), center = new Point(74, 47);
 
-		for (List<ItemStack> o : ingredients.getInputs(ItemStack.class)) {
-			layout.getItemStacks().init(index, true, point.x, point.y);
-			layout.getItemStacks().set(index, o);
-			index += 1;
+		for (int i = 2; i < inputs.size() + 1; i++) {
+			stacks.init(i, true, point.x, point.y);
+			stacks.set(i, inputs.get(i - 1));
 			point = rotatePoint(point, center, angleBetweenEach);
 		}
-
-		layout.getItemStacks().init(index, false, 77, 149);
-		layout.getItemStacks().set(index, ingredients.getOutputs(ItemStack.class).get(0));
 	}
 
 	private Point rotatePoint(Point in, Point about, double degrees) {
@@ -68,10 +74,5 @@ public class CombinationCraftingCategory implements IRecipeCategory<CombinationC
 		double newX = Math.cos(rad) * (in.x - about.x) - Math.sin(rad) * (in.y - about.y) + about.x;
 		double newY = Math.sin(rad) * (in.x - about.x) + Math.cos(rad) * (in.y - about.y) + about.y;
 		return new Point((int) newX, (int) newY);
-	}
-
-	@Override
-	public String getModName() {
-		return ExtendedCrafting.NAME;
 	}
 }

@@ -7,7 +7,6 @@ import com.blakebr0.cucumber.util.Utils;
 import com.blakebr0.extendedcrafting.ExtendedCrafting;
 
 import mezz.jei.api.IGuiHelper;
-import mezz.jei.api.gui.ICraftingGridHelper;
 import mezz.jei.api.gui.IDrawable;
 import mezz.jei.api.gui.IGuiItemStackGroup;
 import mezz.jei.api.gui.IRecipeLayout;
@@ -23,11 +22,9 @@ public class UltimateTableCategory implements IRecipeCategory {
 	private static final ResourceLocation TEXTURE = ResourceHelper.getResource(ExtendedCrafting.MOD_ID, "textures/jei/ultimate_crafting.png");
 	
     private final IDrawable background;
-	private final ICraftingGridHelper gridHelper;	
 	
     public UltimateTableCategory(IGuiHelper helper) {
-        this.background = helper.createDrawable(TEXTURE, 33, 5, 168, 200);
-        this.gridHelper = helper.createCraftingGridHelper(1, 0);
+        this.background = helper.createDrawable(TEXTURE, 0, 0, 162, 195);
     }
     
 	@Override
@@ -57,13 +54,13 @@ public class UltimateTableCategory implements IRecipeCategory {
         List<List<ItemStack>> inputs = ingredients.getInputs(ItemStack.class);
         List<ItemStack> outputs = ingredients.getOutputs(ItemStack.class).get(0);
         
-        stacks.init(0, false, 87, 175);
+        stacks.init(0, false, 84, 173);
         stacks.set(0, outputs);
 
-        for (int i = 0; i < 9; i++){
-            for (int j = 0; j < 9; j++){
+        for (int i = 0; i < 9; i++) {
+            for (int j = 0; j < 9; j++) {
                 int index = 1 + j + (i * 9);
-                stacks.init(index, true, j * 18 + 3, i * 18 + 2);
+                stacks.init(index, true, j * 18, i * 18);
             }
         }
         
@@ -87,6 +84,6 @@ public class UltimateTableCategory implements IRecipeCategory {
 			}
 		}
 		
-		layout.setRecipeTransferButton(122, 177);
+		layout.setRecipeTransferButton(149, 182);
 	}
 }

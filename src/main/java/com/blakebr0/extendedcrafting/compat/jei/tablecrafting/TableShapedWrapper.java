@@ -69,6 +69,7 @@ public class TableShapedWrapper implements IShapedCraftingRecipeWrapper {
 		if (this.tiered && this.recipe.requiresTier() && mouseX > sX - 1 && mouseX < sX + 10 && mouseY > sY - 1 && mouseY < sY + 8) {
 			return Utils.asList(Utils.localize("tooltip.ec.requires_table", this.recipe.getTier()));
 		}
+		
 		return Collections.emptyList();
 	}
 	

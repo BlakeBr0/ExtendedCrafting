@@ -92,10 +92,10 @@ item.ec.singularity_ultimate.name=The Ultimate Singularity
 # CONTAINERS
 container.ec.crafting_core=Crafting Core
 container.ec.interface=Automation Interface
-container.ec.table_basic=Basic Crafting Table
-container.ec.table_advanced=Advanced Crafting Table
-container.ec.table_elite=Elite Crafting Table
-container.ec.table_ultimate=Ultimate Crafting Table
+container.ec.table_basic=Basic Crafting
+container.ec.table_advanced=Advanced Crafting
+container.ec.table_elite=Elite Crafting
+container.ec.table_ultimate=Ultimate Crafting
 container.ec.compressor=Quantum Compressor
 container.ec.ender_crafter=Ender Crafter
 

@@ -29,8 +29,7 @@ public class GuiEliteTable extends GuiContainer {
 	
 	@Override
 	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
-		String s = Utils.localize("container.ec.table_elite");
-		this.fontRenderer.drawString(s, this.xSize / 2 - this.fontRenderer.getStringWidth(s) / 2, 6, 4210752);
+		this.fontRenderer.drawString(Utils.localize("container.ec.table_elite"), 8, 6, 4210752);
 		this.fontRenderer.drawString(Utils.localize("container.inventory"), 20, this.ySize - 94, 4210752);
 	}
 

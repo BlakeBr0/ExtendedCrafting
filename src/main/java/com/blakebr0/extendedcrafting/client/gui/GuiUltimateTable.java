@@ -30,8 +30,7 @@ public class GuiUltimateTable extends GuiContainer {
 	
 	@Override
 	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
-		String s = Utils.localize("container.ec.table_ultimate");
-		this.fontRenderer.drawString(s, this.xSize / 2 - this.fontRenderer.getStringWidth(s) / 2, 6, 4210752);
+		this.fontRenderer.drawString(Utils.localize("container.ec.table_ultimate"), 8, 6, 4210752);
 		this.fontRenderer.drawString(Utils.localize("container.inventory"), 39, this.ySize - 94, 4210752);
 	}
 

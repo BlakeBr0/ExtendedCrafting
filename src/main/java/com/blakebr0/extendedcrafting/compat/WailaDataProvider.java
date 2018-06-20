@@ -2,7 +2,6 @@ package com.blakebr0.extendedcrafting.compat;
 
 import java.util.List;
 
-import com.blakebr0.cucumber.helper.StackHelper;
 import com.blakebr0.cucumber.util.Utils;
 import com.blakebr0.extendedcrafting.block.BlockAutomationInterface;
 import com.blakebr0.extendedcrafting.block.BlockCompressor;
@@ -21,6 +20,7 @@ import mcp.mobius.waila.api.IWailaConfigHandler;
 import mcp.mobius.waila.api.IWailaDataAccessor;
 import mcp.mobius.waila.api.IWailaDataProvider;
 import mcp.mobius.waila.api.IWailaRegistrar;
+import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -41,66 +41,73 @@ public class WailaDataProvider implements IWailaDataProvider {
 	}
 
 	@Override
-	public NBTTagCompound getNBTData(EntityPlayerMP arg0, TileEntity arg1, NBTTagCompound arg2, World arg3, BlockPos arg4) {
+	public NBTTagCompound getNBTData(EntityPlayerMP player, TileEntity tile, NBTTagCompound tag, World world, BlockPos pos) {
 		return null;
 	}
 
 	@Override
-	public List<String> getWailaBody(ItemStack arg0, List<String> arg1, IWailaDataAccessor arg2, IWailaConfigHandler arg3) {
-		if (arg2.getBlock() instanceof BlockLamp) {
-			arg1.add(Utils.localize("tooltip.ec.lamp_" + BlockLamp.Type.byMetadata(arg2.getMetadata()).getName()));
+	public List<String> getWailaBody(ItemStack stack, List<String> tooltip, IWailaDataAccessor data, IWailaConfigHandler config) {
+		Block block = data.getBlock();
+		TileEntity tile = data.getTileEntity();
+		
+		if (block instanceof BlockLamp) {
+			tooltip.add(Utils.localize("tooltip.ec.lamp_" + BlockLamp.Type.byMetadata(data.getMetadata()).getName()));
 		}
 		
-		if (arg2.getBlock() instanceof BlockTrimmed) {
-			arg1.add(Utils.localize("tooltip.ec.trimmed_" + BlockTrimmed.Type.byMetadata(arg2.getMetadata()).getName()));
+		if (block instanceof BlockTrimmed) {
+			tooltip.add(Utils.localize("tooltip.ec.trimmed_" + BlockTrimmed.Type.byMetadata(data.getMetadata()).getName()));
 		}
 		
-		if (arg2.getBlock() instanceof BlockPedestal && arg2.getTileEntity() instanceof TilePedestal && !arg2.getTileEntity().isInvalid()) {
-			TilePedestal pedestal = (TilePedestal) arg2.getTileEntity();
-			if (!StackHelper.isNull(pedestal.getInventory().getStackInSlot(0))) {
-				arg1.add(pedestal.getInventory().getStackInSlot(0).getDisplayName());
+		if (block instanceof BlockPedestal && tile instanceof TilePedestal && !tile.isInvalid()) {
+			TilePedestal pedestal = (TilePedestal) tile;
+			ItemStack invStack = pedestal.getInventory().getStackInSlot(0);
+			if (!invStack.isEmpty()) {
+				tooltip.add(invStack.getDisplayName());
 			}
 		}
 		
-		if (arg2.getBlock() instanceof BlockCraftingCore && arg2.getTileEntity() instanceof TileCraftingCore && !arg2.getTileEntity().isInvalid()) {
-			TileCraftingCore core = (TileCraftingCore) arg2.getTileEntity();
-			arg1.add(Utils.format(core.getEnergy().getEnergyStored()) + " RF");
+		if (block instanceof BlockCraftingCore && tile instanceof TileCraftingCore && !tile.isInvalid()) {
+			TileCraftingCore core = (TileCraftingCore) tile;
+			tooltip.add(Utils.format(core.getEnergy().getEnergyStored()) + " FE");
 		}
 		
-		if (arg2.getBlock() instanceof BlockAutomationInterface && arg2.getTileEntity() instanceof TileAutomationInterface && !arg2.getTileEntity().isInvalid()) {
-			TileAutomationInterface auto = (TileAutomationInterface) arg2.getTileEntity();
-			arg1.add(Utils.format(auto.getEnergy().getEnergyStored()) + " RF");
-			if (!auto.getResult().isEmpty()) {
-				arg1.add(auto.getResult().getDisplayName());
+		if (block instanceof BlockAutomationInterface && tile instanceof TileAutomationInterface && !tile.isInvalid()) {
+			TileAutomationInterface auto = (TileAutomationInterface) tile;
+			tooltip.add(Utils.format(auto.getEnergy().getEnergyStored()) + " FE");
+			
+			ItemStack result = auto.getResult();
+			if (!result.isEmpty()) {
+				tooltip.add(result.getDisplayName());
 			}
 		}
 		
-		if (arg2.getBlock() instanceof BlockEnderCrafter && arg2.getTileEntity() instanceof TileEnderCrafter && !arg2.getTileEntity().isInvalid()) {
-			TileEnderCrafter crafter = (TileEnderCrafter) arg2.getTileEntity();
-			if (!crafter.getResult().isEmpty()) {
-				arg1.add(Utils.localize("tooltip.ec.output") + crafter.getResult().getCount() + "x " + crafter.getResult().getDisplayName());
+		if (block instanceof BlockEnderCrafter && tile instanceof TileEnderCrafter && !tile.isInvalid()) {
+			TileEnderCrafter crafter = (TileEnderCrafter) tile;
+			ItemStack result = crafter.getResult();
+			if (!result.isEmpty()) {
+				tooltip.add(Utils.localize("tooltip.ec.output") + result.getCount() + "x " + result.getDisplayName());
 			}
 		}
 		
-		if (arg2.getBlock() instanceof BlockCompressor && arg2.getTileEntity() instanceof TileCompressor && !arg2.getTileEntity().isInvalid()) {
-			TileCompressor compressor = (TileCompressor) arg2.getTileEntity();
-			arg1.add(Utils.format(compressor.getEnergy().getEnergyStored()) + " RF");
+		if (block instanceof BlockCompressor && tile instanceof TileCompressor && !tile.isInvalid()) {
+			TileCompressor compressor = (TileCompressor) tile;
+			tooltip.add(Utils.format(compressor.getEnergy().getEnergyStored()) + " FE");
 		}
-		return arg1;
+		return tooltip;
 	}
 
 	@Override
-	public List<String> getWailaHead(ItemStack arg0, List<String> arg1, IWailaDataAccessor arg2, IWailaConfigHandler arg3) {
+	public List<String> getWailaHead(ItemStack stack, List<String> tooltip, IWailaDataAccessor data, IWailaConfigHandler config) {
 		return null;
 	}
 
 	@Override
-	public ItemStack getWailaStack(IWailaDataAccessor arg0, IWailaConfigHandler arg1) {
-		return StackHelper.getNull();
+	public ItemStack getWailaStack(IWailaDataAccessor data, IWailaConfigHandler config) {
+		return ItemStack.EMPTY;
 	}
 
 	@Override
-	public List<String> getWailaTail(ItemStack arg0, List<String> arg1, IWailaDataAccessor arg2, IWailaConfigHandler arg3) {
+	public List<String> getWailaTail(ItemStack stack, List<String> tooltip, IWailaDataAccessor data, IWailaConfigHandler config) {
 		return null;
 	}
 }

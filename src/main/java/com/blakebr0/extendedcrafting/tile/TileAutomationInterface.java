@@ -171,12 +171,12 @@ public class TileAutomationInterface extends TileEntity implements ITickable, IS
 	}
 	
 	public void handleOutput(ItemStack output) {
-		ItemStack result = this.getTable().getResult();
-		IItemHandlerModifiable matrix = this.getTable().getMatrix();
+		IExtendedTable table = this.getTable();
+		ItemStack result = table.getResult();
+		IItemHandlerModifiable matrix = table.getMatrix();
 		if (!result.isEmpty() && (output.isEmpty() || (output.isItemEqual(result) && ItemStack.areItemStackTagsEqual(output, result) && output.getCount() <= result.getMaxStackSize() - result.getCount()))) {				
 			if (this.getEnergy().getEnergyStored() >= ModConfig.confInterfaceRFRate) {
 				ItemStack toInsert = result.copy();
-				result.shrink(1);
 				for (int i = 0; i < matrix.getSlots(); i++) {
 					ItemStack slotStack = matrix.getStackInSlot(i);
 					if (!slotStack.isEmpty()) {

@@ -10,9 +10,7 @@ import net.minecraft.inventory.Slot;
 import net.minecraft.inventory.SlotCrafting;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.World;
-
 
 public class ContainerHandheldTable extends Container {
 
@@ -61,8 +59,7 @@ public class ContainerHandheldTable extends Container {
 
 	@Override
 	public boolean canInteractWith(EntityPlayer player) {
-		return player.getDistanceSq((double) this.pos.getX() + 0.5D, (double) this.pos.getY() + 0.5D,
-				(double) this.pos.getZ() + 0.5D) <= 64.0D;
+		return true;
 	}
 
 	@Override

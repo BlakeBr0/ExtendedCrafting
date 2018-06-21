@@ -27,7 +27,7 @@ public class CombinationCraftingWrapper implements IRecipeWrapper {
 	@Override
 	public List<String> getTooltipStrings(int mouseX, int mouseY) {
 		if (mouseX > 1 && mouseX < 14 && mouseY > 9 && mouseY < 86) {
-			return Arrays.<String> asList(Utils.format(this.recipe.getCost()) + " RF", Utils.format(this.recipe.getPerTick()) + " RF/t");
+			return Arrays.<String> asList(Utils.format(this.recipe.getCost()) + " FE", Utils.format(this.recipe.getPerTick()) + " FE/t");
 		}
 		return Collections.emptyList();
 	}

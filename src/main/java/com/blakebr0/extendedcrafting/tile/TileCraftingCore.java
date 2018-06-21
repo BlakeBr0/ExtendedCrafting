@@ -62,7 +62,7 @@ public class TileCraftingCore extends TileEntity implements ITickable {
 	public void update() {
 		boolean mark = false;
 
-		List<BlockPos> pedestalLocations = locatePedestals();
+		List<BlockPos> pedestalLocations = this.locatePedestals();
 
 		if (!this.getWorld().isRemote) {
 			CombinationRecipe recipe = this.getRecipe();

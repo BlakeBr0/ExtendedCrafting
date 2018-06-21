@@ -108,8 +108,8 @@ public class GuiCraftingCore extends GuiContainer {
 		if (recipe == null) {
 			this.fontRenderer.drawString(Utils.localize("ec.ccore.no_recipe"), 36, 56, -1);
 		} else {
-			this.fontRenderer.drawString(Utils.localize("ec.ccore.rf_cost") + " " + Utils.format(recipe.getCost()) + " RF", 36, 56, -1);
-			this.fontRenderer.drawString(Utils.localize("ec.ccore.rf_rate") + " " + Utils.format(recipe.getPerTick()) + " RF/t", 36, 66, -1);
+			this.fontRenderer.drawString(Utils.localize("ec.ccore.rf_cost") + " " + Utils.format(recipe.getCost()) + " FE", 36, 56, -1);
+			this.fontRenderer.drawString(Utils.localize("ec.ccore.rf_rate") + " " + Utils.format(recipe.getPerTick()) + " FE/t", 36, 66, -1);
 			//this.fontRenderer.drawString(Utils.localize("ec.ccore.progress") + " " + this.tile.getProgress() + " " + recipe.getCost() + "%", 36, 63, -1);
 			if (this.tile.getEnergy().getEnergyStored() < recipe.getPerTick()) {
 				this.fontRenderer.drawString(Utils.localize("ec.ccore.no_power"), 36, 86, -1);
@@ -134,7 +134,7 @@ public class GuiCraftingCore extends GuiContainer {
 		}
 
 		if (mouseX > left + 7 && mouseX < guiLeft + 20 && mouseY > this.guiTop + 17 && mouseY < this.guiTop + 94) {
-			this.drawHoveringText(Utils.asList(Utils.format(this.tile.getEnergy().getEnergyStored()) + " RF"), mouseX, mouseY);
+			this.drawHoveringText(Utils.asList(Utils.format(this.tile.getEnergy().getEnergyStored()) + " FE"), mouseX, mouseY);
 		}
 	}
 

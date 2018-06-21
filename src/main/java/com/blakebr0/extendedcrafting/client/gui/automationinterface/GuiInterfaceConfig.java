@@ -43,7 +43,7 @@ public class GuiInterfaceConfig extends GuiContainer {
 		this.renderHoveredToolTip(mouseX, mouseY);
 		
 		if (mouseX > this.guiLeft + 7 && mouseX < this.guiLeft + 20 && mouseY > this.guiTop + 16 && mouseY < this.guiTop + 93) {
-			this.drawHoveringText(Utils.format(parent.tile.getEnergy().getEnergyStored()) + " RF", mouseX, mouseY);
+			this.drawHoveringText(Utils.format(parent.tile.getEnergy().getEnergyStored()) + " FE", mouseX, mouseY);
 		}
 	}
 	

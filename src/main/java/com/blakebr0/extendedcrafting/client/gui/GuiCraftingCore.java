@@ -1,9 +1,6 @@
 package com.blakebr0.extendedcrafting.client.gui;
 
-import java.util.List;
-
 import com.blakebr0.cucumber.helper.ResourceHelper;
-import com.blakebr0.cucumber.helper.StackHelper;
 import com.blakebr0.cucumber.util.Utils;
 import com.blakebr0.extendedcrafting.ExtendedCrafting;
 import com.blakebr0.extendedcrafting.client.container.ContainerCraftingCore;
@@ -46,12 +43,8 @@ public class GuiCraftingCore extends GuiContainer {
 		this.zLevel = 50.0F;
 		this.itemRender.zLevel = 50.0F;
 		FontRenderer font = null;
-		if (!stack.isEmpty()) {
-			font = stack.getItem().getFontRenderer(stack);
-		}
-		if (font == null) {
-			font = fontRenderer;
-		}
+		if (!stack.isEmpty()) font = stack.getItem().getFontRenderer(stack);
+		if (font == null) font = this.fontRenderer;
 		this.itemRender.renderItemAndEffectIntoGUI(stack, x, y);
 		this.itemRender.renderItemOverlayIntoGUI(font, stack, x, y, altText);
 		this.zLevel = 0.0F;
@@ -64,7 +57,7 @@ public class GuiCraftingCore extends GuiContainer {
 
 	private void drawFakeItemStackTooltip(ItemStack stack, int xOffset, int yOffset, int mouseX, int mouseY) {
 		if (mouseX > this.guiLeft + xOffset - 1 && mouseX < guiLeft + xOffset + 16 && mouseY > this.guiTop + yOffset - 1 && mouseY < this.guiTop + yOffset + 16) {
-			if (!StackHelper.isNull(stack)) {
+			if (!stack.isEmpty()) {
                 GlStateManager.disableLighting();
                 GlStateManager.disableDepth();
                 GlStateManager.colorMask(true, true, true, false);
@@ -77,25 +70,6 @@ public class GuiCraftingCore extends GuiContainer {
 		}
 	}
 
-	private ItemStack getStack(Object obj) {
-		if (obj instanceof ItemStack) {
-			return ((ItemStack) obj).copy();
-		} else if (obj instanceof List) {
-			return ((List<ItemStack>) obj).get(0);
-		} else {
-			return ItemStack.EMPTY;
-		}
-	}
-
-	private ItemStack getPedestalStackFromIndex(int index) {
-		List<Object> list = this.tile.getRecipe().getPedestalItems();
-		if (index < list.size()) {
-			return getStack(list.get(index));
-		} else {
-			return ItemStack.EMPTY;
-		}
-	}
-
 	@Override
 	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
 		String s = Utils.localize("container.ec.crafting_core");
@@ -103,18 +77,19 @@ public class GuiCraftingCore extends GuiContainer {
 		this.fontRenderer.drawString(Utils.localize("container.inventory"), 8, this.ySize - 94, 4210752);
 		GlStateManager.pushMatrix();
 		GlStateManager.scale(0.75F, 0.75F, 0.75F);
-		this.fontRenderer.drawString(Utils.localize("ec.ccore.pedestals") + " " + this.tile.getPedestalCount(), 36, 36, -1);
+		this.fontRenderer.drawString(Utils.localize("ec.ccore.pedestals", this.tile.getPedestalCount()), 36, 36, -1);
+		
 		CombinationRecipe recipe = this.tile.getRecipe();
 		if (recipe == null) {
 			this.fontRenderer.drawString(Utils.localize("ec.ccore.no_recipe"), 36, 56, -1);
 		} else {
-			this.fontRenderer.drawString(Utils.localize("ec.ccore.rf_cost") + " " + Utils.format(recipe.getCost()) + " FE", 36, 56, -1);
-			this.fontRenderer.drawString(Utils.localize("ec.ccore.rf_rate") + " " + Utils.format(recipe.getPerTick()) + " FE/t", 36, 66, -1);
-			//this.fontRenderer.drawString(Utils.localize("ec.ccore.progress") + " " + this.tile.getProgress() + " " + recipe.getCost() + "%", 36, 63, -1);
+			this.fontRenderer.drawString(Utils.localize("ec.ccore.rf_cost", Utils.format(recipe.getCost())) + " FE", 36, 56, -1);
+			this.fontRenderer.drawString(Utils.localize("ec.ccore.rf_rate", Utils.format(recipe.getPerTick())) + " FE/t", 36, 66, -1);
 			if (this.tile.getEnergy().getEnergyStored() < recipe.getPerTick()) {
 				this.fontRenderer.drawString(Utils.localize("ec.ccore.no_power"), 36, 86, -1);
 			}
 		}
+		
 		GlStateManager.popMatrix();
 	}
 
@@ -134,7 +109,7 @@ public class GuiCraftingCore extends GuiContainer {
 		}
 
 		if (mouseX > left + 7 && mouseX < guiLeft + 20 && mouseY > this.guiTop + 17 && mouseY < this.guiTop + 94) {
-			this.drawHoveringText(Utils.asList(Utils.format(this.tile.getEnergy().getEnergyStored()) + " FE"), mouseX, mouseY);
+			this.drawHoveringText(Utils.format(this.tile.getEnergy().getEnergyStored()) + " FE", mouseX, mouseY);
 		}
 	}
 
@@ -149,8 +124,9 @@ public class GuiCraftingCore extends GuiContainer {
 		int i1 = this.getEnergyBarScaled(78);
 		this.drawTexturedModalRect(x + 7, y + 95 - i1, 178, 78 - i1, 15, i1 + 1);
 
-		if (this.tile != null && this.tile.getRecipe() != null) {
-			if (this.tile.getProgress() > 0 && this.tile.getRecipe().getCost() > 0) {
+		CombinationRecipe recipe = this.tile.getRecipe();
+		if (this.tile != null && recipe != null) {
+			if (this.tile.getProgress() > 0 && recipe.getCost() > 0) {
 				int i2 = getProgressBarScaled(24);
 				this.drawTexturedModalRect(x + 116, y + 47, 194, 0, i2 + 1, 16);
 			}

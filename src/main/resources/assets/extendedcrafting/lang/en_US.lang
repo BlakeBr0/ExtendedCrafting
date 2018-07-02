@@ -99,10 +99,9 @@ container.ec.table_ultimate=Ultimate Crafting
 container.ec.compressor=Quantum Compressor
 container.ec.ender_crafter=Ender Crafter
 
-ec.ccore.pedestals=Pedestals:
-ec.ccore.rf_cost=RF Cost:
-ec.ccore.rf_rate=RF Rate:
-ec.ccore.progress=Progress:
+ec.ccore.pedestals=Pedestals: %s
+ec.ccore.rf_cost=RF Cost: %s
+ec.ccore.rf_rate=RF Rate: %s
 ec.ccore.no_recipe=No recipe found.
 ec.ccore.no_power=Not enough power.
 

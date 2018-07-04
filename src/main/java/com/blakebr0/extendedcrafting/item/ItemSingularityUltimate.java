@@ -33,9 +33,8 @@ public class ItemSingularityUltimate extends ItemBase {
 
 	public void configure(Configuration config) {
 		ConfigCategory category = config.getCategory("singularity");
-		String[] values = config.get(category.getName(), "_ultimate_blacklist", new String[0]).getStringList();
-		category.get("_ultimate_blacklist")
-				.setComment("Blacklist Singularities from being in the Ultimate Singularity crafting recipe."
+		String[] values = config.get(category.getName(), "ultimate_singularity_recipe_blacklist", new String[0]).getStringList();
+		category.get("ultimate_singularity_recipe_blacklist").setComment("Blacklist Singularities from being in the Ultimate Singularity crafting recipe."
 						+ "\n- Syntax: singularityType;meta"
 						+ "\n- 'singularityType' can be 'default' or 'custom'."
 						+ "\n- 'default' for the ones added by the mod by default, 'custom' being the ones defined in '_custom_singularities'."

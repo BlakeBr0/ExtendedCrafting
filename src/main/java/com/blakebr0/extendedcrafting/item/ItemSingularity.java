@@ -1,12 +1,12 @@
 package com.blakebr0.extendedcrafting.item;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.commons.lang3.text.WordUtils;
 
 import com.blakebr0.cucumber.helper.ResourceHelper;
-import com.blakebr0.cucumber.helper.StackHelper;
 import com.blakebr0.cucumber.item.ItemMeta;
 import com.blakebr0.cucumber.util.Utils;
 import com.blakebr0.extendedcrafting.ExtendedCrafting;
@@ -20,6 +20,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.common.config.Configuration;
+import net.minecraftforge.common.config.Property;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
 
 public class ItemSingularity extends ItemMeta {
@@ -93,41 +94,42 @@ public class ItemSingularity extends ItemMeta {
 	}
 
 	public ItemStack addSingularity(int meta, String name, ItemStack material, int color) {
-		boolean enabled = config.get("singularity", name, true).getBoolean();
-		if (config.hasChanged()) {
-			config.save();
-		}		
+		addToConfig(name);
+		
+		boolean enabled = checkConfig(name);
+		
 		if (enabled) {
 			singularityColors.put(meta, color);
 			singularityMaterials.put(meta, material);
 			ItemSingularityUltimate.addSingularityToRecipe(new ItemStack(this, 1, meta));
 		}
+		
 		return addItem(meta, name, enabled);
 	}
 
 	public ItemStack addSingularity(int meta, String name, String oreName, int color) {
-		boolean enabled = config.get("singularity", name, true).getBoolean();
-		if (config.hasChanged()) {
-			config.save();
-		}
+		addToConfig(name);
+		
+		boolean enabled = checkConfig(name);
+		
 		if (enabled) {
 			singularityColors.put(meta, color);
 			singularityMaterials.put(meta, oreName);
 			ItemSingularityUltimate.addSingularityToRecipe(new ItemStack(this, 1, meta));
 		}
+		
 		return addItem(meta, name, enabled);
 	}
 	
 	public void initRecipes() {
-		if (!ModConfig.confSingularityRecipes) {
-			return;
-		}
+		if (!ModConfig.confSingularityRecipes) return;
+		
 		for (Map.Entry<Integer, Object> obj : singularityMaterials.entrySet()) {
 			Object value = obj.getValue();
 			int meta = obj.getKey();
 			if (value instanceof ItemStack) {
 				ItemStack stack = (ItemStack) value;
-				if (!StackHelper.isNull(stack)) {
+				if (!stack.isEmpty()) {
 					CompressorRecipeManager.getInstance().addRecipe(new ItemStack(this, 1, meta), stack.copy(), ModConfig.confSingularityAmount, ItemSingularity.getCatalystStack(), false, ModConfig.confSingularityRF);
 				}
 			} else if (value instanceof String) {
@@ -152,6 +154,38 @@ public class ItemSingularity extends ItemMeta {
 		}
 		
 		return new ItemStack(item, 1, Integer.parseInt(parts[2]));
+	}
+	
+	public boolean checkConfig(String name) {
+		String[] values = config.get("singularity", "default_singularities", new String[0]).getStringList();
+		
+		for (int i = 0; i < values.length; i++) {
+			String[] entry = values[i].split("=");
+			if (entry[0].equals(name)) {
+				return Boolean.valueOf(entry[1]);
+			}
+		}
+		
+		return false;
+	}
+	
+	private void addToConfig(String name) {
+		Property prop = config.get("singularity", "default_singularities", new String[0]);
+		String[] values = prop.getStringList();
+		if (!Arrays.stream(values).anyMatch(s -> s.split("=")[0].equals(name))) {
+			String[] newValues = new String[values.length + 1];
+			for (int i = 0; i < newValues.length; i++) {
+				if (i < values.length) {
+					newValues[i] = values[i];
+				} else {
+					newValues[i] = name + "=" + ModConfig.removeSingularity(name);
+				}
+			}
+			
+			prop.setComment("Disable specific default singularities here.");
+			prop.set(newValues);
+			config.save();
+		}
 	}
 
 	public static class ColorHandler implements IItemColor {

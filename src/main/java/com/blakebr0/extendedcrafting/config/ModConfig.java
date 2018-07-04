@@ -45,35 +45,88 @@ public class ModConfig {
 	}
 
 	public static void pre() {
-
+		updateConfig();
+		
 		String category;
+		
+		category = "general";
+		
+		category = "combination_crafting";
+		config.setCategoryComment(category, "Settings for the Crafting Core.");
+		confCraftingCoreRFCapacity = config.getInt("energy_capacity", category, 5000000, 0, Integer.MAX_VALUE, "How much FE the Crafting Core should hold.");
+		confCraftingCoreRFRate = config.getInt("energy_rate", category, 500, 0, Integer.MAX_VALUE, "How much FE/t the Crafting Core should use when crafting by default.");
 
-		category = "settings";
-		config.setCategoryComment(category, "Settings for Extended Crafting content.");
-		confCraftingCoreRFCapacity = config.getInt("crafting_core_rf_capacity", category, 5000000, 0, Integer.MAX_VALUE, "How much RF/FE the Crafting Core should hold.");
-		confCraftingCoreRFRate = config.getInt("crafting_core_rf_rate", category, 500, 0, Integer.MAX_VALUE, "How much RF/t the Crafting Core should use when crafting by default.");
-		confCompressorRFCapacity = config.getInt("compressor_rf_capacity", category, 10000000, 0, Integer.MAX_VALUE, "How much RF/FE the Quantum Compressor should hold.");
-		confCompressorRFRate = config.getInt("compressor_rf_rate", category, 5000, 0, Integer.MAX_VALUE, "How much RF/t the Quantum Compressor should use when crafting by default.");
-		confCompressorItemRate = config.getInt("compressor_item_rate", category, 4, 1, 64, "How many items/t the Quantum Compressor should consume/eject.");
-		confInterfaceRFCapacity = config.getInt("interface_rf_capacity", category, 1000000, 0, Integer.MAX_VALUE, "How much RF/FE the Automation Interface should hold.");
-		confInterfaceRFRate = config.getInt("interface_rf_rate", category, 80, 0, 100000, "How much RF the Automation Interface should use when moving items.");
+		category = "automation_interface";
+		config.setCategoryComment(category, "Settings for the Automation Interface.");
+		confInterfaceRFCapacity = config.getInt("energy_capacity", category, 1000000, 0, Integer.MAX_VALUE, "How much FE the Automation Interface should hold.");
+		confInterfaceRFRate = config.getInt("energy_rate", category, 80, 0, 100000, "How much FE the Automation Interface should use when moving items.");
+
+		category = "table_crafting";
+		config.setCategoryComment(category, "Settings for the Extended Crafting Tables.");
+		
+		category = "quantum_compression";
+		config.setCategoryComment(category, "Settings for the Quantum Compressor.");
+		confCompressorRFCapacity = config.getInt("energy_capacity", category, 10000000, 0, Integer.MAX_VALUE, "How much FE the Quantum Compressor should hold.");
+		confCompressorRFRate = config.getInt("energy_rate", category, 5000, 0, Integer.MAX_VALUE, "How much FE/t the Quantum Compressor should use when crafting by default.");
+		confCompressorItemRate = config.getInt("item_rate", category, 4, 1, 64, "How many items/t the Quantum Compressor should consume/eject.");
+
+		category = "ender_crafting";
+		config.setCategoryComment(category, "Settings for the Ender Crafter.");
 		
 		category = "recipe_maker";
-		confRMOredict = config.getBoolean("recipe_maker_oredict", category, true, "Should the Recipe Maker use OreDictionary entries when applicable?");
-		confRMNBT = config.getBoolean("recipe_maker_nbt", category, false, "Should the Recipe maker also copy the NBT of the ingredients?");
+		config.setCategoryComment(category, "Settings for the Recipe Maker.");
+		confRMOredict = config.getBoolean("use_oredictionary", category, true, "Should the Recipe Maker use OreDictionary entries when applicable?");
+		confRMNBT = config.getBoolean("use_nbt", category, false, "Should the Recipe maker also copy the NBT of the ingredients?");
 		
 		category = "singularity";
-		config.setCategoryComment(category, "High end crafting components.");
-		confSingularityAmount = config.getInt("_singularity_amount", category, 10000, 1, Integer.MAX_VALUE, "The amount of materials required to create a Singularity, for the default recipes.");
-		confSingularityRF = config.getInt("_singularity_rf", category, 5000000, 0, Integer.MAX_VALUE, "The amount of RF required to craft a Singularity, for the default recipes.");
-		confSingularityCatalyst = config.getString("_singularity_catalyst", category, "extendedcrafting:material:11", "The catalyst required for the default Singularity recipes. modid:itemid:metadata");
-		confSingularityRecipes = config.getBoolean("_singularity_recipes", category, true, "Should the default Singularity recipes be enabled?");
-		confUltimateSingularityRecipe = config.getBoolean("_ultimate_singularity_recipe", category, true, "Should the default Ultimate Singularity recipe be enabled?");
+		config.setCategoryComment(category, "Settings for the Singularities.");
+		confSingularityAmount = config.getInt("material_amount", category, 10000, 1, Integer.MAX_VALUE, "The amount of materials required to create a Singularity, for the default recipes.");
+		confSingularityRF = config.getInt("energy_cost", category, 5000000, 0, Integer.MAX_VALUE, "The amount of RF required to craft a Singularity, for the default recipes.");
+		confSingularityCatalyst = config.getString("default_catalyst", category, "extendedcrafting:material:11", "The catalyst required for the default Singularity recipes. modid:itemid:metadata");
+		confSingularityRecipes = config.getBoolean("default_recipes", category, true, "Should the default Singularity recipes be enabled?");
+		confUltimateSingularityRecipe = config.getBoolean("ultimate_singularity_recipe", category, true, "Should the default Ultimate Singularity recipe be enabled?");
 		ModItems.itemSingularityCustom.configure(config);
 		ModItems.itemSingularityUltimate.configure(config);
 
 		if (config.hasChanged()) {
 			config.save();
 		}
+	}
+	
+	private static void updateConfig() {
+		if (config.hasCategory("settings")) {
+			updateProperty("crafting_core_rf_capacity", "energy_capacity", "settings", "combination_crafting");
+			updateProperty("crafting_core_rf_rate", "energy_rate", "settings", "combination_crafting");
+			updateProperty("compressor_rf_capacity", "energy_capacity", "settings", "quantum_compression");
+			updateProperty("compressor_rf_rate", "energy_rate", "settings", "quantum_compression");
+			updateProperty("compressor_item_rate", "item_rate", "settings", "quantum_compression");
+			updateProperty("interface_rf_capacity", "energy_capacity", "settings", "automation_interface");
+			updateProperty("interface_rf_rate", "energy_rate", "settings", "automation_interface");
+			
+			config.removeCategory(config.getCategory("settings"));
+			
+			config.renameProperty("recipe_maker", "recipe_maker_oredict", "use_oredictionary");
+			config.renameProperty("recipe_maker", "recipe_maker_nbt", "use_nbt");
+			
+			config.renameProperty("singularity", "_singularity_amount", "material_amount");
+			config.renameProperty("singularity", "_singularity_rf", "energy_cost");
+			config.renameProperty("singularity", "_singularity_catalyst", "default_catalyst");
+			config.renameProperty("singularity", "_singularity_recipes", "default_recipes");
+			config.renameProperty("singularity", "_ultimate_singularity_recipe", "ultimate_singularity_recipe");
+			config.renameProperty("singularity", "_custom_singularities", "custom_singularities");
+			config.renameProperty("singularity", "_ultimate_blacklist", "ultimate_singularity_recipe_blacklist");
+		}
+	}
+	
+	private static void updateProperty(String oldName, String newName, String oldCategory, String newCategory) {
+		config.moveProperty(oldCategory, oldName, newCategory);
+		config.renameProperty(newCategory, oldName, newName);
+	}
+	
+	public static boolean removeSingularity(String name) {
+		boolean value = config.get("singularity", name, true).getBoolean();
+		config.getCategory("singularity").remove(name);
+		
+		return value;
 	}
 }

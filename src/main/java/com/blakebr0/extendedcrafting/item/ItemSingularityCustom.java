@@ -15,7 +15,6 @@ import com.blakebr0.extendedcrafting.ExtendedCrafting;
 import com.blakebr0.extendedcrafting.config.ModConfig;
 import com.blakebr0.extendedcrafting.crafting.CompressorRecipeManager;
 
-import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.renderer.color.IItemColor;
 import net.minecraft.item.EnumRarity;
 import net.minecraft.item.Item;
@@ -52,8 +51,8 @@ public class ItemSingularityCustom extends ItemMeta implements IModelHelper {
 
 	public void configure(Configuration config) {
 		ConfigCategory category = config.getCategory("singularity");
-		String[] values = config.get(category.getName(), "_custom_singularities", new String[0]).getStringList();
-		category.get("_custom_singularities").setComment("Here you can add your own custom Singularities." 
+		String[] values = config.get(category.getName(), "custom_singularities", new String[0]).getStringList();
+		category.get("custom_singularities").setComment("Here you can add your own custom Singularities." 
 						+ "\n- Syntax: meta;name;material;color"
 						+ "\n- Example: 12;super_potato;minecraft:carrot;123456"
 						+ "\n- 'meta' must be different for each, and should not be changed."

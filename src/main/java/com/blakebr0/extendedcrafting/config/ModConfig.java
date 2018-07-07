@@ -13,18 +13,32 @@ public class ModConfig {
 
 	public static Configuration config;
 	public static ModConfig instance;
+	
+	public static boolean confGuideEnabled;
+	public static boolean confHandheldTableEnabled;
 
+	public static boolean confCraftingCoreEnabled;
 	public static int confCraftingCoreRFCapacity;
 	public static int confCraftingCoreRFRate;
-	public static int confCompressorRFCapacity;
-	public static int confCompressorRFRate;
-	public static int confCompressorItemRate;
+	
+	public static boolean confInterfaceEnabled;
 	public static int confInterfaceRFCapacity;
 	public static int confInterfaceRFRate;
 	
+	public static boolean confTableEnabled;
+	
+	public static boolean confCompressorEnabled;
+	public static int confCompressorRFCapacity;
+	public static int confCompressorRFRate;
+	public static int confCompressorItemRate;
+	
+	public static boolean confEnderEnabled;
+	
+	public static boolean confRMEnabled;
 	public static boolean confRMOredict;
 	public static boolean confRMNBT;
 	
+	public static boolean confSingularityEnabled;
 	public static int confSingularityAmount;
 	public static int confSingularityRF;
 	public static boolean confSingularityRecipes;
@@ -32,54 +46,64 @@ public class ModConfig {
 	public static String confSingularityCatalyst;
 
 	@SubscribeEvent
-	public void onConfigChanged(ConfigChangedEvent.OnConfigChangedEvent eventArgs) {
-		if (eventArgs.getModID().equals(ExtendedCrafting.MOD_ID)) {
-			ModConfig.pre();
+	public void onConfigChanged(ConfigChangedEvent.OnConfigChangedEvent event) {
+		if (event.getModID().equals(ExtendedCrafting.MOD_ID)) {
+			ModConfig.init();
 		}
 	}
 
 	public static void init(File file) {
 		config = new Configuration(file);
 		config.load();
-		pre();
+		init();
 	}
 
-	public static void pre() {
+	public static void init() {
 		updateConfig();
 		
 		String category;
 		
 		category = "general";
+		config.setCategoryComment(category, "Settings for general things.");
+		confGuideEnabled = config.getBoolean("guide_enabled", category, true, "Should the In-Game Guide Book be enabled?");
+		confHandheldTableEnabled = config.getBoolean("handheld_table_enabled", category, true, "Should the Handheld Crafting Table be enabled?");
 		
 		category = "combination_crafting";
 		config.setCategoryComment(category, "Settings for the Crafting Core.");
+		confCraftingCoreEnabled = config.getBoolean("enabled", category, true, "Should the Crafting Core and Pedestal be enabled?");
 		confCraftingCoreRFCapacity = config.getInt("energy_capacity", category, 5000000, 0, Integer.MAX_VALUE, "How much FE the Crafting Core should hold.");
 		confCraftingCoreRFRate = config.getInt("energy_rate", category, 500, 0, Integer.MAX_VALUE, "How much FE/t the Crafting Core should use when crafting by default.");
 
 		category = "automation_interface";
 		config.setCategoryComment(category, "Settings for the Automation Interface.");
+		confInterfaceEnabled = config.getBoolean("enabled", category, true, "Should the Automation Interface be enabled?");
 		confInterfaceRFCapacity = config.getInt("energy_capacity", category, 1000000, 0, Integer.MAX_VALUE, "How much FE the Automation Interface should hold.");
 		confInterfaceRFRate = config.getInt("energy_rate", category, 80, 0, 100000, "How much FE the Automation Interface should use when moving items.");
 
 		category = "table_crafting";
 		config.setCategoryComment(category, "Settings for the Extended Crafting Tables.");
+		confTableEnabled = config.getBoolean("enabled", category, true, "Should the Extended Crafting Tables be enabled?");
 		
 		category = "quantum_compression";
 		config.setCategoryComment(category, "Settings for the Quantum Compressor.");
+		confCompressorEnabled = config.getBoolean("enabled", category, true, "Should the Quantum Compressor be enabled?");
 		confCompressorRFCapacity = config.getInt("energy_capacity", category, 10000000, 0, Integer.MAX_VALUE, "How much FE the Quantum Compressor should hold.");
 		confCompressorRFRate = config.getInt("energy_rate", category, 5000, 0, Integer.MAX_VALUE, "How much FE/t the Quantum Compressor should use when crafting by default.");
 		confCompressorItemRate = config.getInt("item_rate", category, 4, 1, 64, "How many items/t the Quantum Compressor should consume/eject.");
 
 		category = "ender_crafting";
 		config.setCategoryComment(category, "Settings for the Ender Crafter.");
+		confEnderEnabled = config.getBoolean("enabled", category, true, "Should the Ender Crafter and Ender Alternator be enabled?");
 		
 		category = "recipe_maker";
 		config.setCategoryComment(category, "Settings for the Recipe Maker.");
+		confRMEnabled = config.getBoolean("enabled", category, true, "Should the Recipe Maker be enabled?");
 		confRMOredict = config.getBoolean("use_oredictionary", category, true, "Should the Recipe Maker use OreDictionary entries when applicable?");
 		confRMNBT = config.getBoolean("use_nbt", category, false, "Should the Recipe maker also copy the NBT of the ingredients?");
 		
 		category = "singularity";
 		config.setCategoryComment(category, "Settings for the Singularities.");
+		confSingularityEnabled = config.getBoolean("enabled", category, true, "Should the Singularities be enabled?");
 		confSingularityAmount = config.getInt("material_amount", category, 10000, 1, Integer.MAX_VALUE, "The amount of materials required to create a Singularity, for the default recipes.");
 		confSingularityRF = config.getInt("energy_cost", category, 5000000, 0, Integer.MAX_VALUE, "The amount of RF required to craft a Singularity, for the default recipes.");
 		confSingularityCatalyst = config.getString("default_catalyst", category, "extendedcrafting:material:11", "The catalyst required for the default Singularity recipes. modid:itemid:metadata");

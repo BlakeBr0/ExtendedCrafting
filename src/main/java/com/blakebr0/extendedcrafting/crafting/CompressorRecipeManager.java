@@ -2,6 +2,8 @@ package com.blakebr0.extendedcrafting.crafting;
 
 import java.util.ArrayList;
 
+import com.blakebr0.extendedcrafting.config.ModConfig;
+
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
 
@@ -16,15 +18,19 @@ public class CompressorRecipeManager {
 	}
 	
 	public void addRecipe(ItemStack output, Object input, int inputCount, ItemStack catalyst, boolean consumeCatalyst, int powerCost) {
-		recipes.add(new CompressorRecipe(output, input, inputCount, catalyst, consumeCatalyst, powerCost));
+		if (ModConfig.confCompressorEnabled) {
+			this.recipes.add(new CompressorRecipe(output, input, inputCount, catalyst, consumeCatalyst, powerCost));
+		}
 	}
 
 	public void addRecipe(ItemStack output, Object input, int inputCount, ItemStack catalyst, boolean consumeCatalyst, int powerCost, int powerRate) {
-		recipes.add(new CompressorRecipe(output, input, inputCount, catalyst, consumeCatalyst, powerCost, powerRate));
+		if (ModConfig.confCompressorEnabled) {
+			this.recipes.add(new CompressorRecipe(output, input, inputCount, catalyst, consumeCatalyst, powerCost, powerRate));
+		}
 	}
 
 	public ArrayList<CompressorRecipe> getRecipes() {
-		return recipes;
+		return this.recipes;
 	}
 	
 	public ArrayList<CompressorRecipe> getValidRecipes() {

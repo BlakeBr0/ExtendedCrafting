@@ -7,6 +7,7 @@ import java.util.Map;
 import org.apache.commons.lang3.text.WordUtils;
 
 import com.blakebr0.cucumber.helper.ResourceHelper;
+import com.blakebr0.cucumber.iface.IEnableable;
 import com.blakebr0.cucumber.item.ItemMeta;
 import com.blakebr0.cucumber.util.Utils;
 import com.blakebr0.extendedcrafting.ExtendedCrafting;
@@ -23,7 +24,7 @@ import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.common.config.Property;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
 
-public class ItemSingularity extends ItemMeta {
+public class ItemSingularity extends ItemMeta implements IEnableable {
 
 	public static Map<Integer, Integer> singularityColors = new HashMap<>();
 	public static Map<Integer, Object> singularityMaterials = new HashMap<>();
@@ -92,6 +93,11 @@ public class ItemSingularity extends ItemMeta {
 			ModelLoader.setCustomModelResourceLocation(this, item.getKey(), ResourceHelper.getModelResource(ExtendedCrafting.MOD_ID, "singularity", "inventory"));
 		}
 	}
+	
+	@Override
+	public boolean isEnabled() {
+		return ModConfig.confSingularityEnabled;
+	}
 
 	public ItemStack addSingularity(int meta, String name, ItemStack material, int color) {
 		addToConfig(name);
@@ -122,7 +128,8 @@ public class ItemSingularity extends ItemMeta {
 	}
 	
 	public void initRecipes() {
-		if (!ModConfig.confSingularityRecipes) return;
+		if (!ModConfig.confSingularityRecipes || !ModConfig.confSingularityEnabled) 
+			return;
 		
 		for (Map.Entry<Integer, Object> obj : singularityMaterials.entrySet()) {
 			Object value = obj.getValue();
@@ -184,7 +191,7 @@ public class ItemSingularity extends ItemMeta {
 			
 			prop.setComment("Disable specific default singularities here.");
 			prop.set(newValues);
-			config.save();
+			this.config.save();
 		}
 	}
 

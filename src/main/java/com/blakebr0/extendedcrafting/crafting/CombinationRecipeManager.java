@@ -2,6 +2,8 @@ package com.blakebr0.extendedcrafting.crafting;
 
 import java.util.ArrayList;
 
+import com.blakebr0.extendedcrafting.config.ModConfig;
+
 import net.minecraft.item.ItemStack;
 
 public class CombinationRecipeManager {
@@ -15,15 +17,19 @@ public class CombinationRecipeManager {
 	}
 	
 	public void addRecipe(ItemStack output, int cost, ItemStack input, Object... pedestals) {
-		recipes.add(new CombinationRecipe(output, cost, input, pedestals));
+		if (ModConfig.confCraftingCoreEnabled) {
+			this.recipes.add(new CombinationRecipe(output, cost, input, pedestals));
+		}
 	}
 
 	public void addRecipe(ItemStack output, int cost, int perTick, ItemStack input, Object... pedestals) {
-		recipes.add(new CombinationRecipe(output, cost, perTick, input, pedestals));
+		if (ModConfig.confCraftingCoreEnabled) {
+			this.recipes.add(new CombinationRecipe(output, cost, perTick, input, pedestals));
+		}
 	}
 
 	public ArrayList<CombinationRecipe> getRecipes() {
-		return recipes;
+		return this.recipes;
 	}
 	
 	public void removeRecipe(ItemStack stack) {

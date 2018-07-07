@@ -1,4 +1,10 @@
 {
+  "conditions": [
+     {
+        "type": "minecraft:item_exists",
+        "item": "extendedcrafting:table_elite"
+     }
+  ],
   "type": "forge:ore_shaped",
   "pattern": [
 	"BAB",

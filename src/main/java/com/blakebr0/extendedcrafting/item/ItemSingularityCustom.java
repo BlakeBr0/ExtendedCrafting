@@ -7,7 +7,7 @@ import java.util.Map;
 import org.apache.commons.lang3.text.WordUtils;
 
 import com.blakebr0.cucumber.helper.ResourceHelper;
-import com.blakebr0.cucumber.helper.StackHelper;
+import com.blakebr0.cucumber.iface.IEnableable;
 import com.blakebr0.cucumber.iface.IModelHelper;
 import com.blakebr0.cucumber.item.ItemMeta;
 import com.blakebr0.cucumber.util.Utils;
@@ -26,7 +26,7 @@ import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import net.minecraftforge.oredict.OreDictionary;
 
-public class ItemSingularityCustom extends ItemMeta implements IModelHelper {
+public class ItemSingularityCustom extends ItemMeta implements IModelHelper, IEnableable {
 
 	public static ArrayList<CustomSingularity> singularities = new ArrayList<>();
 	public static Map<Integer, Integer> singularityColors = new HashMap<>();
@@ -104,6 +104,11 @@ public class ItemSingularityCustom extends ItemMeta implements IModelHelper {
 			ModelLoader.setCustomModelResourceLocation(this, item.getKey(), ResourceHelper.getModelResource(ExtendedCrafting.MOD_ID, "singularity", "inventory"));
 		}
 	}
+	
+	@Override
+	public boolean isEnabled() {
+		return ModConfig.confSingularityEnabled;
+	}
 
 	public ItemStack addSingularity(int meta, String name, String material, int color) {
 		singularityColors.put(meta, color);
@@ -113,6 +118,8 @@ public class ItemSingularityCustom extends ItemMeta implements IModelHelper {
 	}
 	
 	public void initRecipes() {
+		if (!this.isEnabled()) return;
+		
 		for (Map.Entry<Integer, Object> obj : singularityMaterials.entrySet()) {
 			Object value = obj.getValue();
 			int meta = obj.getKey();
@@ -133,7 +140,7 @@ public class ItemSingularityCustom extends ItemMeta implements IModelHelper {
 					}
 					item = ForgeRegistries.ITEMS.getValue(new ResourceLocation(parts[0], parts[1]));
 					stack = new ItemStack(item, 1, matMeta);
-					if (!StackHelper.isNull(stack)) {
+					if (!stack.isEmpty()) {
 						CompressorRecipeManager.getInstance().addRecipe(new ItemStack(this, 1, meta), stack.copy(), ModConfig.confSingularityAmount, ItemSingularity.getCatalystStack(), false, ModConfig.confSingularityRF);
 					}
 				} else if (parts.length == 2) {
@@ -147,7 +154,7 @@ public class ItemSingularityCustom extends ItemMeta implements IModelHelper {
 					} else {
 						item = ForgeRegistries.ITEMS.getValue(new ResourceLocation(parts[0], parts[1]));
 						stack = new ItemStack(item);
-						if (!StackHelper.isNull(stack)) {
+						if (!stack.isEmpty()) {
 							CompressorRecipeManager.getInstance().addRecipe(new ItemStack(this, 1, meta), stack.copy(), ModConfig.confSingularityAmount, ItemSingularity.getCatalystStack(), false, ModConfig.confSingularityRF);
 						}
 					}

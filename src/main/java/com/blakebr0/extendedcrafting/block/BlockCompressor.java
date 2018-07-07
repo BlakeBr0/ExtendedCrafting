@@ -3,8 +3,10 @@ package com.blakebr0.extendedcrafting.block;
 import javax.annotation.Nonnull;
 
 import com.blakebr0.cucumber.block.BlockBase;
+import com.blakebr0.cucumber.iface.IEnableable;
 import com.blakebr0.extendedcrafting.ExtendedCrafting;
 import com.blakebr0.extendedcrafting.client.gui.GuiHandler;
+import com.blakebr0.extendedcrafting.config.ModConfig;
 import com.blakebr0.extendedcrafting.tile.TileCompressor;
 
 import net.minecraft.block.BlockHorizontal;
@@ -30,7 +32,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class BlockCompressor extends BlockBase implements ITileEntityProvider {
+public class BlockCompressor extends BlockBase implements ITileEntityProvider, IEnableable {
 
 	public static final PropertyDirection FACING = BlockHorizontal.FACING;
 
@@ -152,5 +154,10 @@ public class BlockCompressor extends BlockBase implements ITileEntityProvider {
 	@SideOnly(Side.CLIENT)
 	public BlockRenderLayer getBlockLayer() {
 		return BlockRenderLayer.CUTOUT_MIPPED;
+	}
+
+	@Override
+	public boolean isEnabled() {
+		return ModConfig.confCompressorEnabled;
 	}
 }

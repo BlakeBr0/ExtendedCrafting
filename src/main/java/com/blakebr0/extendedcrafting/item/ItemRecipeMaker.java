@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.blakebr0.cucumber.helper.NBTHelper;
+import com.blakebr0.cucumber.iface.IEnableable;
 import com.blakebr0.cucumber.item.ItemBase;
 import com.blakebr0.cucumber.util.Utils;
 import com.blakebr0.extendedcrafting.ExtendedCrafting;
@@ -34,7 +35,7 @@ import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.oredict.OreDictionary;
 
-public class ItemRecipeMaker extends ItemBase {
+public class ItemRecipeMaker extends ItemBase implements IEnableable {
 	
 	private static final String NEW_LINE = System.lineSeparator() + "\t";
 
@@ -44,9 +45,14 @@ public class ItemRecipeMaker extends ItemBase {
 		this.setMaxStackSize(1);
 		this.setHasSubtypes(true);
 		
-		if (Loader.isModLoaded("jei")) {
+		if (Loader.isModLoaded("jei") && this.isEnabled()) {
 			CompatJEI.items.add(this);
 		}
+	}
+	
+	@Override
+	public boolean isEnabled() {
+		return ModConfig.confRMEnabled;
 	}
 	
 	@Override

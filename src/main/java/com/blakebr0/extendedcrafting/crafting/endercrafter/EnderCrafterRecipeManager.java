@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.blakebr0.cucumber.helper.StackHelper;
+import com.blakebr0.extendedcrafting.config.ModConfig;
 import com.blakebr0.extendedcrafting.crafting.table.ITieredRecipe;
 import com.blakebr0.extendedcrafting.crafting.table.TableRecipeShaped;
 import com.blakebr0.extendedcrafting.crafting.table.TableRecipeShapeless;
@@ -29,13 +30,21 @@ public class EnderCrafterRecipeManager {
 
 	public TableRecipeShaped addShaped(ItemStack result, Object... recipe) {
 		TableRecipeShaped craft = new TableRecipeShaped(1, result, recipe);
-		this.recipes.add(craft);
+		
+		if (ModConfig.confEnderEnabled) {
+			this.recipes.add(craft);
+		}
+		
 		return craft;
 	}
 	
 	public TableRecipeShapeless addShapeless(ItemStack result, Object... ingredients) {
 		TableRecipeShapeless recipe = new TableRecipeShapeless(1, result, ingredients);
-		this.recipes.add(recipe);
+		
+		if (ModConfig.confEnderEnabled) {
+			this.recipes.add(recipe);
+		}
+		
 		return recipe;
 	}
 	

@@ -1,4 +1,10 @@
 {
+  "conditions": [
+     {
+        "type": "minecraft:item_exists",
+        "item": "extendedcrafting:crafting_core"
+     }
+  ],
   "type": "forge:ore_shaped",
   "pattern": [
 	"CAC",

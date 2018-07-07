@@ -1,4 +1,10 @@
 {
+  "conditions": [
+     {
+        "type": "minecraft:item_exists",
+        "item": "extendedcrafting:guide"
+     }
+  ],
   "type": "forge:ore_shapeless",
   "ingredients": [
     {

@@ -1,4 +1,10 @@
 {
+  "conditions": [
+     {
+        "type": "minecraft:item_exists",
+        "item": "extendedcrafting:ender_crafter"
+     }
+  ],
   "type": "forge:ore_shaped",
   "pattern": [
 	"EEE",

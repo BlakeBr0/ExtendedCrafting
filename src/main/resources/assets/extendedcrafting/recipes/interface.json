@@ -1,4 +1,10 @@
 {
+  "conditions": [
+     {
+        "type": "minecraft:item_exists",
+        "item": "extendedcrafting:interface"
+     }
+  ],
   "type": "forge:ore_shaped",
   "pattern": [
 	"CBC",

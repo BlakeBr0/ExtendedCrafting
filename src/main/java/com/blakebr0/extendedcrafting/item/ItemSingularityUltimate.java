@@ -3,7 +3,7 @@ package com.blakebr0.extendedcrafting.item;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.blakebr0.cucumber.helper.StackHelper;
+import com.blakebr0.cucumber.iface.IEnableable;
 import com.blakebr0.cucumber.item.ItemBase;
 import com.blakebr0.cucumber.lib.Colors;
 import com.blakebr0.cucumber.util.Utils;
@@ -19,7 +19,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.config.ConfigCategory;
 import net.minecraftforge.common.config.Configuration;
 
-public class ItemSingularityUltimate extends ItemBase {
+public class ItemSingularityUltimate extends ItemBase implements IEnableable {
 
 	public static ArrayList<ItemStack> singularities = new ArrayList<>();
 	public static ArrayList<Integer> blacklistDefaults = new ArrayList<>();
@@ -70,6 +70,11 @@ public class ItemSingularityUltimate extends ItemBase {
 			}
 		}
 	}
+	
+	@Override
+	public boolean isEnabled() {
+		return ModConfig.confSingularityEnabled;
+	}
 
 	public static void addSingularityToRecipe(ItemStack stack) {
 		Item item = stack.getItem();
@@ -91,10 +96,10 @@ public class ItemSingularityUltimate extends ItemBase {
 	}
 
 	public void initRecipe() {
-		if (!ModConfig.confUltimateSingularityRecipe) {
+		if (!ModConfig.confUltimateSingularityRecipe || !this.isEnabled())
 			return;
-		}
-		TableRecipeManager.getInstance().addShapeless(4, StackHelper.to(ModItems.itemSingularityUltimate, 1, 0), singularities.toArray());
+		
+		TableRecipeManager.getInstance().addShapeless(4, new ItemStack(ModItems.itemSingularityUltimate, 1, 0), singularities.toArray());
 	}
 
 	@Override

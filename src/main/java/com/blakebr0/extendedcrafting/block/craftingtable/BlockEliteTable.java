@@ -4,9 +4,11 @@ import java.util.List;
 
 import com.blakebr0.cucumber.block.BlockBase;
 import com.blakebr0.cucumber.helper.StackHelper;
+import com.blakebr0.cucumber.iface.IEnableable;
 import com.blakebr0.cucumber.util.Utils;
 import com.blakebr0.extendedcrafting.ExtendedCrafting;
 import com.blakebr0.extendedcrafting.client.gui.GuiHandler;
+import com.blakebr0.extendedcrafting.config.ModConfig;
 import com.blakebr0.extendedcrafting.tile.TileEliteCraftingTable;
 
 import net.minecraft.block.ITileEntityProvider;
@@ -25,7 +27,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
-public class BlockEliteTable extends BlockBase implements ITileEntityProvider {
+public class BlockEliteTable extends BlockBase implements ITileEntityProvider, IEnableable {
 
 	public BlockEliteTable() {
 		super("ec.table_elite", Material.IRON, SoundType.METAL, 5.0F, 10.0F);
@@ -38,8 +40,7 @@ public class BlockEliteTable extends BlockBase implements ITileEntityProvider {
 	}
 
 	@Override
-	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand,
-			EnumFacing side, float hitX, float hitY, float hitZ) {
+	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
 		if (world.isRemote) {
 			return true;
 		} else {
@@ -77,5 +78,10 @@ public class BlockEliteTable extends BlockBase implements ITileEntityProvider {
 	@Override
 	public void addInformation(ItemStack stack, World world, List<String> tooltip, ITooltipFlag flag) {
 		tooltip.add(Utils.localize("tooltip.ec.tier", 3));
+	}
+
+	@Override
+	public boolean isEnabled() {
+		return ModConfig.confTableEnabled;
 	}
 }

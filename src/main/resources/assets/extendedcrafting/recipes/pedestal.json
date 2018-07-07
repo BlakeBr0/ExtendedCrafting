@@ -1,4 +1,10 @@
 {
+  "conditions": [
+     {
+        "type": "minecraft:item_exists",
+        "item": "extendedcrafting:pedestal"
+     }
+  ],
   "type": "forge:ore_shaped",
   "pattern": [
 	" I ",

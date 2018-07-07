@@ -4,9 +4,11 @@ import java.util.List;
 
 import com.blakebr0.cucumber.block.BlockBase;
 import com.blakebr0.cucumber.helper.StackHelper;
+import com.blakebr0.cucumber.iface.IEnableable;
 import com.blakebr0.cucumber.util.Utils;
 import com.blakebr0.extendedcrafting.ExtendedCrafting;
 import com.blakebr0.extendedcrafting.client.gui.GuiHandler;
+import com.blakebr0.extendedcrafting.config.ModConfig;
 import com.blakebr0.extendedcrafting.tile.TileUltimateCraftingTable;
 
 import net.minecraft.block.ITileEntityProvider;
@@ -25,7 +27,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
-public class BlockUltimateTable extends BlockBase implements ITileEntityProvider {
+public class BlockUltimateTable extends BlockBase implements ITileEntityProvider, IEnableable {
 
 	public BlockUltimateTable() {
 		super("ec.table_ultimate", Material.IRON, SoundType.METAL, 5.0F, 10.0F);
@@ -76,5 +78,10 @@ public class BlockUltimateTable extends BlockBase implements ITileEntityProvider
 	@Override
 	public void addInformation(ItemStack stack, World world, List<String> tooltip, ITooltipFlag flag) {
 		tooltip.add(Utils.localize("tooltip.ec.tier", 4));
+	}
+
+	@Override
+	public boolean isEnabled() {
+		return ModConfig.confTableEnabled;
 	}
 }

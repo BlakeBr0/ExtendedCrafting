@@ -3,14 +3,12 @@ package com.blakebr0.extendedcrafting.crafting.table;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.blakebr0.cucumber.helper.StackHelper;
-import com.blakebr0.extendedcrafting.lib.IExtendedTable;
+import com.blakebr0.extendedcrafting.config.ModConfig;
 
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
-import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.world.World;
 import net.minecraftforge.items.IItemHandlerModifiable;
 
@@ -30,7 +28,11 @@ public class TableRecipeManager {
 
 	public TableRecipeShaped addShaped(int tier, ItemStack result, Object... recipe) {
 		TableRecipeShaped craft = new TableRecipeShaped(tier, result, recipe);
-		this.recipes.add(craft);
+		
+		if (ModConfig.confTableEnabled) {
+			this.recipes.add(craft);
+		}
+		
 		return craft;
 	}
 
@@ -40,7 +42,11 @@ public class TableRecipeManager {
 
 	public TableRecipeShapeless addShapeless(int tier, ItemStack result, Object... ingredients) {
 		TableRecipeShapeless recipe = new TableRecipeShapeless(tier, result, ingredients);
-		this.recipes.add(recipe);
+		
+		if (ModConfig.confTableEnabled) {
+			this.recipes.add(recipe);
+		}
+		
 		return recipe;
 	}
 
@@ -52,7 +58,7 @@ public class TableRecipeManager {
 
 		for (j = 0; j < grid.getSizeInventory(); ++j) {
 			ItemStack stack2 = grid.getStackInSlot(j);
-			if (!StackHelper.isNull(stack2)) {
+			if (!stack2.isEmpty()) {
 				if (i == 0) {
 					stack = stack2;
 				}
@@ -94,7 +100,7 @@ public class TableRecipeManager {
 
 		for (j = 0; j < grid.getSlots(); ++j) {
 			ItemStack stack2 = grid.getStackInSlot(j);
-			if (!StackHelper.isNull(stack2)) {
+			if (!stack2.isEmpty()) {
 				if (i == 0) {
 					stack = stack2;
 				}

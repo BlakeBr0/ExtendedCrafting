@@ -2,7 +2,9 @@ package com.blakebr0.extendedcrafting.block;
 
 import com.blakebr0.cucumber.block.BlockBase;
 import com.blakebr0.cucumber.helper.StackHelper;
+import com.blakebr0.cucumber.iface.IEnableable;
 import com.blakebr0.extendedcrafting.ExtendedCrafting;
+import com.blakebr0.extendedcrafting.config.ModConfig;
 import com.blakebr0.extendedcrafting.tile.TilePedestal;
 
 import net.minecraft.block.ITileEntityProvider;
@@ -23,7 +25,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
-public class BlockPedestal extends BlockBase implements ITileEntityProvider {
+public class BlockPedestal extends BlockBase implements ITileEntityProvider, IEnableable {
 
 	public static final AxisAlignedBB AABB = new AxisAlignedBB(0.0625D, 0.0D, 0.0625D, 0.9375D, 1.0D, 0.9375D);
 
@@ -94,5 +96,10 @@ public class BlockPedestal extends BlockBase implements ITileEntityProvider {
 	@Override
 	public boolean isFullCube(IBlockState state) {
 		return false;
+	}
+
+	@Override
+	public boolean isEnabled() {
+		return ModConfig.confCraftingCoreEnabled;
 	}
 }

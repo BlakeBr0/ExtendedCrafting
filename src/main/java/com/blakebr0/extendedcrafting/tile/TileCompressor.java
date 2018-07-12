@@ -86,6 +86,7 @@ public class TileCompressor extends TileEntity implements ISidedInventory, ITick
 						mark = true;
 					}
 				}
+				
 				// TODO: Possibly come up with a system to deal with differing itemstacks?
 				if (input.isItemEqual(this.materialStack) && ItemStack.areItemStackTagsEqual(input, this.materialStack)) {
 					int consumeAmount = input.getCount();
@@ -101,13 +102,16 @@ public class TileCompressor extends TileEntity implements ISidedInventory, ITick
 				if (this.materialCount >= recipe.getInputCount()) {
 					this.process(recipe);
 					if (this.progress == recipe.getPowerCost()) {
-						if ((output.isEmpty() || output.isItemEqual(recipe.getOutput())) && output.getCount() < recipe.getOutput().getMaxStackSize()) {
+						ItemStack recipeOutput = recipe.getOutput();
+						if ((output.isEmpty() || output.isItemEqual(recipeOutput)) && output.getCount() < recipeOutput.getMaxStackSize()) {
 							this.addStackToSlot(0, recipe.getOutput());
 							if (recipe.consumeCatalyst()) {
 								StackHelper.decrease(this.getStackInSlot(2), 1, false);
 							}
+							
 							this.progress = 0;
 							this.materialCount -= recipe.getInputCount();
+							
 							if (this.materialCount <= 0) {
 								this.materialStack = ItemStack.EMPTY;
 							}
@@ -121,8 +125,10 @@ public class TileCompressor extends TileEntity implements ISidedInventory, ITick
 					ItemStack toAdd = this.materialStack.copy();
 					int addCount = Math.min(this.materialCount, toAdd.getMaxStackSize());
 					toAdd.setCount(addCount);
-					if (this.addStackToSlot(0, toAdd)) {
-						this.materialCount -= addCount;
+					
+					int added = this.addStackToSlot(0, toAdd);
+					if (added > 0) {
+						this.materialCount -= added;
 						if (this.materialCount < 1) {
 							this.materialStack = ItemStack.EMPTY;
 							this.ejecting = false;
@@ -218,20 +224,28 @@ public class TileCompressor extends TileEntity implements ISidedInventory, ITick
 		this.energy.setEnergy(compound.getInteger("Energy"));
 	}
 
-	public boolean addStackToSlot(int slot, ItemStack stack) {
+	/**
+	 * Tries to add a stack to the specified slot, returns the amount added
+	 * @param slot the slot to insert to
+	 * @param stack the stack to insert
+	 * @return the amount added
+	 */
+	public int addStackToSlot(int slot, ItemStack stack) {
 		ItemStack slotStack = this.getStackInSlot(slot);
 		if (slotStack.isEmpty()) {
 			this.setInventorySlotContents(slot, stack);
-			return true;
+			return stack.getCount();
 		} else {
-			if (slotStack.isItemEqual(stack) && slotStack.getCount() + stack.getCount() <= slotStack.getMaxStackSize() && ItemStack.areItemStackTagsEqual(stack, slotStack)) {
+			if (slotStack.isItemEqual(stack) && slotStack.getCount() < slotStack.getMaxStackSize() && ItemStack.areItemStackTagsEqual(stack, slotStack)) {
 				ItemStack newStack = slotStack.copy();
-				newStack.grow(stack.getCount());
+				int newSize = Math.min(slotStack.getCount() + stack.getCount(), slotStack.getMaxStackSize());
+				newStack.setCount(newSize);
 				this.setInventorySlotContents(slot, newStack);
-				return true;
+				return newSize - slotStack.getCount();
 			}
 		}
-		return false;
+		
+		return 0;
 	}
 
 	@Override
@@ -242,7 +256,7 @@ public class TileCompressor extends TileEntity implements ISidedInventory, ITick
 
 	@Override
 	public SPacketUpdateTileEntity getUpdatePacket() {
-		return new SPacketUpdateTileEntity(pos, -1, this.getUpdateTag());
+		return new SPacketUpdateTileEntity(this.getPos(), -1, this.getUpdateTag());
 	}
 
 	@Override

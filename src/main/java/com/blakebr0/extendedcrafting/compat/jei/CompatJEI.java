@@ -103,6 +103,7 @@ public class CompatJEI implements IModPlugin {
 		
 		if (ModConfig.confCraftingCoreEnabled) {
 			registry.addRecipeCatalyst(new ItemStack(ModBlocks.blockCraftingCore), CombinationCraftingCategory.UID);
+			registry.addRecipeCatalyst(new ItemStack(ModBlocks.blockPedestal), CombinationCraftingCategory.UID);
 			registry.handleRecipes(CombinationRecipe.class, recipe -> new CombinationCraftingWrapper(helpers, recipe), CombinationCraftingCategory.UID);
 			registry.addRecipeClickArea(GuiCraftingCore.class, 117, 47, 21, 14, CombinationCraftingCategory.UID);
 			registry.addRecipes(CombinationRecipeManager.getInstance().getRecipes(), CombinationCraftingCategory.UID);
@@ -144,6 +145,7 @@ public class CompatJEI implements IModPlugin {
 		
 		if (ModConfig.confEnderEnabled) {
 			registry.addRecipeCatalyst(new ItemStack(ModBlocks.blockEnderCrafter), EnderCrafterCategory.UID);
+			registry.addRecipeCatalyst(new ItemStack(ModBlocks.blockEnderAlternator), EnderCrafterCategory.UID);
 			registry.handleRecipes(TableRecipeShaped.class, recipe -> new TableShapedWrapper(helpers, recipe), EnderCrafterCategory.UID);
 			registry.handleRecipes(TableRecipeShapeless.class, recipe -> new TableShapelessWrapper(helpers, recipe), EnderCrafterCategory.UID);
 			registry.addRecipeClickArea(GuiEnderCrafter.class, 90, 36, 21, 14, EnderCrafterCategory.UID);

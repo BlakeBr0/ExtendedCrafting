@@ -5,6 +5,7 @@ import java.io.File;
 import com.blakebr0.extendedcrafting.ExtendedCrafting;
 import com.blakebr0.extendedcrafting.item.ModItems;
 
+import net.minecraftforge.common.config.ConfigCategory;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.fml.client.event.ConfigChangedEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -30,7 +31,6 @@ public class ModConfig {
 	public static boolean confCompressorEnabled;
 	public static int confCompressorRFCapacity;
 	public static int confCompressorRFRate;
-	public static int confCompressorItemRate;
 	
 	public static boolean confEnderEnabled;
 	
@@ -89,7 +89,6 @@ public class ModConfig {
 		confCompressorEnabled = config.getBoolean("enabled", category, true, "Should the Quantum Compressor be enabled?");
 		confCompressorRFCapacity = config.getInt("energy_capacity", category, 10000000, 0, Integer.MAX_VALUE, "How much FE the Quantum Compressor should hold.");
 		confCompressorRFRate = config.getInt("energy_rate", category, 5000, 0, Integer.MAX_VALUE, "How much FE/t the Quantum Compressor should use when crafting by default.");
-		confCompressorItemRate = config.getInt("item_rate", category, 4, 1, 64, "How many items/t the Quantum Compressor should consume/eject.");
 
 		category = "ender_crafting";
 		config.setCategoryComment(category, "Settings for the Ender Crafter.");
@@ -123,11 +122,12 @@ public class ModConfig {
 			updateProperty("crafting_core_rf_rate", "energy_rate", "settings", "combination_crafting");
 			updateProperty("compressor_rf_capacity", "energy_capacity", "settings", "quantum_compression");
 			updateProperty("compressor_rf_rate", "energy_rate", "settings", "quantum_compression");
-			updateProperty("compressor_item_rate", "item_rate", "settings", "quantum_compression");
 			updateProperty("interface_rf_capacity", "energy_capacity", "settings", "automation_interface");
 			updateProperty("interface_rf_rate", "energy_rate", "settings", "automation_interface");
 			
-			config.removeCategory(config.getCategory("settings"));
+			ConfigCategory settings = config.getCategory("settings");
+			settings.remove("compressor_item_rate");
+			config.removeCategory(settings);
 			
 			config.renameProperty("recipe_maker", "recipe_maker_oredict", "use_oredictionary");
 			config.renameProperty("recipe_maker", "recipe_maker_nbt", "use_nbt");

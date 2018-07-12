@@ -78,7 +78,6 @@ public class TileCompressor extends TileEntity implements ISidedInventory, ITick
 			CompressorRecipe recipe = this.getRecipe();
 			ItemStack output = this.getStackInSlot(0);
 			ItemStack input = this.getStackInSlot(1);
-			int consumeAmount;
 
 			if (!input.isEmpty()) {
 				if (this.materialStack.isEmpty()) {
@@ -87,9 +86,9 @@ public class TileCompressor extends TileEntity implements ISidedInventory, ITick
 						mark = true;
 					}
 				}
-				// TODO: properly deal with multiple itemstacks
+				// TODO: Possibly come up with a system to deal with differing itemstacks?
 				if (input.isItemEqual(this.materialStack) && ItemStack.areItemStackTagsEqual(input, this.materialStack)) {
-					consumeAmount = input.getCount() < ModConfig.confCompressorItemRate ? input.getCount() : ModConfig.confCompressorItemRate;
+					int consumeAmount = input.getCount();
 					StackHelper.decrease(input, consumeAmount, false);
 					this.materialCount += consumeAmount;
 					if (!mark) {
@@ -98,21 +97,19 @@ public class TileCompressor extends TileEntity implements ISidedInventory, ITick
 				}
 			}
 
-			if (recipe != null) {
-				if (this.getEnergy().getEnergyStored() > 0) {
-					if (this.materialCount >= recipe.getInputCount()) {
-						this.process(recipe);
-						if (this.progress == recipe.getPowerCost()) {
-							if ((output.isEmpty() || output.isItemEqual(recipe.getOutput())) && output.getCount() < recipe.getOutput().getMaxStackSize()) {
-								this.addStackToSlot(0, recipe.getOutput());
-								if (recipe.consumeCatalyst()) {
-									StackHelper.decrease(this.getStackInSlot(2), 1, false);
-								}
-								this.progress = 0;
-								this.materialCount -= recipe.getInputCount();
-								if (this.materialCount <= 0) {
-									this.materialStack = ItemStack.EMPTY;
-								}
+			if (recipe != null && this.getEnergy().getEnergyStored() > 0) {
+				if (this.materialCount >= recipe.getInputCount()) {
+					this.process(recipe);
+					if (this.progress == recipe.getPowerCost()) {
+						if ((output.isEmpty() || output.isItemEqual(recipe.getOutput())) && output.getCount() < recipe.getOutput().getMaxStackSize()) {
+							this.addStackToSlot(0, recipe.getOutput());
+							if (recipe.consumeCatalyst()) {
+								StackHelper.decrease(this.getStackInSlot(2), 1, false);
+							}
+							this.progress = 0;
+							this.materialCount -= recipe.getInputCount();
+							if (this.materialCount <= 0) {
+								this.materialStack = ItemStack.EMPTY;
 							}
 						}
 					}
@@ -122,8 +119,7 @@ public class TileCompressor extends TileEntity implements ISidedInventory, ITick
 			if (this.ejecting) {
 				if (this.materialCount > 0 && !this.materialStack.isEmpty()) {
 					ItemStack toAdd = this.materialStack.copy();
-					int addCount = this.materialCount < ModConfig.confCompressorItemRate ? this.materialCount : ModConfig.confCompressorItemRate;
-					addCount = Math.min(addCount, toAdd.getMaxStackSize());
+					int addCount = Math.min(this.materialCount, toAdd.getMaxStackSize());
 					toAdd.setCount(addCount);
 					if (this.addStackToSlot(0, toAdd)) {
 						this.materialCount -= addCount;

@@ -33,6 +33,8 @@ public class ModConfig {
 	public static int confCompressorRFRate;
 	
 	public static boolean confEnderEnabled;
+	public static int confEnderTimeRequired;
+	public static float confEnderAlternatorEff;
 	
 	public static boolean confRMEnabled;
 	public static boolean confRMOredict;
@@ -93,6 +95,8 @@ public class ModConfig {
 		category = "ender_crafting";
 		config.setCategoryComment(category, "Settings for the Ender Crafter.");
 		confEnderEnabled = config.getBoolean("enabled", category, true, "Should the Ender Crafter and Ender Alternator be enabled?");
+		confEnderTimeRequired = config.getInt("time_required", category, 60, 0, Integer.MAX_VALUE, "How many seconds each craft should take.");
+		confEnderAlternatorEff = config.getFloat("alternator_effectiveness", category, 0.01F, 0, 1, "How much an Ender Alternator should speed up a craft. This is the percentage of time_required.");
 		
 		category = "recipe_maker";
 		config.setCategoryComment(category, "Settings for the Recipe Maker.");

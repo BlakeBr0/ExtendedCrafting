@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.blakebr0.cucumber.tile.TileEntityBase;
 import com.blakebr0.extendedcrafting.block.BlockEnderAlternator;
+import com.blakebr0.extendedcrafting.config.ModConfig;
 import com.blakebr0.extendedcrafting.crafting.endercrafter.EnderCrafterRecipeManager;
 import com.blakebr0.extendedcrafting.lib.IExtendedTable;
 
@@ -29,7 +30,7 @@ public class TileEnderCrafter extends TileEntityBase implements IExtendedTable, 
 	@Override
 	public void update() {
 		if (!this.getWorld().isRemote) {
-			ItemStack result = EnderCrafterRecipeManager.getInstance().findMatchingRecipe(matrix);
+			ItemStack result = EnderCrafterRecipeManager.getInstance().findMatchingRecipe(this.matrix);
 			ItemStack output = this.getResult();
 			if (!result.isEmpty() && (output.isEmpty() || (output.isItemEqual(result) && output.getCount() + result.getCount() <= output.getMaxStackSize()))) {
 				List<BlockPos> alternators = this.getAlternatorPositions();
@@ -48,17 +49,18 @@ public class TileEnderCrafter extends TileEntityBase implements IExtendedTable, 
 						for (int i = 0; i < matrix.getSlots(); i++) {
 							this.matrix.extractItem(i, 1, false);
 						}
+						
 						this.updateResult(result);
 						this.progress = 0;
 					}
 					
-					markDirty();
+					this.markDirty();
 				}
 			} else {
 				if (this.progress > 0 || this.progressReq > 0) {
 					this.progress = 0;
 					this.progressReq = 0;
-					markDirty();
+					this.markDirty();
 				}
 			}
 		}
@@ -68,11 +70,13 @@ public class TileEnderCrafter extends TileEntityBase implements IExtendedTable, 
 	public NBTTagCompound writeToNBT(NBTTagCompound tag) {
 		tag = super.writeToNBT(tag);
 		tag.merge(this.matrix.serializeNBT());
+		
 		if (!this.getResult().isEmpty()) {
 			tag.setTag("Result", this.getResult().serializeNBT());
 		} else {
 			tag.removeTag("Result");
 		}
+		
 		tag.setInteger("Progress", this.progress);
 		tag.setInteger("ProgressReq", this.progressReq);
 		return tag;
@@ -82,16 +86,18 @@ public class TileEnderCrafter extends TileEntityBase implements IExtendedTable, 
 	public void readFromNBT(NBTTagCompound tag) {
 		super.readFromNBT(tag);
 		this.matrix.deserializeNBT(tag);
+		
 		if (tag.hasKey("Result")) {
 			this.result.setInventorySlotContents(0, new ItemStack(tag.getCompoundTag("Result")));
 		}
+		
 		this.progress = tag.getInteger("Progress");
 		this.progressReq = tag.getInteger("ProgressReq");
 	}
 	
 	@Override
 	public ItemStack getResult() {
-		return result.getStackInSlot(0);
+		return this.result.getStackInSlot(0);
 	}
 	
 	@Override
@@ -128,6 +134,7 @@ public class TileEnderCrafter extends TileEntityBase implements IExtendedTable, 
 				alternators.add(aoePos);
 			}
 		}
+		
 		return alternators;
 	}
 	
@@ -137,7 +144,9 @@ public class TileEnderCrafter extends TileEntityBase implements IExtendedTable, 
 	
 	private void progress(int alternators) {
 		this.progress++;
-		this.progressReq = Math.max(623 - alternators * 3, 20);
+		
+		int timeReq = 20 * ModConfig.confEnderTimeRequired;
+		this.progressReq = (int) Math.max(timeReq - (timeReq * (ModConfig.confEnderAlternatorEff * alternators)), 20);
 	}
 	
 	public int getProgressRequired() {

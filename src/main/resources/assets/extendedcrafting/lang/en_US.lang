@@ -1,5 +1,5 @@
 # CREATIVE TAB
-itemGroup.ec.extended_crafting=Extended Crafting
+itemGroup.extendedcrafting=Extended Crafting
 
 # BLOCKS
 tile.ec.storage_black_iron.name=Block of Black Iron

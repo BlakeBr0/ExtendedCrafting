@@ -24,19 +24,7 @@ public class BlockAutomationInterface extends BlockBase implements ITileEntityPr
 
 	public BlockAutomationInterface() {
 		super("ec.interface", Material.IRON, SoundType.METAL, 5.0F, 10.0F);
-		this.setCreativeTab(ExtendedCrafting.tabExtendedCrafting);
-	}
-	
-	@Override
-	public void breakBlock(World world, BlockPos pos, IBlockState state) {
-		TileAutomationInterface tile = (TileAutomationInterface) world.getTileEntity(pos);
-		if (tile != null) {
-			for (int i = 0; i < tile.getSizeInventory(); i++) {
-				ItemStack stack = tile.getStackInSlot(i);
-				this.spawnAsEntity(world, pos, stack);
-			}
-		}
-		super.breakBlock(world, pos, state);
+		this.setCreativeTab(ExtendedCrafting.CREATIVE_TAB);
 	}
 	
 	@Override
@@ -54,7 +42,21 @@ public class BlockAutomationInterface extends BlockBase implements ITileEntityPr
 				compressor.getEnergy().receiveEnergy(100000, false);
 			}
 		}
+		
 		return true;
+	}
+	
+	@Override
+	public void breakBlock(World world, BlockPos pos, IBlockState state) {
+		TileAutomationInterface tile = (TileAutomationInterface) world.getTileEntity(pos);
+		if (tile != null) {
+			for (int i = 0; i < tile.getSizeInventory(); i++) {
+				ItemStack stack = tile.getStackInSlot(i);
+				this.spawnAsEntity(world, pos, stack);
+			}
+		}
+		
+		super.breakBlock(world, pos, state);
 	}
 	
 	@Override

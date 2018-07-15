@@ -4,11 +4,9 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.blakebr0.cucumber.registry.ModRegistry;
-import com.blakebr0.extendedcrafting.block.ModBlocks;
 import com.blakebr0.extendedcrafting.proxy.CommonProxy;
 
 import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.Mod.Instance;
@@ -24,11 +22,12 @@ public class ExtendedCrafting {
 	public static final String NAME = "Extended Crafting";
 	public static final String VERSION = "${version}";
 	public static final String GUI_FACTORY = "com.blakebr0.extendedcrafting.config.GuiFactory";
-	public static final String DEPENDENCIES = "required-after:cucumber@[1.1.0,)";
+	public static final String DEPENDENCIES = "required-after:cucumber@[1.1.1,)";
 
 	public static final ModRegistry REGISTRY = ModRegistry.create(MOD_ID);
 	public static final Logger LOGGER = LogManager.getLogger(MOD_ID);
-	
+	public static final CreativeTabs CREATIVE_TAB = new ECCreativeTab();
+
 	public static final boolean DEBUG = false;
 
 	@SidedProxy(clientSide = "com.blakebr0.extendedcrafting.proxy.ClientProxy", serverSide = "com.blakebr0.extendedcrafting.proxy.ServerProxy")
@@ -36,13 +35,6 @@ public class ExtendedCrafting {
 
 	@Instance(ExtendedCrafting.MOD_ID)
 	public static ExtendedCrafting instance = new ExtendedCrafting();
-
-	public static CreativeTabs tabExtendedCrafting = new CreativeTabs("ec.extended_crafting") {
-		@Override
-		public ItemStack getTabIconItem() {
-			return new ItemStack(ModBlocks.blockCraftingCore);
-		}
-	};
 
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event) {

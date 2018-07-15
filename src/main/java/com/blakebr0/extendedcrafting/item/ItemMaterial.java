@@ -61,7 +61,7 @@ public class ItemMaterial extends ItemMeta {
 
 	public ItemMaterial() {
 		super("ec.material", ExtendedCrafting.REGISTRY);
-		this.setCreativeTab(ExtendedCrafting.tabExtendedCrafting);
+		this.setCreativeTab(ExtendedCrafting.CREATIVE_TAB);
 	}
 
 	@Override

@@ -17,7 +17,7 @@ public class ItemHandheldTable extends ItemBase implements IEnableable {
 
 	public ItemHandheldTable() {
 		super("ec.handheld_table");
-		this.setCreativeTab(ExtendedCrafting.tabExtendedCrafting);
+		this.setCreativeTab(ExtendedCrafting.CREATIVE_TAB);
 		this.setMaxStackSize(1);
 	}
 

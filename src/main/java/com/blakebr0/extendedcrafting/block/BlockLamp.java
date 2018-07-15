@@ -34,7 +34,7 @@ public class BlockLamp extends BlockBase implements IModelHelper {
 
 	public BlockLamp() {
 		super("ec.lamp", Material.IRON, SoundType.METAL, 5.0F, 10.0F);
-		this.setCreativeTab(ExtendedCrafting.tabExtendedCrafting);
+		this.setCreativeTab(ExtendedCrafting.CREATIVE_TAB);
 		this.setLightLevel(1.0F);
 	}
 

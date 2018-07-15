@@ -7,7 +7,7 @@ import com.blakebr0.extendedcrafting.lib.ModGuide;
 
 public class ModItems {
 	
-	public static ItemGuide itemGuide = new ItemGuide("extendedcrafting", ExtendedCrafting.tabExtendedCrafting, ModGuide.GUIDE);
+	public static ItemGuide itemGuide = new ItemGuide("extendedcrafting", ExtendedCrafting.CREATIVE_TAB, ModGuide.GUIDE);
 
 	public static ItemMaterial itemMaterial = new ItemMaterial();
 

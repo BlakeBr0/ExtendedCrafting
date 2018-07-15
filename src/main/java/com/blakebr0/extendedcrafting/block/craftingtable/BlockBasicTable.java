@@ -31,7 +31,7 @@ public class BlockBasicTable extends BlockBase implements ITileEntityProvider, I
 
 	public BlockBasicTable() {
 		super("ec.table_basic", Material.IRON, SoundType.METAL, 5.0F, 10.0F);
-		this.setCreativeTab(ExtendedCrafting.tabExtendedCrafting);
+		this.setCreativeTab(ExtendedCrafting.CREATIVE_TAB);
 	}
 
 	@Override
@@ -40,17 +40,16 @@ public class BlockBasicTable extends BlockBase implements ITileEntityProvider, I
 	}
 
 	@Override
-	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand,
-			EnumFacing side, float hitX, float hitY, float hitZ) {
+	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
 		if (world.isRemote) {
 			return true;
 		} else {
 			TileEntity tile = world.getTileEntity(pos);
 
 			if (tile instanceof TileBasicCraftingTable) {
-				player.openGui(ExtendedCrafting.instance, GuiHandler.BASIC_TABLE, world, pos.getX(), pos.getY(),
-						pos.getZ());
+				player.openGui(ExtendedCrafting.instance, GuiHandler.BASIC_TABLE, world, pos.getX(), pos.getY(), pos.getZ());
 			}
+			
 			return true;
 		}
 	}
@@ -64,6 +63,7 @@ public class BlockBasicTable extends BlockBase implements ITileEntityProvider, I
 				this.spawnAsEntity(world, pos, stack);
 			}
 		}
+		
 		super.breakBlock(world, pos, state);
 	}
 	

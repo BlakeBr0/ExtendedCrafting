@@ -27,7 +27,7 @@ public class BlockCraftingCore extends BlockBase implements ITileEntityProvider,
 
 	public BlockCraftingCore() {
 		super("ec.crafting_core", Material.IRON, SoundType.METAL, 5.0F, 10.0F);
-		this.setCreativeTab(ExtendedCrafting.tabExtendedCrafting);
+		this.setCreativeTab(ExtendedCrafting.CREATIVE_TAB);
 	}
 
 	@Override
@@ -59,6 +59,7 @@ public class BlockCraftingCore extends BlockBase implements ITileEntityProvider,
 				} 
 			} 
 		}
+		
 		return true;
 	}
 
@@ -69,6 +70,7 @@ public class BlockCraftingCore extends BlockBase implements ITileEntityProvider,
 			ItemStack stack = tile.getInventory().getStackInSlot(0);
 			this.spawnAsEntity(world, pos, stack);
 		}
+		
 		super.breakBlock(world, pos, state);
 	}
 

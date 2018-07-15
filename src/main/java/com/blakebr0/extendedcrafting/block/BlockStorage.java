@@ -32,10 +32,10 @@ public class BlockStorage extends BlockBase implements IModelHelper {
 
 	public BlockStorage() {
 		super("ec.storage", Material.IRON, SoundType.METAL, 5.0F, 10.0F);
-		this.setCreativeTab(ExtendedCrafting.tabExtendedCrafting);
+		this.setCreativeTab(ExtendedCrafting.CREATIVE_TAB);
 		this.setDefaultState(this.blockState.getBaseState().withProperty(VARIANT, Type.BLACK_IRON));
 	}
-
+	
 	@Override
 	public void init() {
 

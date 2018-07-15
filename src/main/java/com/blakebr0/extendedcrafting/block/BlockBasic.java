@@ -16,7 +16,7 @@ public class BlockBasic extends BlockBase {
 
 	public BlockBasic(String name, Material material, SoundType sound, float hardness, float resistance) {
 		super(name, material, sound, hardness, resistance);
-		this.setCreativeTab(ExtendedCrafting.tabExtendedCrafting);
+		this.setCreativeTab(ExtendedCrafting.CREATIVE_TAB);
 	}
 
 	@Override

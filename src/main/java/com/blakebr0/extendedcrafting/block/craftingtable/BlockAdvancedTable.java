@@ -31,7 +31,7 @@ public class BlockAdvancedTable extends BlockBase implements ITileEntityProvider
 
 	public BlockAdvancedTable() {
 		super("ec.table_advanced", Material.IRON, SoundType.METAL, 5.0F, 10.0F);
-		this.setCreativeTab(ExtendedCrafting.tabExtendedCrafting);
+		this.setCreativeTab(ExtendedCrafting.CREATIVE_TAB);
 	}
 
 	@Override
@@ -49,6 +49,7 @@ public class BlockAdvancedTable extends BlockBase implements ITileEntityProvider
 			if (tileentity instanceof TileAdvancedCraftingTable) {
 				player.openGui(ExtendedCrafting.instance, GuiHandler.ADVANCED_TABLE, world, pos.getX(), pos.getY(), pos.getZ());
 			}
+			
 			return true;
 		}
 	}
@@ -62,6 +63,7 @@ public class BlockAdvancedTable extends BlockBase implements ITileEntityProvider
 				this.spawnAsEntity(world, pos, stack);
 			}
 		}
+		
 		super.breakBlock(world, pos, state);
 	}
 	

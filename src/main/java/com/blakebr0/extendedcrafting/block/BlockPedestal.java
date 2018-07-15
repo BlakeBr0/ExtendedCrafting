@@ -31,7 +31,7 @@ public class BlockPedestal extends BlockBase implements ITileEntityProvider, IEn
 
 	public BlockPedestal() {
 		super("ec.pedestal", Material.IRON, SoundType.METAL, 5.0F, 10.0F);
-		this.setCreativeTab(ExtendedCrafting.tabExtendedCrafting);
+		this.setCreativeTab(ExtendedCrafting.CREATIVE_TAB);
 	}
 
 	@Override
@@ -55,6 +55,7 @@ public class BlockPedestal extends BlockBase implements ITileEntityProvider, IEn
 				}
 			}
 		}
+		
 		return true;
 	}
 
@@ -65,6 +66,7 @@ public class BlockPedestal extends BlockBase implements ITileEntityProvider, IEn
 			ItemStack stack = tile.getInventory().getStackInSlot(0);
 			this.spawnAsEntity(world, pos, stack);
 		}
+		
 		super.breakBlock(world, pos, state);
 	}
 

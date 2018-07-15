@@ -16,7 +16,7 @@ public class BlockFrame extends BlockBase {
 
 	public BlockFrame() {
 		super("ec.frame", Material.IRON, SoundType.METAL, 5.0F, 10.0F);
-		this.setCreativeTab(ExtendedCrafting.tabExtendedCrafting);
+		this.setCreativeTab(ExtendedCrafting.CREATIVE_TAB);
 	}
 
 	@Override

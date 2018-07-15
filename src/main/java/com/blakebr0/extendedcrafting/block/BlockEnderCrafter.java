@@ -23,7 +23,7 @@ public class BlockEnderCrafter extends BlockBase implements ITileEntityProvider,
 
 	public BlockEnderCrafter() {
 		super("ec.ender_crafter", Material.IRON, SoundType.METAL, 6.0F, 12.0F);
-		this.setCreativeTab(ExtendedCrafting.tabExtendedCrafting);
+		this.setCreativeTab(ExtendedCrafting.CREATIVE_TAB);
 	}
 	
 	@Override
@@ -31,6 +31,7 @@ public class BlockEnderCrafter extends BlockBase implements ITileEntityProvider,
 		if (!world.isRemote) {
 			player.openGui(ExtendedCrafting.instance, GuiHandler.ENDER_CRAFTER, world, pos.getX(), pos.getY(), pos.getZ());
 		}
+		
 		return true;
 	}
 
@@ -49,6 +50,7 @@ public class BlockEnderCrafter extends BlockBase implements ITileEntityProvider,
 			}
 			this.spawnAsEntity(world, pos, tile.getResult());
 		}
+		
 		super.breakBlock(world, pos, state);
 	}
 

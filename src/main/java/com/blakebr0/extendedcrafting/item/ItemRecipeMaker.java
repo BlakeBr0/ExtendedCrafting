@@ -41,7 +41,7 @@ public class ItemRecipeMaker extends ItemBase implements IEnableable {
 
 	public ItemRecipeMaker() {
 		super("ec.recipe_maker");
-		this.setCreativeTab(ExtendedCrafting.tabExtendedCrafting);
+		this.setCreativeTab(ExtendedCrafting.CREATIVE_TAB);
 		this.setMaxStackSize(1);
 		this.setHasSubtypes(true);
 		

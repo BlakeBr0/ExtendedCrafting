@@ -29,7 +29,7 @@ public class BlockTrimmed extends BlockBase implements IModelHelper {
 
 	public BlockTrimmed() {
 		super("ec.trimmed", Material.IRON, SoundType.METAL, 5.0F, 10.0F);
-		this.setCreativeTab(ExtendedCrafting.tabExtendedCrafting);
+		this.setCreativeTab(ExtendedCrafting.CREATIVE_TAB);
 		this.setDefaultState(this.blockState.getBaseState().withProperty(VARIANT, Type.IRON_TRIMMED));
 	}
 

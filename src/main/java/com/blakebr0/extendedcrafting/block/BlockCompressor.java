@@ -38,7 +38,7 @@ public class BlockCompressor extends BlockBase implements ITileEntityProvider, I
 
 	public BlockCompressor() {
 		super("ec.compressor", Material.IRON, SoundType.METAL, 5.0F, 10.0F);
-		this.setCreativeTab(ExtendedCrafting.tabExtendedCrafting);
+		this.setCreativeTab(ExtendedCrafting.CREATIVE_TAB);
 	}
 
 	@Override
@@ -51,6 +51,7 @@ public class BlockCompressor extends BlockBase implements ITileEntityProvider, I
 				compressor.getEnergy().receiveEnergy(100000, false);
 			} 
 		}
+		
 		return true;
 	}
 
@@ -63,6 +64,7 @@ public class BlockCompressor extends BlockBase implements ITileEntityProvider, I
 				this.spawnAsEntity(world, pos, stack);
 			}
 		}
+		
 		super.breakBlock(world, pos, state);
 	}
 

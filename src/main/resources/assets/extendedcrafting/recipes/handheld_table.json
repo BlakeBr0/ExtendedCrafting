@@ -1,11 +1,11 @@
 {
-  "type": "forge:ore_shaped",
   "conditions": [
      {
 	    "type": "minecraft:item_exists",
 		"item": "extendedcrafting:handheld_table"
 	 }
   ],
+  "type": "forge:ore_shaped",
   "pattern": [
 	" C",
 	"S "

@@ -3,14 +3,11 @@ package com.blakebr0.extendedcrafting.client.gui;
 import com.blakebr0.cucumber.helper.ResourceHelper;
 import com.blakebr0.cucumber.util.Utils;
 import com.blakebr0.extendedcrafting.ExtendedCrafting;
-import com.blakebr0.extendedcrafting.client.container.ContainerBasicTable;
 import com.blakebr0.extendedcrafting.client.container.ContainerEnderCrafter;
-import com.blakebr0.extendedcrafting.tile.TileBasicCraftingTable;
 import com.blakebr0.extendedcrafting.tile.TileEnderCrafter;
 
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.resources.I18n;
 import net.minecraft.util.ResourceLocation;
 
 public class GuiEnderCrafter extends GuiContainer {
@@ -40,8 +37,7 @@ public class GuiEnderCrafter extends GuiContainer {
 
 	@Override
 	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
-		String s = Utils.localize("container.ec.ender_crafter");
-		this.fontRenderer.drawString(s, this.xSize / 2 - this.fontRenderer.getStringWidth(s) / 2, 6, 4210752);
+		this.fontRenderer.drawString(Utils.localize("container.ec.ender_crafter"), 30, 6, 4210752);
 		this.fontRenderer.drawString(Utils.localize("container.inventory"), 8, this.ySize - 94, 4210752);
 	}
 

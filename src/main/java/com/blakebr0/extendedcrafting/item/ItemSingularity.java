@@ -128,7 +128,7 @@ public class ItemSingularity extends ItemMeta implements IEnableable {
 	}
 	
 	public void initRecipes() {
-		if (!ModConfig.confSingularityRecipes || !ModConfig.confSingularityEnabled) 
+		if (!ModConfig.confSingularityRecipes || !this.isEnabled()) 
 			return;
 		
 		for (Map.Entry<Integer, Object> obj : singularityMaterials.entrySet()) {
@@ -164,7 +164,7 @@ public class ItemSingularity extends ItemMeta implements IEnableable {
 	}
 	
 	public boolean checkConfig(String name) {
-		String[] values = config.get("singularity", "default_singularities", new String[0]).getStringList();
+		String[] values = this.config.get("singularity", "default_singularities", new String[0]).getStringList();
 		
 		for (int i = 0; i < values.length; i++) {
 			String[] entry = values[i].split("=");
@@ -177,7 +177,7 @@ public class ItemSingularity extends ItemMeta implements IEnableable {
 	}
 	
 	private void addToConfig(String name) {
-		Property prop = config.get("singularity", "default_singularities", new String[0]);
+		Property prop = this.config.get("singularity", "default_singularities", new String[0]);
 		String[] values = prop.getStringList();
 		if (!Arrays.stream(values).anyMatch(s -> s.split("=")[0].equals(name))) {
 			String[] newValues = new String[values.length + 1];

@@ -97,7 +97,7 @@ container.ec.table_advanced=Advanced Crafting
 container.ec.table_elite=Elite Crafting
 container.ec.table_ultimate=Ultimate Crafting
 container.ec.compressor=Quantum Compressor
-container.ec.ender_crafter=Ender Crafter
+container.ec.ender_crafter=Ender Crafting
 
 ec.ccore.pedestals=Pedestals: %s
 ec.ccore.rf_cost=RF Cost: %s

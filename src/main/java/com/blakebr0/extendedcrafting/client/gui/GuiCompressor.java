@@ -6,7 +6,6 @@ import java.util.Collections;
 import java.util.List;
 
 import com.blakebr0.cucumber.helper.ResourceHelper;
-import com.blakebr0.cucumber.helper.StackHelper;
 import com.blakebr0.cucumber.util.Utils;
 import com.blakebr0.extendedcrafting.ExtendedCrafting;
 import com.blakebr0.extendedcrafting.client.container.ContainerCompressor;
@@ -23,7 +22,6 @@ import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.text.translation.I18n;
 
 public class GuiCompressor extends GuiContainer {
 

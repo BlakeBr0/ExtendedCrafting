@@ -95,14 +95,14 @@ public class ModConfig {
 		category = "ender_crafting";
 		config.setCategoryComment(category, "Settings for the Ender Crafter.");
 		confEnderEnabled = config.getBoolean("enabled", category, true, "Should the Ender Crafter and Ender Alternator be enabled?");
-		confEnderTimeRequired = config.getInt("time_required", category, 60, 0, Integer.MAX_VALUE, "How many seconds each craft should take.");
+		confEnderTimeRequired = config.getInt("time_required", category, 60, 1, Integer.MAX_VALUE, "How many seconds each craft should take.");
 		confEnderAlternatorEff = config.getFloat("alternator_effectiveness", category, 0.01F, 0, 1, "How much an Ender Alternator should speed up a craft. This is the percentage of time_required.");
 		
 		category = "recipe_maker";
 		config.setCategoryComment(category, "Settings for the Recipe Maker.");
 		confRMEnabled = config.getBoolean("enabled", category, true, "Should the Recipe Maker be enabled?");
 		confRMOredict = config.getBoolean("use_oredictionary", category, true, "Should the Recipe Maker use OreDictionary entries when applicable?");
-		confRMNBT = config.getBoolean("use_nbt", category, false, "Should the Recipe maker also copy the NBT of the ingredients?");
+		confRMNBT = config.getBoolean("use_nbt", category, false, "Should the Recipe Maker also copy the NBT of the ingredients?");
 		
 		category = "singularity";
 		config.setCategoryComment(category, "Settings for the Singularities.");

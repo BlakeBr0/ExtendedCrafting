@@ -1,8 +1,6 @@
 package com.blakebr0.extendedcrafting.client.gui.automationinterface;
 
 import java.io.IOException;
-import java.util.Collections;
-import java.util.Locale;
 
 import com.blakebr0.cucumber.util.Utils;
 import com.blakebr0.extendedcrafting.util.InterfaceAutoChangePacket;
@@ -13,9 +11,6 @@ import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.inventory.Container;
-import net.minecraft.util.EnumFacing;
-import net.minecraftforge.items.ItemStackHandler;
 
 public class GuiInterfaceConfig extends GuiContainer {
 

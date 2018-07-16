@@ -62,12 +62,6 @@ public class ContainerUltimateTable extends Container {
 	}
 
 	@Override
-	public void onContainerClosed(EntityPlayer player) {
-		super.onContainerClosed(player);
-
-	}
-
-	@Override
 	public boolean canInteractWith(EntityPlayer player) {
 		return this.tile.isUseableByPlayer(player);
 	}
@@ -88,19 +82,15 @@ public class ContainerUltimateTable extends Container {
 				}
 
 				slot.onSlotChange(itemstack1, itemstack);
-			} else if (slotNumber >= 82 && slotNumber < 109) {
-				if (!this.mergeItemStack(itemstack1, 109, 118, false)) {
-					return ItemStack.EMPTY;
-				}
-			} else if (slotNumber >= 109 && slotNumber < 118) {
-				if (!this.mergeItemStack(itemstack1, 82, 109, false)) {
+			} else if (slotNumber >= 82 && slotNumber < 118) {
+				if (!this.mergeItemStack(itemstack1, 1, 82, false)) {
 					return ItemStack.EMPTY;
 				}
 			} else if (!this.mergeItemStack(itemstack1, 82, 118, false)) {
 				return ItemStack.EMPTY;
 			}
 
-			if (itemstack1.getCount() == 0) {
+			if (itemstack1.isEmpty()) {
 				slot.putStack(ItemStack.EMPTY);
 			} else {
 				slot.onSlotChanged();
@@ -111,7 +101,7 @@ public class ContainerUltimateTable extends Container {
 			}
 
 			slot.onTake(player, itemstack1);
-			this.onCraftMatrixChanged(matrix);
+			this.onCraftMatrixChanged(this.matrix);
 		}
 
 		return itemstack;

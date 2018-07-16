@@ -62,12 +62,6 @@ public class ContainerEliteTable extends Container {
 	}
 
 	@Override
-	public void onContainerClosed(EntityPlayer player) {
-		super.onContainerClosed(player);
-
-	}
-
-	@Override
 	public boolean canInteractWith(EntityPlayer player) {
 		return this.tile.isUseableByPlayer(player);
 	}
@@ -88,12 +82,8 @@ public class ContainerEliteTable extends Container {
 				}
 
 				slot.onSlotChange(itemstack1, itemstack);
-			} else if (slotNumber >= 50 && slotNumber < 77) {
-				if (!this.mergeItemStack(itemstack1, 77, 86, false)) {
-					return ItemStack.EMPTY;
-				}
-			} else if (slotNumber >= 77 && slotNumber < 86) {
-				if (!this.mergeItemStack(itemstack1, 50, 77, false)) {
+			} else if (slotNumber >= 50 && slotNumber < 86) {
+				if (!this.mergeItemStack(itemstack1, 1, 50, false)) {
 					return ItemStack.EMPTY;
 				}
 			} else if (!this.mergeItemStack(itemstack1, 50, 86, false)) {

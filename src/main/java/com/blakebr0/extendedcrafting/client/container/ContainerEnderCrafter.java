@@ -81,12 +81,8 @@ public class ContainerEnderCrafter extends Container {
 				}
 
 				slot.onSlotChange(itemstack1, itemstack);
-			} else if (slotNumber >= 10 && slotNumber < 37) {
-				if (!this.mergeItemStack(itemstack1, 37, 46, false)) {
-					return ItemStack.EMPTY;
-				}
-			} else if (slotNumber >= 37 && slotNumber < 46) {
-				if (!this.mergeItemStack(itemstack1, 10, 37, false)) {
+			} else if (slotNumber >= 10 && slotNumber < 46) {
+				if (!this.mergeItemStack(itemstack1, 1, 10, false)) {
 					return ItemStack.EMPTY;
 				}
 			} else if (!this.mergeItemStack(itemstack1, 10, 46, false)) {
@@ -104,7 +100,7 @@ public class ContainerEnderCrafter extends Container {
 			}
 
 			slot.onTake(player, itemstack1);
-			this.onCraftMatrixChanged(matrix);
+			this.onCraftMatrixChanged(this.matrix);
 		}
 
 		return itemstack;

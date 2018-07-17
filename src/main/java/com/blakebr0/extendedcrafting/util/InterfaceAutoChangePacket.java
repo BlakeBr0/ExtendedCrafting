@@ -19,8 +19,8 @@ public class InterfaceAutoChangePacket implements IMessage {
 		
 	}
 
-	public InterfaceAutoChangePacket(long pos, int mode) {
-		this.pos = pos;
+	public InterfaceAutoChangePacket(BlockPos pos, int mode) {
+		this.pos = pos.toLong();
 		this.mode = mode;
 	}
 

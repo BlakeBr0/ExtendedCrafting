@@ -62,6 +62,10 @@ public class GuiViewRecipe extends GuiContainer {
 		this.drawDefaultBackground();
 		super.drawScreen(mouseX, mouseY, partialTicks);
 		this.renderHoveredToolTip(mouseX, mouseY);
+		
+		if (this.back.isMouseOver()) {
+			this.drawHoveringText(this.back.displayString, mouseX, mouseY);
+		}
 	}
 	
 	@Override

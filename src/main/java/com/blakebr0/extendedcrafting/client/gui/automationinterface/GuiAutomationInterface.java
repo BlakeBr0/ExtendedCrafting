@@ -74,20 +74,20 @@ public class GuiAutomationInterface extends GuiContainer {
 	
 	@Override
 	protected void actionPerformed(GuiButton button) throws IOException {
-		if (button.id == 0) {
+		if (button == this.save) {
 			NetworkThingy.THINGY.sendToServer(new InterfaceRecipeChangePacket(this.tile.getPos().toLong(), 0));
 			this.save.enabled = false;
 			this.clear.enabled = true;
 			this.view.enabled = true;
-		} else if (button.id == 1) {
+		} else if (button == this.clear) {
 			NetworkThingy.THINGY.sendToServer(new InterfaceRecipeChangePacket(this.tile.getPos().toLong(), 1));
 			this.save.enabled = true;
 			this.clear.enabled = false;
 			this.view.enabled = false;
-		} else if (button.id == 5) {
+		} else if (button == this.view) {
 			Point size = this.getSizeForGrid();
 			this.mc.displayGuiScreen(new GuiViewRecipe(this, size.x, size.y, (int) Math.sqrt(this.tile.getRecipe().getSlots())));
-		} else if (button.id == 10) {
+		} else if (button == this.config) {
 			this.mc.displayGuiScreen(new GuiInterfaceConfig(this));
 		}
 	}

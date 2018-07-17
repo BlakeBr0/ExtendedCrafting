@@ -40,28 +40,29 @@ public class TileAutomationInterface extends TileEntity implements ITickable, IS
 	public int autoInsert = -1;
 	public int autoExtract = -1;
 	private boolean autoEject = false;
+	private boolean smartInsert = true;
 	private int ticks = 0;
 		
 	public IItemHandlerModifiable getInventory() {
-		return inventory;
+		return this.inventory;
 	}
 	
 	public ItemStackHandler getRecipe() {
-		return recipe;
+		return this.recipe;
 	}
 	
 	public ItemStack getResult() {
-		return result;
+		return this.result;
 	}
 	
 	public EnergyStorageCustom getEnergy() {
-		return energy;
+		return this.energy;
 	}
 	
 	@Override
 	public void update() {
 		boolean mark = false;
-		ticks++;
+		this.ticks++;
 		if (!this.getWorld().isRemote) {
 			ItemStack input = this.getInventory().getStackInSlot(0);
 			ItemStack output = this.getInventory().getStackInSlot(1);
@@ -72,12 +73,12 @@ public class TileAutomationInterface extends TileEntity implements ITickable, IS
 					}
 				}
 				
-				if (this.hasRecipe() && this.getEnergy().getEnergyStored() >= ModConfig.confInterfaceRFRate && ticks % 10 == 0) {
+				if (this.hasRecipe() && this.getEnergy().getEnergyStored() >= ModConfig.confInterfaceRFRate && this.ticks % 10 == 0) {
 					this.handleOutput(output);
 				}
 			}
 			
-			if (this.getInserterFace() != null && this.getEnergy().getEnergyStored() >= ModConfig.confInterfaceRFRate && ticks % 4 == 0) {
+			if (this.getInserterFace() != null && this.getEnergy().getEnergyStored() >= ModConfig.confInterfaceRFRate && this.ticks % 4 == 0) {
 				TileEntity tile = this.getWorld().getTileEntity(this.getPos().offset(this.getInserterFace()));
 				if (tile != null && tile.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, EnumFacing.DOWN)) {
 					IItemHandler handler = tile.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, EnumFacing.DOWN);
@@ -96,7 +97,7 @@ public class TileAutomationInterface extends TileEntity implements ITickable, IS
 				}
 			}
 			
-			if (this.getExtractorFace() != null && this.getEnergy().getEnergyStored() >= ModConfig.confInterfaceRFRate && ticks % 4 == 0) {
+			if (this.getExtractorFace() != null && this.getEnergy().getEnergyStored() >= ModConfig.confInterfaceRFRate && this.ticks % 4 == 0) {
 				TileEntity tile = this.getWorld().getTileEntity(this.getPos().offset(this.getExtractorFace()));
 				if (tile != null && tile.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, EnumFacing.UP)) {
 					IItemHandler handler = tile.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, EnumFacing.UP);
@@ -123,8 +124,8 @@ public class TileAutomationInterface extends TileEntity implements ITickable, IS
 			}
 		}
 		
-		if (ticks > 100) {
-			ticks = 0;
+		if (this.ticks > 100) {
+			this.ticks = 0;
 		}
 		
 		if (mark) {
@@ -217,10 +218,12 @@ public class TileAutomationInterface extends TileEntity implements ITickable, IS
 		for (int i = 0; i < matrix.getSlots(); i++) {
 			recipe.setStackInSlot(i, matrix.getStackInSlot(i).copy());
 		}
+		
 		ItemStack result = this.getTable().getResult();
 		if (result != null) {
 			this.result = result;
 		}
+		
 		this.setHasRecipe(true);
 		this.markDirty();
 	}
@@ -258,6 +261,7 @@ public class TileAutomationInterface extends TileEntity implements ITickable, IS
 				this.autoInsert++;
 			}
 		}
+		
 		this.markDirty();
 	}
 	
@@ -270,6 +274,7 @@ public class TileAutomationInterface extends TileEntity implements ITickable, IS
 				this.autoExtract++;
 			}
 		}
+		
 		this.markDirty();
 	}
 	
@@ -279,6 +284,15 @@ public class TileAutomationInterface extends TileEntity implements ITickable, IS
 	
 	public void toggleAutoEject() {
 		this.autoEject = !this.autoEject;
+		this.markDirty();
+	}
+	
+	public boolean getSmartInsert() {
+		return this.smartInsert;
+	}
+	
+	public void toggleSmartInsert() {
+		this.smartInsert = !this.smartInsert;
 		this.markDirty();
 	}
 		
@@ -294,6 +308,7 @@ public class TileAutomationInterface extends TileEntity implements ITickable, IS
 		tag.setInteger("AutoInsert", this.autoInsert);
 		tag.setInteger("AutoExtract", this.autoExtract);
 		tag.setBoolean("AutoEject", this.autoEject);
+		tag.setBoolean("SmartInsert", this.smartInsert);
 		return tag;
 	}
 	
@@ -308,11 +323,12 @@ public class TileAutomationInterface extends TileEntity implements ITickable, IS
 		this.autoInsert = tag.getInteger("AutoInsert");
 		this.autoExtract = tag.getInteger("AutoExtract");
 		this.autoEject = tag.getBoolean("AutoEject");
+		this.smartInsert = tag.getBoolean("SmartInsert");
 	}
 
 	@Override
 	public SPacketUpdateTileEntity getUpdatePacket() {
-		return new SPacketUpdateTileEntity(pos, -1, this.getUpdateTag());
+		return new SPacketUpdateTileEntity(this.getPos(), -1, this.getUpdateTag());
 	}
 
 	@Override
@@ -342,7 +358,7 @@ public class TileAutomationInterface extends TileEntity implements ITickable, IS
 		if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
 			return (T) new SidedInvWrapper(this, side);
 		} else if (capability == CapabilityEnergy.ENERGY) {
-			return CapabilityEnergy.ENERGY.cast(energy);
+			return CapabilityEnergy.ENERGY.cast(this.energy);
 		}
 		return super.getCapability(capability, side);
 	}
@@ -365,13 +381,13 @@ public class TileAutomationInterface extends TileEntity implements ITickable, IS
 
 	@Override
 	public int getSizeInventory() {
-		return inventory.getSlots();
+		return this.inventory.getSlots();
 	}
 
 	@Override
 	public boolean isEmpty() {
-		for (int i = 0; i < inventory.getSlots(); i++) {
-			if (!inventory.getStackInSlot(i).isEmpty()) {
+		for (int i = 0; i < this.inventory.getSlots(); i++) {
+			if (!this.inventory.getStackInSlot(i).isEmpty()) {
 				return false;
 			}
 		}
@@ -380,18 +396,18 @@ public class TileAutomationInterface extends TileEntity implements ITickable, IS
 
 	@Override
 	public ItemStack getStackInSlot(int index) {
-		return inventory.getStackInSlot(index);
+		return this.inventory.getStackInSlot(index);
 	}
 
 	@Override
 	public ItemStack decrStackSize(int index, int count) {
-		return index >= 0 && index < inventory.getSlots() && !inventory.getStackInSlot(index).isEmpty() && count > 0 ? inventory.getStackInSlot(index).splitStack(count) : ItemStack.EMPTY;
+		return index >= 0 && index < this.inventory.getSlots() && !this.inventory.getStackInSlot(index).isEmpty() && count > 0 ? this.inventory.getStackInSlot(index).splitStack(count) : ItemStack.EMPTY;
 	}
 
 	@Override
 	public ItemStack removeStackFromSlot(int index) {
 		if (index >= 0 && index < inventory.getSlots()) {
-			inventory.setStackInSlot(index, ItemStack.EMPTY);
+			this.inventory.setStackInSlot(index, ItemStack.EMPTY);
 			return ItemStack.EMPTY;
 		} else {
 			return ItemStack.EMPTY;

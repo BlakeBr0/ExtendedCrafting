@@ -66,7 +66,8 @@ public class TileAutomationInterface extends TileEntity implements ITickable, IS
 		if (!this.getWorld().isRemote) {
 			ItemStack input = this.getInventory().getStackInSlot(0);
 			ItemStack output = this.getInventory().getStackInSlot(1);
-			if (this.hasTable()) {
+			
+			if (this.hasTable()) { // TODO: auto eject doesnt work without a table
 				if (!input.isEmpty()) {
 					if (this.hasRecipe() && this.getEnergy().getEnergyStored() >= ModConfig.confInterfaceRFRate) {
 						this.handleInput(input);
@@ -85,8 +86,8 @@ public class TileAutomationInterface extends TileEntity implements ITickable, IS
 					for (int i = 0; i < handler.getSlots(); i++) {
 						ItemStack stack = handler.getStackInSlot(i);
 						if (!stack.isEmpty() && ((FakeRecipeHandler) this.getRecipe()).getStacks().stream().anyMatch(s -> s.isItemEqual(stack))) {
-							if (input.isEmpty() || (input.isItemEqual(stack) && input.getCount() < input.getMaxStackSize())) {
-								ItemStack toInsert = stack.copy(); toInsert.setCount(1);
+							ItemStack toInsert = StackHelper.withSize(stack.copy(), 1, false);
+							if (input.isEmpty() || (StackHelper.canCombineStacks(input, toInsert))) {
 								this.getInventory().insertItem(0, toInsert, false);
 								handler.extractItem(i, 1, false);
 								this.getEnergy().extractEnergy(ModConfig.confInterfaceRFRate, false);
@@ -104,8 +105,8 @@ public class TileAutomationInterface extends TileEntity implements ITickable, IS
 					for (int i = 0; i < handler.getSlots(); i++) {
 						ItemStack stack = handler.getStackInSlot(i);
 						if (!output.isEmpty()) {
-							if (stack.isEmpty() || (stack.isItemEqual(output) && stack.getCount() < stack.getMaxStackSize())) {
-								ItemStack toInsert = output.copy(); toInsert.setCount(1);
+							ItemStack toInsert = StackHelper.withSize(output.copy(), 1, false);
+							if (stack.isEmpty() || (StackHelper.canCombineStacks(stack, toInsert))) {
 								handler.insertItem(i, toInsert, false);
 								output.shrink(1);
 								this.getEnergy().extractEnergy(ModConfig.confInterfaceRFRate, false);
@@ -143,7 +144,7 @@ public class TileAutomationInterface extends TileEntity implements ITickable, IS
 		for (int i = 0; i < matrix.getSlots(); i++) {
 			ItemStack slot = matrix.getStackInSlot(i);
 			ItemStack recipeStack = recipe.getStackInSlot(i);
-			if ((slot.isEmpty() || slot.isItemEqual(input)) && input.isItemEqual(recipeStack) && ItemStack.areItemStacksEqual(slot, input)) {
+			if (((slot.isEmpty() || StackHelper.areStacksEqual(input, slot)) && StackHelper.areStacksEqual(input, recipeStack))) {
 				if (slot.isEmpty() || slot.getCount() < slot.getMaxStackSize()) {
 					if (slot.isEmpty()) {
 						slotToPut = i;
@@ -157,14 +158,13 @@ public class TileAutomationInterface extends TileEntity implements ITickable, IS
 		}
 		
 		ItemStack output = this.getInventory().getStackInSlot(1);
+		ItemStack toInsert = StackHelper.withSize(input.copy(), 1, false);
 		
 		if (slotToPut > -1) {
-			ItemStack toInsert = input.copy(); toInsert.setCount(1);
 			matrix.insertItem(slotToPut, toInsert, false);
 			input.shrink(1);
 			this.getEnergy().extractEnergy(ModConfig.confInterfaceRFRate, false);
-		} else if (this.getAutoEject() && (output.isEmpty() || (output.isItemEqual(input) && output.getCount() < output.getMaxStackSize()))) {
-			ItemStack toInsert = input.copy(); toInsert.setCount(1);
+		} else if (this.getAutoEject() && (output.isEmpty() || StackHelper.canCombineStacks(output, toInsert))) {
 			this.getInventory().insertItem(1, toInsert, false);
 			input.shrink(1);
 			this.getEnergy().extractEnergy(ModConfig.confInterfaceRFRate, false);
@@ -175,7 +175,7 @@ public class TileAutomationInterface extends TileEntity implements ITickable, IS
 		IExtendedTable table = this.getTable();
 		ItemStack result = table.getResult();
 		IItemHandlerModifiable matrix = table.getMatrix();
-		if (!result.isEmpty() && (output.isEmpty() || (output.isItemEqual(result) && ItemStack.areItemStackTagsEqual(output, result) && output.getCount() <= result.getMaxStackSize() - result.getCount()))) {				
+		if (!result.isEmpty() && (output.isEmpty() || StackHelper.canCombineStacks(output, result))) {				
 			if (this.getEnergy().getEnergyStored() >= ModConfig.confInterfaceRFRate) {
 				ItemStack toInsert = result.copy();
 				for (int i = 0; i < matrix.getSlots(); i++) {
@@ -188,6 +188,7 @@ public class TileAutomationInterface extends TileEntity implements ITickable, IS
 						}
 					}
 				}
+				
 				this.getInventory().insertItem(1, toInsert, false);
 				this.getEnergy().extractEnergy(ModConfig.confInterfaceRFRate, false);
 			}
@@ -360,6 +361,7 @@ public class TileAutomationInterface extends TileEntity implements ITickable, IS
 		} else if (capability == CapabilityEnergy.ENERGY) {
 			return CapabilityEnergy.ENERGY.cast(this.energy);
 		}
+		
 		return super.getCapability(capability, side);
 	}
 	

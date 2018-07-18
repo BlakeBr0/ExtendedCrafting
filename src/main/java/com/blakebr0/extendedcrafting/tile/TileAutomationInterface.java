@@ -66,17 +66,14 @@ public class TileAutomationInterface extends TileEntity implements ITickable, IS
 		if (!this.getWorld().isRemote) {
 			ItemStack input = this.getInventory().getStackInSlot(0);
 			ItemStack output = this.getInventory().getStackInSlot(1);
+			boolean hasTable = this.hasTable();
 			
-			if (this.hasTable()) { // TODO: auto eject doesnt work without a table
-				if (!input.isEmpty()) {
-					if (this.hasRecipe() && this.getEnergy().getEnergyStored() >= ModConfig.confInterfaceRFRate) {
-						this.handleInput(input);
-					}
-				}
-				
-				if (this.hasRecipe() && this.getEnergy().getEnergyStored() >= ModConfig.confInterfaceRFRate && this.ticks % 10 == 0) {
-					this.handleOutput(output);
-				}
+			if (!input.isEmpty() && this.getEnergy().getEnergyStored() >= ModConfig.confInterfaceRFRate) {
+				this.handleInput(input, hasTable && this.hasRecipe());
+			}
+			
+			if (hasTable && this.hasRecipe() && this.getEnergy().getEnergyStored() >= ModConfig.confInterfaceRFRate && this.ticks % 10 == 0) {
+				this.handleOutput(output);
 			}
 			
 			if (this.getInserterFace() != null && this.getEnergy().getEnergyStored() >= ModConfig.confInterfaceRFRate && this.ticks % 4 == 0) {
@@ -134,37 +131,40 @@ public class TileAutomationInterface extends TileEntity implements ITickable, IS
 		}
 	}
 	
-	private void handleInput(ItemStack input) {
-		IExtendedTable table = this.getTable();
-		IItemHandlerModifiable matrix = table.getMatrix();
-		ItemStackHandler recipe = this.getRecipe();
-		
+	private void handleInput(ItemStack input, boolean canInsert) {
+		ItemStack output = this.getInventory().getStackInSlot(1);
+		ItemStack toInsert = StackHelper.withSize(input.copy(), 1, false);
+		IItemHandlerModifiable matrix = null;
 		int slotToPut = -1;
-		ItemStack stackToPut = ItemStack.EMPTY;
-		for (int i = 0; i < matrix.getSlots(); i++) {
-			ItemStack slot = matrix.getStackInSlot(i);
-			ItemStack recipeStack = recipe.getStackInSlot(i);
-			if (((slot.isEmpty() || StackHelper.areStacksEqual(input, slot)) && StackHelper.areStacksEqual(input, recipeStack))) {
-				if (slot.isEmpty() || slot.getCount() < slot.getMaxStackSize()) {
-					if (slot.isEmpty()) {
-						slotToPut = i;
-						break;
-					} else if (stackToPut.isEmpty() || (!stackToPut.isEmpty() && slot.getCount() < stackToPut.getCount())) {
-						slotToPut = i;
-						stackToPut = slot.copy();
+
+		if (canInsert) {
+			IExtendedTable table = this.getTable();
+			ItemStackHandler recipe = this.getRecipe();
+			matrix = table.getMatrix();
+			
+			ItemStack stackToPut = ItemStack.EMPTY;
+			for (int i = 0; i < matrix.getSlots(); i++) {
+				ItemStack slot = matrix.getStackInSlot(i);
+				ItemStack recipeStack = recipe.getStackInSlot(i);
+				if (((slot.isEmpty() || StackHelper.areStacksEqual(input, slot)) && StackHelper.areStacksEqual(input, recipeStack))) {
+					if (slot.isEmpty() || slot.getCount() < slot.getMaxStackSize()) {
+						if (slot.isEmpty()) {
+							slotToPut = i;
+							break;
+						} else if (stackToPut.isEmpty() || (!stackToPut.isEmpty() && slot.getCount() < stackToPut.getCount())) {
+							slotToPut = i;
+							stackToPut = slot.copy();
+						}
 					}
 				}
 			}
 		}
 		
-		ItemStack output = this.getInventory().getStackInSlot(1);
-		ItemStack toInsert = StackHelper.withSize(input.copy(), 1, false);
-		
-		if (slotToPut > -1) {
-			matrix.insertItem(slotToPut, toInsert, false);
-			input.shrink(1);
-			this.getEnergy().extractEnergy(ModConfig.confInterfaceRFRate, false);
-		} else if (this.getAutoEject() && (output.isEmpty() || StackHelper.canCombineStacks(output, toInsert))) {
+		if (matrix != null && slotToPut > -1) {
+			matrix.insertItem(slotToPut, toInsert, false); 
+			input.shrink(1); 
+			this.getEnergy().extractEnergy(ModConfig.confInterfaceRFRate, false); 
+		} else if (this.getAutoEject() && (output.isEmpty() || StackHelper.canCombineStacks(output, toInsert))) { 
 			this.getInventory().insertItem(1, toInsert, false);
 			input.shrink(1);
 			this.getEnergy().extractEnergy(ModConfig.confInterfaceRFRate, false);
@@ -492,7 +492,7 @@ public class TileAutomationInterface extends TileEntity implements ITickable, IS
 	}
 
 	@Override
-	public boolean canInsertItem(int index, ItemStack itemStackIn, EnumFacing direction) {
+	public boolean canInsertItem(int index, ItemStack stack, EnumFacing direction) {
 		return index == 0;
 	}
 

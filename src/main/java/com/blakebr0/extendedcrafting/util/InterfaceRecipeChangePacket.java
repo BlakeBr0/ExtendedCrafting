@@ -48,12 +48,10 @@ public class InterfaceRecipeChangePacket implements IMessage {
 			TileEntity tile = ctx.getServerHandler().player.world.getTileEntity(BlockPos.fromLong(message.pos));
 			if (tile instanceof TileAutomationInterface) {
 				TileAutomationInterface machine = (TileAutomationInterface) tile;
-				if (machine.hasTable()) {
-					if (message.mode == 0) {
-						machine.saveRecipe();
-					} else if (message.mode == 1) {
-						machine.clearRecipe();
-					}
+				if (message.mode == 0 && machine.hasTable()) {
+					machine.saveRecipe();
+				} else if (message.mode == 1) {
+					machine.clearRecipe();
 				}
 			}
 		}

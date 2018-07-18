@@ -48,6 +48,7 @@ public class ModGuide {
 				     .setIconStack(new ItemStack(ModBlocks.blockAutomationInterface))
 				     .addPageText()
 				     .addPageText()
+				     .addPageText()
 				     .addPageText();
 			}
 

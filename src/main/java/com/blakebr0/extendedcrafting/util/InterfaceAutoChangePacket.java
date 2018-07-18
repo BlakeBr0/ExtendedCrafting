@@ -54,6 +54,8 @@ public class InterfaceAutoChangePacket implements IMessage {
 					machine.switchExtractor();
 				} else if (message.mode == 2) {
 					machine.toggleAutoEject();
+				} else if (message.mode == 3) {
+					machine.toggleSmartInsert();
 				}
 			}
 		}

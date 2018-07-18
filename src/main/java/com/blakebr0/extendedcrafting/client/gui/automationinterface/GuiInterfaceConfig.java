@@ -95,6 +95,7 @@ public class GuiInterfaceConfig extends GuiContainer {
 			this.eject.on = !this.eject.on;
 			this.eject.tooltip = this.getButtonTooltip(this.eject);
 		} else if (button == this.smart) {
+			NetworkThingy.THINGY.sendToServer(new InterfaceAutoChangePacket(this.tile.getPos(), 3));
 			this.smart.on = !this.smart.on;
 			this.smart.tooltip = this.getButtonTooltip(this.smart);
 		}
@@ -142,8 +143,13 @@ public class GuiInterfaceConfig extends GuiContainer {
 				list.add(button.displayString + " -> " + Colors.YELLOW + facing.getName().toUpperCase(Locale.ROOT));
 			}
 			
-			if (button == this.insert) list.add(Colors.GRAY + Utils.localize("ec.interface.insert_desc"));
-			if (button == this.extract) list.add(Colors.GRAY + Utils.localize("ec.interface.extract_desc"));
+			if (button == this.insert) {
+				list.addAll(this.fontRenderer.listFormattedStringToWidth(Colors.GRAY + Utils.localize("ec.interface.insert_desc"), 200));
+			}
+			
+			if (button == this.extract) {
+				list.addAll(this.fontRenderer.listFormattedStringToWidth(Colors.GRAY + Utils.localize("ec.interface.extract_desc"), 200));
+			}
 		} else if (button instanceof CheckboxButton) {
 			if (((CheckboxButton) button).on) {
 				list.add(button.displayString + " -> " + (Colors.GREEN + Utils.localize("ec.interface.on")));
@@ -151,8 +157,13 @@ public class GuiInterfaceConfig extends GuiContainer {
 				list.add(button.displayString + " -> " + (Colors.RED + Utils.localize("ec.interface.off")));
 			}
 			
-			if (button == this.eject) list.add(Colors.GRAY + Utils.localize("ec.interface.eject_desc"));
-			if (button == this.smart) list.add(Colors.GRAY + Utils.localize("ec.interface.smart_desc"));
+			if (button == this.eject) {
+				list.addAll(this.fontRenderer.listFormattedStringToWidth(Colors.GRAY + Utils.localize("ec.interface.eject_desc"), 200));
+			}
+			
+			if (button == this.smart) {
+				list.addAll(this.fontRenderer.listFormattedStringToWidth(Colors.GRAY + Utils.localize("ec.interface.smart_desc"), 200));
+			}
 		}
 		
 		return list;

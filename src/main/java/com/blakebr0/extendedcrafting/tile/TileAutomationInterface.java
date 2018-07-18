@@ -408,7 +408,7 @@ public class TileAutomationInterface extends TileEntity implements ITickable, IS
 
 	@Override
 	public ItemStack removeStackFromSlot(int index) {
-		if (index >= 0 && index < inventory.getSlots()) {
+		if (index >= 0 && index < this.inventory.getSlots()) {
 			this.inventory.setStackInSlot(index, ItemStack.EMPTY);
 			return ItemStack.EMPTY;
 		} else {

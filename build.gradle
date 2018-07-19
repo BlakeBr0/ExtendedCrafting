@@ -10,10 +10,9 @@ buildscript {
 apply plugin: 'net.minecraftforge.gradle.forge'
 //Only edit below this line, the above code adds and enables the necessary things for Forge to be setup.
 
-
-version = "1.3.7"
+version = "1.4.0"
 group = "com.blakebr0.extendedcrafting"
-archivesBaseName = "extendedcrafting-1.12.2"
+archivesBaseName = "ExtendedCrafting-1.12.2"
 
 sourceCompatibility = targetCompatibility = '1.8' // Need this here so eclipse task generates correctly.
 compileJava {

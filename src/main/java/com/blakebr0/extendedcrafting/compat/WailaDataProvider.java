@@ -10,6 +10,10 @@ import com.blakebr0.extendedcrafting.block.BlockEnderCrafter;
 import com.blakebr0.extendedcrafting.block.BlockLamp;
 import com.blakebr0.extendedcrafting.block.BlockPedestal;
 import com.blakebr0.extendedcrafting.block.BlockTrimmed;
+import com.blakebr0.extendedcrafting.block.craftingtable.BlockAdvancedTable;
+import com.blakebr0.extendedcrafting.block.craftingtable.BlockBasicTable;
+import com.blakebr0.extendedcrafting.block.craftingtable.BlockEliteTable;
+import com.blakebr0.extendedcrafting.block.craftingtable.BlockUltimateTable;
 import com.blakebr0.extendedcrafting.tile.TileAutomationInterface;
 import com.blakebr0.extendedcrafting.tile.TileCompressor;
 import com.blakebr0.extendedcrafting.tile.TileCraftingCore;
@@ -33,6 +37,10 @@ public class WailaDataProvider implements IWailaDataProvider {
 	public static void callbackRegister(IWailaRegistrar registrar) {
 		registrar.registerBodyProvider(new WailaDataProvider(), BlockLamp.class);
 		registrar.registerBodyProvider(new WailaDataProvider(), BlockTrimmed.class);
+		registrar.registerBodyProvider(new WailaDataProvider(), BlockBasicTable.class);
+		registrar.registerBodyProvider(new WailaDataProvider(), BlockAdvancedTable.class);
+		registrar.registerBodyProvider(new WailaDataProvider(), BlockEliteTable.class);
+		registrar.registerBodyProvider(new WailaDataProvider(), BlockUltimateTable.class);
 		registrar.registerBodyProvider(new WailaDataProvider(), BlockPedestal.class);
 		registrar.registerBodyProvider(new WailaDataProvider(), BlockCraftingCore.class);
 		registrar.registerBodyProvider(new WailaDataProvider(), BlockAutomationInterface.class);
@@ -70,6 +78,11 @@ public class WailaDataProvider implements IWailaDataProvider {
 			TileCraftingCore core = (TileCraftingCore) tile;
 			tooltip.add(Utils.format(core.getEnergy().getEnergyStored()) + " FE");
 		}
+		
+		if (block instanceof BlockBasicTable) tooltip.add(Utils.localize("tooltip.ec.tier", 1));
+		if (block instanceof BlockAdvancedTable) tooltip.add(Utils.localize("tooltip.ec.tier", 2));
+		if (block instanceof BlockEliteTable) tooltip.add(Utils.localize("tooltip.ec.tier", 3));
+		if (block instanceof BlockUltimateTable) tooltip.add(Utils.localize("tooltip.ec.tier", 4));
 		
 		if (block instanceof BlockAutomationInterface && tile instanceof TileAutomationInterface && !tile.isInvalid()) {
 			TileAutomationInterface auto = (TileAutomationInterface) tile;

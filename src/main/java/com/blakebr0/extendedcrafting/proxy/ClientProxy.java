@@ -1,5 +1,6 @@
 package com.blakebr0.extendedcrafting.proxy;
 
+import com.blakebr0.extendedcrafting.config.ModConfig;
 import com.blakebr0.extendedcrafting.item.ItemSingularity;
 import com.blakebr0.extendedcrafting.item.ItemSingularityCustom;
 import com.blakebr0.extendedcrafting.item.ModItems;
@@ -21,10 +22,13 @@ public class ClientProxy extends CommonProxy {
 	public void init(FMLInitializationEvent event) {
 		super.init(event);
 		ModRenders.init();
-		Minecraft.getMinecraft().getItemColors().registerItemColorHandler(new ItemSingularity.ColorHandler(),
-				ModItems.itemSingularity);
-		Minecraft.getMinecraft().getItemColors().registerItemColorHandler(new ItemSingularityCustom.ColorHandler(),
-				ModItems.itemSingularityCustom);
+		
+		if (ModConfig.confSingularityEnabled) {
+			Minecraft.getMinecraft().getItemColors().registerItemColorHandler(new ItemSingularity.ColorHandler(),
+					ModItems.itemSingularity);
+			Minecraft.getMinecraft().getItemColors().registerItemColorHandler(new ItemSingularityCustom.ColorHandler(),
+					ModItems.itemSingularityCustom);
+		}
 	}
 
 	@Override

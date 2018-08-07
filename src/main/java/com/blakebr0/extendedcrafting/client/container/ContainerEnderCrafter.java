@@ -3,12 +3,6 @@ package com.blakebr0.extendedcrafting.client.container;
 import javax.annotation.Nullable;
 
 import com.blakebr0.extendedcrafting.crafting.endercrafter.EnderCraftResult;
-import com.blakebr0.extendedcrafting.crafting.table.TableRecipeManager;
-import com.blakebr0.extendedcrafting.crafting.table.basic.BasicCraftResult;
-import com.blakebr0.extendedcrafting.crafting.table.basic.BasicCrafting;
-import com.blakebr0.extendedcrafting.crafting.table.basic.BasicResultHandler;
-import com.blakebr0.extendedcrafting.crafting.table.basic.BasicStackHandler;
-import com.blakebr0.extendedcrafting.tile.TileBasicCraftingTable;
 import com.blakebr0.extendedcrafting.tile.TileEnderCrafter;
 
 import net.minecraft.entity.player.EntityPlayer;
@@ -20,7 +14,6 @@ import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import net.minecraftforge.items.IItemHandler;
-import net.minecraftforge.items.ItemStackHandler;
 import net.minecraftforge.items.SlotItemHandler;
 
 public class ContainerEnderCrafter extends Container {
@@ -45,7 +38,7 @@ public class ContainerEnderCrafter extends Container {
 
 		for (wy = 0; wy < 3; ++wy) {
 			for (ex = 0; ex < 3; ++ex) {
-				this.addSlotToContainer(new SlotItemHandler(handler, ex + wy * 3, 30 + ex * 18, 18 + wy * 18));
+				this.addSlotToContainer(new SlotItemHandler(this.handler, ex + wy * 3, 30 + ex * 18, 18 + wy * 18));
 			}
 		}
 

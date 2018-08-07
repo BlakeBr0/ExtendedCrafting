@@ -2,11 +2,11 @@ package com.blakebr0.extendedcrafting.client.container;
 
 import javax.annotation.Nullable;
 
+import com.blakebr0.extendedcrafting.crafting.table.TableCraftResult;
+import com.blakebr0.extendedcrafting.crafting.table.TableCrafting;
 import com.blakebr0.extendedcrafting.crafting.table.TableRecipeManager;
-import com.blakebr0.extendedcrafting.crafting.table.basic.BasicCraftResult;
-import com.blakebr0.extendedcrafting.crafting.table.basic.BasicCrafting;
-import com.blakebr0.extendedcrafting.crafting.table.basic.BasicResultHandler;
-import com.blakebr0.extendedcrafting.crafting.table.basic.BasicStackHandler;
+import com.blakebr0.extendedcrafting.crafting.table.TableResultHandler;
+import com.blakebr0.extendedcrafting.crafting.table.TableStackHandler;
 import com.blakebr0.extendedcrafting.tile.TileBasicCraftingTable;
 
 import net.minecraft.entity.player.EntityPlayer;
@@ -24,21 +24,21 @@ public class ContainerBasicTable extends Container {
 
 	public InventoryCrafting matrix;
 	public IInventory result;
-	private TileBasicCraftingTable tile;
-	private IItemHandler handler;
+	public TileBasicCraftingTable tile;
+	public IItemHandler handler;
 
 	public ContainerBasicTable(InventoryPlayer player, TileBasicCraftingTable tile, World world) {
 		this.tile = tile;
 		this.handler = tile.matrix;
-		this.matrix = new BasicCrafting(this, tile);
-		this.result = new BasicCraftResult(tile);
-		this.addSlotToContainer(new BasicResultHandler(player.player, this.matrix, this.result, 0, 124, 36));
-		int wy;
-		int ex;
-
+		this.matrix = new TableCrafting(this, tile);
+		this.result = new TableCraftResult(tile);
+		
+		this.addSlotToContainer(new TableResultHandler(this.matrix, this.result, 0, 124, 36));
+		
+		int wy, ex;
 		for (wy = 0; wy < 3; ++wy) {
 			for (ex = 0; ex < 3; ++ex) {
-				this.addSlotToContainer(new SlotItemHandler(handler, ex + wy * 3, 32 + ex * 18, 18 + wy * 18));
+				this.addSlotToContainer(new SlotItemHandler(this.handler, ex + wy * 3, 32 + ex * 18, 18 + wy * 18));
 			}
 		}
 
@@ -53,7 +53,7 @@ public class ContainerBasicTable extends Container {
 		}
 
 		this.onCraftMatrixChanged(this.matrix);
-		((BasicStackHandler) handler).crafting = matrix;
+		((TableStackHandler) this.handler).crafting = this.matrix;
 	}
 
 	public void onCraftMatrixChanged(IInventory matrix) {

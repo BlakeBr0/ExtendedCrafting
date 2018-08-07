@@ -7,4 +7,7 @@ public interface IExtendedTable {
 	
 	IItemHandlerModifiable getMatrix();
 	ItemStack getResult();
+	void setResult(ItemStack stack);
+	void setInventorySlotContents(int slot, ItemStack stack);
+	int getLineSize();
 }

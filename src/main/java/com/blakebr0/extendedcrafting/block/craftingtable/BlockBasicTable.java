@@ -3,7 +3,6 @@ package com.blakebr0.extendedcrafting.block.craftingtable;
 import java.util.List;
 
 import com.blakebr0.cucumber.block.BlockBase;
-import com.blakebr0.cucumber.helper.StackHelper;
 import com.blakebr0.cucumber.iface.IEnableable;
 import com.blakebr0.cucumber.util.Utils;
 import com.blakebr0.extendedcrafting.ExtendedCrafting;
@@ -17,7 +16,6 @@ import net.minecraft.block.material.Material;
 import net.minecraft.block.state.BlockFaceShape;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -26,6 +24,7 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import net.minecraftforge.items.IItemHandlerModifiable;
 
 public class BlockBasicTable extends BlockBase implements ITileEntityProvider, IEnableable {
 
@@ -58,8 +57,9 @@ public class BlockBasicTable extends BlockBase implements ITileEntityProvider, I
 	public void breakBlock(World world, BlockPos pos, IBlockState state) {
 		TileBasicCraftingTable tile = (TileBasicCraftingTable) world.getTileEntity(pos);
 		if (tile != null) {
-			for (int i = 0; i < tile.matrix.getSlots(); i++) {
-				ItemStack stack = tile.matrix.getStackInSlot(i);
+			IItemHandlerModifiable matrix = tile.getMatrix();
+			for (int i = 0; i < matrix.getSlots(); i++) {
+				ItemStack stack = matrix.getStackInSlot(i);
 				this.spawnAsEntity(world, pos, stack);
 			}
 		}

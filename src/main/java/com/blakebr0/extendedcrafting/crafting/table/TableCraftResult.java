@@ -1,16 +1,15 @@
 package com.blakebr0.extendedcrafting.crafting.table;
 
-import com.blakebr0.cucumber.helper.StackHelper;
-import com.blakebr0.extendedcrafting.tile.TileAdvancedCraftingTable;
+import com.blakebr0.extendedcrafting.lib.IExtendedTable;
 
 import net.minecraft.inventory.InventoryCraftResult;
 import net.minecraft.item.ItemStack;
 
-public class TableCraftingCraftResult extends InventoryCraftResult {
+public class TableCraftResult extends InventoryCraftResult {
 
-	private TileAdvancedCraftingTable tile;
+	private IExtendedTable tile;
 
-	public TableCraftingCraftResult(TileAdvancedCraftingTable tile) {
+	public TableCraftResult(IExtendedTable tile) {
 		this.tile = tile;
 	}
 
@@ -22,7 +21,7 @@ public class TableCraftingCraftResult extends InventoryCraftResult {
 	@Override
 	public ItemStack decrStackSize(int slot, int decrement) {
 		ItemStack stack = this.tile.getResult();
-		if (!StackHelper.isNull(stack)) {
+		if (!stack.isEmpty()) {
 			ItemStack resultStack = stack;
 			this.tile.setResult(ItemStack.EMPTY);
 			return resultStack;

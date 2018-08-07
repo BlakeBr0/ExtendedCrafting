@@ -2,11 +2,11 @@ package com.blakebr0.extendedcrafting.client.container;
 
 import javax.annotation.Nullable;
 
-import com.blakebr0.extendedcrafting.crafting.table.TableCraftResultHandler;
-import com.blakebr0.extendedcrafting.crafting.table.TableCraftingCraftResult;
-import com.blakebr0.extendedcrafting.crafting.table.TableCraftingStackHandler;
+import com.blakebr0.extendedcrafting.crafting.table.TableCraftResult;
+import com.blakebr0.extendedcrafting.crafting.table.TableCrafting;
 import com.blakebr0.extendedcrafting.crafting.table.TableRecipeManager;
-import com.blakebr0.extendedcrafting.crafting.table.advanced.AdvancedCrafting;
+import com.blakebr0.extendedcrafting.crafting.table.TableResultHandler;
+import com.blakebr0.extendedcrafting.crafting.table.TableStackHandler;
 import com.blakebr0.extendedcrafting.tile.TileAdvancedCraftingTable;
 
 import net.minecraft.entity.player.EntityPlayer;
@@ -30,15 +30,15 @@ public class ContainerAdvancedTable extends Container {
 	public ContainerAdvancedTable(InventoryPlayer player, TileAdvancedCraftingTable tile, World world) {
 		this.tile = tile;
 		this.handler = tile.matrix;
-		this.matrix = new AdvancedCrafting(this, tile);
-		this.result = new TableCraftingCraftResult(tile);
-		this.addSlotToContainer(new TableCraftResultHandler(player.player, this.matrix, this.result, 0, 142, 53));
-		int wy;
-		int ex;
-
+		this.matrix = new TableCrafting(this, tile);
+		this.result = new TableCraftResult(tile);
+		
+		this.addSlotToContainer(new TableResultHandler(this.matrix, this.result, 0, 142, 53));
+		
+		int wy, ex;
 		for (wy = 0; wy < 5; ++wy) {
 			for (ex = 0; ex < 5; ++ex) {
-				this.addSlotToContainer(new SlotItemHandler(handler, ex + wy * 5, 14 + ex * 18, 18 + wy * 18));
+				this.addSlotToContainer(new SlotItemHandler(this.handler, ex + wy * 5, 14 + ex * 18, 18 + wy * 18));
 			}
 		}
 
@@ -53,7 +53,7 @@ public class ContainerAdvancedTable extends Container {
 		}
 
 		this.onCraftMatrixChanged(this.matrix);
-		((TableCraftingStackHandler) handler).crafting = matrix;
+		((TableStackHandler) this.handler).crafting = this.matrix;
 	}
 
 	public void onCraftMatrixChanged(IInventory matrix) {

@@ -1,9 +1,6 @@
 package com.blakebr0.extendedcrafting.crafting.table;
 
-import javax.annotation.Nullable;
-
 import com.blakebr0.cucumber.helper.StackHelper;
-import com.blakebr0.extendedcrafting.crafting.table.advanced.AdvancedCrafting;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
@@ -12,21 +9,19 @@ import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.items.ItemStackHandler;
 
-public class TableCraftResultHandler extends Slot {
+public class TableResultHandler extends Slot {
 
-	private final AdvancedCrafting crafting;
-	private final EntityPlayer player;
+	private final TableCrafting crafting;
 	private final ItemStackHandler matrix;
 
-	public TableCraftResultHandler(EntityPlayer player, InventoryCrafting craftingInventory, IInventory inventory, int slot, int x, int y) {
+	public TableResultHandler(InventoryCrafting crafting, IInventory inventory, int slot, int x, int y) {
 		super(inventory, slot, x, y);
-		this.crafting = (AdvancedCrafting) craftingInventory;
-		this.player = player;
-		this.matrix = ((AdvancedCrafting) craftingInventory).tile.matrix;
+		this.crafting = (TableCrafting) crafting;
+		this.matrix = (ItemStackHandler) ((TableCrafting) crafting).tile.getMatrix();
 	}
 
 	@Override
-	public boolean isItemValid(@Nullable ItemStack stack) {
+	public boolean isItemValid(ItemStack stack) {
 		return false;
 	}
 
@@ -34,7 +29,7 @@ public class TableCraftResultHandler extends Slot {
 	public ItemStack onTake(EntityPlayer player, ItemStack stack) {
 		for (int i = 0; i < this.matrix.getSlots(); i++) {
 			ItemStack slotStack = this.matrix.getStackInSlot(i);
-			if (!StackHelper.isNull(slotStack)) {
+			if (!slotStack.isEmpty()) {
 				if (slotStack.getItem().hasContainerItem(slotStack) && slotStack.getCount() == 1) {
 					this.matrix.setStackInSlot(i, slotStack.getItem().getContainerItem(slotStack));
 				} else {
@@ -42,6 +37,7 @@ public class TableCraftResultHandler extends Slot {
 				}
 			}
 		}
+		
 		this.crafting.container.onCraftMatrixChanged(this.crafting);
 		return stack;
 	}

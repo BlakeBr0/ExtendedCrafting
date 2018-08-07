@@ -2,11 +2,11 @@ package com.blakebr0.extendedcrafting.client.container;
 
 import javax.annotation.Nullable;
 
+import com.blakebr0.extendedcrafting.crafting.table.TableCraftResult;
+import com.blakebr0.extendedcrafting.crafting.table.TableCrafting;
 import com.blakebr0.extendedcrafting.crafting.table.TableRecipeManager;
-import com.blakebr0.extendedcrafting.crafting.table.elite.EliteCraftResult;
-import com.blakebr0.extendedcrafting.crafting.table.elite.EliteCrafting;
-import com.blakebr0.extendedcrafting.crafting.table.elite.EliteResultHandler;
-import com.blakebr0.extendedcrafting.crafting.table.elite.EliteStackHandler;
+import com.blakebr0.extendedcrafting.crafting.table.TableResultHandler;
+import com.blakebr0.extendedcrafting.crafting.table.TableStackHandler;
 import com.blakebr0.extendedcrafting.tile.TileEliteCraftingTable;
 
 import net.minecraft.entity.player.EntityPlayer;
@@ -30,15 +30,15 @@ public class ContainerEliteTable extends Container {
 	public ContainerEliteTable(InventoryPlayer player, TileEliteCraftingTable tile, World world) {
 		this.tile = tile;
 		this.handler = tile.matrix;
-		this.matrix = new EliteCrafting(this, tile);
-		this.result = new EliteCraftResult(tile);
-		this.addSlotToContainer(new EliteResultHandler(player.player, this.matrix, this.result, 0, 172, 71));
-		int wy;
-		int ex;
-
+		this.matrix = new TableCrafting(this, tile);
+		this.result = new TableCraftResult(tile);
+		
+		this.addSlotToContainer(new TableResultHandler(this.matrix, this.result, 0, 172, 71));
+		
+		int wy, ex;
 		for (wy = 0; wy < 7; ++wy) {
 			for (ex = 0; ex < 7; ++ex) {
-				this.addSlotToContainer(new SlotItemHandler(handler, ex + wy * 7, 8 + ex * 18, 18 + wy * 18));
+				this.addSlotToContainer(new SlotItemHandler(this.handler, ex + wy * 7, 8 + ex * 18, 18 + wy * 18));
 			}
 		}
 
@@ -53,7 +53,7 @@ public class ContainerEliteTable extends Container {
 		}
 
 		this.onCraftMatrixChanged(this.matrix);
-		((EliteStackHandler) handler).crafting = matrix;
+		((TableStackHandler) this.handler).crafting = this.matrix;
 	}
 
 	public void onCraftMatrixChanged(IInventory matrix) {

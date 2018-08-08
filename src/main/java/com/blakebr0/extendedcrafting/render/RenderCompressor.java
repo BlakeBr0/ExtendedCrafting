@@ -2,6 +2,7 @@ package com.blakebr0.extendedcrafting.render;
 
 import com.blakebr0.cucumber.render.GhostItemRenderer;
 import com.blakebr0.extendedcrafting.block.ModBlocks;
+import com.blakebr0.extendedcrafting.config.ModConfig;
 import com.blakebr0.extendedcrafting.tile.TileCompressor;
 
 import net.minecraft.block.state.IBlockState;
@@ -19,11 +20,12 @@ public class RenderCompressor extends TileEntitySpecialRenderer<TileCompressor> 
 
 	@Override
 	public void render(TileCompressor tile, double x, double y, double z, float partialTick, int destroyStage, float alpha) {
+		if (!ModConfig.confCompressorRenderer) return;
+		
 		IBlockState state = tile.getWorld().getBlockState(tile.getPos());
 
-		if (state == null || state.getBlock() != ModBlocks.blockCompressor) {
+		if (state == null || state.getBlock() != ModBlocks.blockCompressor)
 			return;
-		}
 
 		if (tile.getRecipe() != null) {
 			ItemStack stack = tile.getRecipe().getOutput();

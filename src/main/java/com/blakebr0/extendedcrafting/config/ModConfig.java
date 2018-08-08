@@ -31,6 +31,7 @@ public class ModConfig {
 	public static boolean confCompressorEnabled;
 	public static int confCompressorRFCapacity;
 	public static int confCompressorRFRate;
+	public static boolean confCompressorRenderer;
 	
 	public static boolean confEnderEnabled;
 	public static int confEnderTimeRequired;
@@ -91,7 +92,8 @@ public class ModConfig {
 		confCompressorEnabled = config.getBoolean("enabled", category, true, "Should the Quantum Compressor be enabled?");
 		confCompressorRFCapacity = config.getInt("energy_capacity", category, 10000000, 0, Integer.MAX_VALUE, "How much FE the Quantum Compressor should hold.");
 		confCompressorRFRate = config.getInt("energy_rate", category, 5000, 0, Integer.MAX_VALUE, "How much FE/t the Quantum Compressor should use when crafting by default.");
-
+		confCompressorRenderer = config.getBoolean("render_item", category, true, "Should the Quantum Compressor render the result item above it?");
+		
 		category = "ender_crafting";
 		config.setCategoryComment(category, "Settings for the Ender Crafter.");
 		confEnderEnabled = config.getBoolean("enabled", category, true, "Should the Ender Crafter and Ender Alternator be enabled?");

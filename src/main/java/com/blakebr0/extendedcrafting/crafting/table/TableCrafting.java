@@ -1,6 +1,6 @@
-package com.blakebr0.extendedcrafting.crafting.table.basic;
+package com.blakebr0.extendedcrafting.crafting.table;
 
-import com.blakebr0.extendedcrafting.tile.TileBasicCraftingTable;
+import com.blakebr0.extendedcrafting.lib.IExtendedTable;
 
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.ISidedInventory;
@@ -9,17 +9,19 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.items.IItemHandler;
 
-public class BasicCrafting extends InventoryCrafting implements ISidedInventory {
+public class TableCrafting extends InventoryCrafting implements ISidedInventory {
 
-	public TileBasicCraftingTable tile;
-	private IItemHandler handler;
+	public IExtendedTable tile;
+	public IItemHandler handler;
 	public Container container;
+	public int lineSize;
 
-	public BasicCrafting(Container container, TileBasicCraftingTable tile) {
-		super(container, 3, 3);
+	public TableCrafting(Container container, IExtendedTable tile) {
+		super(container, tile.getLineSize(), tile.getLineSize());
 		this.tile = tile;
-		this.handler = tile.matrix;
+		this.handler = tile.getMatrix();
 		this.container = container;
+		this.lineSize = tile.getLineSize();
 	}
 
 	@Override
@@ -29,8 +31,8 @@ public class BasicCrafting extends InventoryCrafting implements ISidedInventory 
 
 	@Override
 	public ItemStack getStackInRowAndColumn(int row, int column) {
-		if (row >= 0 && row < 3) {
-			int x = row + column * 3;
+		if (row >= 0 && row < this.lineSize) {
+			int x = row + column * this.lineSize;
 			return this.getStackInSlot(x);
 		} else {
 			return ItemStack.EMPTY;

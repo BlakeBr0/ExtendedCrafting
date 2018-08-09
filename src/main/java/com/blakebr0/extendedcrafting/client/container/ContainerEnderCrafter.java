@@ -2,7 +2,8 @@ package com.blakebr0.extendedcrafting.client.container;
 
 import javax.annotation.Nullable;
 
-import com.blakebr0.extendedcrafting.crafting.endercrafter.EnderCraftResult;
+import com.blakebr0.extendedcrafting.crafting.endercrafter.EnderResultSlot;
+import com.blakebr0.extendedcrafting.crafting.table.TableCraftResult;
 import com.blakebr0.extendedcrafting.tile.TileEnderCrafter;
 
 import net.minecraft.entity.player.EntityPlayer;
@@ -26,16 +27,11 @@ public class ContainerEnderCrafter extends Container {
 	public ContainerEnderCrafter(InventoryPlayer player, TileEnderCrafter tile, World world) {
 		this.tile = tile;
 		this.handler = tile.matrix;
-		this.result = new EnderCraftResult(tile);
-		this.addSlotToContainer(new Slot(tile.result, 0, 124, 36) {
-			@Override
-			public boolean isItemValid(ItemStack stack) {
-				return false;
-			}
-		});
-		int wy;
-		int ex;
-
+		this.result = new TableCraftResult(tile);
+		
+		this.addSlotToContainer(new EnderResultSlot(tile.result, 0, 124, 36));
+		
+		int wy, ex;
 		for (wy = 0; wy < 3; ++wy) {
 			for (ex = 0; ex < 3; ++ex) {
 				this.addSlotToContainer(new SlotItemHandler(this.handler, ex + wy * 3, 30 + ex * 18, 18 + wy * 18));

@@ -120,6 +120,11 @@ public class TileEnderCrafter extends TileEntityBase implements IExtendedTable, 
 	public void setInventorySlotContents(int slot, ItemStack stack) {
 		this.matrix.setStackInSlot(slot, stack);
 	}
+	
+	@Override
+	public int getLineSize() {
+		return 3;
+	}
 
 	public boolean isUseableByPlayer(EntityPlayer player) {
 		return this.getWorld().getTileEntity(this.getPos()) == this && player.getDistanceSq(this.getPos().add(0.5, 0.5, 0.5)) <= 64;

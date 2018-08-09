@@ -29,7 +29,7 @@ public class ContainerEliteTable extends Container {
 
 	public ContainerEliteTable(InventoryPlayer player, TileEliteCraftingTable tile, World world) {
 		this.tile = tile;
-		this.handler = tile.matrix;
+		this.handler = tile.getMatrix();
 		this.matrix = new TableCrafting(this, tile);
 		this.result = new TableCraftResult(tile);
 		
@@ -58,7 +58,6 @@ public class ContainerEliteTable extends Container {
 
 	public void onCraftMatrixChanged(IInventory matrix) {
 		this.result.setInventorySlotContents(0, TableRecipeManager.getInstance().findMatchingRecipe(this.matrix, this.tile.getWorld()));
-		this.tile.markDirty();
 	}
 
 	@Override

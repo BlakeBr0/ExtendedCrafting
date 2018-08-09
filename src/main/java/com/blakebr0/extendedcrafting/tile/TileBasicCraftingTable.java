@@ -1,6 +1,5 @@
 package com.blakebr0.extendedcrafting.tile;
 
-import com.blakebr0.extendedcrafting.crafting.table.TableRecipeManager;
 import com.blakebr0.extendedcrafting.crafting.table.TableStackHandler;
 import com.blakebr0.extendedcrafting.lib.IExtendedTable;
 
@@ -13,19 +12,29 @@ import net.minecraft.tileentity.TileEntity;
 
 public class TileBasicCraftingTable extends TileEntity implements IExtendedTable {
 
-	public TableStackHandler matrix = new TableStackHandler(9, this, this.getWorld());
+	private TableStackHandler matrix = new TableStackHandler(9, this, this.getWorld());
 	private ItemStack result = ItemStack.EMPTY;
 
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound tag) {
 		tag = super.writeToNBT(tag);
+		
+		if (!this.result.isEmpty()) {
+			tag.setTag("Result", this.result.serializeNBT());
+		} else {
+			tag.removeTag("Result");
+		}
+		
 		tag.merge(this.matrix.serializeNBT());
+		
 		return tag;
 	}
 
 	@Override
 	public void readFromNBT(NBTTagCompound tag) {
 		super.readFromNBT(tag);
+		
+		this.result = new ItemStack(tag.getCompoundTag("Result"));
 		this.matrix.deserializeNBT(tag);
 	}
 	
@@ -45,15 +54,13 @@ public class TileBasicCraftingTable extends TileEntity implements IExtendedTable
 	
 	@Override
 	public ItemStack getResult() {
-		if (result.isEmpty()) {
-			result = TableRecipeManager.getInstance().findMatchingRecipe(matrix);
-		}
 		return this.result;
 	}
 
 	@Override
 	public void setResult(ItemStack result) {
 		this.result = result;
+		this.markDirty();
 	}
 
 	@Override

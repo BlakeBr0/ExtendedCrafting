@@ -3,19 +3,14 @@ package com.blakebr0.extendedcrafting.crafting.endercrafter;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.blakebr0.cucumber.helper.StackHelper;
 import com.blakebr0.extendedcrafting.config.ModConfig;
 import com.blakebr0.extendedcrafting.crafting.table.ITieredRecipe;
 import com.blakebr0.extendedcrafting.crafting.table.TableRecipeShaped;
 import com.blakebr0.extendedcrafting.crafting.table.TableRecipeShapeless;
-import com.blakebr0.extendedcrafting.lib.IExtendedTable;
 
 import net.minecraft.inventory.InventoryCrafting;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
-import net.minecraft.item.crafting.Ingredient;
-import net.minecraft.world.World;
 import net.minecraftforge.items.IItemHandlerModifiable;
 
 public class EnderCrafterRecipeManager {
@@ -60,6 +55,7 @@ public class EnderCrafterRecipeManager {
 				}
 			}
 		}
+		
 		return ItemStack.EMPTY;
 	}
 
@@ -67,16 +63,8 @@ public class EnderCrafterRecipeManager {
 		return this.recipes;
 	}
 	
-	public void removeRecipe(ItemStack stack) {
-		for (Object obj : getRecipes()) {
-			if (obj instanceof IRecipe) {
-				IRecipe recipe = (IRecipe)obj;
-				if (recipe.getRecipeOutput().isItemEqual(stack)) {
-					this.recipes.remove(obj);
-					break;
-				}
-			}
-		}
+	public void removeRecipes(ItemStack stack) {
+		this.recipes.removeIf(o -> o instanceof IRecipe && ((IRecipe) o).getRecipeOutput().isItemEqual(stack));
 	}
 
 	public List getRecipes(int size) {
@@ -87,6 +75,7 @@ public class EnderCrafterRecipeManager {
 				recipes.add(recipe);
 			}
 		}
+		
 		return recipes;
 	}
 
@@ -107,6 +96,7 @@ public class EnderCrafterRecipeManager {
 				}
 			}
 		}
+		
 		return recipes;
 	}
 }

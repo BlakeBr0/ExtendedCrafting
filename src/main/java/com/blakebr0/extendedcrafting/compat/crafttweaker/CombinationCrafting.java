@@ -3,7 +3,6 @@ package com.blakebr0.extendedcrafting.compat.crafttweaker;
 import java.util.Arrays;
 import java.util.List;
 
-import com.blakebr0.extendedcrafting.compat.jei.CompatJEI;
 import com.blakebr0.extendedcrafting.crafting.CombinationRecipe;
 import com.blakebr0.extendedcrafting.crafting.CombinationRecipeManager;
 
@@ -13,7 +12,6 @@ import crafttweaker.api.item.IIngredient;
 import crafttweaker.api.item.IItemStack;
 import crafttweaker.api.oredict.IOreDictEntry;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.oredict.OreDictionary;
 import stanhebben.zenscript.annotations.ZenClass;
 import stanhebben.zenscript.annotations.ZenMethod;
@@ -40,22 +38,21 @@ public class CombinationCrafting {
 		CombinationRecipe recipe;
 
 		public Add(CombinationRecipe add) {
-			recipe = add;
+			this.recipe = add;
 		}
 
 		@Override
 		public void apply() {
-			CombinationRecipeManager.getInstance().getRecipes().add(recipe);
+			CombinationRecipeManager.getInstance().getRecipes().add(this.recipe);
 		}
 
 		@Override
 		public String describe() {
-			return "Adding a Combination Crafting recipe for " + recipe.getOutput().getDisplayName();
+			return "Adding a Combination Crafting recipe for " + this.recipe.getOutput().getDisplayName();
 		}
 	}
 
 	private static class Remove implements IAction {
-		CombinationRecipe recipe = null;
 		ItemStack remove;
 
 		public Remove(ItemStack remove) {
@@ -64,12 +61,12 @@ public class CombinationCrafting {
 
 		@Override
 		public void apply() {
-			CombinationRecipeManager.getInstance().removeRecipe(remove);
+			CombinationRecipeManager.getInstance().removeRecipes(this.remove);
 		}
 
 		@Override
 		public String describe() {
-			return "Removing an Combination Crafting recipe for " + remove.getDisplayName();
+			return "Removing all Combination Crafting recipes for " + this.remove.getDisplayName();
 		}
 	}
 
@@ -81,30 +78,34 @@ public class CombinationCrafting {
 			if (internal == null || !(internal instanceof ItemStack)) {
 				CraftTweakerAPI.getLogger().logError("Not a valid item stack: " + item);
 			}
+			
 			return (ItemStack) internal;
 		}
 	}
 
 	private static Object toObject(IIngredient ingredient) {
-		if (ingredient == null)
+		if (ingredient == null) {
 			return null;
-		else {
+		} else {
 			if (ingredient instanceof IOreDictEntry) {
 				return toString((IOreDictEntry) ingredient);
 			} else if (ingredient instanceof IItemStack) {
 				return toStack((IItemStack) ingredient);
-			} else
+			} else {
 				return null;
+			}
 		}
 	}
 
 	private static Object[] toObjects(IIngredient[] list) {
 		if (list == null)
 			return null;
+		
 		Object[] ingredients = new Object[list.length];
 		for (int x = 0; x < list.length; x++) {
 			ingredients[x] = toActualObject(list[x]);
 		}
+		
 		return ingredients;
 	}
 
@@ -113,15 +114,16 @@ public class CombinationCrafting {
 	}
 
 	private static Object toActualObject(IIngredient ingredient) {
-		if (ingredient == null)
+		if (ingredient == null) {
 			return null;
-		else {
+		} else {
 			if (ingredient instanceof IOreDictEntry) {
 				return OreDictionary.getOres(toString((IOreDictEntry) ingredient));
 			} else if (ingredient instanceof IItemStack) {
 				return toStack((IItemStack) ingredient);
-			} else
+			} else {
 				return null;
+			}
 		}
 	}
 

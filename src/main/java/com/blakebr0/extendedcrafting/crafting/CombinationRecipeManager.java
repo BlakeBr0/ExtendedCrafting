@@ -32,12 +32,7 @@ public class CombinationRecipeManager {
 		return this.recipes;
 	}
 	
-	public void removeRecipe(ItemStack stack) {
-		for (CombinationRecipe recipe : getRecipes()) {
-			if (recipe.getOutput().isItemEqual(stack)) {
-				this.recipes.remove(recipe);
-				break;
-			}
-		}
+	public void removeRecipes(ItemStack stack) {
+		this.recipes.removeIf(o -> o.getOutput().isItemEqual(stack));
 	}
 }

@@ -80,6 +80,7 @@ public class TableRecipeManager {
 			if (i1 < 0) {
 				i1 = 0;
 			}
+			
 			return new ItemStack(stack.getItem(), 1, i1);
 		} else {
 			for (j = 0; j < this.recipes.size(); ++j) {
@@ -88,6 +89,7 @@ public class TableRecipeManager {
 					return recipe.getCraftingResult(grid);
 				}
 			}
+			
 			return ItemStack.EMPTY;
 		}
 	}
@@ -121,6 +123,7 @@ public class TableRecipeManager {
 			if (i1 < 0) {
 				i1 = 0;
 			}
+			
 			return new ItemStack(stack.getItem(), 1, i1);
 		} else {
 			for (j = 0; j < this.recipes.size(); ++j) {
@@ -132,6 +135,7 @@ public class TableRecipeManager {
 					}
 				}
 			}
+			
 			return ItemStack.EMPTY;
 		}
 	}
@@ -140,16 +144,8 @@ public class TableRecipeManager {
 		return this.recipes;
 	}
 	
-	public void removeRecipe(ItemStack stack) {
-		for (Object obj : getRecipes()) {
-			if (obj instanceof IRecipe) {
-				IRecipe recipe = (IRecipe)obj;
-				if (recipe.getRecipeOutput().isItemEqual(stack)) {
-					this.recipes.remove(obj);
-					break;
-				}
-			}
-		}
+	public void removeRecipes(ItemStack stack) {
+		this.recipes.removeIf(o -> o instanceof IRecipe && ((IRecipe) o).getRecipeOutput().isItemEqual(stack));
 	}
 
 	public List getRecipes(int size) {
@@ -160,6 +156,7 @@ public class TableRecipeManager {
 				recipes.add(recipe);
 			}
 		}
+		
 		return recipes;
 	}
 
@@ -180,6 +177,7 @@ public class TableRecipeManager {
 				}
 			}
 		}
+		
 		return recipes;
 	}
 }

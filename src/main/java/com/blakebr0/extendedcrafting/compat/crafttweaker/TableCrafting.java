@@ -3,7 +3,6 @@ package com.blakebr0.extendedcrafting.compat.crafttweaker;
 import java.util.Arrays;
 import java.util.List;
 
-import com.blakebr0.extendedcrafting.compat.jei.CompatJEI;
 import com.blakebr0.extendedcrafting.crafting.table.TableRecipeManager;
 import com.blakebr0.extendedcrafting.crafting.table.TableRecipeShaped;
 import com.blakebr0.extendedcrafting.crafting.table.TableRecipeShapeless;
@@ -18,8 +17,6 @@ import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.NonNullList;
 import net.minecraftforge.common.crafting.CraftingHelper;
-import net.minecraftforge.fml.common.Loader;
-import net.minecraftforge.oredict.OreDictionary;
 import stanhebben.zenscript.annotations.ZenClass;
 import stanhebben.zenscript.annotations.ZenMethod;
 
@@ -87,17 +84,17 @@ public class TableCrafting {
 		IRecipe recipe;
 
 		public Add(IRecipe add) {
-			recipe = add;
+			this.recipe = add;
 		}
 
 		@Override
 		public void apply() {
-			TableRecipeManager.getInstance().getRecipes().add(recipe);
+			TableRecipeManager.getInstance().getRecipes().add(this.recipe);
 		}
 
 		@Override
 		public String describe() {
-			return "Adding a Table Crafting recipe for " + recipe.getRecipeOutput().getDisplayName();
+			return "Adding a Table Crafting recipe for " + this.recipe.getRecipeOutput().getDisplayName();
 		}
 	}
 
@@ -110,12 +107,12 @@ public class TableCrafting {
 
 		@Override
 		public void apply() {
-			TableRecipeManager.getInstance().removeRecipe(remove);
+			TableRecipeManager.getInstance().removeRecipes(this.remove);
 		}
 
 		@Override
 		public String describe() {
-			return "Removing a Table Crafting recipe for " + remove.getDisplayName();
+			return "Removing all Table Crafting recipes for " + this.remove.getDisplayName();
 		}
 	}
 
@@ -132,9 +129,9 @@ public class TableCrafting {
 	}
 
 	private static Object toObject(IIngredient ingredient) {
-		if (ingredient == null)
+		if (ingredient == null) {
 			return null;
-		else {
+		} else {
 			if (ingredient instanceof IOreDictEntry) {
 				return toString((IOreDictEntry) ingredient);
 			} else if (ingredient instanceof IItemStack) {
@@ -146,13 +143,14 @@ public class TableCrafting {
 	}
 
 	private static Object[] toObjects(IIngredient[] list) {
-		if (list == null) {
+		if (list == null)
 			return null;
-		}
+		
 		Object[] ingredients = new Object[list.length];
 		for (int x = 0; x < list.length; x++) {
 			ingredients[x] = toObject(list[x]);
 		}
+		
 		return ingredients;
 	}
 

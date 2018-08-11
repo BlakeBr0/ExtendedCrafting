@@ -47,7 +47,7 @@ public class TileEnderCrafter extends TileEntityBase implements IExtendedTable, 
 					}
 					
 					if (this.progress >= this.progressReq) {
-						for (int i = 0; i < matrix.getSlots(); i++) {
+						for (int i = 0; i < this.matrix.getSlots(); i++) {
 							this.matrix.extractItem(i, 1, false);
 						}
 						

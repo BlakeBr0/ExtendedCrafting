@@ -44,10 +44,8 @@ public class EnderCrafterRecipeManager {
 	}
 	
 	public ItemStack findMatchingRecipe(IItemHandlerModifiable grid) {
-		int i = 0;
-		int j;
-		for (j = 0; j < this.recipes.size(); ++j) {
-			IRecipe recipe = (IRecipe) this.recipes.get(j);
+		for (int i = 0; i < this.recipes.size(); i++) {
+			IRecipe recipe = (IRecipe) this.recipes.get(i);
 			if (recipe instanceof ITieredRecipe) {
 				if (((ITieredRecipe) recipe).matches(grid)) {
 					// Pass through a dummy crafting inventory because it doesn't actually need one

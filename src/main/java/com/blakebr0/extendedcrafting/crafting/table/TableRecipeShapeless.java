@@ -140,7 +140,7 @@ public class TableRecipeShapeless implements IRecipe, ITieredRecipe {
 	@Override
 	public boolean matches(IItemHandlerModifiable grid) {
 		NonNullList<Ingredient> required = NonNullList.create();
-		required.addAll(input);
+		required.addAll(this.input);
 
 		if (this.tier != 0 && this.tier != this.getTierFromSize(grid.getSlots()))
 			return false;

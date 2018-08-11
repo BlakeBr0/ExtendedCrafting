@@ -75,12 +75,12 @@ public class TableRecipeShaped implements IRecipe, ITieredRecipe {
 			return false;
 
 		for (int x = 0; x <= inv.getWidth() - this.width; x++) {
-			for (int y = 0; y <= inv.getHeight() - this.height; ++y) {
-				if (checkMatch(inv, x, y, false)) {
+			for (int y = 0; y <= inv.getHeight() - this.height; y++) {
+				if (this.checkMatch(inv, x, y, false)) {
 					return true;
 				}
 
-				if (mirrored && checkMatch(inv, x, y, true)) {
+				if (this.mirrored && this.checkMatch(inv, x, y, true)) {
 					return true;
 				}
 			}
@@ -114,18 +114,18 @@ public class TableRecipeShaped implements IRecipe, ITieredRecipe {
 	}
 	
 	@Override
-	public boolean matches(IItemHandlerModifiable grid) {
-		if (this.tier != 0 && this.tier == this.getTierFromSize(grid.getSlots()))
+	public boolean matches(IItemHandlerModifiable inv) {
+		if (this.tier != 0 && this.tier != this.getTierFromSize(inv.getSlots()))
 			return false;
 
-		int size = (int) Math.sqrt(grid.getSlots());
+		int size = (int) Math.sqrt(inv.getSlots());
 		for (int x = 0; x <= size - this.width; x++) {
-			for (int y = 0; y <= size - this.height; ++y) {
-				if (checkMatch(grid, x, y, false)) {
+			for (int y = 0; y <= size - this.height; y++) {
+				if (this.checkMatch(inv, x, y, false)) {
 					return true;
 				}
 
-				if (this.mirrored && checkMatch(grid, x, y, true)) {
+				if (this.mirrored && this.checkMatch(inv, x, y, true)) {
 					return true;
 				}
 			}

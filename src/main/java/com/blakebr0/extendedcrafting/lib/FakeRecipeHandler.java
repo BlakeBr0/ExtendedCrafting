@@ -20,30 +20,30 @@ public class FakeRecipeHandler extends ItemStackHandler {
     @Override
     public NBTTagCompound serializeNBT() {
         NBTTagList nbtTagList = new NBTTagList();
-        for (int i = 0; i < stacks.size(); i++) {
-            if (!stacks.get(i).isEmpty()) {
+        for (int i = 0; i < this.stacks.size(); i++) {
+            if (!this.stacks.get(i).isEmpty()) {
                 NBTTagCompound itemTag = new NBTTagCompound();
                 itemTag.setInteger("Slot", i);
-                stacks.get(i).writeToNBT(itemTag);
+                this.stacks.get(i).writeToNBT(itemTag);
                 nbtTagList.appendTag(itemTag);
             }
         }
         NBTTagCompound nbt = new NBTTagCompound();
         nbt.setTag("FakeItems", nbtTagList);
-        nbt.setInteger("FakeSize", stacks.size());
+        nbt.setInteger("FakeSize", this.stacks.size());
         return nbt;
     }
 
     @Override
     public void deserializeNBT(NBTTagCompound nbt) {
-        setSize(nbt.hasKey("FakeSize", Constants.NBT.TAG_INT) ? nbt.getInteger("FakeSize") : stacks.size());
+        setSize(nbt.hasKey("FakeSize", Constants.NBT.TAG_INT) ? nbt.getInteger("FakeSize") : this.stacks.size());
         NBTTagList tagList = nbt.getTagList("FakeItems", Constants.NBT.TAG_COMPOUND);
         for (int i = 0; i < tagList.tagCount(); i++) {
             NBTTagCompound itemTags = tagList.getCompoundTagAt(i);
             int slot = itemTags.getInteger("Slot");
 
-            if (slot >= 0 && slot < stacks.size()) {
-                stacks.set(slot, new ItemStack(itemTags));
+            if (slot >= 0 && slot < this.stacks.size()) {
+                this.stacks.set(slot, new ItemStack(itemTags));
             }
         }
         onLoad();

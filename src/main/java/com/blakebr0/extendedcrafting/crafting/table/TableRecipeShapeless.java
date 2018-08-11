@@ -18,56 +18,52 @@ import net.minecraftforge.items.IItemHandlerModifiable;
 
 public class TableRecipeShapeless implements IRecipe, ITieredRecipe {
 
-	@Nonnull
 	protected ItemStack output = ItemStack.EMPTY;
 	protected NonNullList<Ingredient> input = NonNullList.create();
 	protected ResourceLocation group;
 	protected int tier;
 
-	public TableRecipeShapeless(int tier, @Nonnull ItemStack result, Object... recipe) {
+	public TableRecipeShapeless(int tier, ItemStack result, Object... recipe) {
 		this.group = RecipeHelper.EMPTY_GROUP;
 		this.tier = tier;
-		output = result.copy();
+		this.output = result.copy();
 		for (Object in : recipe) {
 			Ingredient ing = CraftingHelper.getIngredient(in);
 			if (ing != null) {
-				input.add(ing);
+				this.input.add(ing);
 			} else {
 				String ret = "Invalid shapeless ore recipe: ";
 				for (Object tmp : recipe) {
 					ret += tmp + ", ";
 				}
-				ret += output;
+				
+				ret += this.output;
+				
 				throw new RuntimeException(ret);
 			}
 		}
 	}
 
 	@Override
-	@Nonnull
 	public ItemStack getRecipeOutput() {
-		return output;
+		return this.output;
 	}
 
 	@Override
-	@Nonnull
-	public ItemStack getCraftingResult(@Nonnull InventoryCrafting var1) {
-		return output.copy();
+	public ItemStack getCraftingResult(InventoryCrafting inv) {
+		return this.output.copy();
 	}
 
 	@Override
-	public boolean matches(@Nonnull InventoryCrafting var1, @Nonnull World world) {
+	public boolean matches(InventoryCrafting inv, World world) {
 		NonNullList<Ingredient> required = NonNullList.create();
-		required.addAll(input);
+		required.addAll(this.input);
 
-		if (tier != 0) {
-			if (!(this.tier == this.getTierFromSize(var1.getSizeInventory()))) {
-				return false;
-			}
-		}
+		if (this.tier != 0 && this.tier != this.getTierFromSize(inv.getSizeInventory()))
+			return false;
 
-		for (int x = 0; x < var1.getSizeInventory(); x++) {
-			ItemStack slot = var1.getStackInSlot(x);
+		for (int x = 0; x < inv.getSizeInventory(); x++) {
+			ItemStack slot = inv.getStackInSlot(x);
 
 			if (!slot.isEmpty()) {
 				boolean inRecipe = false;
@@ -81,9 +77,7 @@ public class TableRecipeShapeless implements IRecipe, ITieredRecipe {
 					}
 				}
 
-				if (!inRecipe) {
-					return false;
-				}
+				if (!inRecipe) return false;
 			}
 		}
 
@@ -127,18 +121,19 @@ public class TableRecipeShapeless implements IRecipe, ITieredRecipe {
 				 : size < 26 && size > 9 ? 2
 				 : size < 50 && size > 25 ? 3
 				 : 4;
+				 
 		return tier;
 	}
 
 	@Override
 	public int getTier() {
-		if (this.tier > 0) {
-			return this.tier;
-		}
+		if (this.tier > 0) return this.tier;
+		
 		int tier = this.input.size() < 10 ? 1
 				 : this.input.size() < 26 && this.input.size() > 9 ? 2
 				 : this.input.size() < 50 && this.input.size() > 25 ? 3
 				 : 4;
+				 
 		return tier;
 	}
 
@@ -147,11 +142,8 @@ public class TableRecipeShapeless implements IRecipe, ITieredRecipe {
 		NonNullList<Ingredient> required = NonNullList.create();
 		required.addAll(input);
 
-		if (tier != 0) {
-			if (!(this.tier == this.getTierFromSize(grid.getSlots()))) {
-				return false;
-			}
-		}
+		if (this.tier != 0 && this.tier != this.getTierFromSize(grid.getSlots()))
+			return false;
 
 		for (int x = 0; x < grid.getSlots(); x++) {
 			ItemStack slot = grid.getStackInSlot(x);
@@ -168,9 +160,7 @@ public class TableRecipeShapeless implements IRecipe, ITieredRecipe {
 					}
 				}
 
-				if (!inRecipe) {
-					return false;
-				}
+				if (!inRecipe) return false;
 			}
 		}
 

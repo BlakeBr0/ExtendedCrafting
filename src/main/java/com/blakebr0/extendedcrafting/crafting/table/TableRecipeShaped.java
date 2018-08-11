@@ -1,7 +1,5 @@
 package com.blakebr0.extendedcrafting.crafting.table;
 
-import javax.annotation.Nonnull;
-
 import com.blakebr0.cucumber.helper.RecipeHelper;
 
 import net.minecraft.block.Block;
@@ -22,7 +20,6 @@ public class TableRecipeShaped implements IRecipe, ITieredRecipe {
 	public static final int MAX_CRAFT_GRID_WIDTH = 9;
 	public static final int MAX_CRAFT_GRID_HEIGHT = 9;
 
-	@Nonnull
 	protected ItemStack output = ItemStack.EMPTY;
 	protected NonNullList<Ingredient> input = null;
 	protected int width = 0;
@@ -39,13 +36,13 @@ public class TableRecipeShaped implements IRecipe, ITieredRecipe {
 		this(tier, new ItemStack(result), recipe);
 	}
 
-	public TableRecipeShaped(int tier, @Nonnull ItemStack result, Object... recipe) {
+	public TableRecipeShaped(int tier, ItemStack result, Object... recipe) {
 		this(tier, result, CraftingHelper.parseShaped(recipe));
 	}
 
-	public TableRecipeShaped(int tier, @Nonnull ItemStack result, ShapedPrimer primer) {
+	public TableRecipeShaped(int tier, ItemStack result, ShapedPrimer primer) {
 		this.group = RecipeHelper.EMPTY_GROUP;
-		output = result.copy();
+		this.output = result.copy();
 		this.width = primer.width;
 		this.height = primer.height;
 		this.input = primer.input;
@@ -53,9 +50,9 @@ public class TableRecipeShaped implements IRecipe, ITieredRecipe {
 		this.tier = tier;
 	}
 
-	public TableRecipeShaped(int tier, @Nonnull ItemStack result, int width, int height, NonNullList<Ingredient> ingredients) {
+	public TableRecipeShaped(int tier, ItemStack result, int width, int height, NonNullList<Ingredient> ingredients) {
 		this.group = RecipeHelper.EMPTY_GROUP;
-		output = result.copy();
+		this.output = result.copy();
 		this.width = width;
 		this.height = height;
 		this.input = ingredients;
@@ -63,27 +60,22 @@ public class TableRecipeShaped implements IRecipe, ITieredRecipe {
 	}
 
 	@Override
-	@Nonnull
-	public ItemStack getCraftingResult(@Nonnull InventoryCrafting var1) {
-		return output.copy();
+	public ItemStack getCraftingResult(InventoryCrafting var1) {
+		return this.output.copy();
 	}
 
 	@Override
-	@Nonnull
 	public ItemStack getRecipeOutput() {
-		return output;
+		return this.output;
 	}
 
 	@Override
-	public boolean matches(@Nonnull InventoryCrafting inv, @Nonnull World world) {
-		if (tier != 0) {
-			if (!(this.tier == this.getTierFromGridSize(inv))) {
-				return false;
-			}
-		}
+	public boolean matches(InventoryCrafting inv, World world) {
+		if (this.tier != 0 && this.tier != this.getTierFromGridSize(inv))
+			return false;
 
-		for (int x = 0; x <= inv.getWidth() - width; x++) {
-			for (int y = 0; y <= inv.getHeight() - height; ++y) {
+		for (int x = 0; x <= inv.getWidth() - this.width; x++) {
+			for (int y = 0; y <= inv.getHeight() - this.height; ++y) {
 				if (checkMatch(inv, x, y, false)) {
 					return true;
 				}
@@ -104,11 +96,11 @@ public class TableRecipeShaped implements IRecipe, ITieredRecipe {
 				int subY = y - startY;
 				Ingredient target = Ingredient.EMPTY;
 
-				if (subX >= 0 && subY >= 0 && subX < width && subY < height) {
+				if (subX >= 0 && subY >= 0 && subX < this.width && subY < this.height) {
 					if (mirror) {
-						target = input.get(width - subX - 1 + subY * width);
+						target = this.input.get(this.width - subX - 1 + subY * this.width);
 					} else {
-						target = input.get(subX + subY * width);
+						target = this.input.get(subX + subY * this.width);
 					}
 				}
 
@@ -123,20 +115,17 @@ public class TableRecipeShaped implements IRecipe, ITieredRecipe {
 	
 	@Override
 	public boolean matches(IItemHandlerModifiable grid) {
-		if (tier != 0) {
-			if (!(this.tier == this.getTierFromSize(grid.getSlots()))) {
-				return false;
-			}
-		}
+		if (this.tier != 0 && this.tier == this.getTierFromSize(grid.getSlots()))
+			return false;
 
 		int size = (int) Math.sqrt(grid.getSlots());
-		for (int x = 0; x <= size - width; x++) {
-			for (int y = 0; y <= size - height; ++y) {
+		for (int x = 0; x <= size - this.width; x++) {
+			for (int y = 0; y <= size - this.height; ++y) {
 				if (checkMatch(grid, x, y, false)) {
 					return true;
 				}
 
-				if (mirrored && checkMatch(grid, x, y, true)) {
+				if (this.mirrored && checkMatch(grid, x, y, true)) {
 					return true;
 				}
 			}
@@ -153,11 +142,11 @@ public class TableRecipeShaped implements IRecipe, ITieredRecipe {
 				int subY = y - startY;
 				Ingredient target = Ingredient.EMPTY;
 
-				if (subX >= 0 && subY >= 0 && subX < width && subY < height) {
+				if (subX >= 0 && subY >= 0 && subX < this.width && subY < this.height) {
 					if (mirror) {
-						target = input.get(width - subX - 1 + subY * width);
+						target = this.input.get(this.width - subX - 1 + subY * this.width);
 					} else {
-						target = input.get(subX + subY * width);
+						target = this.input.get(subX + subY * this.width);
 					}
 				}
 
@@ -171,26 +160,24 @@ public class TableRecipeShaped implements IRecipe, ITieredRecipe {
 	}
 
 	public TableRecipeShaped setMirrored(boolean mirror) {
-		mirrored = mirror;
+		this.mirrored = mirror;
 		return this;
 	}
 
 	@Override
-	@Nonnull
 	public NonNullList<Ingredient> getIngredients() {
 		return this.input;
 	}
 
 	public int getWidth() {
-		return width;
+		return this.width;
 	}
 
 	public int getHeight() {
-		return height;
+		return this.height;
 	}
 
 	@Override
-	@Nonnull
 	public String getGroup() {
 		return this.group == null ? "" : this.group.toString();
 	}
@@ -220,6 +207,7 @@ public class TableRecipeShaped implements IRecipe, ITieredRecipe {
 				 : size < 26 && size > 9 ? 2
 				 : size < 50 && size > 25 ? 3
 				 : 4;
+				 
 		return tier;
 	}
 
@@ -229,18 +217,19 @@ public class TableRecipeShaped implements IRecipe, ITieredRecipe {
 				 : size < 26 && size > 9 ? 2
 				 : size < 50 && size > 25 ? 3
 				 : 4;
+				 
 		return tier;
 	}
 
 	@Override
 	public int getTier() {
-		if (this.tier > 0) {
-			return this.tier;
-		}
+		if (this.tier > 0) return this.tier;
+			
 		int tier = (this.width < 4 && this.height < 4) ? 1
 				 : ((this.width > 3 || this.height > 3) && this.width < 6 && this.height < 6) ? 2
 				 : ((this.width > 5 || this.height > 5) && this.width < 8 && this.height < 8) ? 3
 				 : 4;
+		
 		return tier;
 	}
 	

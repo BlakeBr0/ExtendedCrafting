@@ -43,7 +43,9 @@ public class CombinationRecipe {
 				for (Object tmp : pedestals) {
 					ret += tmp + ", ";
 				}
+				
 				ret += this.output;
+				
 				throw new RuntimeException(ret);
 			}
 		}

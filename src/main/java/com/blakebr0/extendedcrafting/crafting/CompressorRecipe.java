@@ -24,7 +24,8 @@ public class CompressorRecipe {
 	}
 
 	public CompressorRecipe(ItemStack output, Object input, int inputCount, ItemStack catalyst, boolean consumeCatalyst, int powerCost, int powerRate) {
-		this.output = output;
+		this.output = output.copy();
+		
 		if (input instanceof ItemStack) {
 			this.input = ((ItemStack) input).copy();
 		} else if (input instanceof Item) {
@@ -38,15 +39,16 @@ public class CompressorRecipe {
 		} else {
 			throw new RuntimeException("Invalid compressor recipe input: " + input.toString());
 		}
+		
 		this.inputCount = inputCount;
-		this.catalyst = catalyst;
+		this.catalyst = catalyst.copy();
 		this.consumeCatalyst = consumeCatalyst;
 		this.powerCost = powerCost;
 		this.powerRate = powerRate;
 	}
 
 	public ItemStack getOutput() {
-		return this.output.copy();
+		return this.output;
 	}
 
 	public Object getInput() {
@@ -58,7 +60,7 @@ public class CompressorRecipe {
 	}
 
 	public ItemStack getCatalyst() {
-		return this.catalyst.copy();
+		return this.catalyst;
 	}
 
 	public boolean consumeCatalyst() {

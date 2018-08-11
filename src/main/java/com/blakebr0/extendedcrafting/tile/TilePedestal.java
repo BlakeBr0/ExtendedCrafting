@@ -1,7 +1,5 @@
 package com.blakebr0.extendedcrafting.tile;
 
-import javax.annotation.Nonnull;
-
 import com.blakebr0.extendedcrafting.util.VanillaPacketDispatcher;
 
 import net.minecraft.item.ItemStack;
@@ -17,33 +15,28 @@ import net.minecraftforge.items.ItemStackHandler;
 
 public class TilePedestal extends TileEntity {
 
-	private final ItemStackHandler inventory = new StackHandler(1);
-
-	public TilePedestal() {
-
-	}
-
+	private ItemStackHandler inventory = new StackHandler(1);
+	
 	public IItemHandlerModifiable getInventory() {
-		return inventory;
+		return this.inventory;
 	}
 
 	@Override
 	public void readFromNBT(NBTTagCompound tag) {
 		super.readFromNBT(tag);
-		inventory.deserializeNBT(tag);
+		this.inventory.deserializeNBT(tag);
 	}
 
-	@Nonnull
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound tag) {
 		tag = super.writeToNBT(tag);
-		tag.merge(inventory.serializeNBT());
+		tag.merge(this.inventory.serializeNBT());
 		return tag;
 	}
 
 	@Override
 	public SPacketUpdateTileEntity getUpdatePacket() {
-		return new SPacketUpdateTileEntity(pos, -1, this.getUpdateTag());
+		return new SPacketUpdateTileEntity(this.getPos(), -1, this.getUpdateTag());
 	}
 
 	@Override
@@ -63,16 +56,16 @@ public class TilePedestal extends TileEntity {
 	}
 
 	@Override
-	public boolean hasCapability(@Nonnull Capability<?> capability, @Nonnull EnumFacing side) {
+	public boolean hasCapability(Capability<?> capability, EnumFacing side) {
 		return capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY || super.hasCapability(capability, side);
 	}
 
-	@Nonnull
 	@Override
-	public <T> T getCapability(@Nonnull Capability<T> capability, @Nonnull EnumFacing side) {
+	public <T> T getCapability(Capability<T> capability, EnumFacing side) {
 		if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
 			return CapabilityItemHandler.ITEM_HANDLER_CAPABILITY.cast(inventory);
 		}
+		
 		return super.getCapability(capability, side);
 	}
 

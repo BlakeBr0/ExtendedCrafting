@@ -3,6 +3,7 @@ package com.blakebr0.extendedcrafting.tile;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.blakebr0.cucumber.helper.StackHelper;
 import com.blakebr0.cucumber.tile.TileEntityBase;
 import com.blakebr0.extendedcrafting.block.BlockEnderAlternator;
 import com.blakebr0.extendedcrafting.config.ModConfig;
@@ -32,7 +33,7 @@ public class TileEnderCrafter extends TileEntityBase implements IExtendedTable, 
 		if (!this.getWorld().isRemote) {
 			ItemStack result = EnderCrafterRecipeManager.getInstance().findMatchingRecipe(this.matrix);
 			ItemStack output = this.getResult();
-			if (!result.isEmpty() && (output.isEmpty() || (output.isItemEqual(result) && output.getCount() + result.getCount() <= output.getMaxStackSize()))) {
+			if (!result.isEmpty() && (output.isEmpty() || StackHelper.canCombineStacks(output, result))) {
 				List<BlockPos> alternators = this.getAlternatorPositions();
 				int alternatorCount = alternators.size();
 

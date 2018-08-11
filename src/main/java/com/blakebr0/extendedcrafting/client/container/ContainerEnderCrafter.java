@@ -20,14 +20,12 @@ import net.minecraftforge.items.SlotItemHandler;
 public class ContainerEnderCrafter extends Container {
 
 	public InventoryCrafting matrix;
-	public IInventory result;
 	private TileEnderCrafter tile;
 	private IItemHandler handler;
 
 	public ContainerEnderCrafter(InventoryPlayer player, TileEnderCrafter tile, World world) {
 		this.tile = tile;
 		this.handler = tile.matrix;
-		this.result = new TableCraftResult(tile);
 		
 		this.addSlotToContainer(new EnderResultSlot(tile.result, 0, 124, 36));
 		

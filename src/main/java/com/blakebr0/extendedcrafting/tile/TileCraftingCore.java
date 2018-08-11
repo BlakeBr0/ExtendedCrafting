@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import javax.annotation.Nonnull;
-
 import com.blakebr0.cucumber.energy.EnergyStorageCustom;
 import com.blakebr0.cucumber.helper.StackHelper;
 import com.blakebr0.extendedcrafting.block.BlockPedestal;
@@ -38,7 +36,6 @@ public class TileCraftingCore extends TileEntity implements ITickable {
 	private final ItemStackHandler inventory = new StackHandler(1);
 	private final EnergyStorageCustom energy = new EnergyStorageCustom(ModConfig.confCraftingCoreRFCapacity);
 
-	public CombinationRecipe activeRecipe;
 	private int progress;
 	private int oldEnergy;
 	private int pedestalCount;
@@ -122,9 +119,7 @@ public class TileCraftingCore extends TileEntity implements ITickable {
 		ArrayList<Object> remaining = new ArrayList<Object>(recipe.getPedestalItems());
 		ArrayList<TilePedestal> pedestals = new ArrayList<TilePedestal>();
 
-		if (locations.isEmpty()) {
-			return null;
-		}
+		if (locations.isEmpty()) return null;
 
 		for (BlockPos pos : locations) {
 			TileEntity tile = this.getWorld().getTileEntity(pos);
@@ -155,13 +150,10 @@ public class TileCraftingCore extends TileEntity implements ITickable {
 			}
 		}
 		
-		if (pedestals.size() != recipe.getPedestalItems().size()) {
+		if (pedestals.size() != recipe.getPedestalItems().size()) 
 			return null;
-		}
 		
-		if (!remaining.isEmpty()) {
-			return null;
-		}
+		if (!remaining.isEmpty()) return null;
 		
 		return pedestals;
 	}
@@ -204,10 +196,6 @@ public class TileCraftingCore extends TileEntity implements ITickable {
 	public int getProgress() {
 		return this.progress;
 	}
-
-	public CombinationRecipe getActiveRecipe() {
-		return this.activeRecipe;
-	}
 	
 	public IItemHandlerModifiable getInventory() {
 		return this.inventory;
@@ -229,11 +217,10 @@ public class TileCraftingCore extends TileEntity implements ITickable {
 		this.energy.setEnergy(tag.getInteger("Energy"));
 	}
 
-	@Nonnull
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound tag) {
 		tag = super.writeToNBT(tag);
-		tag.merge(inventory.serializeNBT());
+		tag.merge(this.inventory.serializeNBT());
 		tag.setInteger("Progress", this.progress);
 		tag.setInteger("Energy", this.energy.getEnergyStored());
 		
@@ -242,7 +229,7 @@ public class TileCraftingCore extends TileEntity implements ITickable {
 
 	@Override
 	public SPacketUpdateTileEntity getUpdatePacket() {
-		return new SPacketUpdateTileEntity(this.pos, -1, this.getUpdateTag());
+		return new SPacketUpdateTileEntity(this.getPos(), -1, this.getUpdateTag());
 	}
 
 	@Override
@@ -262,24 +249,23 @@ public class TileCraftingCore extends TileEntity implements ITickable {
 	}
 
 	@Override
-	public boolean hasCapability(@Nonnull Capability<?> capability, @Nonnull EnumFacing side) {
+	public boolean hasCapability(Capability<?> capability, EnumFacing side) {
 		return this.getCapability(capability, side) != null;
 	}
 
-	public boolean isUseableByPlayer(EntityPlayer player) {
-		return this.getWorld().getTileEntity(this.getPos()) == this && player.getDistanceSq(this.getPos().add(0.5, 0.5, 0.5)) <= 64;
-	}
-
-	@Nonnull
 	@Override
-	public <T> T getCapability(@Nonnull Capability<T> capability, @Nonnull EnumFacing side) {
+	public <T> T getCapability(Capability<T> capability, EnumFacing side) {
 		if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
-			return CapabilityItemHandler.ITEM_HANDLER_CAPABILITY.cast(inventory);
+			return CapabilityItemHandler.ITEM_HANDLER_CAPABILITY.cast(this.inventory);
 		} else if (capability == CapabilityEnergy.ENERGY) {
-			return CapabilityEnergy.ENERGY.cast(energy);
+			return CapabilityEnergy.ENERGY.cast(this.energy);
 		}
 		
 		return super.getCapability(capability, side);
+	}
+	
+	public boolean isUseableByPlayer(EntityPlayer player) {
+		return this.getWorld().getTileEntity(this.getPos()) == this && player.getDistanceSq(this.getPos().add(0.5, 0.5, 0.5)) <= 64;
 	}
 
 	class StackHandler extends ItemStackHandler {

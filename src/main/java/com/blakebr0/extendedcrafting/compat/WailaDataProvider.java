@@ -14,6 +14,8 @@ import com.blakebr0.extendedcrafting.block.craftingtable.BlockAdvancedTable;
 import com.blakebr0.extendedcrafting.block.craftingtable.BlockBasicTable;
 import com.blakebr0.extendedcrafting.block.craftingtable.BlockEliteTable;
 import com.blakebr0.extendedcrafting.block.craftingtable.BlockUltimateTable;
+import com.blakebr0.extendedcrafting.crafting.CombinationRecipe;
+import com.blakebr0.extendedcrafting.crafting.CompressorRecipe;
 import com.blakebr0.extendedcrafting.tile.TileAutomationInterface;
 import com.blakebr0.extendedcrafting.tile.TileCompressor;
 import com.blakebr0.extendedcrafting.tile.TileCraftingCore;
@@ -68,15 +70,21 @@ public class WailaDataProvider implements IWailaDataProvider {
 		
 		if (block instanceof BlockPedestal && tile instanceof TilePedestal && !tile.isInvalid()) {
 			TilePedestal pedestal = (TilePedestal) tile;
-			ItemStack invStack = pedestal.getInventory().getStackInSlot(0);
-			if (!invStack.isEmpty()) {
-				tooltip.add(invStack.getDisplayName());
+			ItemStack result = pedestal.getStack();
+			if (!result.isEmpty()) {
+				tooltip.add(result.getDisplayName());
 			}
 		}
 		
 		if (block instanceof BlockCraftingCore && tile instanceof TileCraftingCore && !tile.isInvalid()) {
 			TileCraftingCore core = (TileCraftingCore) tile;
 			tooltip.add(Utils.format(core.getEnergy().getEnergyStored()) + " FE");
+			
+			CombinationRecipe recipe = core.getRecipe();
+			if (recipe != null) {
+				ItemStack output = recipe.getOutput();
+				tooltip.add(Utils.localize("tooltip.ec.crafting", output.getCount(), output.getDisplayName()));
+			}
 		}
 		
 		if (block instanceof BlockBasicTable) tooltip.add(Utils.localize("tooltip.ec.tier", 1));
@@ -90,7 +98,7 @@ public class WailaDataProvider implements IWailaDataProvider {
 			
 			ItemStack result = auto.getResult();
 			if (!result.isEmpty()) {
-				tooltip.add(result.getDisplayName());
+				tooltip.add(Utils.localize("tooltip.ec.crafting", result.getCount(), result.getDisplayName()));
 			}
 		}
 		
@@ -98,14 +106,21 @@ public class WailaDataProvider implements IWailaDataProvider {
 			TileEnderCrafter crafter = (TileEnderCrafter) tile;
 			ItemStack result = crafter.getResult();
 			if (!result.isEmpty()) {
-				tooltip.add(Utils.localize("tooltip.ec.output") + result.getCount() + "x " + result.getDisplayName());
+				tooltip.add(Utils.localize("tooltip.ec.output", result.getCount(), result.getDisplayName()));
 			}
 		}
 		
 		if (block instanceof BlockCompressor && tile instanceof TileCompressor && !tile.isInvalid()) {
 			TileCompressor compressor = (TileCompressor) tile;
 			tooltip.add(Utils.format(compressor.getEnergy().getEnergyStored()) + " FE");
+			
+			CompressorRecipe recipe = compressor.getRecipe();
+			if (recipe != null) {
+				ItemStack output = recipe.getOutput();
+				tooltip.add(Utils.localize("tooltip.ec.crafting", output.getCount(), output.getDisplayName()));
+			}
 		}
+		
 		return tooltip;
 	}
 

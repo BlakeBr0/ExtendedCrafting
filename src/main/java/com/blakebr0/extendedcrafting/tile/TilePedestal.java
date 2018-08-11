@@ -16,10 +16,6 @@ import net.minecraftforge.items.ItemStackHandler;
 public class TilePedestal extends TileEntity {
 
 	private ItemStackHandler inventory = new StackHandler(1);
-	
-	public IItemHandlerModifiable getInventory() {
-		return this.inventory;
-	}
 
 	@Override
 	public void readFromNBT(NBTTagCompound tag) {
@@ -67,6 +63,14 @@ public class TilePedestal extends TileEntity {
 		}
 		
 		return super.getCapability(capability, side);
+	}
+	
+	public IItemHandlerModifiable getInventory() {
+		return this.inventory;
+	}
+	
+	public ItemStack getStack() {
+		return this.inventory.getStackInSlot(0);
 	}
 
 	class StackHandler extends ItemStackHandler {

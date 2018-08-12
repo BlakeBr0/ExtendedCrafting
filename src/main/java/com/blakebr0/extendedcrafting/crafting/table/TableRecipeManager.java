@@ -150,7 +150,7 @@ public class TableRecipeManager {
 
 	public List getRecipes(int size) {
 		List recipes = new ArrayList<>();
-		for (Object o : getRecipes()) {
+		for (Object o : this.getRecipes()) {
 			IRecipe recipe = (IRecipe) o;
 			if (recipe.canFit(size, size)) {
 				recipes.add(recipe);
@@ -169,7 +169,7 @@ public class TableRecipeManager {
 	 */
 	public List getRecipesTiered(int tier) {
 		List recipes = new ArrayList<>();
-		for (Object o : getRecipes()) {
+		for (Object o : this.getRecipes()) {
 			if (o instanceof ITieredRecipe) {
 				ITieredRecipe recipe = (ITieredRecipe) o;
 				if (recipe.getTier() == tier) {

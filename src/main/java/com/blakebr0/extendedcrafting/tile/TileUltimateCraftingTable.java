@@ -59,11 +59,13 @@ public class TileUltimateCraftingTable extends TileEntity implements IExtendedTa
 		return this.result;
 	}
 
+	@Override
 	public void setResult(ItemStack result) {
 		this.result = result;
 		this.markDirty();
 	}
 
+	@Override
 	public void setInventorySlotContents(int slot, ItemStack stack) {
 		this.matrix.setStackInSlot(slot, stack);
 	}

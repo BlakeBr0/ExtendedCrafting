@@ -180,13 +180,18 @@ public class TileAutomationInterface extends TileEntity implements ITickable, IS
 		if (!result.isEmpty() && (output.isEmpty() || StackHelper.canCombineStacks(output, result))) {				
 			if (this.getEnergy().getEnergyStored() >= ModConfig.confInterfaceRFRate) {
 				ItemStack toInsert = result.copy();
-				for (int i = 0; i < matrix.getSlots(); i++) {
-					ItemStack slotStack = matrix.getStackInSlot(i);
-					if (!slotStack.isEmpty()) {
-						if (slotStack.getItem().hasContainerItem(slotStack) && slotStack.getCount() == 1) {
-							matrix.setStackInSlot(i, slotStack.getItem().getContainerItem(slotStack));
-						} else {
-							matrix.setStackInSlot(i, StackHelper.decrease(slotStack.copy(), 1, false));
+				
+				if (this.isEnderCrafter()) {
+					table.setResult(ItemStack.EMPTY);
+				} else {
+					for (int i = 0; i < matrix.getSlots(); i++) {
+						ItemStack slotStack = matrix.getStackInSlot(i);
+						if (!slotStack.isEmpty()) {
+							if (slotStack.getItem().hasContainerItem(slotStack) && slotStack.getCount() == 1) {
+								matrix.setStackInSlot(i, slotStack.getItem().getContainerItem(slotStack));
+							} else {
+								matrix.setStackInSlot(i, StackHelper.decrease(slotStack.copy(), 1, false));
+							}
 						}
 					}
 				}
@@ -203,7 +208,11 @@ public class TileAutomationInterface extends TileEntity implements ITickable, IS
 	}
 	
 	public boolean hasTable() {
-		return getTable() != null;
+		return this.getTable() != null;
+	}
+	
+	public boolean isEnderCrafter() {
+		return this.getTable() instanceof TileEnderCrafter;
 	}
 	
 	public boolean hasRecipe() {

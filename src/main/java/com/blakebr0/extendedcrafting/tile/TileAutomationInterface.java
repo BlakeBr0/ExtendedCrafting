@@ -8,6 +8,7 @@ import com.blakebr0.cucumber.energy.EnergyStorageCustom;
 import com.blakebr0.cucumber.helper.StackHelper;
 import com.blakebr0.cucumber.util.Utils;
 import com.blakebr0.extendedcrafting.config.ModConfig;
+import com.blakebr0.extendedcrafting.crafting.endercrafter.EnderCrafterRecipeManager;
 import com.blakebr0.extendedcrafting.lib.FakeRecipeHandler;
 import com.blakebr0.extendedcrafting.lib.IExtendedTable;
 import com.blakebr0.extendedcrafting.util.VanillaPacketDispatcher;
@@ -37,27 +38,11 @@ public class TileAutomationInterface extends TileEntity implements ITickable, IS
 	private int oldEnergy;
 	private ItemStack result = ItemStack.EMPTY;
 	private boolean hasRecipe = false;
-	public int autoInsert = -1;
-	public int autoExtract = -1;
+	private int autoInsert = -1;
+	private int autoExtract = -1;
 	private boolean autoEject = false;
 	private boolean smartInsert = true;
 	private int ticks = 0;
-		
-	public IItemHandlerModifiable getInventory() {
-		return this.inventory;
-	}
-	
-	public ItemStackHandler getRecipe() {
-		return this.recipe;
-	}
-	
-	public ItemStack getResult() {
-		return this.result;
-	}
-	
-	public EnergyStorageCustom getEnergy() {
-		return this.energy;
-	}
 	
 	@Override
 	public void update() {
@@ -201,131 +186,7 @@ public class TileAutomationInterface extends TileEntity implements ITickable, IS
 			}
 		}
 	}
-	
-	public IExtendedTable getTable() {
-		TileEntity tile = this.getWorld().getTileEntity(this.getPos().down());
-		return tile != null && tile instanceof IExtendedTable ? (IExtendedTable) tile : null;
-	}
-	
-	public boolean hasTable() {
-		return this.getTable() != null;
-	}
-	
-	public boolean isEnderCrafter() {
-		return this.getTable() instanceof TileEnderCrafter;
-	}
-	
-	public boolean hasRecipe() {
-		return this.hasRecipe;
-	}
-	
-	public void setHasRecipe(boolean hasRecipe) {
-		this.hasRecipe = hasRecipe;
-	}
-	
-	public void saveRecipe() {
-		ItemStackHandler recipe = this.getRecipe();
-		IItemHandlerModifiable matrix = this.getTable().getMatrix();
-		recipe.setSize(matrix.getSlots());
-		for (int i = 0; i < matrix.getSlots(); i++) {
-			recipe.setStackInSlot(i, matrix.getStackInSlot(i).copy());
-		}
 		
-		ItemStack result = this.getTable().getResult();
-		if (result != null) {
-			this.result = result;
-		}
-		
-		this.setHasRecipe(true);
-		this.markDirty();
-	}
-	
-	public void clearRecipe() {
-		ItemStackHandler recipe = this.getRecipe();
-		recipe.setSize(1);
-		this.result = ItemStack.EMPTY;
-		this.setHasRecipe(false);
-		this.markDirty();
-	}
-	
-	public EnumFacing getInserterFace() {
-		return this.autoInsert > -1 && this.autoInsert < EnumFacing.values().length ? EnumFacing.values()[this.autoInsert] : null;
-	}
-	
-	public EnumFacing getExtractorFace() {
-		return this.autoExtract > -1 && this.autoExtract < EnumFacing.values().length ? EnumFacing.values()[this.autoExtract] : null;
-	}
-	
-	public String getInserterFaceName() {
-		return this.getInserterFace() != null ? this.getInserterFace().getName().toUpperCase(Locale.ROOT) : Utils.localize("ec.interface.none");
-	}
-	
-	public String getExtractorFaceName() {
-		return this.getExtractorFace() != null ? this.getExtractorFace().getName().toUpperCase(Locale.ROOT) : Utils.localize("ec.interface.none");
-	}
-	
-	public void switchInserter() {
-		if (this.autoInsert >= EnumFacing.values().length - 1) {
-			this.autoInsert = -1;
-		} else {
-			this.autoInsert++;
-			if (this.autoInsert == EnumFacing.DOWN.getIndex()) {
-				this.autoInsert++;
-			}
-		}
-		
-		this.markDirty();
-	}
-	
-	public void switchExtractor() {
-		if (this.autoExtract >= EnumFacing.values().length - 1) {
-			this.autoExtract = -1;
-		} else {
-			this.autoExtract++;
-			if (this.autoExtract == EnumFacing.DOWN.getIndex()) {
-				this.autoExtract++;
-			}
-		}
-		
-		this.markDirty();
-	}
-	
-	public boolean checkStackSmartly(ItemStack stack) {
-		if (!this.getSmartInsert()) return true;
-		if (!this.hasTable()) return false;
-		if (!this.hasRecipe()) return false;
-		
-		IItemHandlerModifiable matrix = this.getTable().getMatrix();
-		for (int i = 0; i < matrix.getSlots(); i++) {
-			ItemStack slotStack = matrix.getStackInSlot(i);
-			ItemStack recipeStack = this.getRecipe().getStackInSlot(i);
-			if (StackHelper.areStacksEqual(stack, recipeStack) && StackHelper.canCombineStacks(stack, slotStack)) {
-				return true;
-			}
-		}
-		
-		return false;
-	}
-	
-	public boolean getAutoEject() {
-		return this.autoEject;
-	}
-	
-	public void toggleAutoEject() {
-		this.autoEject = !this.autoEject;
-		this.markDirty();
-	}
-	
-	public boolean getSmartInsert() {
-		return this.smartInsert;
-	}
-	
-	public void toggleSmartInsert() {
-		this.smartInsert = !this.smartInsert;
-		this.markDirty();
-	}
-		
-	@Nonnull
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound tag) {
 		tag = super.writeToNBT(tag);
@@ -375,40 +236,7 @@ public class TileAutomationInterface extends TileEntity implements ITickable, IS
 		super.markDirty();
 		VanillaPacketDispatcher.dispatchTEToNearbyPlayers(this);
 	}
-
-	@Override
-	public boolean hasCapability(@Nonnull Capability<?> capability, @Nonnull EnumFacing side) {
-		return this.getCapability(capability, side) != null;
-	}
-
-	@Nonnull
-	@Override
-	public <T> T getCapability(@Nonnull Capability<T> capability, @Nonnull EnumFacing side) {
-		if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
-			return (T) new SidedInvWrapper(this, side);
-		} else if (capability == CapabilityEnergy.ENERGY) {
-			return CapabilityEnergy.ENERGY.cast(this.energy);
-		}
-		
-		return super.getCapability(capability, side);
-	}
 	
-	public boolean isUseableByPlayer(EntityPlayer player) {
-		return this.getWorld().getTileEntity(this.getPos()) == this && player.getDistanceSq(this.getPos().add(0.5, 0.5, 0.5)) <= 64;
-	}
-	
-	class StackHandler extends ItemStackHandler {
-				
-		StackHandler(int size) {
-			super(size);
-		}
-
-		@Override
-		public void onContentsChanged(int slot) {
-			TileAutomationInterface.this.markDirty();
-		}
-	}
-
 	@Override
 	public int getSizeInventory() {
 		return this.inventory.getSlots();
@@ -527,5 +355,181 @@ public class TileAutomationInterface extends TileEntity implements ITickable, IS
 	@Override
 	public boolean canExtractItem(int index, ItemStack stack, EnumFacing direction) {
 		return index == 1;
+	}
+
+	@Override
+	public boolean hasCapability(@Nonnull Capability<?> capability, @Nonnull EnumFacing side) {
+		return this.getCapability(capability, side) != null;
+	}
+
+	@Override
+	public <T> T getCapability(@Nonnull Capability<T> capability, @Nonnull EnumFacing side) {
+		if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
+			return (T) new SidedInvWrapper(this, side);
+		} else if (capability == CapabilityEnergy.ENERGY) {
+			return CapabilityEnergy.ENERGY.cast(this.energy);
+		}
+		
+		return super.getCapability(capability, side);
+	}
+	
+	public IItemHandlerModifiable getInventory() {
+		return this.inventory;
+	}
+	
+	public ItemStackHandler getRecipe() {
+		return this.recipe;
+	}
+	
+	public ItemStack getResult() {
+		return this.result;
+	}
+	
+	public EnergyStorageCustom getEnergy() {
+		return this.energy;
+	}
+	
+	public IExtendedTable getTable() {
+		TileEntity tile = this.getWorld().getTileEntity(this.getPos().down());
+		return tile != null && tile instanceof IExtendedTable ? (IExtendedTable) tile : null;
+	}
+	
+	public boolean hasTable() {
+		return this.getTable() != null;
+	}
+	
+	public boolean isEnderCrafter() {
+		return this.getTable() instanceof TileEnderCrafter;
+	}
+	
+	public boolean hasRecipe() {
+		return this.hasRecipe;
+	}
+	
+	public void setHasRecipe(boolean hasRecipe) {
+		this.hasRecipe = hasRecipe;
+	}
+	
+	public void saveRecipe() {
+		ItemStackHandler recipe = this.getRecipe();
+		IExtendedTable table = this.getTable();
+		IItemHandlerModifiable matrix = table.getMatrix();
+		recipe.setSize(matrix.getSlots());
+		for (int i = 0; i < matrix.getSlots(); i++) {
+			recipe.setStackInSlot(i, matrix.getStackInSlot(i).copy());
+		}
+		
+		if (this.isEnderCrafter()) {
+			this.result = EnderCrafterRecipeManager.getInstance().findMatchingRecipe(matrix);
+		} else {
+			ItemStack result = table.getResult();
+			if (result != null) {
+				this.result = result;
+			}
+		}
+		
+		this.setHasRecipe(true);
+		this.markDirty();
+	}
+	
+	public void clearRecipe() {
+		ItemStackHandler recipe = this.getRecipe();
+		recipe.setSize(1);
+		this.result = ItemStack.EMPTY;
+		this.setHasRecipe(false);
+		this.markDirty();
+	}
+	
+	public EnumFacing getInserterFace() {
+		return this.autoInsert > -1 && this.autoInsert < EnumFacing.values().length ? EnumFacing.values()[this.autoInsert] : null;
+	}
+	
+	public EnumFacing getExtractorFace() {
+		return this.autoExtract > -1 && this.autoExtract < EnumFacing.values().length ? EnumFacing.values()[this.autoExtract] : null;
+	}
+	
+	public String getInserterFaceName() {
+		return this.getInserterFace() != null ? this.getInserterFace().getName().toUpperCase(Locale.ROOT) : Utils.localize("ec.interface.none");
+	}
+	
+	public String getExtractorFaceName() {
+		return this.getExtractorFace() != null ? this.getExtractorFace().getName().toUpperCase(Locale.ROOT) : Utils.localize("ec.interface.none");
+	}
+	
+	public void switchInserter() {
+		if (this.autoInsert >= EnumFacing.values().length - 1) {
+			this.autoInsert = -1;
+		} else {
+			this.autoInsert++;
+			if (this.autoInsert == EnumFacing.DOWN.getIndex()) {
+				this.autoInsert++;
+			}
+		}
+		
+		this.markDirty();
+	}
+	
+	public void switchExtractor() {
+		if (this.autoExtract >= EnumFacing.values().length - 1) {
+			this.autoExtract = -1;
+		} else {
+			this.autoExtract++;
+			if (this.autoExtract == EnumFacing.DOWN.getIndex()) {
+				this.autoExtract++;
+			}
+		}
+		
+		this.markDirty();
+	}
+	
+	public boolean checkStackSmartly(ItemStack stack) {
+		if (!this.getSmartInsert()) return true;
+		if (!this.hasTable()) return false;
+		if (!this.hasRecipe()) return false;
+		
+		IItemHandlerModifiable matrix = this.getTable().getMatrix();
+		for (int i = 0; i < matrix.getSlots(); i++) {
+			ItemStack slotStack = matrix.getStackInSlot(i);
+			ItemStack recipeStack = this.getRecipe().getStackInSlot(i);
+			if (StackHelper.areStacksEqual(stack, recipeStack) && StackHelper.canCombineStacks(stack, slotStack)) {
+				return true;
+			}
+		}
+		
+		return false;
+	}
+	
+	public boolean getAutoEject() {
+		return this.autoEject;
+	}
+	
+	public void toggleAutoEject() {
+		this.autoEject = !this.autoEject;
+		this.markDirty();
+	}
+	
+	public boolean getSmartInsert() {
+		return this.smartInsert;
+	}
+	
+	public void toggleSmartInsert() {
+		this.smartInsert = !this.smartInsert;
+		this.markDirty();
+	}
+	
+	public boolean isUseableByPlayer(EntityPlayer player) {
+		return this.getWorld().getTileEntity(this.getPos()) == this && player.getDistanceSq(this.getPos().add(0.5, 0.5, 0.5)) <= 64;
+	}
+	
+	class StackHandler extends ItemStackHandler {
+		
+		StackHandler(int size) {
+			super(size);
+		}
+
+		@Override
+		public void onContentsChanged(int slot) {
+			TileAutomationInterface.this.markDirty();
+		}
 	}
 }

@@ -12,7 +12,6 @@ import com.blakebr0.extendedcrafting.lib.IExtendedTable;
 
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.InventoryCraftResult;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumParticleTypes;
@@ -23,8 +22,8 @@ import net.minecraftforge.items.ItemStackHandler;
 
 public class TileEnderCrafter extends TileEntityBase implements IExtendedTable, ITickable {
 
-	public ItemStackHandler matrix = new ItemStackHandler(9);
-	public InventoryCraftResult result = new InventoryCraftResult();
+	private ItemStackHandler matrix = new ItemStackHandler(9);
+	private ItemStack result = ItemStack.EMPTY;
 	private int progress;
 	private int progressReq;
 	
@@ -72,14 +71,15 @@ public class TileEnderCrafter extends TileEntityBase implements IExtendedTable, 
 		tag = super.writeToNBT(tag);
 		tag.merge(this.matrix.serializeNBT());
 		
-		if (!this.getResult().isEmpty()) {
-			tag.setTag("Result", this.getResult().serializeNBT());
+		if (!this.result.isEmpty()) {
+			tag.setTag("Result", this.result.serializeNBT());
 		} else {
 			tag.removeTag("Result");
 		}
 		
 		tag.setInteger("Progress", this.progress);
 		tag.setInteger("ProgressReq", this.progressReq);
+		
 		return tag;
 	}
 
@@ -87,10 +87,7 @@ public class TileEnderCrafter extends TileEntityBase implements IExtendedTable, 
 	public void readFromNBT(NBTTagCompound tag) {
 		super.readFromNBT(tag);
 		this.matrix.deserializeNBT(tag);
-		
-		if (tag.hasKey("Result")) {
-			this.result.setInventorySlotContents(0, new ItemStack(tag.getCompoundTag("Result")));
-		}
+		this.result = new ItemStack(tag.getCompoundTag("Result"));
 		
 		this.progress = tag.getInteger("Progress");
 		this.progressReq = tag.getInteger("ProgressReq");
@@ -98,7 +95,7 @@ public class TileEnderCrafter extends TileEntityBase implements IExtendedTable, 
 	
 	@Override
 	public ItemStack getResult() {
-		return this.result.getStackInSlot(0);
+		return this.result;
 	}
 	
 	@Override
@@ -106,18 +103,12 @@ public class TileEnderCrafter extends TileEntityBase implements IExtendedTable, 
 		return this.matrix;
 	}
 
+	@Override
 	public void setResult(ItemStack result) {
-		this.result.setInventorySlotContents(0, result);
-	}
-	
-	public void updateResult(ItemStack result) {
-		if (this.getResult().isEmpty()) {
-			this.setResult(result);
-		} else {
-			this.getResult().grow(result.getCount());
-		}
+		this.result = result;
 	}
 
+	@Override
 	public void setInventorySlotContents(int slot, ItemStack stack) {
 		this.matrix.setStackInSlot(slot, stack);
 	}
@@ -126,9 +117,13 @@ public class TileEnderCrafter extends TileEntityBase implements IExtendedTable, 
 	public int getLineSize() {
 		return 3;
 	}
-
-	public boolean isUseableByPlayer(EntityPlayer player) {
-		return this.getWorld().getTileEntity(this.getPos()) == this && player.getDistanceSq(this.getPos().add(0.5, 0.5, 0.5)) <= 64;
+	
+	public void updateResult(ItemStack result) {
+		if (this.result.isEmpty()) {
+			this.setResult(result);
+		} else {
+			this.result.grow(result.getCount());
+		}
 	}
 	
 	public List<BlockPos> getAlternatorPositions() {
@@ -157,5 +152,9 @@ public class TileEnderCrafter extends TileEntityBase implements IExtendedTable, 
 	
 	public int getProgressRequired() {
 		return this.progressReq;
+	}
+	
+	public boolean isUseableByPlayer(EntityPlayer player) {
+		return this.getWorld().getTileEntity(this.getPos()) == this && player.getDistanceSq(this.getPos().add(0.5, 0.5, 0.5)) <= 64;
 	}
 }

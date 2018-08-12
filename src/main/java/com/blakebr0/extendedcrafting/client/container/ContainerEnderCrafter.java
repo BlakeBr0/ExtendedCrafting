@@ -1,9 +1,8 @@
 package com.blakebr0.extendedcrafting.client.container;
 
-import javax.annotation.Nullable;
-
 import com.blakebr0.extendedcrafting.crafting.endercrafter.EnderResultSlot;
 import com.blakebr0.extendedcrafting.crafting.table.TableCraftResult;
+import com.blakebr0.extendedcrafting.crafting.table.TableResultHandler;
 import com.blakebr0.extendedcrafting.tile.TileEnderCrafter;
 
 import net.minecraft.entity.player.EntityPlayer;
@@ -19,15 +18,16 @@ import net.minecraftforge.items.SlotItemHandler;
 
 public class ContainerEnderCrafter extends Container {
 
-	public InventoryCrafting matrix;
+	public IInventory result;
 	private TileEnderCrafter tile;
 	private IItemHandler handler;
 
 	public ContainerEnderCrafter(InventoryPlayer player, TileEnderCrafter tile, World world) {
 		this.tile = tile;
-		this.handler = tile.matrix;
+		this.handler = tile.getMatrix();
+		this.result = new TableCraftResult(tile);
 		
-		this.addSlotToContainer(new EnderResultSlot(tile.result, 0, 124, 36));
+		this.addSlotToContainer(new EnderResultSlot(this.result, 0, 124, 36));
 		
 		int wy, ex;
 		for (wy = 0; wy < 3; ++wy) {
@@ -52,7 +52,6 @@ public class ContainerEnderCrafter extends Container {
 		return this.tile.isUseableByPlayer(player);
 	}
 
-	@Nullable
 	@Override
 	public ItemStack transferStackInSlot(EntityPlayer player, int slotNumber) {
 		ItemStack itemstack = ItemStack.EMPTY;
@@ -87,7 +86,6 @@ public class ContainerEnderCrafter extends Container {
 			}
 
 			slot.onTake(player, itemstack1);
-			this.onCraftMatrixChanged(this.matrix);
 		}
 
 		return itemstack;

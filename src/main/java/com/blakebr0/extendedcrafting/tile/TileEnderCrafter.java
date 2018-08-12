@@ -22,7 +22,7 @@ import net.minecraftforge.items.ItemStackHandler;
 
 public class TileEnderCrafter extends TileEntityBase implements IExtendedTable, ITickable {
 
-	private ItemStackHandler matrix = new ItemStackHandler(9);
+	private ItemStackHandler matrix = new StackHandler(9);
 	private ItemStack result = ItemStack.EMPTY;
 	private int progress;
 	private int progressReq;
@@ -156,5 +156,16 @@ public class TileEnderCrafter extends TileEntityBase implements IExtendedTable, 
 	
 	public boolean isUseableByPlayer(EntityPlayer player) {
 		return this.getWorld().getTileEntity(this.getPos()) == this && player.getDistanceSq(this.getPos().add(0.5, 0.5, 0.5)) <= 64;
+	}
+	
+	class StackHandler extends ItemStackHandler {
+		public StackHandler(int size) {
+			super(size);
+		}
+		
+		@Override
+		protected void onContentsChanged(int slot) {
+			TileEnderCrafter.this.markDirty();
+		}
 	}
 }

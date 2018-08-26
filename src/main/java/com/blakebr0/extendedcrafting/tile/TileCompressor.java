@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import javax.annotation.Nonnull;
-
 import com.blakebr0.cucumber.energy.EnergyStorageCustom;
 import com.blakebr0.cucumber.helper.StackHelper;
 import com.blakebr0.cucumber.util.VanillaPacketDispatcher;
@@ -422,13 +420,12 @@ public class TileCompressor extends TileEntity implements ISidedInventory, ITick
 		return this.getCapability(capability, side) != null;
 	}
 	
-	@Nonnull
 	@Override
 	public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
 		if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
 			return (T) new SidedInvWrapper(this, facing);
 		} else if (capability == CapabilityEnergy.ENERGY) {
-			return CapabilityEnergy.ENERGY.cast(energy);
+			return CapabilityEnergy.ENERGY.cast(this.energy);
 		}
 		
 		return super.getCapability(capability, facing);

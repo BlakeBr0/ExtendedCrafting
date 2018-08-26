@@ -2,14 +2,12 @@ package com.blakebr0.extendedcrafting.client.container;
 
 import com.blakebr0.extendedcrafting.crafting.endercrafter.EnderResultSlot;
 import com.blakebr0.extendedcrafting.crafting.table.TableCraftResult;
-import com.blakebr0.extendedcrafting.crafting.table.TableResultHandler;
 import com.blakebr0.extendedcrafting.tile.TileEnderCrafter;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
@@ -30,19 +28,19 @@ public class ContainerEnderCrafter extends Container {
 		this.addSlotToContainer(new EnderResultSlot(this.result, 0, 124, 36));
 		
 		int wy, ex;
-		for (wy = 0; wy < 3; ++wy) {
-			for (ex = 0; ex < 3; ++ex) {
+		for (wy = 0; wy < 3; wy++) {
+			for (ex = 0; ex < 3; ex++) {
 				this.addSlotToContainer(new SlotItemHandler(this.handler, ex + wy * 3, 30 + ex * 18, 18 + wy * 18));
 			}
 		}
 
-		for (wy = 0; wy < 3; ++wy) {
-			for (ex = 0; ex < 9; ++ex) {
+		for (wy = 0; wy < 3; wy++) {
+			for (ex = 0; ex < 9; ex++) {
 				this.addSlotToContainer(new Slot(player, ex + wy * 9 + 9, 8 + ex * 18, 88 + wy * 18));
 			}
 		}
 
-		for (ex = 0; ex < 9; ++ex) {
+		for (ex = 0; ex < 9; ex++) {
 			this.addSlotToContainer(new Slot(player, ex, 8 + ex * 18, 146));
 		}
 	}

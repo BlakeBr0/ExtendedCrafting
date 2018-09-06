@@ -1,8 +1,11 @@
 package com.blakebr0.extendedcrafting.crafting;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
+import com.blakebr0.cucumber.util.Utils;
 import com.blakebr0.extendedcrafting.config.ModConfig;
 
 import net.minecraft.block.Block;
@@ -16,7 +19,8 @@ public class CombinationRecipe {
 	protected int cost;
 	protected int perTick;
 	protected ItemStack input;
-	protected ArrayList<Object> pedestals = new ArrayList<Object>();
+	protected ArrayList<Object> pedestals = new ArrayList<>();
+	protected ArrayList<String> inputList = new ArrayList<>();
 	
 	public CombinationRecipe(ItemStack output, int cost, ItemStack input, Object... pedestals) {
 		this(output, cost, ModConfig.confCraftingCoreRFRate, input, pedestals);
@@ -27,15 +31,27 @@ public class CombinationRecipe {
 		this.cost = cost;
 		this.perTick = perTick;
 		this.input = input;
+		
+		Map<String, Integer> ingredients = new LinkedHashMap<>();
+		
+		ingredients.put(input.getDisplayName(), 1);
 		for (Object obj : pedestals) {
 			if (obj instanceof ItemStack) {
-				this.pedestals.add(((ItemStack) obj).copy());
+				ItemStack stack = ((ItemStack) obj).copy();
+				this.pedestals.add(stack);
+				this.putIngredient(ingredients, stack.getDisplayName());
 			} else if (obj instanceof Item) {
-				this.pedestals.add(new ItemStack((Item) obj));
+				ItemStack stack = new ItemStack((Item) obj);
+				this.pedestals.add(stack);
+				this.putIngredient(ingredients, stack.getDisplayName());
 			} else if (obj instanceof Block) {
-				this.pedestals.add(new ItemStack((Block) obj));
+				ItemStack stack = new ItemStack((Block) obj);
+				this.pedestals.add(stack);
+				this.putIngredient(ingredients, stack.getDisplayName());
 			} else if (obj instanceof String) {
-				this.pedestals.add(OreDictionary.getOres((String) obj));
+				String ore = (String) obj;
+				this.pedestals.add(OreDictionary.getOres(ore));
+				this.putIngredient(ingredients, ore + " (oredict)");
 			} else if (obj instanceof List) {
 				this.pedestals.add(obj);
 			} else {
@@ -49,6 +65,9 @@ public class CombinationRecipe {
 				throw new RuntimeException(ret);
 			}
 		}
+		
+		this.inputList.add(Utils.localize("tooltip.ec.items_required"));
+		ingredients.forEach((s, i) -> this.inputList.add(" " + i + "x " + s));
 	}
 
 	public ItemStack getOutput() {
@@ -69,5 +88,18 @@ public class CombinationRecipe {
 
 	public ArrayList<Object> getPedestalItems() {
 		return this.pedestals;
+	}
+	
+	public ArrayList<String> getInputList() {
+		return this.inputList;
+	}
+	
+	private void putIngredient(Map<String, Integer> ingredients, String name) {
+		if (ingredients.containsKey(name)) {
+			int current = ingredients.get(name);
+			ingredients.replace(name, current + 1);
+		} else {
+			ingredients.put(name, 1);
+		}
 	}
 }

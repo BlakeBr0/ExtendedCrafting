@@ -167,6 +167,7 @@ tooltip.ec.crafting=Crafting: %sx %s
 tooltip.ec.mode=Mode: %s
 tooltip.ec.num_items=%s Items
 tooltip.ec.requires_table=Requires Tier %s Crafting Table
+tooltip.ec.items_required=Items Required:
 
 # GUIDE
 guide.extendedcrafting.name=Extended Crafting Guide

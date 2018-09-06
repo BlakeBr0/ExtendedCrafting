@@ -18,7 +18,7 @@ public class CombinationCraftingWrapper implements IRecipeWrapper {
 
 	private IJeiHelpers helpers;
 	private final CombinationRecipe recipe;
-
+	
 	public CombinationCraftingWrapper(IJeiHelpers helpers, CombinationRecipe recipe) {
 		this.helpers = helpers;
 		this.recipe = recipe;
@@ -27,8 +27,13 @@ public class CombinationCraftingWrapper implements IRecipeWrapper {
 	@Override
 	public List<String> getTooltipStrings(int mouseX, int mouseY) {
 		if (mouseX > 1 && mouseX < 14 && mouseY > 9 && mouseY < 86) {
-			return Arrays.<String> asList(Utils.format(this.recipe.getCost()) + " FE", Utils.format(this.recipe.getPerTick()) + " FE/t");
+			return Arrays.asList(Utils.format(this.recipe.getCost()) + " FE", Utils.format(this.recipe.getPerTick()) + " FE/t");
 		}
+		
+		if (mouseX > 5 && mouseX < 23 && mouseY > 144 && mouseY < 165) {
+			return this.recipe.getInputList();
+		}
+		
 		return Collections.emptyList();
 	}
 

@@ -12,7 +12,6 @@ import crafttweaker.api.item.IIngredient;
 import crafttweaker.api.item.IItemStack;
 import crafttweaker.api.oredict.IOreDictEntry;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.oredict.OreDictionary;
 import stanhebben.zenscript.annotations.ZenClass;
 import stanhebben.zenscript.annotations.ZenMethod;
 
@@ -118,7 +117,7 @@ public class CombinationCrafting {
 			return null;
 		} else {
 			if (ingredient instanceof IOreDictEntry) {
-				return OreDictionary.getOres(toString((IOreDictEntry) ingredient));
+				return toString((IOreDictEntry) ingredient);
 			} else if (ingredient instanceof IItemStack) {
 				return toStack((IItemStack) ingredient);
 			} else {

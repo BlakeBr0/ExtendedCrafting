@@ -85,6 +85,12 @@ public class ItemSingularity extends ItemMeta implements IEnableable {
 		addSingularity(64, "ardite", "ingotArdite", 0xDA4817);
 		addSingularity(65, "cobalt", "ingotCobalt", 0x023C9B);
 		addSingularity(66, "manyullyn", "ingotManyullyn", 0x5C268A);
+		
+		this.config.get("singularity", "default_singularities", new String[0]).setComment("Disable specific default singularities here.");
+		
+		if (this.config.hasChanged()) { 
+			this.config.save();
+		}
 	}
 
 	@Override
@@ -189,9 +195,7 @@ public class ItemSingularity extends ItemMeta implements IEnableable {
 				}
 			}
 			
-			prop.setComment("Disable specific default singularities here.");
 			prop.set(newValues);
-			this.config.save();
 		}
 	}
 

@@ -76,7 +76,7 @@ public class ContainerBasicTable extends Container {
 			itemstack = itemstack1.copy();
 
 			if (slotNumber == 0) {
-				if (!this.mergeItemStack(itemstack1, 10, 46, false)) {
+				if (!this.mergeItemStack(itemstack1, 10, 46, true)) {
 					return ItemStack.EMPTY;
 				}
 

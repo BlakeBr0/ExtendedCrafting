@@ -76,7 +76,7 @@ public class ContainerUltimateTable extends Container {
 			itemstack = itemstack1.copy();
 
 			if (slotNumber == 0) {
-				if (!this.mergeItemStack(itemstack1, 82, 118, false)) {
+				if (!this.mergeItemStack(itemstack1, 82, 118, true)) {
 					return ItemStack.EMPTY;
 				}
 

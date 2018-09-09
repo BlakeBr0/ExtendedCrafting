@@ -76,7 +76,7 @@ public class ContainerEliteTable extends Container {
 			itemstack = itemstack1.copy();
 
 			if (slotNumber == 0) {
-				if (!this.mergeItemStack(itemstack1, 50, 86, false)) {
+				if (!this.mergeItemStack(itemstack1, 50, 86, true)) {
 					return ItemStack.EMPTY;
 				}
 

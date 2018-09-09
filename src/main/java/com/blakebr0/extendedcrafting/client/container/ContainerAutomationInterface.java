@@ -31,13 +31,13 @@ public class ContainerAutomationInterface extends Container {
 			}
 		});
 
-		for (int i = 0; i < 3; ++i) {
-			for (int j = 0; j < 9; ++j) {
+		for (int i = 0; i < 3; i++) {
+			for (int j = 0; j < 9; j++) {
 				this.addSlotToContainer(new Slot(player, j + i * 9 + 9, 8 + j * 18, 111 + i * 18));
 			}
 		}
 
-		for (int i = 0; i < 9; ++i) {
+		for (int i = 0; i < 9; i++) {
 			this.addSlotToContainer(new Slot(player, i, 8 + i * 18, 169));
 		}
 	}
@@ -52,9 +52,10 @@ public class ContainerAutomationInterface extends Container {
             itemstack = itemstack1.copy();
 
             if (slotNumber == 1) {
-                if (!this.mergeItemStack(itemstack1, 2, 38, false)) {
+                if (!this.mergeItemStack(itemstack1, 2, 38, true)) {
                     return ItemStack.EMPTY;
                 }
+                
                 slot.onSlotChange(itemstack1, itemstack);
             } else if (slotNumber != 0) {
             	ItemStack inputStack = this.inventorySlots.get(0).getStack();
@@ -84,8 +85,10 @@ public class ContainerAutomationInterface extends Container {
             if (itemstack1.getCount() == itemstack.getCount()) {
                 return ItemStack.EMPTY;
             }
+            
             slot.onTake(player, itemstack1);
         }
+        
         return itemstack;
 	}
 

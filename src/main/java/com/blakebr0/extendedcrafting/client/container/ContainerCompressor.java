@@ -52,9 +52,10 @@ public class ContainerCompressor extends Container {
 			itemstack = itemstack1.copy();
 
 			if (slotNumber < 3) {
-				if (!this.mergeItemStack(itemstack1, 3, 39, false)) {
+				if (!this.mergeItemStack(itemstack1, 3, 39, true)) {
 					return ItemStack.EMPTY;
 				}
+				
 				slot.onSlotChange(itemstack1, itemstack);
 			} else if (slotNumber >= 3) {
 				ItemStack inputStack = this.inventorySlots.get(1).getStack();

@@ -27,6 +27,7 @@ public class ModConfig {
 	public static int confInterfaceRFRate;
 	
 	public static boolean confTableEnabled;
+	public static boolean confTableUseRecipes;
 	
 	public static boolean confCompressorEnabled;
 	public static int confCompressorRFCapacity;
@@ -86,6 +87,7 @@ public class ModConfig {
 		category = "table_crafting";
 		config.setCategoryComment(category, "Settings for the Extended Crafting Tables.");
 		confTableEnabled = config.getBoolean("enabled", category, true, "Should the Extended Crafting Tables be enabled?");
+		confTableUseRecipes = config.getBoolean("use_recipes", category, true, "Should the Basic Crafting Table inherit normal crafting recipes?");
 		
 		category = "quantum_compression";
 		config.setCategoryComment(category, "Settings for the Quantum Compressor.");

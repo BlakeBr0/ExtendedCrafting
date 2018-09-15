@@ -25,7 +25,7 @@ public class RenderCompressor extends TileEntitySpecialRenderer<TileCompressor> 
 		
 		IBlockState state = tile.getWorld().getBlockState(tile.getPos());
 
-		if (state == null || state.getBlock() != ModBlocks.blockCompressor)
+		if (state == null || state.getBlock() != ModBlocks.blockCompressor || !tile.getWorld().isAirBlock(tile.getPos().up()))
 			return;
 
 		CompressorRecipe recipe = tile.getRecipe();

@@ -25,6 +25,7 @@ public class ModConfig {
 	public static boolean confInterfaceEnabled;
 	public static int confInterfaceRFCapacity;
 	public static int confInterfaceRFRate;
+	public static boolean confInterfaceRenderer;
 	
 	public static boolean confTableEnabled;
 	public static boolean confTableUseRecipes;
@@ -83,7 +84,8 @@ public class ModConfig {
 		confInterfaceEnabled = config.getBoolean("enabled", category, true, "Should the Automation Interface be enabled?");
 		confInterfaceRFCapacity = config.getInt("energy_capacity", category, 1000000, 0, Integer.MAX_VALUE, "How much FE the Automation Interface should hold.");
 		confInterfaceRFRate = config.getInt("energy_rate", category, 80, 0, 100000, "How much FE the Automation Interface should use when moving items.");
-
+		confInterfaceRenderer = config.getBoolean("render_item", category, true, "Should the Automation Interface render the result item inside it?");
+		
 		category = "table_crafting";
 		config.setCategoryComment(category, "Settings for the Extended Crafting Tables.");
 		confTableEnabled = config.getBoolean("enabled", category, true, "Should the Extended Crafting Tables be enabled?");

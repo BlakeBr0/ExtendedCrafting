@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-import com.blakebr0.cucumber.gui.button.GuiButtonArrow;
 import com.blakebr0.cucumber.gui.button.IconButton;
 import com.blakebr0.cucumber.lib.Colors;
 import com.blakebr0.cucumber.util.Utils;

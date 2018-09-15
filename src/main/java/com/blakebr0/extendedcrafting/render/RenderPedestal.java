@@ -1,6 +1,5 @@
 package com.blakebr0.extendedcrafting.render;
 
-import com.blakebr0.cucumber.helper.StackHelper;
 import com.blakebr0.extendedcrafting.block.ModBlocks;
 import com.blakebr0.extendedcrafting.tile.TilePedestal;
 
@@ -11,6 +10,7 @@ import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms.TransformType;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.item.ItemBlock;
+import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -21,14 +21,14 @@ public class RenderPedestal extends TileEntitySpecialRenderer<TilePedestal> {
 	public void render(TilePedestal tile, double x, double y, double z, float partialTick, int destroyStage, float alpha) {
 		IBlockState state = tile.getWorld().getBlockState(tile.getPos());
 
-		if (state == null || state.getBlock() != ModBlocks.blockPedestal) {
+		if (state == null || state.getBlock() != ModBlocks.blockPedestal)
 			return;
-		}
 
-		if (!StackHelper.isNull(tile.getInventory().getStackInSlot(0))) {
+		ItemStack stack = tile.getInventory().getStackInSlot(0);
+		if (!stack.isEmpty()) {
 			GlStateManager.pushMatrix();
 			GlStateManager.translate(x + 0.5D, y + 1.4D, z + 0.5D);
-			float scale = (float) (tile.getInventory().getStackInSlot(0).getItem() instanceof ItemBlock ? 0.85F : 0.65);
+			float scale = (float) (stack.getItem() instanceof ItemBlock ? 0.85F : 0.65F);
 			GlStateManager.scale(scale, scale, scale);
 			double tick = Minecraft.getSystemTime() / 800.0D;
 			GlStateManager.translate(0.0D, Math.sin(tick % (2 * Math.PI)) * 0.065D, 0.0D);
@@ -37,7 +37,7 @@ public class RenderPedestal extends TileEntitySpecialRenderer<TilePedestal> {
 			GlStateManager.pushAttrib();
 			RenderHelper.enableStandardItemLighting();
 			GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
-			Minecraft.getMinecraft().getRenderItem().renderItem(tile.getInventory().getStackInSlot(0), TransformType.FIXED);
+			Minecraft.getMinecraft().getRenderItem().renderItem(stack, TransformType.FIXED);
 			RenderHelper.disableStandardItemLighting();
 			GlStateManager.popAttrib();
 			GlStateManager.enableLighting();

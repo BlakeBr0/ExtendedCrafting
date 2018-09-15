@@ -64,7 +64,7 @@ public class ContainerAutomationInterface extends Container {
                         return ItemStack.EMPTY;
                     }
                 } else if(slotNumber >= 2 && slotNumber < 29) {
-                    if(!this.mergeItemStack(itemstack1, 29, 38, false)) {
+                    if (!this.mergeItemStack(itemstack1, 29, 38, false)) {
                         return ItemStack.EMPTY;
                     }
                 } else if (slotNumber >= 29 && slotNumber < 38) {

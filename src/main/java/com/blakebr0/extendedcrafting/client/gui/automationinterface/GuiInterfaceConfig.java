@@ -82,12 +82,24 @@ public class GuiInterfaceConfig extends GuiContainer {
 		if (button == this.back) {
 			Minecraft.getMinecraft().displayGuiScreen(this.parent);
 		} else if (button == this.insert) {
-			NetworkThingy.THINGY.sendToServer(new InterfaceAutoChangePacket(this.tile.getPos(), 0));
-			this.insert.facing = this.incrementFace(this.insert.facing);
+			if (Utils.isShiftKeyDown()) {
+				NetworkThingy.THINGY.sendToServer(new InterfaceAutoChangePacket(this.tile.getPos(), 4));
+				this.insert.facing = null;
+			} else {
+				NetworkThingy.THINGY.sendToServer(new InterfaceAutoChangePacket(this.tile.getPos(), 0));
+				this.insert.facing = this.incrementFace(this.insert.facing);
+			}
+			
 			this.insert.tooltip = this.getButtonTooltip(this.insert);
 		} else if (button == this.extract) {
-			NetworkThingy.THINGY.sendToServer(new InterfaceAutoChangePacket(this.tile.getPos(), 1));
-			this.extract.facing = this.incrementFace(this.extract.facing);
+			if (Utils.isShiftKeyDown()) {
+				NetworkThingy.THINGY.sendToServer(new InterfaceAutoChangePacket(this.tile.getPos(), 5));
+				this.extract.facing = null;
+			} else {
+				NetworkThingy.THINGY.sendToServer(new InterfaceAutoChangePacket(this.tile.getPos(), 1));
+				this.extract.facing = this.incrementFace(this.extract.facing);
+			}
+
 			this.extract.tooltip = this.getButtonTooltip(this.extract);
 		} else if (button == this.eject) {
 			NetworkThingy.THINGY.sendToServer(new InterfaceAutoChangePacket(this.tile.getPos(), 2));

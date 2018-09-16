@@ -48,6 +48,7 @@ public class InterfaceAutoChangePacket implements IMessage {
 			TileEntity tile = ctx.getServerHandler().player.world.getTileEntity(BlockPos.fromLong(message.pos));
 			if (tile instanceof TileAutomationInterface) {
 				TileAutomationInterface machine = (TileAutomationInterface) tile;
+				
 				if (message.mode == 0) {
 					machine.switchInserter();
 				} else if (message.mode == 1) {
@@ -56,6 +57,10 @@ public class InterfaceAutoChangePacket implements IMessage {
 					machine.toggleAutoEject();
 				} else if (message.mode == 3) {
 					machine.toggleSmartInsert();
+				} else if (message.mode == 4) {
+					machine.disableInserter();
+				} else if (message.mode == 5) {
+					machine.disableExtractor();
 				}
 			}
 		}

@@ -483,13 +483,17 @@ public class TileAutomationInterface extends TileEntity implements ITickable, IS
 	}
 	
 	public void disableInserter() {
-		this.autoInsert = -1;
-		this.markDirty();
+		if (this.autoInsert != -1) {
+			this.autoInsert = -1;
+			this.markDirty();
+		}
 	}
 	
 	public void disableExtractor() {
-		this.autoExtract = -1;
-		this.markDirty();
+		if (this.autoExtract != -1) {
+			this.autoExtract = -1;
+			this.markDirty();
+		}
 	}
 	
 	public boolean checkStackSmartly(ItemStack stack) {

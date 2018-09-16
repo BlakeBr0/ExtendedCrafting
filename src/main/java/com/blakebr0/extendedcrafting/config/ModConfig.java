@@ -17,6 +17,7 @@ public class ModConfig {
 	
 	public static boolean confGuideEnabled;
 	public static boolean confHandheldTableEnabled;
+	public static boolean confEnergyInWaila;
 
 	public static boolean confCraftingCoreEnabled;
 	public static int confCraftingCoreRFCapacity;
@@ -72,6 +73,7 @@ public class ModConfig {
 		config.setCategoryComment(category, "Settings for general things.");
 		confGuideEnabled = config.getBoolean("guide_enabled", category, true, "Should the In-Game Guide Book be enabled?");
 		confHandheldTableEnabled = config.getBoolean("handheld_table_enabled", category, true, "Should the Handheld Crafting Table be enabled?");
+		confEnergyInWaila = config.getBoolean("energy_in_waila", category, true, "Should WAILA show the current energy of Extended Crafting machines?");
 		
 		category = "combination_crafting";
 		config.setCategoryComment(category, "Settings for the Crafting Core.");

@@ -14,6 +14,7 @@ import com.blakebr0.extendedcrafting.block.craftingtable.BlockAdvancedTable;
 import com.blakebr0.extendedcrafting.block.craftingtable.BlockBasicTable;
 import com.blakebr0.extendedcrafting.block.craftingtable.BlockEliteTable;
 import com.blakebr0.extendedcrafting.block.craftingtable.BlockUltimateTable;
+import com.blakebr0.extendedcrafting.config.ModConfig;
 import com.blakebr0.extendedcrafting.crafting.CombinationRecipe;
 import com.blakebr0.extendedcrafting.crafting.CompressorRecipe;
 import com.blakebr0.extendedcrafting.tile.TileAutomationInterface;
@@ -78,7 +79,10 @@ public class WailaDataProvider implements IWailaDataProvider {
 		
 		if (block instanceof BlockCraftingCore && tile instanceof TileCraftingCore && !tile.isInvalid()) {
 			TileCraftingCore core = (TileCraftingCore) tile;
-			tooltip.add(Utils.format(core.getEnergy().getEnergyStored()) + " FE");
+			
+			if (ModConfig.confEnergyInWaila) {
+				tooltip.add(Utils.format(core.getEnergy().getEnergyStored()) + " FE");
+			}
 			
 			CombinationRecipe recipe = core.getRecipe();
 			if (recipe != null) {
@@ -94,7 +98,10 @@ public class WailaDataProvider implements IWailaDataProvider {
 		
 		if (block instanceof BlockAutomationInterface && tile instanceof TileAutomationInterface && !tile.isInvalid()) {
 			TileAutomationInterface auto = (TileAutomationInterface) tile;
-			tooltip.add(Utils.format(auto.getEnergy().getEnergyStored()) + " FE");
+			
+			if (ModConfig.confEnergyInWaila) {
+				tooltip.add(Utils.format(auto.getEnergy().getEnergyStored()) + " FE");
+			}
 			
 			ItemStack result = auto.getResult();
 			if (!result.isEmpty()) {
@@ -112,7 +119,10 @@ public class WailaDataProvider implements IWailaDataProvider {
 		
 		if (block instanceof BlockCompressor && tile instanceof TileCompressor && !tile.isInvalid()) {
 			TileCompressor compressor = (TileCompressor) tile;
-			tooltip.add(Utils.format(compressor.getEnergy().getEnergyStored()) + " FE");
+			
+			if (ModConfig.confEnergyInWaila) {
+				tooltip.add(Utils.format(compressor.getEnergy().getEnergyStored()) + " FE");
+			}
 			
 			CompressorRecipe recipe = compressor.getRecipe();
 			if (recipe != null) {

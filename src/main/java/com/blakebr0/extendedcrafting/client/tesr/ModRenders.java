@@ -1,4 +1,4 @@
-package com.blakebr0.extendedcrafting.render;
+package com.blakebr0.extendedcrafting.client.tesr;
 
 import com.blakebr0.extendedcrafting.tile.TileAutomationInterface;
 import com.blakebr0.extendedcrafting.tile.TileCompressor;

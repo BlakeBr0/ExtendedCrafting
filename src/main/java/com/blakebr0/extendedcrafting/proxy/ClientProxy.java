@@ -1,10 +1,10 @@
 package com.blakebr0.extendedcrafting.proxy;
 
+import com.blakebr0.extendedcrafting.client.tesr.ModRenders;
 import com.blakebr0.extendedcrafting.config.ModConfig;
 import com.blakebr0.extendedcrafting.item.ItemSingularity;
 import com.blakebr0.extendedcrafting.item.ItemSingularityCustom;
 import com.blakebr0.extendedcrafting.item.ModItems;
-import com.blakebr0.extendedcrafting.render.ModRenders;
 
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;

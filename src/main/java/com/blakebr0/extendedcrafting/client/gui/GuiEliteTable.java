@@ -12,7 +12,7 @@ import net.minecraft.util.ResourceLocation;
 
 public class GuiEliteTable extends GuiContainer {
 
-	private static final ResourceLocation GUI = ResourceHelper.getResource(ExtendedCrafting.MOD_ID, "textures/gui/elite_table.png");
+	public static final ResourceLocation GUI = ResourceHelper.getResource(ExtendedCrafting.MOD_ID, "textures/gui/elite_table.png");
 
 	public GuiEliteTable(TileEliteCraftingTable tileEntity, ContainerEliteTable container) {
 		super(container);

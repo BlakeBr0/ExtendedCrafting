@@ -3,15 +3,20 @@ package com.blakebr0.extendedcrafting.client.gui.automationinterface;
 import java.io.IOException;
 
 import com.blakebr0.cucumber.gui.button.GuiButtonArrow;
-import com.blakebr0.extendedcrafting.ExtendedCrafting;
+import com.blakebr0.cucumber.helper.RenderHelper;
+import com.blakebr0.cucumber.util.Utils;
+import com.blakebr0.extendedcrafting.client.container.automationinterface.ContainerViewRecipe;
+import com.blakebr0.extendedcrafting.client.gui.GuiAdvancedTable;
+import com.blakebr0.extendedcrafting.client.gui.GuiBasicTable;
+import com.blakebr0.extendedcrafting.client.gui.GuiEliteTable;
+import com.blakebr0.extendedcrafting.client.gui.GuiUltimateTable;
+import com.blakebr0.extendedcrafting.lib.ViewRecipeInfo;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.items.ItemStackHandler;
@@ -19,41 +24,28 @@ import net.minecraftforge.items.ItemStackHandler;
 public class GuiViewRecipe extends GuiContainer {
 	
 	private GuiAutomationInterface parent;
-	private int xSize, ySize;
-	
-	protected static final ResourceLocation GRID_3x3 = new ResourceLocation(ExtendedCrafting.MOD_ID, "textures/gui/grid_3x3.png");
-	protected static final ResourceLocation GRID_5x5 = new ResourceLocation(ExtendedCrafting.MOD_ID, "textures/gui/grid_5x5.png");
-	protected static final ResourceLocation GRID_7x7 = new ResourceLocation(ExtendedCrafting.MOD_ID, "textures/gui/grid_7x7.png");
-	protected static final ResourceLocation GRID_9x9 = new ResourceLocation(ExtendedCrafting.MOD_ID, "textures/gui/grid_9x9.png");
-	protected static ResourceLocation grid;
+	public ViewRecipeInfo info;
+	public ResourceLocation grid;
 	public GuiButton back;
 		
-	public GuiViewRecipe(GuiAutomationInterface parent, int xSize, int ySize, int size) {
-		super(new Container() {
-			@Override
-			public boolean canInteractWith(EntityPlayer player) {
-				return false;
-			}
-		});
+	public GuiViewRecipe(GuiAutomationInterface parent, ViewRecipeInfo info, int width) {
+		super(new ContainerViewRecipe(parent.player, parent.tile, info));
 		this.parent = parent;
-		this.xSize = xSize;
-		this.ySize = ySize;
-		switch (size) {
+		this.info = info;
+		this.xSize = info.width;
+		this.ySize = info.height;
+		
+		switch (width) {
 		case 3:
-			this.grid = GRID_3x3;
-			break;
+			this.grid = GuiBasicTable.GUI; break;
 		case 5:
-			this.grid = GRID_5x5;
-			break;
+			this.grid = GuiAdvancedTable.GUI; break;
 		case 7:
-			this.grid = GRID_7x7;
-			break;
+			this.grid = GuiEliteTable.GUI; break;
 		case 9:
-			this.grid = GRID_9x9;
-			break;
+			this.grid = GuiUltimateTable.GUI; break;
 		default:
-			this.grid = GRID_3x3;
-			break;
+			this.grid = GuiBasicTable.GUI; break;
 		}
 	}
 	
@@ -63,23 +55,66 @@ public class GuiViewRecipe extends GuiContainer {
 		super.drawScreen(mouseX, mouseY, partialTicks);
 		this.renderHoveredToolTip(mouseX, mouseY);
 		
-		if (this.back.isMouseOver()) {
-			this.drawHoveringText(this.back.displayString, mouseX, mouseY);
+		int x = (this.width - this.xSize) / 2;
+		int y = (this.height - this.ySize) / 2;
+		
+		if (this.parent.tile.hasRecipe()) {
+			ItemStackHandler recipe = this.parent.tile.getRecipe();
+			int s = (int) Math.sqrt(recipe.getSlots());
+			ItemStack hovered = ItemStack.EMPTY;
+			int tooltipX = 0, tooltipY = 0;
+			for (int i = 0; i < s; i++) {
+				for (int j = 0; j < s; j++) {
+					int b = i * s + j;
+					ItemStack stack = recipe.getStackInSlot(b);
+					
+					int x1 = x + 13 + (j * 18) + this.info.gridStartX;
+					int y1 = y + 22 + (i * 18) + this.info.gridStartY;
+					this.drawItemStack(stack, x1, y1);
+					
+					int xOffset = x1 - x;
+					int yOffset = y1 - y;
+					if (this.isMouseOver(xOffset, yOffset, mouseX, mouseY)) {
+						hovered = stack;
+						tooltipX = xOffset;
+						tooltipY = yOffset;
+					}
+				}
+			}
+			
+			this.drawFakeItemStackTooltip(hovered, tooltipX, tooltipY, mouseX, mouseY);
+			
+			ItemStack result = this.parent.tile.getResult();
+			this.drawItemStack(result, x + this.info.outputX, y + this.info.outputY);
+			
+			if (this.isMouseOver(this.info.outputX, this.info.outputY, mouseX, mouseY)) {
+				this.drawFakeItemStackTooltip(result, this.info.outputX, this.info.outputY, mouseX, mouseY);
+			}
 		}
-	}
+	}	
 	
 	@Override
 	public void initGui() {
 		super.initGui();
 		
-		this.back = this.addButton(new GuiButtonArrow(0, (this.width / 2) - 15, ((this.height - this.ySize) / 2) + 4));
+		int x = (this.width - this.xSize) / 2;
+		int y = (this.height - this.ySize) / 2;
+		
+		this.back = this.addButton(new GuiButtonArrow(0, x + this.info.width - 35, y + 6));
 	}
 	
 	@Override
 	protected void actionPerformed(GuiButton button) throws IOException {
-		if (button.id == 0) {
+		if (button == this.back) {
 			Minecraft.getMinecraft().displayGuiScreen(this.parent);
 		}
+	}
+	
+	@Override
+	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
+		String s = Utils.localize("ec.interface.view");
+		this.fontRenderer.drawString(s, this.xSize / 2 - this.fontRenderer.getStringWidth(s) / 2, 6, 4210752);
+		this.fontRenderer.drawString(Utils.localize("container.inventory"), 8 + this.info.invOffsetX, this.ySize - 94, 4210752);
 	}
 
 	@Override
@@ -88,17 +123,20 @@ public class GuiViewRecipe extends GuiContainer {
 		this.mc.getTextureManager().bindTexture(this.grid);
 		int x = (this.width - this.xSize) / 2;
 		int y = (this.height - this.ySize) / 2;
-		this.drawTexturedModalRect(x, y, 0, 0, this.xSize, this.ySize);
 		
-		if (this.parent.tile.hasRecipe()) {
-			ItemStackHandler recipe = this.parent.tile.getRecipe();
-			int s = (int) Math.sqrt(recipe.getSlots());
-			for (int i = 0; i < s; i++) {
-				for (int j = 0; j < s; j++) {
-					int b = i * s + j;
-					this.drawItemStack(recipe.getStackInSlot(b), x + 13 + (j * 18), y + 22 + (i * 18));
-				}
-			}
+		if (this.grid == GuiUltimateTable.GUI) {
+			RenderHelper.drawTexturedModelRect(x, y, 0, 0, this.xSize, this.ySize, 512, 512);
+		} else {
+			this.drawTexturedModalRect(x, y, 0, 0, this.xSize, this.ySize);
+		}
+	}
+	
+	@Override
+	protected void renderHoveredToolTip(int mouseX, int mouseY) {
+		super.renderHoveredToolTip(mouseX, mouseY);
+		
+		if (this.back.isMouseOver()) {
+			this.drawHoveringText(this.back.displayString, mouseX, mouseY);
 		}
 	}
 	
@@ -116,4 +154,21 @@ public class GuiViewRecipe extends GuiContainer {
         this.itemRender.zLevel = 0.0F;
         GlStateManager.popMatrix();
     }
+    
+	private void drawFakeItemStackTooltip(ItemStack stack, int xOffset, int yOffset, int mouseX, int mouseY) {
+		if (!stack.isEmpty()) {
+			GlStateManager.disableLighting();
+			GlStateManager.disableDepth();
+			GlStateManager.colorMask(true, true, true, false);
+			this.drawGradientRect(this.guiLeft + xOffset, this.guiTop + yOffset, this.guiLeft + xOffset + 16, this.guiTop + yOffset + 16, -2130706433, -2130706433);
+			GlStateManager.colorMask(true, true, true, true);
+			GlStateManager.enableLighting();
+			GlStateManager.enableDepth();
+			this.renderToolTip(stack, mouseX, mouseY);
+		}
+	}
+	
+	private boolean isMouseOver(int xOffset, int yOffset, int mouseX, int mouseY) {
+		return mouseX > this.guiLeft + xOffset - 1 && mouseX < this.guiLeft + xOffset + 16 && mouseY > this.guiTop + yOffset - 1 && mouseY < this.guiTop + yOffset + 16;
+	}
 }

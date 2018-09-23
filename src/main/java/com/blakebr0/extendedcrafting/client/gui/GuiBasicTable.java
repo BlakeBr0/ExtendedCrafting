@@ -12,7 +12,7 @@ import net.minecraft.util.ResourceLocation;
 
 public class GuiBasicTable extends GuiContainer {
 
-	private static final ResourceLocation GUI = ResourceHelper.getResource(ExtendedCrafting.MOD_ID, "textures/gui/basic_table.png");
+	public static final ResourceLocation GUI = ResourceHelper.getResource(ExtendedCrafting.MOD_ID, "textures/gui/basic_table.png");
 
 	public GuiBasicTable(TileBasicCraftingTable tileEntity, ContainerBasicTable container) {
 		super(container);

@@ -13,7 +13,7 @@ import net.minecraft.util.ResourceLocation;
 
 public class GuiUltimateTable extends GuiContainer {
 
-	private static final ResourceLocation GUI = ResourceHelper.getResource(ExtendedCrafting.MOD_ID, "textures/gui/ultimate_table.png");
+	public static final ResourceLocation GUI = ResourceHelper.getResource(ExtendedCrafting.MOD_ID, "textures/gui/ultimate_table.png");
 
 	public GuiUltimateTable(TileUltimateCraftingTable tileEntity, ContainerUltimateTable container) {
 		super(container);

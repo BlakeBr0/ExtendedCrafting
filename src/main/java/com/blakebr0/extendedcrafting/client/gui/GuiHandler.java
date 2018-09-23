@@ -1,7 +1,6 @@
 package com.blakebr0.extendedcrafting.client.gui;
 
 import com.blakebr0.extendedcrafting.client.container.ContainerAdvancedTable;
-import com.blakebr0.extendedcrafting.client.container.ContainerAutomationInterface;
 import com.blakebr0.extendedcrafting.client.container.ContainerBasicTable;
 import com.blakebr0.extendedcrafting.client.container.ContainerCompressor;
 import com.blakebr0.extendedcrafting.client.container.ContainerCraftingCore;
@@ -9,6 +8,7 @@ import com.blakebr0.extendedcrafting.client.container.ContainerEliteTable;
 import com.blakebr0.extendedcrafting.client.container.ContainerEnderCrafter;
 import com.blakebr0.extendedcrafting.client.container.ContainerHandheldTable;
 import com.blakebr0.extendedcrafting.client.container.ContainerUltimateTable;
+import com.blakebr0.extendedcrafting.client.container.automationinterface.ContainerAutomationInterface;
 import com.blakebr0.extendedcrafting.client.gui.automationinterface.GuiAutomationInterface;
 import com.blakebr0.extendedcrafting.tile.TileAdvancedCraftingTable;
 import com.blakebr0.extendedcrafting.tile.TileAutomationInterface;

@@ -12,7 +12,7 @@ import net.minecraft.util.ResourceLocation;
 
 public class GuiAdvancedTable extends GuiContainer {
 
-	private static final ResourceLocation GUI = ResourceHelper.getResource(ExtendedCrafting.MOD_ID, "textures/gui/advanced_table.png");
+	public static final ResourceLocation GUI = ResourceHelper.getResource(ExtendedCrafting.MOD_ID, "textures/gui/advanced_table.png");
 
 	public GuiAdvancedTable(TileAdvancedCraftingTable tileEntity, ContainerAdvancedTable container) {
 		super(container);

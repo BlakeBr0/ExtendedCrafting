@@ -1,27 +1,22 @@
-package com.blakebr0.extendedcrafting.client.container;
+package com.blakebr0.extendedcrafting.client.container.automationinterface;
 
-import com.blakebr0.extendedcrafting.crafting.CombinationRecipe;
-import com.blakebr0.extendedcrafting.lib.FakeRecipeHandler;
 import com.blakebr0.extendedcrafting.tile.TileAutomationInterface;
-import com.blakebr0.extendedcrafting.tile.TileCraftingCore;
-import com.blakebr0.extendedcrafting.util.VanillaPacketDispatcher;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.NonNullList;
-import net.minecraftforge.items.ItemStackHandler;
 import net.minecraftforge.items.SlotItemHandler;
 
 public class ContainerAutomationInterface extends Container {
 
 	public TileAutomationInterface tile;
+	public InventoryPlayer player;
 
 	public ContainerAutomationInterface(InventoryPlayer player, TileAutomationInterface tile) {
 		this.tile = tile;
+		this.player = player;
 		
 		this.addSlotToContainer(new SlotItemHandler(tile.getInventory(), 0, 34, 50));
 		this.addSlotToContainer(new SlotItemHandler(tile.getInventory(), 1, 144, 50) {

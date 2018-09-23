@@ -1,6 +1,5 @@
 package com.blakebr0.extendedcrafting.client.gui.automationinterface;
 
-import java.awt.Point;
 import java.io.IOException;
 
 import com.blakebr0.cucumber.gui.GuiIcons;
@@ -8,7 +7,8 @@ import com.blakebr0.cucumber.gui.button.IconButton;
 import com.blakebr0.cucumber.helper.ResourceHelper;
 import com.blakebr0.cucumber.util.Utils;
 import com.blakebr0.extendedcrafting.ExtendedCrafting;
-import com.blakebr0.extendedcrafting.client.container.ContainerAutomationInterface;
+import com.blakebr0.extendedcrafting.client.container.automationinterface.ContainerAutomationInterface;
+import com.blakebr0.extendedcrafting.lib.ViewRecipeInfo;
 import com.blakebr0.extendedcrafting.tile.TileAutomationInterface;
 import com.blakebr0.extendedcrafting.util.InterfaceRecipeChangePacket;
 import com.blakebr0.extendedcrafting.util.NetworkThingy;
@@ -17,6 +17,7 @@ import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 
@@ -24,11 +25,13 @@ public class GuiAutomationInterface extends GuiContainer {
 
 	protected static final ResourceLocation GUI = ResourceHelper.getResource(ExtendedCrafting.MOD_ID, "textures/gui/automation_interface.png");
 	protected TileAutomationInterface tile;
+	protected InventoryPlayer player;
 	private GuiButton save, clear, view, config;
 	
 	public GuiAutomationInterface(ContainerAutomationInterface container) {
 		super(container);
 		this.tile = container.tile;
+		this.player = container.player;
 		this.xSize = 176;
 		this.ySize = 193;
 	}
@@ -44,16 +47,6 @@ public class GuiAutomationInterface extends GuiContainer {
 		this.drawDefaultBackground();
 		super.drawScreen(mouseX, mouseY, partialTicks);
 		this.renderHoveredToolTip(mouseX, mouseY);
-		
-		if (mouseX > this.guiLeft + 7 && mouseX < this.guiLeft + 20 && mouseY > this.guiTop + 16 && mouseY < this.guiTop + 93) {
-			this.drawHoveringText(Utils.format(this.tile.getEnergy().getEnergyStored()) + " FE", mouseX, mouseY);
-		}
-		
-		for (GuiButton button : this.buttonList) {
-			if (button instanceof IconButton && button.isMouseOver()) {
-				this.drawHoveringText(button.displayString, mouseX, mouseY);
-			}
-		}
 	}
 	
 	@Override
@@ -85,10 +78,24 @@ public class GuiAutomationInterface extends GuiContainer {
 			this.clear.enabled = false;
 			this.view.enabled = false;
 		} else if (button == this.view) {
-			Point size = this.getSizeForGrid();
-			this.mc.displayGuiScreen(new GuiViewRecipe(this, size.x, size.y, (int) Math.sqrt(this.tile.getRecipe().getSlots())));
+			this.mc.displayGuiScreen(new GuiViewRecipe(this, this.getViewRecipeInfo(), (int) Math.sqrt(this.tile.getRecipe().getSlots())));
 		} else if (button == this.config) {
 			this.mc.displayGuiScreen(new GuiInterfaceConfig(this));
+		}
+	}
+	
+	@Override
+	protected void renderHoveredToolTip(int mouseX, int mouseY) {
+		super.renderHoveredToolTip(mouseX, mouseY);
+		
+		if (mouseX > this.guiLeft + 7 && mouseX < this.guiLeft + 20 && mouseY > this.guiTop + 16 && mouseY < this.guiTop + 93) {
+			this.drawHoveringText(Utils.format(this.tile.getEnergy().getEnergyStored()) + " FE", mouseX, mouseY);
+		}
+		
+		for (GuiButton button : this.buttonList) {
+			if (button instanceof IconButton && button.isMouseOver()) {
+				this.drawHoveringText(button.displayString, mouseX, mouseY);
+			}
 		}
 	}
 	
@@ -135,19 +142,19 @@ public class GuiAutomationInterface extends GuiContainer {
     	this.view.enabled = this.tile.hasRecipe();
     }
     
-    private Point getSizeForGrid() {
+    private ViewRecipeInfo getViewRecipeInfo() {
     	int size = (int) Math.sqrt(this.tile.getRecipe().getSlots());
     	switch (size) {
     	case 3:
-    		return new Point(78, 87);
+    		return ViewRecipeInfo.BASIC;
     	case 5:
-    		return new Point(114, 123);
+    		return ViewRecipeInfo.ADVANCED;
     	case 7:
-    		return new Point(150, 159);
+    		return ViewRecipeInfo.ELITE;
     	case 9:
-    		return new Point(186, 195);
+    		return ViewRecipeInfo.ULTIMATE;
     	default:
-    		return new Point(186, 195);
+    		return ViewRecipeInfo.BASIC;
     	}
     }
 }

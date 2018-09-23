@@ -9,6 +9,9 @@ import com.blakebr0.cucumber.helper.StackHelper;
 import com.blakebr0.cucumber.util.Utils;
 import com.blakebr0.extendedcrafting.config.ModConfig;
 import com.blakebr0.extendedcrafting.crafting.endercrafter.EnderCrafterRecipeManager;
+import com.blakebr0.extendedcrafting.crafting.table.TableCrafting;
+import com.blakebr0.extendedcrafting.crafting.table.TableRecipeManager;
+import com.blakebr0.extendedcrafting.lib.EmptyContainer;
 import com.blakebr0.extendedcrafting.lib.FakeRecipeHandler;
 import com.blakebr0.extendedcrafting.lib.IExtendedTable;
 import com.blakebr0.extendedcrafting.util.VanillaPacketDispatcher;
@@ -175,10 +178,12 @@ public class TileAutomationInterface extends TileEntity implements ITickable, IS
 							if (slotStack.getItem().hasContainerItem(slotStack) && slotStack.getCount() == 1) {
 								matrix.setStackInSlot(i, slotStack.getItem().getContainerItem(slotStack));
 							} else {
-								matrix.setStackInSlot(i, StackHelper.decrease(slotStack.copy(), 1, false));
+								matrix.extractItem(i, 1, false);
 							}
 						}
 					}
+					
+					table.setResult(TableRecipeManager.getInstance().findMatchingRecipe(new TableCrafting(new EmptyContainer(), table), this.getWorld()));
 				}
 				
 				this.getInventory().insertItem(1, toInsert, false);
@@ -249,6 +254,7 @@ public class TileAutomationInterface extends TileEntity implements ITickable, IS
 				return false;
 			}
 		}
+		
 		return true;
 	}
 

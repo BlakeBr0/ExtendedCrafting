@@ -54,7 +54,7 @@ public class GuiViewRecipe extends GuiContainer {
 		this.drawDefaultBackground();
 		super.drawScreen(mouseX, mouseY, partialTicks);
 		this.renderHoveredToolTip(mouseX, mouseY);
-		
+
 		int x = (this.width - this.xSize) / 2;
 		int y = (this.height - this.ySize) / 2;
 		
@@ -62,7 +62,6 @@ public class GuiViewRecipe extends GuiContainer {
 			ItemStackHandler recipe = this.parent.tile.getRecipe();
 			int s = (int) Math.sqrt(recipe.getSlots());
 			ItemStack hovered = ItemStack.EMPTY;
-			int tooltipX = 0, tooltipY = 0;
 			for (int i = 0; i < s; i++) {
 				for (int j = 0; j < s; j++) {
 					int b = i * s + j;
@@ -76,21 +75,22 @@ public class GuiViewRecipe extends GuiContainer {
 					int yOffset = y1 - y;
 					if (this.isMouseOver(xOffset, yOffset, mouseX, mouseY)) {
 						hovered = stack;
-						tooltipX = xOffset;
-						tooltipY = yOffset;
+						this.drawHoverSquare(xOffset, yOffset);
 					}
 				}
 			}
 			
-			this.drawFakeItemStackTooltip(hovered, tooltipX, tooltipY, mouseX, mouseY);
-			
 			ItemStack result = this.parent.tile.getResult();
 			this.drawItemStack(result, x + this.info.outputX, y + this.info.outputY);
 			
+			this.drawFakeItemStackTooltip(hovered, mouseX, mouseY);
+			
 			if (this.isMouseOver(this.info.outputX, this.info.outputY, mouseX, mouseY)) {
-				this.drawFakeItemStackTooltip(result, this.info.outputX, this.info.outputY, mouseX, mouseY);
+				this.drawHoverSquare(this.info.outputX, this.info.outputY);
+				this.drawFakeItemStackTooltip(result, mouseX, mouseY);
 			}
 		}
+		
 	}	
 	
 	@Override
@@ -142,30 +142,33 @@ public class GuiViewRecipe extends GuiContainer {
 	
     private void drawItemStack(ItemStack stack, int x, int y) {
     	GlStateManager.pushMatrix();
-        GlStateManager.translate(0.0F, 0.0F, 32.0F);
+        GlStateManager.translate(0.0F, 0.0F, -32.0F);
         this.zLevel = 200.0F;
         this.itemRender.zLevel = 200.0F;
         FontRenderer font = stack.getItem().getFontRenderer(stack);
         if (font == null) font = this.fontRenderer;
         GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
         this.itemRender.renderItemAndEffectIntoGUI(stack, x, y);
-        this.itemRender.renderItemOverlayIntoGUI(font, stack, x, y, "");
+        this.itemRender.renderItemOverlayIntoGUI(font, stack, x, y, null);
         this.zLevel = 0.0F;
         this.itemRender.zLevel = 0.0F;
         GlStateManager.popMatrix();
     }
     
-	private void drawFakeItemStackTooltip(ItemStack stack, int xOffset, int yOffset, int mouseX, int mouseY) {
+	private void drawFakeItemStackTooltip(ItemStack stack, int mouseX, int mouseY) {
 		if (!stack.isEmpty()) {
-			GlStateManager.disableLighting();
-			GlStateManager.disableDepth();
-			GlStateManager.colorMask(true, true, true, false);
-			this.drawGradientRect(this.guiLeft + xOffset, this.guiTop + yOffset, this.guiLeft + xOffset + 16, this.guiTop + yOffset + 16, -2130706433, -2130706433);
-			GlStateManager.colorMask(true, true, true, true);
-			GlStateManager.enableLighting();
-			GlStateManager.enableDepth();
 			this.renderToolTip(stack, mouseX, mouseY);
 		}
+	}
+	
+	private void drawHoverSquare(int xOffset, int yOffset) {
+		GlStateManager.disableLighting();
+		GlStateManager.disableDepth();
+		GlStateManager.colorMask(true, true, true, false);
+		this.drawGradientRect(this.guiLeft + xOffset, this.guiTop + yOffset, this.guiLeft + xOffset + 16, this.guiTop + yOffset + 16, -2130706433, -2130706433);
+		GlStateManager.colorMask(true, true, true, true);
+		GlStateManager.enableLighting();
+		GlStateManager.enableDepth();
 	}
 	
 	private boolean isMouseOver(int xOffset, int yOffset, int mouseX, int mouseY) {

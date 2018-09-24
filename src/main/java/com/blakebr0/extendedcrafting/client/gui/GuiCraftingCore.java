@@ -38,38 +38,6 @@ public class GuiCraftingCore extends GuiContainer {
 		return (int) (j != 0 && i != 0 ? (long) i * pixels / j : 0);
 	}
 
-	private void drawItemStack(ItemStack stack, int x, int y, String altText) {
-		GlStateManager.translate(0.0F, 0.0F, 32.0F);
-		this.zLevel = 50.0F;
-		this.itemRender.zLevel = 50.0F;
-		FontRenderer font = null;
-		if (!stack.isEmpty()) font = stack.getItem().getFontRenderer(stack);
-		if (font == null) font = this.fontRenderer;
-		this.itemRender.renderItemAndEffectIntoGUI(stack, x, y);
-		this.itemRender.renderItemOverlayIntoGUI(font, stack, x, y, altText);
-		this.zLevel = 0.0F;
-		this.itemRender.zLevel = 0.0F;
-	}
-
-	private void drawFakeItemStack(ItemStack stack, int xOffset, int yOffset, int mouseX, int mouseY) {
-		this.drawItemStack(stack, this.guiLeft + xOffset, this.guiTop + yOffset, (String) null);
-	}
-
-	private void drawFakeItemStackTooltip(ItemStack stack, int xOffset, int yOffset, int mouseX, int mouseY) {
-		if (mouseX > this.guiLeft + xOffset - 1 && mouseX < guiLeft + xOffset + 16 && mouseY > this.guiTop + yOffset - 1 && mouseY < this.guiTop + yOffset + 16) {
-			if (!stack.isEmpty()) {
-                GlStateManager.disableLighting();
-                GlStateManager.disableDepth();
-                GlStateManager.colorMask(true, true, true, false);
-                this.drawGradientRect(this.guiLeft + xOffset, this.guiTop + yOffset, this.guiLeft + xOffset + 16, this.guiTop + yOffset + 16, -2130706433, -2130706433);
-                GlStateManager.colorMask(true, true, true, true);
-                GlStateManager.enableLighting();
-                GlStateManager.enableDepth();
-				this.renderToolTip(stack, mouseX, mouseY);
-			}
-		}
-	}
-
 	@Override
 	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
 		String s = Utils.localize("container.ec.crafting_core");
@@ -108,7 +76,7 @@ public class GuiCraftingCore extends GuiContainer {
 			this.drawFakeItemStackTooltip(output, 148, 47, mouseX, mouseY);
 		}
 
-		if (mouseX > left + 7 && mouseX < guiLeft + 20 && mouseY > this.guiTop + 17 && mouseY < this.guiTop + 94) {
+		if (mouseX > left + 7 && mouseX < this.guiLeft + 20 && mouseY > this.guiTop + 17 && mouseY < this.guiTop + 94) {
 			this.drawHoveringText(Utils.format(this.tile.getEnergy().getEnergyStored()) + " FE", mouseX, mouseY);
 		}
 	}
@@ -129,6 +97,38 @@ public class GuiCraftingCore extends GuiContainer {
 			if (this.tile.getProgress() > 0 && recipe.getCost() > 0) {
 				int i2 = getProgressBarScaled(24);
 				this.drawTexturedModalRect(x + 116, y + 47, 194, 0, i2 + 1, 16);
+			}
+		}
+	}
+	
+	private void drawItemStack(ItemStack stack, int x, int y, String altText) {
+		GlStateManager.translate(0.0F, 0.0F, 32.0F);
+		this.zLevel = 50.0F;
+		this.itemRender.zLevel = 50.0F;
+		FontRenderer font = null;
+		if (!stack.isEmpty()) font = stack.getItem().getFontRenderer(stack);
+		if (font == null) font = this.fontRenderer;
+		this.itemRender.renderItemAndEffectIntoGUI(stack, x, y);
+		this.itemRender.renderItemOverlayIntoGUI(font, stack, x, y, altText);
+		this.zLevel = 0.0F;
+		this.itemRender.zLevel = 0.0F;
+	}
+
+	private void drawFakeItemStack(ItemStack stack, int xOffset, int yOffset, int mouseX, int mouseY) {
+		this.drawItemStack(stack, this.guiLeft + xOffset, this.guiTop + yOffset, null);
+	}
+
+	private void drawFakeItemStackTooltip(ItemStack stack, int xOffset, int yOffset, int mouseX, int mouseY) {
+		if (mouseX > this.guiLeft + xOffset - 1 && mouseX < guiLeft + xOffset + 16 && mouseY > this.guiTop + yOffset - 1 && mouseY < this.guiTop + yOffset + 16) {
+			if (!stack.isEmpty()) {
+                GlStateManager.disableLighting();
+                GlStateManager.disableDepth();
+                GlStateManager.colorMask(true, true, true, false);
+                this.drawGradientRect(this.guiLeft + xOffset, this.guiTop + yOffset, this.guiLeft + xOffset + 16, this.guiTop + yOffset + 16, -2130706433, -2130706433);
+                GlStateManager.colorMask(true, true, true, true);
+                GlStateManager.enableLighting();
+                GlStateManager.enableDepth();
+				this.renderToolTip(stack, mouseX, mouseY);
 			}
 		}
 	}

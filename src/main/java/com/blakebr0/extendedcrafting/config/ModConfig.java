@@ -91,7 +91,7 @@ public class ModConfig {
 		category = "table_crafting";
 		config.setCategoryComment(category, "Settings for the Extended Crafting Tables.");
 		confTableEnabled = config.getBoolean("enabled", category, true, "Should the Extended Crafting Tables be enabled?");
-		confTableUseRecipes = config.getBoolean("use_recipes", category, true, "Should the Basic Crafting Table inherit normal crafting recipes?");
+//		confTableUseRecipes = config.getBoolean("use_recipes", category, true, "Should the Basic Crafting Table inherit normal crafting recipes?");
 		
 		category = "quantum_compression";
 		config.setCategoryComment(category, "Settings for the Quantum Compressor.");

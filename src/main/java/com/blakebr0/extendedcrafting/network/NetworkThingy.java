@@ -1,4 +1,4 @@
-package com.blakebr0.extendedcrafting.util;
+package com.blakebr0.extendedcrafting.network;
 
 import com.blakebr0.extendedcrafting.ExtendedCrafting;
 

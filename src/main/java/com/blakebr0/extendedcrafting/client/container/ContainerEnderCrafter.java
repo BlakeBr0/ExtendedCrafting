@@ -8,6 +8,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
+import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
@@ -17,12 +18,10 @@ import net.minecraftforge.items.SlotItemHandler;
 public class ContainerEnderCrafter extends Container {
 
 	public IInventory result;
-	private TileEnderCrafter tile;
-	private IItemHandler handler;
+	public TileEnderCrafter tile;
 
 	public ContainerEnderCrafter(InventoryPlayer player, TileEnderCrafter tile, World world) {
 		this.tile = tile;
-		this.handler = tile.getMatrix();
 		this.result = new TableCraftResult(tile);
 		
 		this.addSlotToContainer(new EnderResultSlot(this.result, 0, 124, 36));
@@ -30,7 +29,7 @@ public class ContainerEnderCrafter extends Container {
 		int wy, ex;
 		for (wy = 0; wy < 3; wy++) {
 			for (ex = 0; ex < 3; ex++) {
-				this.addSlotToContainer(new SlotItemHandler(this.handler, ex + wy * 3, 30 + ex * 18, 18 + wy * 18));
+				this.addSlotToContainer(new Slot(this.tile, ex + wy * 3, 30 + ex * 18, 18 + wy * 18));
 			}
 		}
 
@@ -47,7 +46,7 @@ public class ContainerEnderCrafter extends Container {
 
 	@Override
 	public boolean canInteractWith(EntityPlayer player) {
-		return this.tile.isUseableByPlayer(player);
+		return this.tile.isUsableByPlayer(player);
 	}
 
 	@Override

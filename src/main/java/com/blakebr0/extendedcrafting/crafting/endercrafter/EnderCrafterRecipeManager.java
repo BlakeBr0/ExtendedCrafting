@@ -5,18 +5,17 @@ import java.util.List;
 
 import com.blakebr0.extendedcrafting.config.ModConfig;
 import com.blakebr0.extendedcrafting.crafting.table.ITieredRecipe;
+import com.blakebr0.extendedcrafting.crafting.table.TableCrafting;
 import com.blakebr0.extendedcrafting.crafting.table.TableRecipeShaped;
 import com.blakebr0.extendedcrafting.crafting.table.TableRecipeShapeless;
 
-import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
-import net.minecraftforge.items.IItemHandlerModifiable;
+import net.minecraft.world.World;
 
 public class EnderCrafterRecipeManager {
 
 	private static final EnderCrafterRecipeManager INSTANCE = new EnderCrafterRecipeManager();
-	private static final InventoryCrafting DUMMY_INVENTORY = new InventoryCrafting(null, 0, 0);
 	private List recipes = new ArrayList();
 
 	public static final EnderCrafterRecipeManager getInstance() {
@@ -43,14 +42,11 @@ public class EnderCrafterRecipeManager {
 		return recipe;
 	}
 	
-	public ItemStack findMatchingRecipe(IItemHandlerModifiable grid) {
+	public ItemStack findMatchingRecipe(TableCrafting grid, World world) {
 		for (int i = 0; i < this.recipes.size(); i++) {
 			IRecipe recipe = (IRecipe) this.recipes.get(i);
-			if (recipe instanceof ITieredRecipe) {
-				if (((ITieredRecipe) recipe).matches(grid)) {
-					// Pass through a dummy crafting inventory because it doesn't actually need one
-					return recipe.getCraftingResult(DUMMY_INVENTORY);
-				}
+			if (recipe.matches(grid, world)) {
+				return recipe.getCraftingResult(grid);
 			}
 		}
 		

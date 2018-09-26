@@ -7,6 +7,7 @@ import javax.annotation.Nonnull;
 import com.blakebr0.cucumber.energy.EnergyStorageCustom;
 import com.blakebr0.cucumber.helper.StackHelper;
 import com.blakebr0.cucumber.util.Utils;
+import com.blakebr0.cucumber.util.VanillaPacketDispatcher;
 import com.blakebr0.extendedcrafting.config.ModConfig;
 import com.blakebr0.extendedcrafting.crafting.endercrafter.EnderCrafterRecipeManager;
 import com.blakebr0.extendedcrafting.crafting.table.TableCrafting;
@@ -14,9 +15,9 @@ import com.blakebr0.extendedcrafting.crafting.table.TableRecipeManager;
 import com.blakebr0.extendedcrafting.lib.EmptyContainer;
 import com.blakebr0.extendedcrafting.lib.FakeRecipeHandler;
 import com.blakebr0.extendedcrafting.lib.IExtendedTable;
-import com.blakebr0.extendedcrafting.util.VanillaPacketDispatcher;
 
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -25,6 +26,7 @@ import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
+import net.minecraft.util.NonNullList;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.items.CapabilityItemHandler;
@@ -124,16 +126,16 @@ public class TileAutomationInterface extends TileEntity implements ITickable, IS
 	private void handleInput(ItemStack input, boolean canInsert) {
 		ItemStack output = this.getInventory().getStackInSlot(1);
 		ItemStack toInsert = StackHelper.withSize(input.copy(), 1, false);
-		IItemHandlerModifiable matrix = null;
+		IInventory matrix = null;
 		int slotToPut = -1;
 
 		if (canInsert) {
 			IExtendedTable table = this.getTable();
 			ItemStackHandler recipe = this.getRecipe();
-			matrix = table.getMatrix();
+			matrix = (IInventory) table;
 			
 			ItemStack stackToPut = ItemStack.EMPTY;
-			for (int i = 0; i < matrix.getSlots(); i++) {
+			for (int i = 0; i < matrix.getSizeInventory(); i++) {
 				ItemStack slot = matrix.getStackInSlot(i);
 				ItemStack recipeStack = recipe.getStackInSlot(i);
 				if (((slot.isEmpty() || StackHelper.areStacksEqual(input, slot)) && StackHelper.areStacksEqual(input, recipeStack))) {
@@ -151,7 +153,7 @@ public class TileAutomationInterface extends TileEntity implements ITickable, IS
 		}
 		
 		if (matrix != null && slotToPut > -1) {
-			matrix.insertItem(slotToPut, toInsert, false); 
+			this.insertItem(matrix, slotToPut, toInsert);
 			input.shrink(1); 
 			this.getEnergy().extractEnergy(ModConfig.confInterfaceRFRate, false); 
 		} else if (this.getAutoEject() && (output.isEmpty() || StackHelper.canCombineStacks(output, toInsert))) { 
@@ -164,7 +166,7 @@ public class TileAutomationInterface extends TileEntity implements ITickable, IS
 	public void handleOutput(ItemStack output) {
 		IExtendedTable table = this.getTable();
 		ItemStack result = table.getResult();
-		IItemHandlerModifiable matrix = table.getMatrix();
+		IInventory matrix = (IInventory) table;
 		if (!result.isEmpty() && (output.isEmpty() || StackHelper.canCombineStacks(output, result))) {				
 			if (this.getEnergy().getEnergyStored() >= ModConfig.confInterfaceRFRate) {
 				ItemStack toInsert = result.copy();
@@ -172,13 +174,13 @@ public class TileAutomationInterface extends TileEntity implements ITickable, IS
 				if (this.isEnderCrafter()) {
 					table.setResult(ItemStack.EMPTY);
 				} else {
-					for (int i = 0; i < matrix.getSlots(); i++) {
+					for (int i = 0; i < matrix.getSizeInventory(); i++) {
 						ItemStack slotStack = matrix.getStackInSlot(i);
 						if (!slotStack.isEmpty()) {
 							if (slotStack.getItem().hasContainerItem(slotStack) && slotStack.getCount() == 1) {
-								matrix.setStackInSlot(i, slotStack.getItem().getContainerItem(slotStack));
+								matrix.setInventorySlotContents(i, slotStack.getItem().getContainerItem(slotStack));
 							} else {
-								matrix.extractItem(i, 1, false);
+								matrix.decrStackSize(i, 1);
 							}
 						}
 					}
@@ -419,14 +421,14 @@ public class TileAutomationInterface extends TileEntity implements ITickable, IS
 	public void saveRecipe() {
 		ItemStackHandler recipe = this.getRecipe();
 		IExtendedTable table = this.getTable();
-		IItemHandlerModifiable matrix = table.getMatrix();
-		recipe.setSize(matrix.getSlots());
-		for (int i = 0; i < matrix.getSlots(); i++) {
-			recipe.setStackInSlot(i, matrix.getStackInSlot(i).copy());
+		NonNullList<ItemStack> matrix = table.getMatrix();
+		recipe.setSize(matrix.size());
+		for (int i = 0; i < matrix.size(); i++) {
+			recipe.setStackInSlot(i, matrix.get(i).copy());
 		}
 		
 		if (this.isEnderCrafter()) {
-			this.result = EnderCrafterRecipeManager.getInstance().findMatchingRecipe(matrix);
+			this.result = EnderCrafterRecipeManager.getInstance().findMatchingRecipe(new TableCrafting(new EmptyContainer(), table), this.getWorld());
 		} else {
 			ItemStack result = table.getResult();
 			if (result != null) {
@@ -507,9 +509,9 @@ public class TileAutomationInterface extends TileEntity implements ITickable, IS
 		if (!this.hasTable()) return false;
 		if (!this.hasRecipe()) return false;
 		
-		IItemHandlerModifiable matrix = this.getTable().getMatrix();
-		for (int i = 0; i < matrix.getSlots(); i++) {
-			ItemStack slotStack = matrix.getStackInSlot(i);
+		NonNullList<ItemStack> matrix = this.getTable().getMatrix();
+		for (int i = 0; i < matrix.size(); i++) {
+			ItemStack slotStack = matrix.get(i);
 			ItemStack recipeStack = this.getRecipe().getStackInSlot(i);
 			if (StackHelper.areStacksEqual(stack, recipeStack) && StackHelper.canCombineStacks(stack, slotStack)) {
 				return true;
@@ -539,6 +541,24 @@ public class TileAutomationInterface extends TileEntity implements ITickable, IS
 	
 	public boolean isUseableByPlayer(EntityPlayer player) {
 		return this.getWorld().getTileEntity(this.getPos()) == this && player.getDistanceSq(this.getPos().add(0.5, 0.5, 0.5)) <= 64;
+	}
+	
+	private int insertItem(IInventory matrix, int slot, ItemStack stack) {
+		ItemStack slotStack = matrix.getStackInSlot(slot);
+		if (slotStack.isEmpty()) {
+			matrix.setInventorySlotContents(slot, stack);
+			return stack.getCount();
+		} else {
+			if (StackHelper.areStacksEqual(stack, slotStack) && slotStack.getCount() < slotStack.getMaxStackSize()) {
+				ItemStack newStack = slotStack.copy();
+				int newSize = Math.min(slotStack.getCount() + stack.getCount(), slotStack.getMaxStackSize());
+				newStack.setCount(newSize);
+				matrix.setInventorySlotContents(slot, newStack);
+				return newSize - slotStack.getCount();
+			}
+		}
+		
+		return 0;
 	}
 	
 	class StackHandler extends ItemStackHandler {

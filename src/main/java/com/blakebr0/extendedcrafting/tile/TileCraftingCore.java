@@ -6,11 +6,11 @@ import java.util.List;
 
 import com.blakebr0.cucumber.energy.EnergyStorageCustom;
 import com.blakebr0.cucumber.helper.StackHelper;
+import com.blakebr0.cucumber.util.VanillaPacketDispatcher;
 import com.blakebr0.extendedcrafting.block.BlockPedestal;
 import com.blakebr0.extendedcrafting.config.ModConfig;
 import com.blakebr0.extendedcrafting.crafting.CombinationRecipe;
 import com.blakebr0.extendedcrafting.crafting.CombinationRecipeManager;
-import com.blakebr0.extendedcrafting.util.VanillaPacketDispatcher;
 
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;

@@ -1,6 +1,6 @@
 package com.blakebr0.extendedcrafting.tile;
 
-import com.blakebr0.extendedcrafting.util.VanillaPacketDispatcher;
+import com.blakebr0.cucumber.util.VanillaPacketDispatcher;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;

@@ -13,8 +13,8 @@ import com.blakebr0.extendedcrafting.config.ModConfig;
 import com.blakebr0.extendedcrafting.crafting.ModRecipes;
 import com.blakebr0.extendedcrafting.item.ModItems;
 import com.blakebr0.extendedcrafting.lib.ModGuide;
+import com.blakebr0.extendedcrafting.network.NetworkThingy;
 import com.blakebr0.extendedcrafting.tile.ModTiles;
-import com.blakebr0.extendedcrafting.util.NetworkThingy;
 
 import crafttweaker.CraftTweakerAPI;
 import net.minecraft.item.crafting.IRecipe;

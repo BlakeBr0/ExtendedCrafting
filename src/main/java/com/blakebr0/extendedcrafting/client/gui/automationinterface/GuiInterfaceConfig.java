@@ -8,9 +8,9 @@ import java.util.Locale;
 import com.blakebr0.cucumber.gui.button.IconButton;
 import com.blakebr0.cucumber.lib.Colors;
 import com.blakebr0.cucumber.util.Utils;
+import com.blakebr0.extendedcrafting.network.InterfaceAutoChangePacket;
+import com.blakebr0.extendedcrafting.network.NetworkThingy;
 import com.blakebr0.extendedcrafting.tile.TileAutomationInterface;
-import com.blakebr0.extendedcrafting.util.InterfaceAutoChangePacket;
-import com.blakebr0.extendedcrafting.util.NetworkThingy;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;

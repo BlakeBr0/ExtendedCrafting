@@ -9,9 +9,9 @@ import com.blakebr0.cucumber.util.Utils;
 import com.blakebr0.extendedcrafting.ExtendedCrafting;
 import com.blakebr0.extendedcrafting.client.container.automationinterface.ContainerAutomationInterface;
 import com.blakebr0.extendedcrafting.lib.ViewRecipeInfo;
+import com.blakebr0.extendedcrafting.network.InterfaceRecipeChangePacket;
+import com.blakebr0.extendedcrafting.network.NetworkThingy;
 import com.blakebr0.extendedcrafting.tile.TileAutomationInterface;
-import com.blakebr0.extendedcrafting.util.InterfaceRecipeChangePacket;
-import com.blakebr0.extendedcrafting.util.NetworkThingy;
 
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiButton;

@@ -9,9 +9,9 @@ import com.blakebr0.cucumber.helper.ResourceHelper;
 import com.blakebr0.cucumber.util.Utils;
 import com.blakebr0.extendedcrafting.ExtendedCrafting;
 import com.blakebr0.extendedcrafting.client.container.ContainerCompressor;
+import com.blakebr0.extendedcrafting.network.EjectModeSwitchPacket;
+import com.blakebr0.extendedcrafting.network.NetworkThingy;
 import com.blakebr0.extendedcrafting.tile.TileCompressor;
-import com.blakebr0.extendedcrafting.util.EjectModeSwitchPacket;
-import com.blakebr0.extendedcrafting.util.NetworkThingy;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;

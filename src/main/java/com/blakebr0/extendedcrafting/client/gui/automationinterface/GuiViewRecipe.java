@@ -142,6 +142,7 @@ public class GuiViewRecipe extends GuiContainer {
 	
     private void drawItemStack(ItemStack stack, int x, int y) {
     	GlStateManager.pushMatrix();
+    	net.minecraft.client.renderer.RenderHelper.enableGUIStandardItemLighting();
         GlStateManager.translate(0.0F, 0.0F, -32.0F);
         this.zLevel = 200.0F;
         this.itemRender.zLevel = 200.0F;
@@ -152,6 +153,7 @@ public class GuiViewRecipe extends GuiContainer {
         this.itemRender.renderItemOverlayIntoGUI(font, stack, x, y, null);
         this.zLevel = 0.0F;
         this.itemRender.zLevel = 0.0F;
+        net.minecraft.client.renderer.RenderHelper.disableStandardItemLighting();
         GlStateManager.popMatrix();
     }
     

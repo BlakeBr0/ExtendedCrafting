@@ -32,7 +32,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.Loader;
-import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.oredict.OreDictionary;
 
 public class ItemRecipeMaker extends ItemBase implements IEnableable {
@@ -124,14 +123,14 @@ public class ItemRecipeMaker extends ItemBase implements IEnableable {
 	
 	private String makeItemArrayShaped(IExtendedTable table) {
 		String string = "";
-		IItemHandlerModifiable matrix = table.getMatrix();
-		for (int i = 0; i < matrix.getSlots(); i++) {
-			int sr = (int) Math.sqrt(matrix.getSlots());
+		NonNullList<ItemStack> matrix = table.getMatrix();
+		for (int i = 0; i < matrix.size(); i++) {
+			int sr = (int) Math.sqrt(matrix.size());
 			if (i == 0 || i % sr == 0) {
 				string += "[";
 			}
 
-			ItemStack stack = matrix.getStackInSlot(i);
+			ItemStack stack = matrix.get(i);
 			
 			String item = "";
 			if (ModConfig.confRMOredict && !stack.isEmpty()) {
@@ -165,7 +164,7 @@ public class ItemRecipeMaker extends ItemBase implements IEnableable {
 			
 			if (i + 1 == sr || (i + 1) % sr == 0) {
 				string += "]";
-				if (i + 1 < matrix.getSlots()) {
+				if (i + 1 < matrix.size()) {
 					string += ", ";
 					string += NEW_LINE;
 				} else {
@@ -179,11 +178,11 @@ public class ItemRecipeMaker extends ItemBase implements IEnableable {
 	
 	private String makeItemArrayShapeless(IExtendedTable table) {
 		String string = "";
-		IItemHandlerModifiable matrix = table.getMatrix();
+		NonNullList<ItemStack> matrix = table.getMatrix();
 		ArrayList<Integer> slots = new ArrayList<>();
 		int lastSlot = 0;
-		for (int i = 0; i < matrix.getSlots(); i++) {
-			ItemStack stack = matrix.getStackInSlot(i);
+		for (int i = 0; i < matrix.size(); i++) {
+			ItemStack stack = matrix.get(i);
 			if (!stack.isEmpty()) {
 				slots.add(i);
 				lastSlot = i;
@@ -191,7 +190,7 @@ public class ItemRecipeMaker extends ItemBase implements IEnableable {
 		}
 		
 		for (int i : slots) {
-			ItemStack stack = matrix.getStackInSlot(i);
+			ItemStack stack = matrix.get(i);
 			int[] oreIds = OreDictionary.getOreIDs(stack);
 			String item = "";
 			if (ModConfig.confRMOredict && oreIds.length > 0) {

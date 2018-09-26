@@ -3,23 +3,23 @@ package com.blakebr0.extendedcrafting.crafting.table;
 import com.blakebr0.extendedcrafting.lib.IExtendedTable;
 
 import net.minecraft.inventory.Container;
+import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
-import net.minecraftforge.items.IItemHandler;
 
 public class TableCrafting extends InventoryCrafting implements ISidedInventory {
 
 	public IExtendedTable tile;
-	public IItemHandler handler;
+	public IInventory handler;
 	public Container container;
 	public int lineSize;
 
 	public TableCrafting(Container container, IExtendedTable tile) {
 		super(container, tile.getLineSize(), tile.getLineSize());
 		this.tile = tile;
-		this.handler = tile.getMatrix();
+		this.handler = (IInventory) tile;
 		this.container = container;
 		this.lineSize = tile.getLineSize();
 	}
@@ -38,10 +38,34 @@ public class TableCrafting extends InventoryCrafting implements ISidedInventory 
 			return ItemStack.EMPTY;
 		}
 	}
+	
+	@Override
+	public ItemStack decrStackSize(int index, int count) {
+        ItemStack stack = this.handler.getStackInSlot(index);
+        if (!stack.isEmpty()) {
+            ItemStack itemstack;
+            if (stack.getCount() <= count) {
+                itemstack = stack.copy();
+                this.handler.setInventorySlotContents(index, ItemStack.EMPTY);
+                this.container.onCraftMatrixChanged(this);
+                return itemstack;
+            } else {
+                itemstack = stack.splitStack(count);
+                if (stack.getCount() == 0) {
+                    this.handler.setInventorySlotContents(index, ItemStack.EMPTY);
+                }
+                
+                this.container.onCraftMatrixChanged(this);
+                return itemstack;
+            }
+        } else {
+            return ItemStack.EMPTY;
+        }
+	}
 
 	@Override
 	public void setInventorySlotContents(int slot, ItemStack stack) {
-		this.tile.setInventorySlotContents(slot, stack);
+		this.handler.setInventorySlotContents(slot, stack);
 		this.container.onCraftMatrixChanged(this);
 	}
 

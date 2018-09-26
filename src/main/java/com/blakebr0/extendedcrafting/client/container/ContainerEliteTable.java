@@ -1,12 +1,9 @@
 package com.blakebr0.extendedcrafting.client.container;
 
-import javax.annotation.Nullable;
-
 import com.blakebr0.extendedcrafting.crafting.table.TableCraftResult;
 import com.blakebr0.extendedcrafting.crafting.table.TableCrafting;
 import com.blakebr0.extendedcrafting.crafting.table.TableRecipeManager;
 import com.blakebr0.extendedcrafting.crafting.table.TableResultHandler;
-import com.blakebr0.extendedcrafting.crafting.table.TableStackHandler;
 import com.blakebr0.extendedcrafting.tile.TileEliteCraftingTable;
 
 import net.minecraft.entity.player.EntityPlayer;
@@ -17,55 +14,50 @@ import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
-import net.minecraftforge.items.IItemHandler;
-import net.minecraftforge.items.SlotItemHandler;
 
 public class ContainerEliteTable extends Container {
 
 	public InventoryCrafting matrix;
 	public IInventory result;
-	private TileEliteCraftingTable tile;
-	private IItemHandler handler;
+	public TileEliteCraftingTable tile;
 
 	public ContainerEliteTable(InventoryPlayer player, TileEliteCraftingTable tile, World world) {
 		this.tile = tile;
-		this.handler = tile.getMatrix();
 		this.matrix = new TableCrafting(this, tile);
 		this.result = new TableCraftResult(tile);
 		
 		this.addSlotToContainer(new TableResultHandler(this.matrix, this.result, 0, 172, 71));
 		
 		int wy, ex;
-		for (wy = 0; wy < 7; ++wy) {
-			for (ex = 0; ex < 7; ++ex) {
-				this.addSlotToContainer(new SlotItemHandler(this.handler, ex + wy * 7, 8 + ex * 18, 18 + wy * 18));
+		for (wy = 0; wy < 7; wy++) {
+			for (ex = 0; ex < 7; ex++) {
+				this.addSlotToContainer(new Slot(this.matrix, ex + wy * 7, 8 + ex * 18, 18 + wy * 18));
 			}
 		}
 
-		for (wy = 0; wy < 3; ++wy) {
-			for (ex = 0; ex < 9; ++ex) {
+		for (wy = 0; wy < 3; wy++) {
+			for (ex = 0; ex < 9; ex++) {
 				this.addSlotToContainer(new Slot(player, ex + wy * 9 + 9, 20 + ex * 18, 160 + wy * 18));
 			}
 		}
 
-		for (ex = 0; ex < 9; ++ex) {
+		for (ex = 0; ex < 9; ex++) {
 			this.addSlotToContainer(new Slot(player, ex, 20 + ex * 18, 218));
 		}
 
 		this.onCraftMatrixChanged(this.matrix);
-		((TableStackHandler) this.handler).crafting = this.matrix;
 	}
 
+	@Override
 	public void onCraftMatrixChanged(IInventory matrix) {
 		this.result.setInventorySlotContents(0, TableRecipeManager.getInstance().findMatchingRecipe(this.matrix, this.tile.getWorld()));
 	}
 
 	@Override
 	public boolean canInteractWith(EntityPlayer player) {
-		return this.tile.isUseableByPlayer(player);
+		return this.tile.isUsableByPlayer(player);
 	}
 
-	@Nullable
 	@Override
 	public ItemStack transferStackInSlot(EntityPlayer player, int slotNumber) {
 		ItemStack itemstack = ItemStack.EMPTY;

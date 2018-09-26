@@ -21,10 +21,10 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraftforge.items.IItemHandlerModifiable;
 
 public class BlockUltimateTable extends BlockBase implements ITileEntityProvider, IEnableable {
 
@@ -57,9 +57,9 @@ public class BlockUltimateTable extends BlockBase implements ITileEntityProvider
 	public void breakBlock(World world, BlockPos pos, IBlockState state) {
 		TileUltimateCraftingTable tile = (TileUltimateCraftingTable) world.getTileEntity(pos);
 		if (tile != null) {
-			IItemHandlerModifiable matrix = tile.getMatrix();
-			for (int i = 0; i < matrix.getSlots(); i++) {
-				ItemStack stack = matrix.getStackInSlot(i);
+			NonNullList<ItemStack> matrix = tile.getMatrix();
+			for (int i = 0; i < matrix.size(); i++) {
+				ItemStack stack = matrix.get(i);
 				this.spawnAsEntity(world, pos, stack);
 			}
 		}

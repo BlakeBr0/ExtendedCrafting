@@ -27,7 +27,7 @@ public class TileUltimateCraftingTable extends TileEntity implements IInventory,
 			tag.removeTag("Result");
 		}
 		
-		tag.merge(ItemStackHelper.saveAllItems(tag, this.matrix, true));
+		tag.merge(ItemStackHelper.saveAllItems(tag, this.matrix));
 		
 		return tag;
 	}
@@ -93,7 +93,7 @@ public class TileUltimateCraftingTable extends TileEntity implements IInventory,
 
 	@Override
 	public boolean isEmpty() {
-		return this.matrix.isEmpty() && this.result.isEmpty();
+		return !this.matrix.stream().anyMatch(s -> !s.isEmpty()) && this.result.isEmpty();
 	}
 
 	@Override

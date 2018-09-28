@@ -513,7 +513,7 @@ public class TileAutomationInterface extends TileEntity implements ITickable, IS
 		for (int i = 0; i < matrix.size(); i++) {
 			ItemStack slotStack = matrix.get(i);
 			ItemStack recipeStack = this.getRecipe().getStackInSlot(i);
-			if (StackHelper.areStacksEqual(stack, recipeStack) && StackHelper.canCombineStacks(stack, slotStack)) {
+			if (StackHelper.areStacksEqual(stack, recipeStack) && (slotStack.isEmpty() || StackHelper.canCombineStacks(stack, slotStack))) {
 				return true;
 			}
 		}

@@ -134,6 +134,11 @@ public class CompatJEI implements IModPlugin {
 			transfer.addRecipeTransferHandler(ContainerAdvancedTable.class, AdvancedTableCategory.UID, 1, 25, 26, 36);
 			transfer.addRecipeTransferHandler(ContainerEliteTable.class, EliteTableCategory.UID, 1, 49, 50, 36);
 			transfer.addRecipeTransferHandler(ContainerUltimateTable.class, UltimateTableCategory.UID, 1, 81, 82, 36);
+			
+			if (ModConfig.confTableUseRecipes) {
+				registry.addRecipeCatalyst(new ItemStack(ModBlocks.blockBasicTable), VanillaRecipeCategoryUid.CRAFTING);
+				transfer.addRecipeTransferHandler(ContainerBasicTable.class, VanillaRecipeCategoryUid.CRAFTING, 1, 9, 10, 36);
+			}
 		}
 
 		if (ModConfig.confCompressorEnabled) {

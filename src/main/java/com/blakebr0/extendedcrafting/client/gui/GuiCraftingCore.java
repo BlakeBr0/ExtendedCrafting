@@ -102,16 +102,20 @@ public class GuiCraftingCore extends GuiContainer {
 	}
 	
 	private void drawItemStack(ItemStack stack, int x, int y, String altText) {
-		GlStateManager.translate(0.0F, 0.0F, 32.0F);
-		this.zLevel = 50.0F;
-		this.itemRender.zLevel = 50.0F;
-		FontRenderer font = null;
-		if (!stack.isEmpty()) font = stack.getItem().getFontRenderer(stack);
-		if (font == null) font = this.fontRenderer;
-		this.itemRender.renderItemAndEffectIntoGUI(stack, x, y);
-		this.itemRender.renderItemOverlayIntoGUI(font, stack, x, y, altText);
-		this.zLevel = 0.0F;
-		this.itemRender.zLevel = 0.0F;
+    	GlStateManager.pushMatrix();
+    	net.minecraft.client.renderer.RenderHelper.enableGUIStandardItemLighting();
+        GlStateManager.translate(0.0F, 0.0F, -32.0F);
+        this.zLevel = 200.0F;
+        this.itemRender.zLevel = 200.0F;
+        FontRenderer font = stack.getItem().getFontRenderer(stack);
+        if (font == null) font = this.fontRenderer;
+        GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+        this.itemRender.renderItemAndEffectIntoGUI(stack, x, y);
+        this.itemRender.renderItemOverlayIntoGUI(font, stack, x, y, altText);
+        this.zLevel = 0.0F;
+        this.itemRender.zLevel = 0.0F;
+        net.minecraft.client.renderer.RenderHelper.disableStandardItemLighting();
+        GlStateManager.popMatrix();
 	}
 
 	private void drawFakeItemStack(ItemStack stack, int xOffset, int yOffset, int mouseX, int mouseY) {

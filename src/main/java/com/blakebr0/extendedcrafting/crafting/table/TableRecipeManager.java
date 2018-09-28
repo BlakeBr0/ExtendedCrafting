@@ -89,10 +89,12 @@ public class TableRecipeManager {
 				}
 			}
 
-			if (ModConfig.confTableUseRecipes && grid.getWidth() == 3 && grid.getHeight() == 3) {
+			if (ModConfig.confTableUseRecipes && grid.getWidth() == 3 && grid.getHeight() == 3 ) {
 				for (IRecipe recipe : ForgeRegistries.RECIPES.getValuesCollection()) {
 					if (recipe.matches(grid, world)) {
-						return recipe.getCraftingResult(grid);
+						if (recipe.isHidden() || !world.getGameRules().getBoolean("doLimitedCrafting")) {
+							return recipe.getCraftingResult(grid);
+						}
 					}
 				}
 			}

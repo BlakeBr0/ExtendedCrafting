@@ -150,6 +150,11 @@ public class BlockCompressor extends BlockBase implements ITileEntityProvider, I
 	public boolean isOpaqueCube(IBlockState state) {
 		return false;
 	}
+	
+	@Override
+	public boolean rotateBlock(World world, BlockPos pos, EnumFacing axis) {
+		return false;
+	}
 
 	@Nonnull
 	@Override

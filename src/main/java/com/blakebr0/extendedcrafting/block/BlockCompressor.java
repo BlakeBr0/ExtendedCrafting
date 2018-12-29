@@ -1,8 +1,7 @@
 package com.blakebr0.extendedcrafting.block;
 
-import javax.annotation.Nonnull;
-
 import com.blakebr0.cucumber.block.BlockBase;
+import com.blakebr0.cucumber.helper.BlockHelper;
 import com.blakebr0.cucumber.iface.IEnableable;
 import com.blakebr0.extendedcrafting.ExtendedCrafting;
 import com.blakebr0.extendedcrafting.client.gui.GuiHandler;
@@ -133,12 +132,12 @@ public class BlockCompressor extends BlockBase implements ITileEntityProvider, I
 
 	@Override
 	public IBlockState withRotation(IBlockState state, Rotation rot) {
-		return state.withProperty(FACING, rot.rotate((EnumFacing) state.getValue(FACING)));
+		return state.withProperty(FACING, rot.rotate(state.getValue(FACING)));
 	}
 
 	@Override
 	public IBlockState withMirror(IBlockState state, Mirror mirror) {
-		return state.withRotation(mirror.toRotation((EnumFacing) state.getValue(FACING)));
+		return state.withRotation(mirror.toRotation(state.getValue(FACING)));
 	}
 
 	@Override
@@ -153,10 +152,9 @@ public class BlockCompressor extends BlockBase implements ITileEntityProvider, I
 	
 	@Override
 	public boolean rotateBlock(World world, BlockPos pos, EnumFacing axis) {
-		return false;
+		return BlockHelper.rotate(this, world, pos, axis);
 	}
 
-	@Nonnull
 	@Override
 	@SideOnly(Side.CLIENT)
 	public BlockRenderLayer getBlockLayer() {

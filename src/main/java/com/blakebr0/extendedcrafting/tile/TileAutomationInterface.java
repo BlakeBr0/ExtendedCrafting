@@ -126,11 +126,12 @@ public class TileAutomationInterface extends TileEntity implements ITickable, IS
 	private void handleInput(ItemStack input, boolean canInsert) {
 		ItemStack output = this.getInventory().getStackInSlot(1);
 		ItemStack toInsert = StackHelper.withSize(input.copy(), 1, false);
+		IExtendedTable table = null;
 		IInventory matrix = null;
 		int slotToPut = -1;
 
 		if (canInsert) {
-			IExtendedTable table = this.getTable();
+			table = this.getTable();
 			ItemStackHandler recipe = this.getRecipe();
 			matrix = (IInventory) table;
 			
@@ -154,7 +155,12 @@ public class TileAutomationInterface extends TileEntity implements ITickable, IS
 		
 		if (matrix != null && slotToPut > -1) {
 			this.insertItem(matrix, slotToPut, toInsert);
-			input.shrink(1); 
+			input.shrink(1);
+			
+			if (this.isCraftingTable()) {
+				table.setResult(TableRecipeManager.getInstance().findMatchingRecipe(new TableCrafting(new EmptyContainer(), table), this.getWorld()));
+			}
+			
 			this.getEnergy().extractEnergy(ModConfig.confInterfaceRFRate, false); 
 		} else if (this.getAutoEject() && (output.isEmpty() || StackHelper.canCombineStacks(output, toInsert))) { 
 			this.getInventory().insertItem(1, toInsert, false);
@@ -416,6 +422,14 @@ public class TileAutomationInterface extends TileEntity implements ITickable, IS
 	
 	public boolean isEnderCrafter() {
 		return this.getTable() instanceof TileEnderCrafter;
+	}
+	
+	public boolean isCraftingTable() {
+		IExtendedTable table = this.getTable();
+		return table instanceof TileBasicCraftingTable
+			|| table instanceof TileAdvancedCraftingTable
+			|| table instanceof TileEliteCraftingTable
+			|| table instanceof TileUltimateCraftingTable;
 	}
 	
 	public boolean hasRecipe() {

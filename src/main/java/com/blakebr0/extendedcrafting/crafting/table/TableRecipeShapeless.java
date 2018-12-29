@@ -2,9 +2,8 @@ package com.blakebr0.extendedcrafting.crafting.table;
 
 import java.util.Iterator;
 
-import javax.annotation.Nonnull;
-
 import com.blakebr0.cucumber.helper.RecipeHelper;
+import com.blakebr0.cucumber.helper.StackHelper;
 
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
@@ -70,10 +69,23 @@ public class TableRecipeShapeless implements IRecipe, ITieredRecipe {
 				Iterator<Ingredient> req = required.iterator();
 
 				while (req.hasNext()) {
-					if (req.next().apply(slot)) {
-						inRecipe = true;
-						req.remove();
-						break;
+					Ingredient target = req.next();
+					if (target.apply(slot)) {
+						if (target.getMatchingStacks().length == 0) {
+							inRecipe = true;
+							req.remove();
+							break;
+						}
+						
+						for (ItemStack stack : target.getMatchingStacks()) {
+							if (StackHelper.compareTags(stack, slot)) {
+								inRecipe = true;
+								req.remove();
+								break;
+							}
+						}
+						
+						if (inRecipe) break;
 					}
 				}
 
@@ -85,13 +97,11 @@ public class TableRecipeShapeless implements IRecipe, ITieredRecipe {
 	}
 
 	@Override
-	@Nonnull
 	public NonNullList<Ingredient> getIngredients() {
 		return this.input;
 	}
 
 	@Override
-	@Nonnull
 	public String getGroup() {
 		return this.group == null ? "" : this.group.toString();
 	}

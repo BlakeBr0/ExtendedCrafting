@@ -1,6 +1,7 @@
 package com.blakebr0.extendedcrafting.crafting.table;
 
 import com.blakebr0.cucumber.helper.RecipeHelper;
+import com.blakebr0.cucumber.helper.StackHelper;
 
 import net.minecraft.block.Block;
 import net.minecraft.inventory.InventoryCrafting;
@@ -106,6 +107,17 @@ public class TableRecipeShaped implements IRecipe, ITieredRecipe {
 
 				if (!target.apply(inv.getStackInRowAndColumn(x, y))) {
 					return false;
+				} else {
+					boolean valid = false;
+					if (target.getMatchingStacks().length == 0) valid = true;
+					
+					for (ItemStack stack : target.getMatchingStacks()) {
+						if (StackHelper.compareTags(stack, inv.getStackInRowAndColumn(x, y))) {
+							valid = true;
+						}
+					}
+					
+					if (!valid) return false;
 				}
 			}
 		}

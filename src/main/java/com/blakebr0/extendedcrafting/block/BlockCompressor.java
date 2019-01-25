@@ -1,7 +1,6 @@
 package com.blakebr0.extendedcrafting.block;
 
 import com.blakebr0.cucumber.block.BlockBase;
-import com.blakebr0.cucumber.helper.BlockHelper;
 import com.blakebr0.cucumber.iface.IEnableable;
 import com.blakebr0.extendedcrafting.ExtendedCrafting;
 import com.blakebr0.extendedcrafting.client.gui.GuiHandler;
@@ -150,10 +149,18 @@ public class BlockCompressor extends BlockBase implements ITileEntityProvider, I
 		return false;
 	}
 	
-	@Override
-	public boolean rotateBlock(World world, BlockPos pos, EnumFacing axis) {
-		return BlockHelper.rotate(this, world, pos, axis);
-	}
+    @Override
+    public boolean rotateBlock(World world, BlockPos pos, EnumFacing axis) {
+    	TileEntity tile = world.getTileEntity(pos);
+    	boolean rotate = super.rotateBlock(world, pos, axis);
+    	
+    	if (tile != null && rotate) {
+    		tile.validate();
+    		world.setTileEntity(pos, tile);
+    	}
+    	
+    	return rotate;
+    }
 
 	@Override
 	@SideOnly(Side.CLIENT)

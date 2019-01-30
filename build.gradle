@@ -29,12 +29,32 @@ minecraft {
 }
 
 repositories {
-	maven {
-		url = "http://dvs1.progwml6.com/files/maven"
-	}
+    mavenCentral()
+    maven {
+        url "http://tehnut.info/maven"
+    }
+    maven {
+        name "ModMaven"
+        url "https://modmaven.k-4u.nl"
+    }
+    ivy {
+        name 'ProjectE'
+        ivyPattern "https://maven.tterrag.com/[module]-[revision].[ext]"
+        artifactPattern "http://media.forgecdn.net/files/${pe_cf}/[module]-[revision].[ext]"
+    }
+    ivy {
+        name 'Cucumber'
+        ivyPattern "https://maven.tterrag.com/[module]-[revision].[ext]"
+        artifactPattern "http://media.forgecdn.net/files/${cc_cf}/[module]-[revision].[ext]"
+    }
 }
 
 dependencies {
+    deobfCompile name: 'ProjectE', version: "${pe_version}", ext: 'jar'
+    deobfCompile name: 'Cucumber', version: "${cc_version}", ext: 'jar'
+    deobfCompile "CraftTweaker2:CraftTweaker2-MC1120-Main:1.12-4.0.0.8"
+    deobfCompile "mcp.mobius.waila:Hwyla:${version_hwyla}:api"
+    runtime "mcp.mobius.waila:Hwyla:${version_hwyla}"
 	deobfCompile "mezz.jei:jei_1.12.2:4.10.0.198:api"
 	runtime "mezz.jei:jei_1.12.2:4.10.0.198"
 }

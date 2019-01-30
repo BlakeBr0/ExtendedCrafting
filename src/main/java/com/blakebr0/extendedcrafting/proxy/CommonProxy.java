@@ -5,6 +5,7 @@ import java.io.File;
 import com.blakebr0.extendedcrafting.ExtendedCrafting;
 import com.blakebr0.extendedcrafting.block.ModBlocks;
 import com.blakebr0.extendedcrafting.client.gui.GuiHandler;
+import com.blakebr0.extendedcrafting.compat.CompatProjectE;
 import com.blakebr0.extendedcrafting.compat.crafttweaker.CombinationCrafting;
 import com.blakebr0.extendedcrafting.compat.crafttweaker.CompressionCrafting;
 import com.blakebr0.extendedcrafting.compat.crafttweaker.EnderCrafting;
@@ -96,6 +97,11 @@ public class CommonProxy {
 	public void postInit(FMLPostInitializationEvent event) {
 		ModRecipes.post();
 		ModGuide.setup();
+
+		
+		if (Loader.isModLoaded("projecte")) {
+			CompatProjectE.loadConversions();
+		}
 	}
 	
 	@SubscribeEvent

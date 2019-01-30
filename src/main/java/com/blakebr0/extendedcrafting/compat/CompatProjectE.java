@@ -17,7 +17,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.NonNullList;
-import net.minecraftforge.oredict.OreIngredient;
 
 public class CompatProjectE {
 	static IConversionProxy conversion_proxy;

@@ -118,7 +118,7 @@ public class TileAutomationInterface extends TileEntity implements ITickable, IS
 			}
 		}
 		
-		if (this.ticks >= this.tickRollover ) {
+		if (this.ticks > this.tickRollover ) {
 			this.ticks = 0;
 		}
 		

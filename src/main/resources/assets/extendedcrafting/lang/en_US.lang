@@ -27,7 +27,12 @@ tile.ec.crafting_table.name=Crafting Table
 tile.ec.pedestal.name=Pedestal
 tile.ec.crafting_core.name=Crafting Core
 
-tile.ec.interface.name=Automation Interface
+tile.ec.interface_basic.name=Basic Interface
+tile.ec.interface_advanced.name=Advanced Interface
+tile.ec.interface_elite.name=Elite Interface
+tile.ec.interface_ultimate.name=Ultimate Interface
+tile.ec.interface_crystaltine.name=Crystaltine Interface
+tile.ec.interface_ultimater.name=The Ultimate Interface
 
 tile.ec.table_basic.name=Basic Crafting Table
 tile.ec.table_advanced.name=Advanced Crafting Table

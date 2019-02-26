@@ -1,7 +1,7 @@
 {
     "variants": {
         "normal": {
-            "model": "extendedcrafting:interface_basic"
+            "model": "extendedcrafting:interface_elite"
         }
     }
 }

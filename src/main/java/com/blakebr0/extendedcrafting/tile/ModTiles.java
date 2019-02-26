@@ -16,6 +16,7 @@ public class ModTiles {
 
 		if (ModConfig.confInterfaceEnabled) {
 			GameRegistry.registerTileEntity(TileAutomationInterface.class, "EC_Automation_Interface");
+			GameRegistry.registerTileEntity(TileUltimaterInterface.class, "EC_Ultimater_Interface");
 		}
 
 		if (ModConfig.confTableEnabled) {

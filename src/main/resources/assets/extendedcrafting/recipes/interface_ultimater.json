@@ -1,0 +1,41 @@
+{
+  "conditions": [
+     {
+        "type": "minecraft:item_exists",
+        "item": "extendedcrafting:interface"
+     }
+  ],
+  "type": "forge:ore_shaped",
+  "pattern": [
+	"CBC",
+	"AIA",
+	"CSC"
+  ],
+  "key": {
+	"I": {
+      "item": "extendedcrafting:frame",
+	  "data": 0
+    },
+    "B": {
+      "item": "extendedcrafting:material",
+      "data": 13
+    },
+    "S": {
+      "item": "extendedcrafting:material",
+      "data": 2
+    },
+    "C": {
+      "item": "extendedcrafting:material",
+      "data": 0
+    },
+    "A": {
+      "item": "extendedcrafting:material",
+      "data": 19
+    }
+  },
+  "result": {
+    "item": "extendedcrafting:interface",
+    "count": 1,
+	"data": 0
+  }
+}

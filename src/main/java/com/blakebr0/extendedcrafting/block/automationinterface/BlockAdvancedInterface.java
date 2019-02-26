@@ -1,4 +1,4 @@
-package com.blakebr0.extendedcrafting.block;
+package com.blakebr0.extendedcrafting.block.automationinterface;
 
 import com.blakebr0.cucumber.block.BlockBase;
 import com.blakebr0.cucumber.iface.IEnableable;
@@ -20,22 +20,24 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-public class BlockAutomationInterface extends BlockBase implements ITileEntityProvider, IEnableable {
+public class BlockAdvancedInterface extends BlockBase implements ITileEntityProvider, IEnableable {
 
-	public BlockAutomationInterface() {
-		super("ec.interface", Material.IRON, SoundType.METAL, 5.0F, 10.0F);
+	public BlockAdvancedInterface() {
+		super("ec.interface_advanced", Material.IRON, SoundType.METAL, 5.0F, 10.0F);
 		this.setCreativeTab(ExtendedCrafting.CREATIVE_TAB);
 	}
 	
 	@Override
 	public TileEntity createNewTileEntity(World world, int meta) {
-		return new TileAutomationInterface();
+		TileAutomationInterface tile = new TileAutomationInterface();
+		tile.setRates(40, 16);
+		return tile;
 	}
 	
 	@Override
 	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
 		if (!world.isRemote) {
-			player.openGui(ExtendedCrafting.instance, GuiHandler.AUTOMATION_INTERFACE, world, pos.getX(), pos.getY(), pos.getZ());
+			player.openGui(ExtendedCrafting.instance, GuiHandler.ADVANCED_INTERFACE, world, pos.getX(), pos.getY(), pos.getZ());
 			TileEntity tile = world.getTileEntity(pos);
 			if (ExtendedCrafting.DEBUG && tile instanceof TileAutomationInterface) {
 				TileAutomationInterface compressor = (TileAutomationInterface) tile;

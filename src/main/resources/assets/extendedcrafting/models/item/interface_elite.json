@@ -1,5 +1,5 @@
 {
-	"parent": "extendedcrafting:block/interface_basic",
+	"parent": "extendedcrafting:block/interface_elite",
     "display": {
         "gui": {
             "rotation": [ 30, 225, 0 ],

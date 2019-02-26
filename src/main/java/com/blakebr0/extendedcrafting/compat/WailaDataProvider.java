@@ -3,13 +3,13 @@ package com.blakebr0.extendedcrafting.compat;
 import java.util.List;
 
 import com.blakebr0.cucumber.util.Utils;
-import com.blakebr0.extendedcrafting.block.BlockAutomationInterface;
 import com.blakebr0.extendedcrafting.block.BlockCompressor;
 import com.blakebr0.extendedcrafting.block.BlockCraftingCore;
 import com.blakebr0.extendedcrafting.block.BlockEnderCrafter;
 import com.blakebr0.extendedcrafting.block.BlockLamp;
 import com.blakebr0.extendedcrafting.block.BlockPedestal;
 import com.blakebr0.extendedcrafting.block.BlockTrimmed;
+import com.blakebr0.extendedcrafting.block.automationinterface.BlockBasicInterface;
 import com.blakebr0.extendedcrafting.block.craftingtable.BlockAdvancedTable;
 import com.blakebr0.extendedcrafting.block.craftingtable.BlockBasicTable;
 import com.blakebr0.extendedcrafting.block.craftingtable.BlockEliteTable;
@@ -46,7 +46,7 @@ public class WailaDataProvider implements IWailaDataProvider {
 		registrar.registerBodyProvider(new WailaDataProvider(), BlockUltimateTable.class);
 		registrar.registerBodyProvider(new WailaDataProvider(), BlockPedestal.class);
 		registrar.registerBodyProvider(new WailaDataProvider(), BlockCraftingCore.class);
-		registrar.registerBodyProvider(new WailaDataProvider(), BlockAutomationInterface.class);
+		registrar.registerBodyProvider(new WailaDataProvider(), BlockBasicInterface.class);
 		registrar.registerBodyProvider(new WailaDataProvider(), BlockEnderCrafter.class);
 		registrar.registerBodyProvider(new WailaDataProvider(), BlockCompressor.class);
 	}
@@ -96,7 +96,7 @@ public class WailaDataProvider implements IWailaDataProvider {
 		if (block instanceof BlockEliteTable) tooltip.add(Utils.localize("tooltip.ec.tier", 3));
 		if (block instanceof BlockUltimateTable) tooltip.add(Utils.localize("tooltip.ec.tier", 4));
 		
-		if (block instanceof BlockAutomationInterface && tile instanceof TileAutomationInterface && !tile.isInvalid()) {
+		if (block instanceof BlockBasicInterface && tile instanceof TileAutomationInterface && !tile.isInvalid()) {
 			TileAutomationInterface auto = (TileAutomationInterface) tile;
 			
 			if (ModConfig.confEnergyInWaila) {

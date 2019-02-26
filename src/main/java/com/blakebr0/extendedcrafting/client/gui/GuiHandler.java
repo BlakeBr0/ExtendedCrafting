@@ -28,16 +28,21 @@ public class GuiHandler implements IGuiHandler {
 
 	public static final int CRAFTING_CORE = 0;
 
-	public static final int HANDHELD_TABLE = 4;
+	public static final int HANDHELD_TABLE = 3;
 
-	public static final int AUTOMATION_INTERFACE = 6;
+	public static final int BASIC_INTERFACE = 5;
+	public static final int ADVANCED_INTERFACE = 6;
+	public static final int ELITE_INTERFACE = 7;
+	public static final int ULTIMATE_INTERFACE = 8;
+	public static final int CRYSTALTINE_INTERFACE = 9;
+	public static final int ULTIMATER_INTERFACE = 10;
 	
-	public static final int BASIC_TABLE = 7;
-	public static final int ADVANCED_TABLE = 8;
-	public static final int ELITE_TABLE = 9;
-	public static final int ULTIMATE_TABLE = 10;
+	public static final int BASIC_TABLE = 12;
+	public static final int ADVANCED_TABLE = 13;
+	public static final int ELITE_TABLE = 14;
+	public static final int ULTIMATE_TABLE = 15;
 
-	public static final int COMPRESSOR = 13;
+	public static final int COMPRESSOR = 17;
 	
 	public static final int ENDER_CRAFTER = 19;
 
@@ -49,8 +54,23 @@ public class GuiHandler implements IGuiHandler {
 		if (ID == HANDHELD_TABLE) {
 			return new GuiHandheldTable(new ContainerHandheldTable(player.inventory, world, new BlockPos(x, y, z)));
 		}
-		if (ID == AUTOMATION_INTERFACE) {
-			return new GuiAutomationInterface(new ContainerAutomationInterface(player.inventory, (TileAutomationInterface) world.getTileEntity(new BlockPos(x, y, z))));
+		if (ID == BASIC_INTERFACE) {
+			return new GuiAutomationInterface(new ContainerAutomationInterface(player.inventory, (TileAutomationInterface) world.getTileEntity(new BlockPos(x, y, z))), 0);
+		}
+		if (ID == ADVANCED_INTERFACE) {
+			return new GuiAutomationInterface(new ContainerAutomationInterface(player.inventory, (TileAutomationInterface) world.getTileEntity(new BlockPos(x, y, z))), 1);
+		}
+		if (ID == ELITE_INTERFACE) {
+			return new GuiAutomationInterface(new ContainerAutomationInterface(player.inventory, (TileAutomationInterface) world.getTileEntity(new BlockPos(x, y, z))), 2);
+		}
+		if (ID == ULTIMATE_INTERFACE) {
+			return new GuiAutomationInterface(new ContainerAutomationInterface(player.inventory, (TileAutomationInterface) world.getTileEntity(new BlockPos(x, y, z))), 3);
+		}
+		if (ID == CRYSTALTINE_INTERFACE) {
+			return new GuiAutomationInterface(new ContainerAutomationInterface(player.inventory, (TileAutomationInterface) world.getTileEntity(new BlockPos(x, y, z))), 4);
+		}
+		if (ID == ULTIMATER_INTERFACE) {
+			return new GuiAutomationInterface(new ContainerAutomationInterface(player.inventory, (TileAutomationInterface) world.getTileEntity(new BlockPos(x, y, z))), 5);
 		}
 		if (ID == BASIC_TABLE) {
 			return new GuiBasicTable((TileBasicCraftingTable) world.getTileEntity(new BlockPos(x, y, z)), new ContainerBasicTable(player.inventory, (TileBasicCraftingTable) world.getTileEntity(new BlockPos(x, y, z)), world));
@@ -81,7 +101,7 @@ public class GuiHandler implements IGuiHandler {
 		if (ID == HANDHELD_TABLE) {
 			return new ContainerHandheldTable(player.inventory, world, new BlockPos(x, y, z));
 		}
-		if (ID == AUTOMATION_INTERFACE) {
+		if (ID == BASIC_INTERFACE || ID == ADVANCED_INTERFACE || ID == ELITE_INTERFACE || ID == ULTIMATE_INTERFACE || ID == CRYSTALTINE_INTERFACE || ID == ULTIMATER_INTERFACE) {
 			return new ContainerAutomationInterface(player.inventory, (TileAutomationInterface) world.getTileEntity(new BlockPos(x, y, z)));
 		}
 		if (ID == BASIC_TABLE) {

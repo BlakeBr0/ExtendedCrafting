@@ -28,12 +28,19 @@ public class GuiAutomationInterface extends GuiContainer {
 	protected InventoryPlayer player;
 	private GuiButton save, clear, view, config;
 	
-	public GuiAutomationInterface(ContainerAutomationInterface container) {
+	public static final String[] tierNames = new String[] { "tile.ec.interface_basic.name", "tile.ec.interface_advanced.name", "tile.ec.interface_elite.name", "tile.ec.interface_ultimate.name", "tile.ec.interface_crystaltine.name", "tile.ec.interface_ultimater.name" };
+	public static final int[] tierColors = new int[]{ 0xFFFFFF, 0xFFFF4D, 0x00FFFF, 0x14F23E, 0x7ED6FC };
+	public static final int[] ultimaterColors = new int[]{ 0xFF0000, 0xFF6A00, 0xFFD800, 0x4CFF00, 0x0094FF, 0xB200FF, 0xFF00DC };
+	protected int tier;
+	protected int ticks;
+	
+	public GuiAutomationInterface(ContainerAutomationInterface container, int tier) {
 		super(container);
 		this.tile = container.tile;
 		this.player = container.player;
 		this.xSize = 176;
 		this.ySize = 193;
+		this.tier = tier;
 	}
 	
 	protected int getEnergyBarScaled(int pixels) {
@@ -101,13 +108,27 @@ public class GuiAutomationInterface extends GuiContainer {
 	
 	@Override
 	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
-		String s = Utils.localize("container.ec.interface");
-		this.fontRenderer.drawString(s, this.xSize / 2 - this.fontRenderer.getStringWidth(s) / 2, 6, 4210752);
-		this.fontRenderer.drawString(Utils.localize("container.inventory"), 8, this.ySize - 94, 4210752);
+		this.drawTitle();
+		this.fontRenderer.drawString(Utils.localize("container.inventory"), 8, this.ySize - 94, 0x404040);
 		GuiIcons.drawCheckOrX(63, 20, this.tile.hasTable());
 		this.fontRenderer.drawString(Utils.localize("ec.interface.table"), 79, 23, -1);
 		GuiIcons.drawCheckOrX(63, 36, this.tile.hasRecipe());
 		this.fontRenderer.drawString(Utils.localize("ec.interface.recipe"), 79, 39, -1);
+	}
+	
+	public void drawTitle()
+	{
+		if(this.ticks++ > 59)
+			this.ticks = 0;
+		
+		String s = Utils.localize(GuiAutomationInterface.tierNames[this.tier]);
+		
+		int x = this.xSize / 2 - this.fontRenderer.getStringWidth(s) / 2;
+		int y = 6;
+		this.fontRenderer.drawString(s, x+1, y, 0x202020);
+		this.fontRenderer.drawString(s, x+1, y+1, 0x202020);
+		this.fontRenderer.drawString(s, x+1, y+1, 0x202020);
+		this.fontRenderer.drawString(s, x, y, (this.tier == 5 ? GuiAutomationInterface.ultimaterColors[Math.floorDiv(this.ticks,10)]:GuiAutomationInterface.tierColors[this.tier]));
 	}
 
 	@Override

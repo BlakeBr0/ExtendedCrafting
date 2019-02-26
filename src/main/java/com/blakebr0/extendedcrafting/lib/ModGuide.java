@@ -45,7 +45,7 @@ public class ModGuide {
 
 			if (ModConfig.confInterfaceEnabled) {
 				GUIDE.addEntry("interface")
-				     .setIconStack(new ItemStack(ModBlocks.blockAutomationInterface))
+				     .setIconStack(new ItemStack(ModBlocks.blockUltimaterInterface))
 				     .addPageText()
 				     .addPageText()
 				     .addPageText()

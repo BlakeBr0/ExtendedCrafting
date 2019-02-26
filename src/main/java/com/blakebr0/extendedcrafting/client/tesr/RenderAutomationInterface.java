@@ -5,6 +5,7 @@ import com.blakebr0.extendedcrafting.block.ModBlocks;
 import com.blakebr0.extendedcrafting.config.ModConfig;
 import com.blakebr0.extendedcrafting.tile.TileAutomationInterface;
 
+import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
@@ -24,7 +25,16 @@ public class RenderAutomationInterface extends TileEntitySpecialRenderer<TileAut
 		
 		IBlockState state = tile.getWorld().getBlockState(tile.getPos());
 
-		if (state == null || state.getBlock() != ModBlocks.blockAutomationInterface)
+		if (state == null)
+			return;
+		
+		Block block = state.getBlock();
+		if(block != ModBlocks.blockBasicInterface
+		|| block != ModBlocks.blockAdvancedInterface
+		|| block != ModBlocks.blockEliteInterface
+		|| block != ModBlocks.blockUltimateInterface
+		|| block != ModBlocks.blockCrystaltineInterface
+		|| block != ModBlocks.blockUltimaterInterface)
 			return;
 
 		ItemStack stack = tile.getResult();

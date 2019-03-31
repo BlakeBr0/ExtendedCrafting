@@ -43,6 +43,7 @@ public class TileAutomationInterface extends TileEntity implements ITickable, IS
 	private int oldEnergy;
 	private ItemStack result = ItemStack.EMPTY;
 	private boolean hasRecipe = false;
+	private int recipeSize;
 	private int autoInsert = -1;
 	private int autoExtract = -1;
 	private boolean autoEject = false;
@@ -57,7 +58,7 @@ public class TileAutomationInterface extends TileEntity implements ITickable, IS
 			ItemStack input = this.getInventory().getStackInSlot(0);
 			ItemStack output = this.getInventory().getStackInSlot(1);
 			boolean hasTable = this.hasTable();
-			
+
 			if (!input.isEmpty() && this.getEnergy().getEnergyStored() >= ModConfig.confInterfaceRFRate) {
 				this.handleInput(input, hasTable && this.hasRecipe());
 			}
@@ -132,9 +133,10 @@ public class TileAutomationInterface extends TileEntity implements ITickable, IS
 
 		if (canInsert) {
 			table = this.getTable();
+
 			ItemStackHandler recipe = this.getRecipe();
 			matrix = (IInventory) table;
-			
+
 			ItemStack stackToPut = ItemStack.EMPTY;
 			for (int i = 0; i < matrix.getSizeInventory(); i++) {
 				ItemStack slot = matrix.getStackInSlot(i);
@@ -152,16 +154,16 @@ public class TileAutomationInterface extends TileEntity implements ITickable, IS
 				}
 			}
 		}
-		
+
 		if (matrix != null && slotToPut > -1) {
 			this.insertItem(matrix, slotToPut, toInsert);
 			input.shrink(1);
-			
+
 			if (this.isCraftingTable()) {
 				table.setResult(TableRecipeManager.getInstance().findMatchingRecipe(new TableCrafting(new EmptyContainer(), table), this.getWorld()));
 			}
-			
-			this.getEnergy().extractEnergy(ModConfig.confInterfaceRFRate, false); 
+
+			this.getEnergy().extractEnergy(ModConfig.confInterfaceRFRate, false);
 		} else if (this.getAutoEject() && (output.isEmpty() || StackHelper.canCombineStacks(output, toInsert))) { 
 			this.getInventory().insertItem(1, toInsert, false);
 			input.shrink(1);
@@ -213,6 +215,7 @@ public class TileAutomationInterface extends TileEntity implements ITickable, IS
 		tag = super.writeToNBT(tag);
 		tag.merge(this.inventory.serializeNBT());
 		tag.merge(this.recipe.serializeNBT());
+		tag.setInteger("RecipeSize", this.recipeSize);
 		tag.setInteger("Energy", this.energy.getEnergyStored());
 		tag.setTag("Result", this.result.serializeNBT());
 		tag.setBoolean("HasRecipe", this.hasRecipe);
@@ -228,6 +231,7 @@ public class TileAutomationInterface extends TileEntity implements ITickable, IS
 		super.readFromNBT(tag);
 		this.inventory.deserializeNBT(tag);
 		this.recipe.deserializeNBT(tag);
+		this.recipeSize = tag.getInteger("RecipeSize");
 		this.energy.setEnergy(tag.getInteger("Energy"));
 		this.result = new ItemStack(tag.getCompoundTag("Result"));
 		this.hasRecipe = tag.getBoolean("HasRecipe");
@@ -235,6 +239,11 @@ public class TileAutomationInterface extends TileEntity implements ITickable, IS
 		this.autoExtract = tag.getInteger("AutoExtract");
 		this.autoEject = tag.getBoolean("AutoEject");
 		this.smartInsert = tag.getBoolean("SmartInsert");
+
+		// TODO: Remove in 1.13
+		if (this.recipeSize == 0) {
+			this.recipeSize = (int) Math.sqrt(this.recipe.getSlots());
+		}
 	}
 
 	@Override
@@ -296,7 +305,7 @@ public class TileAutomationInterface extends TileEntity implements ITickable, IS
 
 	@Override
 	public void setInventorySlotContents(int index, ItemStack stack) {
-		ItemStack itemstack = (ItemStack) this.inventory.getStackInSlot(index);
+		ItemStack itemstack = this.inventory.getStackInSlot(index);
 		boolean flag = !stack.isEmpty() && stack.isItemEqual(itemstack) && ItemStack.areItemStackTagsEqual(stack, itemstack);
 		this.inventory.setStackInSlot(index, stack);
 
@@ -417,7 +426,8 @@ public class TileAutomationInterface extends TileEntity implements ITickable, IS
 	}
 	
 	public boolean hasTable() {
-		return this.getTable() != null;
+		IExtendedTable table = this.getTable();
+		return table != null && table.getLineSize() == this.recipeSize;
 	}
 	
 	public boolean isEnderCrafter() {
@@ -459,6 +469,7 @@ public class TileAutomationInterface extends TileEntity implements ITickable, IS
 		}
 		
 		this.setHasRecipe(true);
+		this.recipeSize = table.getLineSize();
 		this.markDirty();
 	}
 	

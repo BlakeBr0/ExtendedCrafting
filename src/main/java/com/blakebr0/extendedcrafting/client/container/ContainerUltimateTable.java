@@ -44,8 +44,6 @@ public class ContainerUltimateTable extends Container {
 		for (ex = 0; ex < 9; ex++) {
 			this.addSlotToContainer(new Slot(player, ex, 39 + ex * 18, 254));
 		}
-
-		this.onCraftMatrixChanged(this.matrix);
 	}
 
 	@Override

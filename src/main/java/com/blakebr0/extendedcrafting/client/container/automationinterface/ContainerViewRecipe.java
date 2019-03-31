@@ -2,7 +2,6 @@ package com.blakebr0.extendedcrafting.client.container.automationinterface;
 
 import com.blakebr0.extendedcrafting.lib.ViewRecipeInfo;
 import com.blakebr0.extendedcrafting.tile.TileAutomationInterface;
-
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
@@ -38,14 +37,14 @@ public class ContainerViewRecipe extends Container {
 
 			if (slotNumber >= 0 && slotNumber < 27) {
 				if (!this.mergeItemStack(itemstack1, 27, 36, false)) {
-					return itemstack.EMPTY;
+					return ItemStack.EMPTY;
 				}
 			} else if (slotNumber >= 27 && slotNumber < 36) {
 				if (!this.mergeItemStack(itemstack1, 0, 27, false)) {
-					return itemstack.EMPTY;
+					return ItemStack.EMPTY;
 				}
 			} else if (!this.mergeItemStack(itemstack1, 0, 27, false)) {
-				return itemstack.EMPTY;
+				return ItemStack.EMPTY;
 			}
 
 			if (itemstack1.getCount() == 0) {
@@ -55,7 +54,7 @@ public class ContainerViewRecipe extends Container {
 			}
 
 			if (itemstack1.getCount() == itemstack.getCount()) {
-				return itemstack.EMPTY;
+				return ItemStack.EMPTY;
 			}
 
 			slot.onTake(player, itemstack1);

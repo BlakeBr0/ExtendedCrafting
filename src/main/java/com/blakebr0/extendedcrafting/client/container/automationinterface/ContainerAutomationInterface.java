@@ -1,7 +1,6 @@
 package com.blakebr0.extendedcrafting.client.container.automationinterface;
 
 import com.blakebr0.extendedcrafting.tile.TileAutomationInterface;
-
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;

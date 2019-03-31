@@ -2,14 +2,8 @@ package com.blakebr0.extendedcrafting.client.container;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.inventory.Container;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.InventoryCraftResult;
-import net.minecraft.inventory.InventoryCrafting;
-import net.minecraft.inventory.Slot;
-import net.minecraft.inventory.SlotCrafting;
+import net.minecraft.inventory.*;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 public class ContainerHandheldTable extends Container {
@@ -17,12 +11,10 @@ public class ContainerHandheldTable extends Container {
 	public InventoryCrafting craftMatrix = new InventoryCrafting(this, 3, 3);
 	public InventoryCraftResult craftResult = new InventoryCraftResult();
 	private final World world;
-	private final BlockPos pos;
 	private final EntityPlayer player;
 
-	public ContainerHandheldTable(InventoryPlayer inventory, World world, BlockPos pos) {
+	public ContainerHandheldTable(InventoryPlayer inventory, World world) {
 		this.world = world;
-		this.pos = pos;
 		this.player = inventory.player;
 		this.addSlotToContainer(new SlotCrafting(inventory.player, this.craftMatrix, this.craftResult, 0, 124, 35));
 

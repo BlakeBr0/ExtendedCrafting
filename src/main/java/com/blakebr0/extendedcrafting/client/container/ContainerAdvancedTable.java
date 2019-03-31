@@ -5,7 +5,6 @@ import com.blakebr0.extendedcrafting.crafting.table.TableCrafting;
 import com.blakebr0.extendedcrafting.crafting.table.TableRecipeManager;
 import com.blakebr0.extendedcrafting.crafting.table.TableResultHandler;
 import com.blakebr0.extendedcrafting.tile.TileAdvancedCraftingTable;
-
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
@@ -13,7 +12,6 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
-import net.minecraft.world.World;
 
 public class ContainerAdvancedTable extends Container {
 
@@ -21,7 +19,7 @@ public class ContainerAdvancedTable extends Container {
 	public IInventory result;
 	public TileAdvancedCraftingTable tile;
 
-	public ContainerAdvancedTable(InventoryPlayer player, TileAdvancedCraftingTable tile, World world) {
+	public ContainerAdvancedTable(InventoryPlayer player, TileAdvancedCraftingTable tile) {
 		this.tile = tile;
 		this.matrix = new TableCrafting(this, tile);
 		this.result = new TableCraftResult(tile);

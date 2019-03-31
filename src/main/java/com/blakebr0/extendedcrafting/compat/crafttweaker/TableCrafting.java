@@ -61,6 +61,44 @@ public class TableCrafting {
 	}
 
 	@ZenMethod
+	public static void addShapedMirrored(IItemStack output, IIngredient[][] ingredients) {
+		addShapedMirrored(0, output, ingredients);
+	}
+
+	@ZenMethod
+	public static void addShapedMirrored(int tier, IItemStack output, IIngredient[][] ingredients) {
+		if (tier > 4 || tier < 0) {
+			CraftTweakerAPI.getLogger().logError("Unable to assign a tier to the Table Recipe for stack " + output.getDisplayName() + ". Tier cannot be greater than 4 or less than 0.");
+			tier = 0;
+		}
+
+		int height = ingredients.length;
+		int width = 0;
+		for (IIngredient[] row : ingredients) {
+			if (width < row.length) {
+				width = row.length;
+			}
+		}
+
+		NonNullList<Ingredient> input = NonNullList.withSize(height * width, Ingredient.EMPTY);
+
+		int i = 0;
+		for (int a = 0; a < height; a++) {
+			for (int b = 0; b < ingredients[a].length; b++) {
+				Ingredient ing = CraftingHelper.getIngredient(toObject(ingredients[a][b]));
+				if (ing == null) {
+					ing = Ingredient.EMPTY;
+				}
+				i = a * width + b;
+				input.set(i, ing);
+			}
+		}
+
+		CraftTweakerAPI.apply(new Add(new TableRecipeShaped(tier, toStack(output), width, height, input).setMirrored(true)));
+	}
+
+
+	@ZenMethod
 	public static void addShapeless(IItemStack output, IIngredient[] ingredients) {
 		addShapeless(0, output, ingredients);
 	}

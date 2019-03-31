@@ -1,7 +1,5 @@
 package com.blakebr0.extendedcrafting.client.gui.automationinterface;
 
-import java.io.IOException;
-
 import com.blakebr0.cucumber.gui.GuiIcons;
 import com.blakebr0.cucumber.gui.button.IconButton;
 import com.blakebr0.cucumber.helper.ResourceHelper;
@@ -12,7 +10,6 @@ import com.blakebr0.extendedcrafting.lib.ViewRecipeInfo;
 import com.blakebr0.extendedcrafting.network.InterfaceRecipeChangePacket;
 import com.blakebr0.extendedcrafting.network.NetworkThingy;
 import com.blakebr0.extendedcrafting.tile.TileAutomationInterface;
-
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.inventory.GuiContainer;
@@ -20,6 +17,8 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
+
+import java.io.IOException;
 
 public class GuiAutomationInterface extends GuiContainer {
 

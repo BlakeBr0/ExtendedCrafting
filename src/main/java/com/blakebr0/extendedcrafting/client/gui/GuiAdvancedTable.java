@@ -4,8 +4,6 @@ import com.blakebr0.cucumber.helper.ResourceHelper;
 import com.blakebr0.cucumber.util.Utils;
 import com.blakebr0.extendedcrafting.ExtendedCrafting;
 import com.blakebr0.extendedcrafting.client.container.ContainerAdvancedTable;
-import com.blakebr0.extendedcrafting.tile.TileAdvancedCraftingTable;
-
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ResourceLocation;
@@ -14,7 +12,7 @@ public class GuiAdvancedTable extends GuiContainer {
 
 	public static final ResourceLocation GUI = ResourceHelper.getResource(ExtendedCrafting.MOD_ID, "textures/gui/advanced_table.png");
 
-	public GuiAdvancedTable(TileAdvancedCraftingTable tileEntity, ContainerAdvancedTable container) {
+	public GuiAdvancedTable(ContainerAdvancedTable container) {
 		super(container);
 		this.xSize = 176;
 		this.ySize = 206;

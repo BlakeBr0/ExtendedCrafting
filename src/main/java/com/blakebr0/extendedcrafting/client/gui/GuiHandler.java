@@ -38,16 +38,16 @@ public class GuiHandler implements IGuiHandler {
 			return new GuiAutomationInterface(new ContainerAutomationInterface(player.inventory, (TileAutomationInterface) world.getTileEntity(new BlockPos(x, y, z))));
 		}
 		if (ID == BASIC_TABLE) {
-			return new GuiBasicTable((TileBasicCraftingTable) world.getTileEntity(new BlockPos(x, y, z)), new ContainerBasicTable(player.inventory, (TileBasicCraftingTable) world.getTileEntity(new BlockPos(x, y, z))));
+			return new GuiBasicTable(new ContainerBasicTable(player.inventory, (TileBasicCraftingTable) world.getTileEntity(new BlockPos(x, y, z))));
 		}
 		if (ID == ADVANCED_TABLE) {
-			return new GuiAdvancedTable((TileAdvancedCraftingTable) world.getTileEntity(new BlockPos(x, y, z)), new ContainerAdvancedTable(player.inventory, (TileAdvancedCraftingTable) world.getTileEntity(new BlockPos(x, y, z))));
+			return new GuiAdvancedTable(new ContainerAdvancedTable(player.inventory, (TileAdvancedCraftingTable) world.getTileEntity(new BlockPos(x, y, z))));
 		}
 		if (ID == ELITE_TABLE) {
-			return new GuiEliteTable((TileEliteCraftingTable) world.getTileEntity(new BlockPos(x, y, z)), new ContainerEliteTable(player.inventory, (TileEliteCraftingTable) world.getTileEntity(new BlockPos(x, y, z))));
+			return new GuiEliteTable(new ContainerEliteTable(player.inventory, (TileEliteCraftingTable) world.getTileEntity(new BlockPos(x, y, z))));
 		}
 		if (ID == ULTIMATE_TABLE) {
-			return new GuiUltimateTable((TileUltimateCraftingTable) world.getTileEntity(new BlockPos(x, y, z)), new ContainerUltimateTable(player.inventory, (TileUltimateCraftingTable) world.getTileEntity(new BlockPos(x, y, z))));
+			return new GuiUltimateTable(new ContainerUltimateTable(player.inventory, (TileUltimateCraftingTable) world.getTileEntity(new BlockPos(x, y, z))));
 		}
 		if (ID == COMPRESSOR) {
 			return new GuiCompressor((TileCompressor) world.getTileEntity(new BlockPos(x, y, z)), new ContainerCompressor(player.inventory, (TileCompressor) world.getTileEntity(new BlockPos(x, y, z))));

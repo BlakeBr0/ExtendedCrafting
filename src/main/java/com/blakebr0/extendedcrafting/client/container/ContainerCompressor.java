@@ -1,5 +1,7 @@
 package com.blakebr0.extendedcrafting.client.container;
 
+import com.blakebr0.cucumber.inventory.slot.SlotOutput;
+import com.blakebr0.cucumber.inventory.slot.SlotSingle;
 import com.blakebr0.extendedcrafting.crafting.CombinationRecipe;
 import com.blakebr0.extendedcrafting.tile.TileCompressor;
 import net.minecraft.entity.player.EntityPlayer;
@@ -16,19 +18,9 @@ public class ContainerCompressor extends Container {
 	public ContainerCompressor(InventoryPlayer player, TileCompressor tile) {
 		this.tile = tile;
 
-		this.addSlotToContainer(new Slot(tile, 0, 135, 48) {
-			@Override
-			public boolean isItemValid(ItemStack stack) {
-				return false;
-			}
-		});
+		this.addSlotToContainer(new SlotOutput(tile, 0, 135, 48));
 		this.addSlotToContainer(new Slot(tile, 1, 65, 48));
-		this.addSlotToContainer(new Slot(tile, 2, 38, 48) {
-			@Override
-			public int getSlotStackLimit() {
-				return 1;
-			}
-		});
+		this.addSlotToContainer(new SlotSingle(tile, 2, 38, 48));
 
 		for (int i = 0; i < 3; ++i) {
 			for (int j = 0; j < 9; ++j) {

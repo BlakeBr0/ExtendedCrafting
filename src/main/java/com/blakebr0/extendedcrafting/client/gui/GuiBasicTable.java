@@ -4,8 +4,6 @@ import com.blakebr0.cucumber.helper.ResourceHelper;
 import com.blakebr0.cucumber.util.Utils;
 import com.blakebr0.extendedcrafting.ExtendedCrafting;
 import com.blakebr0.extendedcrafting.client.container.ContainerBasicTable;
-import com.blakebr0.extendedcrafting.tile.TileBasicCraftingTable;
-
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ResourceLocation;
@@ -14,7 +12,7 @@ public class GuiBasicTable extends GuiContainer {
 
 	public static final ResourceLocation GUI = ResourceHelper.getResource(ExtendedCrafting.MOD_ID, "textures/gui/basic_table.png");
 
-	public GuiBasicTable(TileBasicCraftingTable tileEntity, ContainerBasicTable container) {
+	public GuiBasicTable(ContainerBasicTable container) {
 		super(container);
 		this.xSize = 176;
 		this.ySize = 170;

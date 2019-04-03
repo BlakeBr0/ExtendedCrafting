@@ -41,12 +41,12 @@ public class TileCraftingCore extends TileEntity implements ITickable {
 	private int pedestalCount;
 
 	private static List<CombinationRecipe> getValidRecipes(ItemStack stack) {
-		List<CombinationRecipe> valid = new ArrayList<CombinationRecipe>();
+		List<CombinationRecipe> valid = new ArrayList<>();
 		
 		if (!stack.isEmpty()) {
 			for (CombinationRecipe recipe : CombinationRecipeManager.getInstance().getRecipes()) {
 				ItemStack input = recipe.getInput();
-				if (!input.isEmpty() && input.isItemEqual(stack)) {
+				if (!input.isEmpty() && input.isItemEqual(stack) && StackHelper.compareTags(input, stack)) {
 					valid.add(recipe);
 				}
 			}
@@ -100,8 +100,8 @@ public class TileCraftingCore extends TileEntity implements ITickable {
 	}
 
 	private List<BlockPos> locatePedestals() {
-		ArrayList<BlockPos> pedestals = new ArrayList<BlockPos>();
-		Iterable<BlockPos> blocks = this.getPos().getAllInBox(this.getPos().add(-3, 0, -3), this.getPos().add(3, 0, 3));
+		ArrayList<BlockPos> pedestals = new ArrayList<>();
+		Iterable<BlockPos> blocks = BlockPos.getAllInBox(this.getPos().add(-3, 0, -3), this.getPos().add(3, 0, 3));
 		
 		for (BlockPos aoePos : blocks) {
 			Block block = this.getWorld().getBlockState(aoePos).getBlock();
@@ -116,8 +116,8 @@ public class TileCraftingCore extends TileEntity implements ITickable {
 	}
 
 	private List<TilePedestal> getPedestalsWithStuff(CombinationRecipe recipe, List<BlockPos> locations) {
-		ArrayList<Object> remaining = new ArrayList<Object>(recipe.getPedestalItems());
-		ArrayList<TilePedestal> pedestals = new ArrayList<TilePedestal>();
+		ArrayList<Object> remaining = new ArrayList<>(recipe.getPedestalItems());
+		ArrayList<TilePedestal> pedestals = new ArrayList<>();
 
 		if (locations.isEmpty()) return null;
 
@@ -132,7 +132,7 @@ public class TileCraftingCore extends TileEntity implements ITickable {
 					ItemStack stack = pedestal.getInventory().getStackInSlot(0);
 					if (next instanceof ItemStack) {
 						ItemStack nextStack = (ItemStack) next;
-						match = OreDictionary.itemMatches(nextStack, stack, false) && (!nextStack.hasTagCompound() || ItemStack.areItemStackTagsEqual(nextStack, stack));
+						match = OreDictionary.itemMatches(nextStack, stack, false) && (!nextStack.hasTagCompound() || StackHelper.compareTags(nextStack, stack));
 					} else if (next instanceof List) {
 						Iterator<ItemStack> itr = ((List<ItemStack>) next).iterator();
 						while (itr.hasNext()) {
@@ -167,11 +167,8 @@ public class TileCraftingCore extends TileEntity implements ITickable {
 		
 		int extracted = this.getEnergy().extractEnergy(extract, false);
 		this.progress += extracted;
-		if (this.progress >= recipe.getCost()) {
-			return true;
-		}
-		
-		return false;
+
+		return this.progress >= recipe.getCost();
 	}
 	
 	public CombinationRecipe getRecipe() {

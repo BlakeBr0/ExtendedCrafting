@@ -29,7 +29,7 @@ import net.minecraftforge.items.wrapper.SidedInvWrapper;
 
 public class TileCompressor extends TileEntity implements ISidedInventory, ITickable {
 
-	private NonNullList<ItemStack> inventoryStacks = NonNullList.<ItemStack> withSize(3, ItemStack.EMPTY);
+	private NonNullList<ItemStack> inventoryStacks = NonNullList.withSize(3, ItemStack.EMPTY);
 	private final EnergyStorageCustom energy = new EnergyStorageCustom(ModConfig.confCompressorRFCapacity);
 	private ItemStack materialStack = ItemStack.EMPTY;
 	private int materialCount;
@@ -38,7 +38,7 @@ public class TileCompressor extends TileEntity implements ISidedInventory, ITick
 	private int oldEnergy;
 	
 	private List<CompressorRecipe> getValidRecipes(ItemStack stack) {
-		List<CompressorRecipe> valid = new ArrayList<CompressorRecipe>();
+		List<CompressorRecipe> valid = new ArrayList<>();
 		if (!stack.isEmpty()) {
 			for (CompressorRecipe recipe : CompressorRecipeManager.getInstance().getRecipes()) {
 				Object input = recipe.getInput();
@@ -50,7 +50,7 @@ public class TileCompressor extends TileEntity implements ISidedInventory, ITick
 						}
 					}
 					
-					if (inputStack.isItemEqual(stack)) {
+					if (inputStack.isItemEqual(stack) && StackHelper.compareTags(inputStack, stack)) {
 						valid.add(recipe);
 					}
 				} else if (input instanceof List) {
@@ -191,11 +191,8 @@ public class TileCompressor extends TileEntity implements ISidedInventory, ITick
 		
 		int extracted = this.getEnergy().extractEnergy(extract, false);
 		this.progress += extracted;
-		if (this.progress >= recipe.getPowerCost()) {
-			return true;
-		}
-		
-		return false;
+
+		return this.progress >= recipe.getPowerCost();
 	}
 	
 	@Override
@@ -218,7 +215,7 @@ public class TileCompressor extends TileEntity implements ISidedInventory, ITick
 	@Override
 	public void readFromNBT(NBTTagCompound compound) {
 		super.readFromNBT(compound);
-		this.inventoryStacks = NonNullList.<ItemStack> withSize(3, ItemStack.EMPTY);
+		this.inventoryStacks = NonNullList.withSize(3, ItemStack.EMPTY);
 		ItemStackHelper.loadAllItems(compound, this.inventoryStacks);
 		this.materialCount = compound.getInteger("MaterialCount");
 		this.materialStack = new ItemStack(compound.getCompoundTag("MaterialStack"));
@@ -306,7 +303,7 @@ public class TileCompressor extends TileEntity implements ISidedInventory, ITick
 
 	@Override
 	public boolean isEmpty() {
-		return !this.inventoryStacks.stream().anyMatch(s -> !s.isEmpty());
+		return this.inventoryStacks.stream().allMatch(ItemStack::isEmpty);
 	}
 
 	@Override
@@ -363,10 +360,8 @@ public class TileCompressor extends TileEntity implements ISidedInventory, ITick
 	public boolean isItemValidForSlot(int index, ItemStack stack) {
 		if (index == 2) {
 			return false;
-		} else if (index != 0) {
-			return true;
 		} else {
-			return false;
+			return index != 0;
 		}
 	}
 

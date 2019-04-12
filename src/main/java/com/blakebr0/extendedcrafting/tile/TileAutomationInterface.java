@@ -427,7 +427,7 @@ public class TileAutomationInterface extends TileEntity implements ITickable, IS
 	
 	public boolean hasTable() {
 		IExtendedTable table = this.getTable();
-		return table != null && table.getLineSize() == this.recipeSize;
+		return table != null && (!this.hasRecipe() || table.getLineSize() == this.recipeSize);
 	}
 	
 	public boolean isEnderCrafter() {

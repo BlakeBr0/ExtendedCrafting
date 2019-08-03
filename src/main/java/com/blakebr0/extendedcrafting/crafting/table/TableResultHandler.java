@@ -27,7 +27,7 @@ public class TableResultHandler extends Slot {
 		for (int i = 0; i < this.matrix.getSizeInventory(); i++) {
 			ItemStack slotStack = this.matrix.getStackInSlot(i);
 			if (!slotStack.isEmpty()) {
-				if (slotStack.getItem().hasContainerItem(slotStack) && slotStack.getCount() == 1) {
+				if (slotStack.getItem().hasContainerItem(slotStack) && slotStack.getCount() == 1 && slotStack.getItemDamage() < slotStack.getMaxDamage()) {
 					this.matrix.setInventorySlotContents(i, slotStack.getItem().getContainerItem(slotStack));
 				} else {
 					this.matrix.decrStackSize(i, 1);

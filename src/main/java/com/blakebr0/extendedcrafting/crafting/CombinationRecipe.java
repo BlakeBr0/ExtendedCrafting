@@ -22,11 +22,11 @@ public class CombinationRecipe {
 	protected ArrayList<Object> pedestals = new ArrayList<>();
 	protected ArrayList<String> inputList = new ArrayList<>();
 	
-	public CombinationRecipe(ItemStack output, int cost, ItemStack input, Object... pedestals) {
+	public CombinationRecipe(ItemStack output, long cost, ItemStack input, Object... pedestals) {
 		this(output, cost, ModConfig.confCraftingCoreRFRate, input, pedestals);
 	}
 
-	public CombinationRecipe(ItemStack output, int cost, int perTick, ItemStack input, Object... pedestals) {
+	public CombinationRecipe(ItemStack output, long cost, long perTick, ItemStack input, Object... pedestals) {
 		this.output = output;
 		this.cost = cost;
 		this.perTick = perTick;
@@ -74,11 +74,11 @@ public class CombinationRecipe {
 		return this.output;
 	}
 
-	public int getCost() {
+	public long getCost() {
 		return this.cost;
 	}
 
-	public int getPerTick() {
+	public long getPerTick() {
 		return this.perTick;
 	}
 

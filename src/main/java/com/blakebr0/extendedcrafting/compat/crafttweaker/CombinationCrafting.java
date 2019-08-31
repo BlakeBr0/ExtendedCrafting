@@ -19,12 +19,12 @@ import stanhebben.zenscript.annotations.ZenMethod;
 public class CombinationCrafting {
 	
 	@ZenMethod
-	public static void addRecipe(IItemStack output, int cost, IItemStack input, IIngredient[] ingredients) {
+	public static void addRecipe(IItemStack output, long cost, IItemStack input, IIngredient[] ingredients) {
 		CraftTweakerAPI.apply(new Add(new CombinationRecipe(toStack(output), cost, toStack(input), toObjects(ingredients))));
 	}
 
 	@ZenMethod
-	public static void addRecipe(IItemStack output, int cost, int perTick, IItemStack input, IIngredient[] ingredients) {
+	public static void addRecipe(IItemStack output, long cost, long perTick, IItemStack input, IIngredient[] ingredients) {
 		CraftTweakerAPI.apply(new Add(new CombinationRecipe(toStack(output), cost, perTick, toStack(input), toObjects(ingredients))));
 	}
 

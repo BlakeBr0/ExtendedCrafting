@@ -12,6 +12,7 @@ import com.blakebr0.cucumber.iface.IEnableable;
 import com.blakebr0.cucumber.item.ItemBase;
 import com.blakebr0.cucumber.util.Utils;
 import com.blakebr0.extendedcrafting.ExtendedCrafting;
+import com.blakebr0.extendedcrafting.compat.crafttweaker.CraftTweakerUtils;
 import com.blakebr0.extendedcrafting.compat.jei.CompatJEI;
 import com.blakebr0.extendedcrafting.config.ModConfig;
 import com.blakebr0.extendedcrafting.lib.IExtendedTable;
@@ -21,6 +22,7 @@ import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResult;
@@ -75,6 +77,10 @@ public class ItemRecipeMaker extends ItemBase implements IEnableable {
 			if (world.isRemote) {
 				setClipboard(tile, stack);
 				player.sendMessage(new TextComponentTranslation("message.ec.copied_recipe"));
+				
+				if (ModConfig.confRMNBT && !Loader.isModLoaded("crafttweaker")) {
+					player.sendMessage(new TextComponentTranslation("message.ec.nbt_requires_crafttweaker"));
+				}
 			}
 			
 			return EnumActionResult.SUCCESS;
@@ -151,8 +157,10 @@ public class ItemRecipeMaker extends ItemBase implements IEnableable {
 			if (!item.equalsIgnoreCase("null")) {
 				string += "<" + item + ">";
 				
-				if (ModConfig.confRMNBT && !stack.isEmpty() && stack.hasTagCompound()) {
-					string += ".withTag(" + stack.getTagCompound().toString() + ")";
+				if (ModConfig.confRMNBT && !stack.isEmpty() && stack.hasTagCompound() && Loader.isModLoaded("crafttweaker")) {
+					NBTBase nbt = stack.serializeNBT().getTag("tag");
+					String tag = CraftTweakerUtils.writeTag(nbt);
+					string += ".withTag(" + tag + ")";
 				}
 			} else {
 				string += item;
@@ -205,8 +213,10 @@ public class ItemRecipeMaker extends ItemBase implements IEnableable {
 					
 			string += "<" + item + ">";
 			
-			if (ModConfig.confRMNBT && !stack.isEmpty() && stack.hasTagCompound()) {
-				string += ".withTag(" + stack.getTagCompound().toString() + ")";
+			if (ModConfig.confRMNBT && !stack.isEmpty() && stack.hasTagCompound() && Loader.isModLoaded("crafttweaker")) {
+				NBTBase nbt = stack.serializeNBT().getTag("tag");
+				String tag = CraftTweakerUtils.writeTag(nbt);
+				string += ".withTag(" + tag + ")";
 			}
 			
 			if (i != lastSlot) {

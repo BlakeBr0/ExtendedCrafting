@@ -138,6 +138,7 @@ desc.item.ec.recipe_maker=Used to copy the contents of an Extended Crafting Tabl
 # MESSAGE
 message.ec.copied_recipe=Copied recipe to clipboard.
 message.ec.changed_mode=Changed mode to %s.
+message.ec.nbt_requires_crafttweaker=WARNING: Copying NBT requires that CraftTweaker is installed.
 
 # TOOLTIPS
 tooltip.ec.crafting_table=Decoration

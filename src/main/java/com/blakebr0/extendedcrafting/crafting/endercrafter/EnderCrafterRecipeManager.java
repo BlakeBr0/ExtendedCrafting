@@ -22,35 +22,37 @@ public class EnderCrafterRecipeManager {
 		return INSTANCE;
 	}
 
-	public TableRecipeShaped addShaped(ItemStack result, Object... recipe) {
+	public TableRecipeShaped addShaped(ItemStack result, int time, Object... recipe) {
 		TableRecipeShaped craft = new TableRecipeShaped(1, result, recipe);
 		
 		if (ModConfig.confEnderEnabled) {
+			craft.enderCrafterRecipeTimeRequired = time;
 			this.recipes.add(craft);
 		}
 		
 		return craft;
 	}
 	
-	public TableRecipeShapeless addShapeless(ItemStack result, Object... ingredients) {
+	public TableRecipeShapeless addShapeless(ItemStack result, int time, Object... ingredients) {
 		TableRecipeShapeless recipe = new TableRecipeShapeless(1, result, ingredients);
 		
 		if (ModConfig.confEnderEnabled) {
+			recipe.enderCrafterRecipeTimeRequired = time;
 			this.recipes.add(recipe);
 		}
 		
 		return recipe;
 	}
 	
-	public ItemStack findMatchingRecipe(TableCrafting grid, World world) {
+	public IEnderCraftingRecipe findMatchingRecipe(TableCrafting grid, World world) {
 		for (int i = 0; i < this.recipes.size(); i++) {
 			IRecipe recipe = (IRecipe) this.recipes.get(i);
 			if (recipe.matches(grid, world)) {
-				return recipe.getCraftingResult(grid);
+				return (IEnderCraftingRecipe) recipe;
 			}
 		}
 		
-		return ItemStack.EMPTY;
+		return null;
 	}
 
 	public List getRecipes() {

@@ -4,6 +4,8 @@ import java.util.Iterator;
 
 import com.blakebr0.cucumber.helper.RecipeHelper;
 import com.blakebr0.cucumber.helper.StackHelper;
+import com.blakebr0.extendedcrafting.config.ModConfig;
+import com.blakebr0.extendedcrafting.crafting.endercrafter.IEnderCraftingRecipe;
 
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
@@ -15,12 +17,13 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.crafting.CraftingHelper;
 import net.minecraftforge.items.IItemHandlerModifiable;
 
-public class TableRecipeShapeless implements IRecipe, ITieredRecipe {
+public class TableRecipeShapeless implements IRecipe, ITieredRecipe, IEnderCraftingRecipe {
 
 	protected ItemStack output = ItemStack.EMPTY;
 	protected NonNullList<Ingredient> input = NonNullList.create();
 	protected ResourceLocation group;
 	protected int tier;
+	public int enderCrafterRecipeTimeRequired = ModConfig.confEnderTimeRequired;
 
 	public TableRecipeShapeless(int tier, ItemStack result, Object... recipe) {
 		this.group = RecipeHelper.EMPTY_GROUP;
@@ -179,5 +182,10 @@ public class TableRecipeShapeless implements IRecipe, ITieredRecipe {
 	
 	public boolean requiresTier() {
 		return this.tier > 0;
+	}
+	
+	@Override
+	public int getEnderCrafterTimeSeconds() {
+		return this.enderCrafterRecipeTimeRequired;
 	}
 }

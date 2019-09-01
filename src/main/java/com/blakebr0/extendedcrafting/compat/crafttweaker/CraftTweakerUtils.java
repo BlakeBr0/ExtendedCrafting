@@ -1,6 +1,5 @@
 package com.blakebr0.extendedcrafting.compat.crafttweaker;
 
-import java.io.DataInputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;

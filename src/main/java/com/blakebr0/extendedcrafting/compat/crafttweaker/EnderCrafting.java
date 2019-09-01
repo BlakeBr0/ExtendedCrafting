@@ -3,6 +3,7 @@ package com.blakebr0.extendedcrafting.compat.crafttweaker;
 import java.util.Arrays;
 import java.util.List;
 
+import com.blakebr0.extendedcrafting.config.ModConfig;
 import com.blakebr0.extendedcrafting.crafting.endercrafter.EnderCrafterRecipeManager;
 import com.blakebr0.extendedcrafting.crafting.table.TableRecipeShaped;
 import com.blakebr0.extendedcrafting.crafting.table.TableRecipeShapeless;
@@ -22,9 +23,14 @@ import stanhebben.zenscript.annotations.ZenMethod;
 
 @ZenClass("mods.extendedcrafting.EnderCrafting")
 public class EnderCrafting {
-
+	
 	@ZenMethod
 	public static void addShaped(IItemStack output, IIngredient[][] ingredients) {
+		addShaped(output, ingredients, ModConfig.confEnderTimeRequired);
+	}
+
+	@ZenMethod
+	public static void addShaped(IItemStack output, IIngredient[][] ingredients, int seconds) {
 		int height = ingredients.length;
 		int width = 0;
 		for (IIngredient[] row : ingredients) {
@@ -46,13 +52,22 @@ public class EnderCrafting {
 				input.set(i, ing);
 			}
 		}
-
-		CraftTweakerAPI.apply(new Add(new TableRecipeShaped(1, toStack(output), width, height, input)));	
+		
+		TableRecipeShaped recipe = new TableRecipeShaped(1, toStack(output), width, height, input);
+		recipe.enderCrafterRecipeTimeRequired = seconds;
+		CraftTweakerAPI.apply(new Add(recipe));	
+	}
+	
+	@ZenMethod
+	public static void addShapeless(IItemStack output, IIngredient[] ingredients) {
+		addShapeless(output, ingredients, ModConfig.confEnderTimeRequired);
 	}
 
 	@ZenMethod
-	public static void addShapeless(IItemStack output, IIngredient[] ingredients) {
-		CraftTweakerAPI.apply(new Add(new TableRecipeShapeless(1, toStack(output), toObjects(ingredients))));	
+	public static void addShapeless(IItemStack output, IIngredient[] ingredients, int seconds) {
+		TableRecipeShapeless recipe = new TableRecipeShapeless(1, toStack(output), toObjects(ingredients));
+		recipe.enderCrafterRecipeTimeRequired = seconds;
+		CraftTweakerAPI.apply(new Add(recipe));	
 	}
 
 	@ZenMethod

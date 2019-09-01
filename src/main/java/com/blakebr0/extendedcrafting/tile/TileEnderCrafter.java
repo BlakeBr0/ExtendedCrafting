@@ -8,15 +8,18 @@ import com.blakebr0.cucumber.tile.TileEntityBase;
 import com.blakebr0.extendedcrafting.block.BlockEnderAlternator;
 import com.blakebr0.extendedcrafting.config.ModConfig;
 import com.blakebr0.extendedcrafting.crafting.endercrafter.EnderCrafterRecipeManager;
+import com.blakebr0.extendedcrafting.crafting.endercrafter.IEnderCraftingRecipe;
 import com.blakebr0.extendedcrafting.crafting.table.TableCrafting;
 import com.blakebr0.extendedcrafting.lib.EmptyContainer;
 import com.blakebr0.extendedcrafting.lib.IExtendedTable;
 
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.ItemStackHelper;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.ITickable;
@@ -34,14 +37,16 @@ public class TileEnderCrafter extends TileEntityBase implements IInventory, ITic
 	@Override
 	public void update() {
 		if (!this.getWorld().isRemote) {
-			ItemStack result = EnderCrafterRecipeManager.getInstance().findMatchingRecipe(new TableCrafting(new EmptyContainer(), this), this.getWorld());
+			TableCrafting crafting = new TableCrafting(new EmptyContainer(), this);
+			IEnderCraftingRecipe recipe = EnderCrafterRecipeManager.getInstance().findMatchingRecipe(crafting, this.getWorld());
+			ItemStack result = recipe == null ? ItemStack.EMPTY : ((IRecipe) recipe).getCraftingResult(crafting);
 			ItemStack output = this.getResult();
 			if (!result.isEmpty() && (output.isEmpty() || StackHelper.canCombineStacks(output, result))) {
 				List<BlockPos> alternators = this.getAlternatorPositions();
 				int alternatorCount = alternators.size();
 
 				if (alternatorCount > 0) {
-					this.progress(alternatorCount);
+					this.progress(alternatorCount, recipe.getEnderCrafterTimeSeconds());
 					
 					for (BlockPos pos : alternators) {
 						if (this.getWorld().isAirBlock(pos.up())) {
@@ -147,10 +152,10 @@ public class TileEnderCrafter extends TileEntityBase implements IInventory, ITic
 		return this.progress;
 	}
 	
-	private void progress(int alternators) {
+	private void progress(int alternators, int timeRequired) {
 		this.progress++;
 		
-		int timeReq = 20 * ModConfig.confEnderTimeRequired;
+		int timeReq = 20 * timeRequired;
 		this.progressReq = (int) Math.max(timeReq - (timeReq * (ModConfig.confEnderAlternatorEff * alternators)), 20);
 	}
 	

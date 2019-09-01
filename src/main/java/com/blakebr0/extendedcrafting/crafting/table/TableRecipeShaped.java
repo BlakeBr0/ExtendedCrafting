@@ -1,7 +1,11 @@
 package com.blakebr0.extendedcrafting.crafting.table;
 
+import java.util.Map;
+
 import com.blakebr0.cucumber.helper.RecipeHelper;
 import com.blakebr0.cucumber.helper.StackHelper;
+import com.blakebr0.extendedcrafting.config.ModConfig;
+import com.blakebr0.extendedcrafting.crafting.endercrafter.IEnderCraftingRecipe;
 
 import net.minecraft.block.Block;
 import net.minecraft.inventory.InventoryCrafting;
@@ -16,7 +20,7 @@ import net.minecraftforge.common.crafting.CraftingHelper;
 import net.minecraftforge.common.crafting.CraftingHelper.ShapedPrimer;
 import net.minecraftforge.items.IItemHandlerModifiable;
 
-public class TableRecipeShaped implements IRecipe, ITieredRecipe {
+public class TableRecipeShaped implements IRecipe, ITieredRecipe, IEnderCraftingRecipe  {
 
 	public static final int MAX_CRAFT_GRID_WIDTH = 9;
 	public static final int MAX_CRAFT_GRID_HEIGHT = 9;
@@ -28,6 +32,7 @@ public class TableRecipeShaped implements IRecipe, ITieredRecipe {
 	protected boolean mirrored = true;
 	protected ResourceLocation group;
 	protected int tier;
+	public int enderCrafterRecipeTimeRequired = ModConfig.confEnderTimeRequired;
 
 	public TableRecipeShaped(int tier, Block result, Object... recipe) {
 		this(tier, new ItemStack(result), recipe);
@@ -247,5 +252,10 @@ public class TableRecipeShaped implements IRecipe, ITieredRecipe {
 	
 	public boolean requiresTier() {
 		return this.tier > 0;
+	}
+	
+	@Override
+	public int getEnderCrafterTimeSeconds() {
+		return this.enderCrafterRecipeTimeRequired;
 	}
 }

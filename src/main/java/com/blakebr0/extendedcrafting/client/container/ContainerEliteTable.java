@@ -24,7 +24,7 @@ public class ContainerEliteTable extends Container {
 		this.matrix = new TableCrafting(this, tile);
 		this.result = new TableCraftResult(tile);
 		
-		this.addSlotToContainer(new TableResultHandler(this.matrix, this.result, 0, 172, 71));
+		this.addSlotToContainer(new TableResultHandler(this.matrix, this.result, tile.getWorld(), 0, 172, 71));
 		
 		int wy, ex;
 		for (wy = 0; wy < 7; wy++) {

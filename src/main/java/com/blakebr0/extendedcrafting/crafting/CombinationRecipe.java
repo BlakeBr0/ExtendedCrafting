@@ -16,8 +16,8 @@ import net.minecraftforge.oredict.OreDictionary;
 public class CombinationRecipe {
 
 	protected ItemStack output;
-	protected int cost;
-	protected int perTick;
+	protected long cost;
+	protected long perTick;
 	protected ItemStack input;
 	protected ArrayList<Object> pedestals = new ArrayList<>();
 	protected ArrayList<String> inputList = new ArrayList<>();

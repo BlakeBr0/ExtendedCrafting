@@ -24,7 +24,7 @@ public class ContainerAdvancedTable extends Container {
 		this.matrix = new TableCrafting(this, tile);
 		this.result = new TableCraftResult(tile);
 		
-		this.addSlotToContainer(new TableResultHandler(this.matrix, this.result, 0, 142, 53));
+		this.addSlotToContainer(new TableResultHandler(this.matrix, this.result, tile.getWorld(), 0, 142, 53));
 		
 		int wy, ex;
 		for (wy = 0; wy < 5; wy++) {

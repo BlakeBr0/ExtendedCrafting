@@ -20,6 +20,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.CraftingManager;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SPacketUpdateTileEntity;
@@ -27,6 +28,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.NonNullList;
+import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.items.CapabilityItemHandler;
@@ -190,16 +192,26 @@ public class TileAutomationInterface extends TileEntity implements ITickable, IS
 						}
 					}
 					
-					for (int i = 0; i < matrix.getSizeInventory(); i++) {
-						ItemStack slotStack = matrix.getStackInSlot(i);
-						if (!slotStack.isEmpty()) {
-							if (slotStack.getItem().hasContainerItem(slotStack) && slotStack.getCount() == 1) {
-								matrix.setInventorySlotContents(i, slotStack.getItem().getContainerItem(slotStack));
-							} else {
-								matrix.decrStackSize(i, 1);
-							}
-						}
-					}
+					NonNullList<ItemStack> remaining = this.getRemainingItems(matrix);
+					
+			        for (int i = 0; i < remaining.size(); i++) {
+			            ItemStack itemstack = matrix.getStackInSlot(i);
+			            ItemStack itemstack1 = remaining.get(i);
+
+			            if (!itemstack.isEmpty()) {
+			                matrix.decrStackSize(i, 1);
+			                itemstack = matrix.getStackInSlot(i);
+			            }
+
+			            if (!itemstack1.isEmpty()) {
+			                if (itemstack.isEmpty()) {
+			                    matrix.setInventorySlotContents(i, itemstack1);
+			                } else if (ItemStack.areItemsEqual(itemstack, itemstack1) && ItemStack.areItemStackTagsEqual(itemstack, itemstack1)) {
+			                    itemstack1.grow(itemstack.getCount());
+			                    matrix.setInventorySlotContents(i, itemstack1);
+			                }
+			            }
+			        }
 					
 					table.setResult(TableRecipeManager.getInstance().findMatchingRecipe(new TableCrafting(new EmptyContainer(), table), this.getWorld()));
 				}
@@ -592,6 +604,15 @@ public class TileAutomationInterface extends TileEntity implements ITickable, IS
 		}
 		
 		return 0;
+	}
+	
+	private NonNullList<ItemStack> getRemainingItems(IInventory matrix) {
+        NonNullList<ItemStack> ret = NonNullList.withSize(matrix.getSizeInventory(), ItemStack.EMPTY);
+        for (int i = 0; i < ret.size(); i++) {
+            ret.set(i, ForgeHooks.getContainerItem(matrix.getStackInSlot(i)));
+        }
+        
+        return ret;
 	}
 	
 	class StackHandler extends ItemStackHandler {

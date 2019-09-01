@@ -24,7 +24,7 @@ public class ContainerUltimateTable extends Container {
 		this.matrix = new TableCrafting(this, tile);
 		this.result = new TableCraftResult(tile);
 		
-		this.addSlotToContainer(new TableResultHandler(this.matrix, this.result, 0, 206, 89));
+		this.addSlotToContainer(new TableResultHandler(this.matrix, this.result, tile.getWorld(), 0, 206, 89));
 		
 		int wy, ex;
 		for (wy = 0; wy < 9; wy++) {

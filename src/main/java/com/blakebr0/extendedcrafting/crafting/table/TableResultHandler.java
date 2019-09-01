@@ -5,16 +5,21 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.CraftingManager;
+import net.minecraft.util.NonNullList;
+import net.minecraft.world.World;
 
 public class TableResultHandler extends Slot {
 
 	private final TableCrafting crafting;
 	private final IInventory matrix;
+	private final World world;
 
-	public TableResultHandler(InventoryCrafting crafting, IInventory inventory, int slot, int x, int y) {
+	public TableResultHandler(InventoryCrafting crafting, IInventory inventory, World world, int slot, int x, int y) {
 		super(inventory, slot, x, y);
 		this.crafting = (TableCrafting) crafting;
-		this.matrix = (IInventory) ((TableCrafting) crafting).tile;
+		this.matrix = (IInventory) this.crafting.tile;
+		this.world = world;
 	}
 
 	@Override
@@ -24,18 +29,29 @@ public class TableResultHandler extends Slot {
 
 	@Override
 	public ItemStack onTake(EntityPlayer player, ItemStack stack) {
-		for (int i = 0; i < this.matrix.getSizeInventory(); i++) {
-			ItemStack slotStack = this.matrix.getStackInSlot(i);
-			if (!slotStack.isEmpty()) {
-				if (slotStack.getItem().hasContainerItem(slotStack) && slotStack.getCount() == 1 && slotStack.getItemDamage() < slotStack.getMaxDamage()) {
-					this.matrix.setInventorySlotContents(i, slotStack.getItem().getContainerItem(slotStack));
-				} else {
-					this.matrix.decrStackSize(i, 1);
-				}
-			}
-		}
+		NonNullList<ItemStack> remaining = CraftingManager.getRemainingItems(this.crafting, this.world);
 		
-		this.crafting.container.onCraftMatrixChanged(this.crafting);
+        for (int i = 0; i < remaining.size(); i++) {
+            ItemStack itemstack = this.matrix.getStackInSlot(i);
+            ItemStack itemstack1 = remaining.get(i);
+
+            if (!itemstack.isEmpty()) {
+                this.matrix.decrStackSize(i, 1);
+                itemstack = this.matrix.getStackInSlot(i);
+            }
+
+            if (!itemstack1.isEmpty()) {
+                if (itemstack.isEmpty()) {
+                    this.matrix.setInventorySlotContents(i, itemstack1);
+                } else if (ItemStack.areItemsEqual(itemstack, itemstack1) && ItemStack.areItemStackTagsEqual(itemstack, itemstack1)) {
+                    itemstack1.grow(itemstack.getCount());
+                    this.matrix.setInventorySlotContents(i, itemstack1);
+                }
+            }
+        }
+        
+        this.crafting.container.onCraftMatrixChanged(this.crafting);
+		
 		return stack;
 	}
 }

@@ -24,7 +24,7 @@ public class ContainerBasicTable extends Container {
 		this.matrix = new TableCrafting(this, tile);
 		this.result = new TableCraftResult(tile);
 		
-		this.addSlotToContainer(new TableResultHandler(this.matrix, this.result, 0, 124, 36));
+		this.addSlotToContainer(new TableResultHandler(this.matrix, this.result, tile.getWorld(), 0, 124, 36));
 		
 		int wy, ex;
 		for (wy = 0; wy < 3; wy++) {

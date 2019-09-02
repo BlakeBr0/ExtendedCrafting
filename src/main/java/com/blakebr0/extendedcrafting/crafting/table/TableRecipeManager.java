@@ -8,7 +8,9 @@ import com.blakebr0.extendedcrafting.config.ModConfig;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.CraftingManager;
 import net.minecraft.item.crafting.IRecipe;
+import net.minecraft.util.NonNullList;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
 
@@ -141,4 +143,15 @@ public class TableRecipeManager {
 		
 		return recipes;
 	}
+	
+    public static NonNullList<ItemStack> getRemainingItems(InventoryCrafting grid, World world) {
+		for (int j = 0; j < getInstance().recipes.size(); j++) {
+			IRecipe recipe = (IRecipe) getInstance().recipes.get(j);
+			if (recipe.matches(grid, world)) {
+				return recipe.getRemainingItems(grid);
+			}
+		}
+
+        return CraftingManager.getRemainingItems(grid, world);
+    }
 }

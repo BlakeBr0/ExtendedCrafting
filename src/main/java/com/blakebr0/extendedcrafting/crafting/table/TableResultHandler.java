@@ -5,7 +5,6 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.CraftingManager;
 import net.minecraft.util.NonNullList;
 import net.minecraft.world.World;
 
@@ -29,7 +28,7 @@ public class TableResultHandler extends Slot {
 
 	@Override
 	public ItemStack onTake(EntityPlayer player, ItemStack stack) {
-		NonNullList<ItemStack> remaining = CraftingManager.getRemainingItems(this.crafting, this.world);
+		NonNullList<ItemStack> remaining = TableRecipeManager.getRemainingItems(this.crafting, this.world);
 		
         for (int i = 0; i < remaining.size(); i++) {
             ItemStack itemstack = this.matrix.getStackInSlot(i);

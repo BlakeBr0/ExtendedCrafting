@@ -4,6 +4,7 @@ import com.blakebr0.cucumber.inventory.slot.SlotOutput;
 import com.blakebr0.cucumber.inventory.slot.SlotSingle;
 import com.blakebr0.extendedcrafting.crafting.CombinationRecipe;
 import com.blakebr0.extendedcrafting.tile.TileCompressor;
+
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;

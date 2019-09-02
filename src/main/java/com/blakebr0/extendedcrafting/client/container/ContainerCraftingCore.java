@@ -1,6 +1,7 @@
 package com.blakebr0.extendedcrafting.client.container;
 
 import com.blakebr0.extendedcrafting.tile.TileCraftingCore;
+
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;

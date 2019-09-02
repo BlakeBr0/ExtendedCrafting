@@ -3,6 +3,7 @@ package com.blakebr0.extendedcrafting.client.container;
 import com.blakebr0.extendedcrafting.crafting.endercrafter.EnderResultSlot;
 import com.blakebr0.extendedcrafting.crafting.table.TableCraftResult;
 import com.blakebr0.extendedcrafting.tile.TileEnderCrafter;
+
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;

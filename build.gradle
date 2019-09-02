@@ -20,11 +20,11 @@ compileJava {
 }
 
 minecraft {
-    version = "1.12.2-14.23.4.2705"
+    version = "1.12.2-14.23.5.2768"
     runDir = "run"
     replace '${version}', project.version
 
-    mappings = "snapshot_20170624"
+    mappings = "snapshot_20171003"
     makeObfSourceJar = false // an Srg named sources jar is made by default. uncomment this to disable.
 }
 
@@ -35,8 +35,8 @@ repositories {
 }
 
 dependencies {
-	deobfCompile "mezz.jei:jei_1.12.2:4.10.0.198:api"
-	runtime "mezz.jei:jei_1.12.2:4.10.0.198"
+	deobfCompile "mezz.jei:jei_1.12.2:4.15.0.268:api"
+	runtime "mezz.jei:jei_1.12.2:4.15.0.268"
 }
 
 processResources {

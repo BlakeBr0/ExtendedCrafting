@@ -202,7 +202,7 @@ public class ItemSingularity extends ItemMeta implements IEnableable {
 	public static class ColorHandler implements IItemColor {
 
 		@Override
-		public int getColorFromItemstack(ItemStack stack, int tintIndex) {
+		public int colorMultiplier(ItemStack stack, int tintIndex) {
 			return singularityColors.get(stack.getMetadata());
 		}
 	}

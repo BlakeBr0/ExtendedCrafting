@@ -34,6 +34,7 @@ public class ModGuide {
 				GUIDE.addEntry("quantum_compression")
 				     .setIconStack(new ItemStack(ModBlocks.blockCompressor))
 				     .addPageText()
+				     .addPageText()
 				     .addPageText();
 			}
 

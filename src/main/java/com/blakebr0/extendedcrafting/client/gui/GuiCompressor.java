@@ -10,6 +10,7 @@ import com.blakebr0.cucumber.util.Utils;
 import com.blakebr0.extendedcrafting.ExtendedCrafting;
 import com.blakebr0.extendedcrafting.client.container.ContainerCompressor;
 import com.blakebr0.extendedcrafting.network.EjectModeSwitchPacket;
+import com.blakebr0.extendedcrafting.network.InputLimitSwitchPacket;
 import com.blakebr0.extendedcrafting.network.NetworkThingy;
 import com.blakebr0.extendedcrafting.tile.TileCompressor;
 
@@ -104,6 +105,8 @@ public class GuiCompressor extends GuiContainer {
 	public void actionPerformed(GuiButton button) throws IOException {
 		if (button.id == 1) {
 			NetworkThingy.THINGY.sendToServer(new EjectModeSwitchPacket(this.tile.getPos().toLong()));
+		} else if (button.id == 2) {
+			NetworkThingy.THINGY.sendToServer(new InputLimitSwitchPacket(this.tile.getPos().toLong()));
 		}
 	}
 
@@ -111,6 +114,12 @@ public class GuiCompressor extends GuiContainer {
 	public void initGui() {
 		super.initGui();
 		this.buttonList.add(new GuiButton(1, this.guiLeft + 69, this.guiTop + 29, 11, 9, (String) null) {
+			@Override
+			public void drawButton(Minecraft mc, int mouseX, int mouseY, float partialTicks) {
+
+			}
+		});
+		this.buttonList.add(new GuiButton(2, this.guiLeft + 91, this.guiTop + 74, 7, 10, (String) null) {
 			@Override
 			public void drawButton(Minecraft mc, int mouseX, int mouseY, float partialTicks) {
 
@@ -151,6 +160,14 @@ public class GuiCompressor extends GuiContainer {
 				this.drawHoveringText(Utils.localize("tooltip.ec.eject"), mouseX, mouseY);
 			}
 		}
+		
+		if (mouseX > guiLeft + 90 && mouseX < guiLeft + 98 && mouseY > guiTop + 73 && mouseY < guiTop + 84) {
+			if (this.tile.isLimitingInput()) {
+				this.drawHoveringText(Utils.localize("tooltip.ec.limited_input"), mouseX, mouseY);
+			} else {
+				this.drawHoveringText(Utils.localize("tooltip.ec.unlimited_input"), mouseX, mouseY);
+			}
+		}
 	}
 
 	@Override
@@ -177,6 +194,19 @@ public class GuiCompressor extends GuiContainer {
 
 		if (mouseX > guiLeft + 68 && mouseX < guiLeft + 79 && mouseY > guiTop + 28 && mouseY < guiTop + 39) {
 			this.drawTexturedModalRect(x + 68, y + 30, 194, 32, 11, 9);
+		}
+		
+		
+		if (mouseX > guiLeft + 90 && mouseX < guiLeft + 98 && mouseY > guiTop + 73 && mouseY < guiTop + 84) {
+			if (this.tile.isLimitingInput()) {
+				this.drawTexturedModalRect(x + 90, y + 74, 194, 56, 9, 10);
+			} else {
+				this.drawTexturedModalRect(x + 90, y + 74, 194, 43, 9, 10);				
+			}
+		} else {
+			if (this.tile.isLimitingInput()) {
+				this.drawTexturedModalRect(x + 90, y + 74, 203, 56, 9, 10);
+			}
 		}
 	}
 }

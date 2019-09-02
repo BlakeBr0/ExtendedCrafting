@@ -36,6 +36,7 @@ public class TileCompressor extends TileEntity implements ISidedInventory, ITick
 	private int progress;
 	private boolean ejecting = false;
 	private int oldEnergy;
+	private boolean inputLimit = true;
 	
 	private List<CompressorRecipe> getValidRecipes(ItemStack stack) {
 		List<CompressorRecipe> valid = new ArrayList<>();
@@ -87,14 +88,19 @@ public class TileCompressor extends TileEntity implements ISidedInventory, ITick
 					}
 				}
 				
-				// TODO: Possibly come up with a system to deal with differing itemstacks?
-				if (StackHelper.areStacksEqual(input, this.materialStack)) {
-					int consumeAmount = input.getCount();
-					StackHelper.decrease(input, consumeAmount, false);
-					this.materialCount += consumeAmount;
-					if (!mark) {
-						mark = true;
-					}
+				if (!this.inputLimit || (recipe != null && this.materialCount < recipe.getInputCount())) {
+					if (StackHelper.areStacksEqual(input, this.materialStack)) {
+						int consumeAmount = input.getCount();
+						if (this.inputLimit) {
+							consumeAmount = Math.min(consumeAmount, recipe.getInputCount() - this.materialCount);
+						}
+						
+						StackHelper.decrease(input, consumeAmount, false);
+						this.materialCount += consumeAmount;
+						if (!mark) {
+							mark = true;
+						}
+					}					
 				}
 			}
 
@@ -209,6 +215,7 @@ public class TileCompressor extends TileEntity implements ISidedInventory, ITick
 		compound.setInteger("Progress", this.progress);
 		compound.setBoolean("Ejecting", this.ejecting);
 		compound.setInteger("Energy", this.energy.getEnergyStored());
+		compound.setBoolean("InputLimit", this.inputLimit);
 		return compound;
 	}
 
@@ -222,6 +229,7 @@ public class TileCompressor extends TileEntity implements ISidedInventory, ITick
 		this.progress = compound.getInteger("Progress");
 		this.ejecting = compound.getBoolean("Ejecting");
 		this.energy.setEnergy(compound.getInteger("Energy"));
+		this.inputLimit = compound.getBoolean("InputLimit");
 	}
 
 	/**
@@ -290,6 +298,15 @@ public class TileCompressor extends TileEntity implements ISidedInventory, ITick
 			this.ejecting = !this.ejecting;
 			this.markDirty();
 		}
+	}
+	
+	public boolean isLimitingInput() {
+		return this.inputLimit;
+	}
+	
+	public void toggleInputLimit() {
+		this.inputLimit = !this.inputLimit;
+		this.markDirty();
 	}
 
 	public int getProgress() {

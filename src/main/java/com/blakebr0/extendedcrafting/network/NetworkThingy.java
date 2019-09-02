@@ -13,5 +13,6 @@ public class NetworkThingy {
 		THINGY.registerMessage(EjectModeSwitchPacket.Handler.class, EjectModeSwitchPacket.class, 1, Side.SERVER);
 		THINGY.registerMessage(InterfaceRecipeChangePacket.Handler.class, InterfaceRecipeChangePacket.class, 2, Side.SERVER);
 		THINGY.registerMessage(InterfaceAutoChangePacket.Handler.class, InterfaceAutoChangePacket.class, 3, Side.SERVER);
+		THINGY.registerMessage(InputLimitSwitchPacket.Handler.class, InputLimitSwitchPacket.class, 4, Side.SERVER);
 	}
 }

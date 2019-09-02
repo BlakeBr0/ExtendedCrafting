@@ -20,7 +20,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.CraftingManager;
+import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SPacketUpdateTileEntity;
@@ -472,7 +472,8 @@ public class TileAutomationInterface extends TileEntity implements ITickable, IS
 		}
 		
 		if (this.isEnderCrafter()) {
-			this.result = EnderCrafterRecipeManager.getInstance().findMatchingRecipe(new TableCrafting(new EmptyContainer(), table), this.getWorld());
+			TableCrafting crafting = new TableCrafting(new EmptyContainer(), table);
+			this.result = ((IRecipe) EnderCrafterRecipeManager.getInstance().findMatchingRecipe(crafting, this.getWorld())).getCraftingResult(crafting);
 		} else {
 			ItemStack result = table.getResult();
 			if (result != null) {

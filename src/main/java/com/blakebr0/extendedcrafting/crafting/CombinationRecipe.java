@@ -17,7 +17,7 @@ public class CombinationRecipe {
 
 	protected ItemStack output;
 	protected long cost;
-	protected long perTick;
+	protected int perTick;
 	protected ItemStack input;
 	protected ArrayList<Object> pedestals = new ArrayList<>();
 	protected ArrayList<String> inputList = new ArrayList<>();
@@ -26,7 +26,7 @@ public class CombinationRecipe {
 		this(output, cost, ModConfig.confCraftingCoreRFRate, input, pedestals);
 	}
 
-	public CombinationRecipe(ItemStack output, long cost, long perTick, ItemStack input, Object... pedestals) {
+	public CombinationRecipe(ItemStack output, long cost, int perTick, ItemStack input, Object... pedestals) {
 		this.output = output;
 		this.cost = cost;
 		this.perTick = perTick;
@@ -78,7 +78,7 @@ public class CombinationRecipe {
 		return this.cost;
 	}
 
-	public long getPerTick() {
+	public int getPerTick() {
 		return this.perTick;
 	}
 

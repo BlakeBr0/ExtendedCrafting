@@ -22,7 +22,7 @@ public class CombinationRecipeManager {
 		}
 	}
 
-	public void addRecipe(ItemStack output, long cost, long perTick, ItemStack input, Object... pedestals) {
+	public void addRecipe(ItemStack output, long cost, int perTick, ItemStack input, Object... pedestals) {
 		if (ModConfig.confCraftingCoreEnabled) {
 			this.recipes.add(new CombinationRecipe(output, cost, perTick, input, pedestals));
 		}

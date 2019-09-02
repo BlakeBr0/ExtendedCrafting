@@ -24,7 +24,7 @@ public class CombinationCrafting {
 	}
 
 	@ZenMethod
-	public static void addRecipe(IItemStack output, long cost, long perTick, IItemStack input, IIngredient[] ingredients) {
+	public static void addRecipe(IItemStack output, long cost, int perTick, IItemStack input, IIngredient[] ingredients) {
 		CraftTweakerAPI.apply(new Add(new CombinationRecipe(toStack(output), cost, perTick, toStack(input), toObjects(ingredients))));
 	}
 

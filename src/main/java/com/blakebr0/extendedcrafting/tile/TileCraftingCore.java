@@ -160,9 +160,9 @@ public class TileCraftingCore extends TileEntity implements ITickable {
 
 	private boolean process(CombinationRecipe recipe) {
 		int extract = recipe.getPerTick();
-		int difference = recipe.getCost() - this.progress;
+		long difference = recipe.getCost() - this.progress;
 		if (difference < recipe.getPerTick()) {
-			extract = difference;
+			extract = (int) difference;
 		}
 		
 		int extracted = this.getEnergy().extractEnergy(extract, false);

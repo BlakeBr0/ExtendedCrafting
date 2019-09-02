@@ -1,7 +1,10 @@
 package com.blakebr0.extendedcrafting.compat.crafttweaker;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
 
 import com.blakebr0.extendedcrafting.crafting.table.TableRecipeManager;
 import com.blakebr0.extendedcrafting.crafting.table.TableRecipeShaped;
@@ -11,6 +14,8 @@ import crafttweaker.CraftTweakerAPI;
 import crafttweaker.IAction;
 import crafttweaker.api.item.IIngredient;
 import crafttweaker.api.item.IItemStack;
+import crafttweaker.api.item.IngredientItem;
+import crafttweaker.api.minecraft.CraftTweakerMC;
 import crafttweaker.api.oredict.IOreDictEntry;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
@@ -44,20 +49,31 @@ public class TableCrafting {
 		}
 			
 		NonNullList<Ingredient> input = NonNullList.withSize(height * width, Ingredient.EMPTY);
+		Map<Integer, Function<ItemStack, ItemStack>> transformers = new HashMap<>();
 		
 		int i = 0;
 		for (int a = 0; a < height; a++) {
 			for (int b = 0; b < ingredients[a].length; b++) {
-				Ingredient ing = CraftingHelper.getIngredient(toObject(ingredients[a][b]));
+				IIngredient iing = ingredients[a][b];
+				Ingredient ing = CraftingHelper.getIngredient(toObject(iing));
 				if (ing == null) {
 					ing = Ingredient.EMPTY;
 				}
+				
 				i = a * width + b;
 				input.set(i, ing);
+				
+				if (ing != Ingredient.EMPTY && iing.hasNewTransformers()) {
+					transformers.put(i, stack -> {
+						IItemStack istack = iing.applyNewTransform(CraftTweakerMC.getIItemStack(stack));
+						ItemStack transformed = CraftTweakerMC.getItemStack(istack);
+						return transformed;
+					});
+				}
 			}
 		}
 
-		CraftTweakerAPI.apply(new Add(new TableRecipeShaped(tier, toStack(output), width, height, input)));
+		CraftTweakerAPI.apply(new Add(new TableRecipeShaped(tier, toStack(output), width, height, input).withTransformers(transformers)));
 	}
 
 	@ZenMethod
@@ -81,20 +97,31 @@ public class TableCrafting {
 		}
 
 		NonNullList<Ingredient> input = NonNullList.withSize(height * width, Ingredient.EMPTY);
+		Map<Integer, Function<ItemStack, ItemStack>> transformers = new HashMap<>();
 
 		int i = 0;
 		for (int a = 0; a < height; a++) {
 			for (int b = 0; b < ingredients[a].length; b++) {
-				Ingredient ing = CraftingHelper.getIngredient(toObject(ingredients[a][b]));
+				IIngredient iing = ingredients[a][b];
+				Ingredient ing = CraftingHelper.getIngredient(toObject(iing));
 				if (ing == null) {
 					ing = Ingredient.EMPTY;
 				}
+				
 				i = a * width + b;
 				input.set(i, ing);
+				
+				if (ing != Ingredient.EMPTY && iing.hasNewTransformers()) {
+					transformers.put(i, stack -> {
+						IItemStack istack = iing.applyNewTransform(CraftTweakerMC.getIItemStack(stack));
+						ItemStack transformed = CraftTweakerMC.getItemStack(istack);
+						return transformed;
+					});
+				}
 			}
 		}
 
-		CraftTweakerAPI.apply(new Add(new TableRecipeShaped(tier, toStack(output), width, height, input).setMirrored(true)));
+		CraftTweakerAPI.apply(new Add(new TableRecipeShaped(tier, toStack(output), width, height, input).setMirrored(true).withTransformers(transformers)));
 	}
 
 
@@ -109,8 +136,22 @@ public class TableCrafting {
 			CraftTweakerAPI.getLogger().logError("Unable to assign a tier to the Table Recipe for stack " + output.getDisplayName() + ". Tier cannot be greater than 4 or less than 0.");
 			tier = 0;
 		}
+		
+		Map<Integer, Function<ItemStack, ItemStack>> transformers = new HashMap<>();
 
-		CraftTweakerAPI.apply(new Add(new TableRecipeShapeless(tier, toStack(output), toObjects(ingredients))));
+		for (int i = 0; i < ingredients.length; i++) {
+			IIngredient iing = ingredients[i];
+			Ingredient ing = CraftingHelper.getIngredient(toObject(iing));
+			if (ing != Ingredient.EMPTY && iing.hasNewTransformers()) {
+				transformers.put(i, stack -> {
+					IItemStack istack = iing.applyNewTransform(CraftTweakerMC.getIItemStack(stack));
+					ItemStack transformed = CraftTweakerMC.getItemStack(istack);
+					return transformed;
+				});
+			}
+		}
+
+		CraftTweakerAPI.apply(new Add(new TableRecipeShapeless(tier, toStack(output), toObjects(ingredients)).withTransforms(transformers)));
 	}
 
 	@ZenMethod
@@ -169,11 +210,13 @@ public class TableCrafting {
 	private static Object toObject(IIngredient ingredient) {
 		if (ingredient == null) {
 			return null;
-		} else {
+		} else {			
 			if (ingredient instanceof IOreDictEntry) {
 				return toString((IOreDictEntry) ingredient);
-			} else if (ingredient instanceof IItemStack) {
+			} else if (ingredient instanceof IItemStack) {				
 				return toStack((IItemStack) ingredient);
+			} else if (ingredient instanceof IngredientItem) {
+				return ingredient.getInternal();
 			} else {
 				return null;
 			}

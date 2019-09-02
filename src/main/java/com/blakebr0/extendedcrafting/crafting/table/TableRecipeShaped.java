@@ -1,6 +1,7 @@
 package com.blakebr0.extendedcrafting.crafting.table;
 
 import java.util.Map;
+import java.util.function.Function;
 
 import com.blakebr0.cucumber.helper.RecipeHelper;
 import com.blakebr0.cucumber.helper.StackHelper;
@@ -32,6 +33,7 @@ public class TableRecipeShaped implements IRecipe, ITieredRecipe, IEnderCrafting
 	protected boolean mirrored = true;
 	protected ResourceLocation group;
 	protected int tier;
+	protected Map<Integer, Function<ItemStack, ItemStack>> transformers;
 	public int enderCrafterRecipeTimeRequired = ModConfig.confEnderTimeRequired;
 
 	public TableRecipeShaped(int tier, Block result, Object... recipe) {
@@ -257,5 +259,22 @@ public class TableRecipeShaped implements IRecipe, ITieredRecipe, IEnderCrafting
 	@Override
 	public int getEnderCrafterTimeSeconds() {
 		return this.enderCrafterRecipeTimeRequired;
+	}
+	
+	public TableRecipeShaped withTransformers(Map<Integer, Function<ItemStack, ItemStack>> transformers) {
+		this.transformers = transformers;
+		return this;
+	}
+	
+	@Override
+	public NonNullList<ItemStack> getRemainingItems(InventoryCrafting inv) {
+		NonNullList<ItemStack> remaining = IRecipe.super.getRemainingItems(inv);
+		if (this.transformers != null && !this.transformers.isEmpty()) {
+			this.transformers.forEach((i, transformer) -> {
+				remaining.set(i, transformer.apply(inv.getStackInSlot(i)));
+			});
+		}
+		
+		return remaining;
 	}
 }

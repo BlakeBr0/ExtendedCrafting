@@ -1,68 +1,96 @@
 buildscript {
     repositories {
+        maven { url = 'https://files.minecraftforge.net/maven' }
         jcenter()
-        maven { url = "http://files.minecraftforge.net/maven" }
+        mavenCentral()
     }
     dependencies {
-        classpath 'net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT'
+        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '3.+', changing: true
     }
 }
-apply plugin: 'net.minecraftforge.gradle.forge'
-//Only edit below this line, the above code adds and enables the necessary things for Forge to be setup.
+apply plugin: 'net.minecraftforge.gradle'
+apply plugin: 'idea'
 
-version = "1.5.6"
-group = "com.blakebr0.extendedcrafting"
-archivesBaseName = "ExtendedCrafting-1.12.2"
+version = '2.0.0'
+group = 'com.blakebr0.extendedcrafting'
+archivesBaseName = 'ExtendedCrafting-1.14.4'
 
-sourceCompatibility = targetCompatibility = '1.8' // Need this here so eclipse task generates correctly.
-compileJava {
-    sourceCompatibility = targetCompatibility = '1.8'
+sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8'
+
+repositories {
+    maven {
+        url = "http://dvs1.progwml6.com/files/maven/"
+    }
+
+    maven {
+        url = "http://tehnut.info/maven/"
+    }
+
+    mavenLocal()
+    jcenter()
 }
 
 minecraft {
-    version = "1.12.2-14.23.5.2768"
-    runDir = "run"
-    replace '${version}', project.version
+    mappings channel: 'snapshot', version: '20190803-1.14.3'
+    accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
 
-    mappings = "snapshot_20171003"
-    makeObfSourceJar = false // an Srg named sources jar is made by default. uncomment this to disable.
-}
+    runs {
+        client {
+            workingDirectory project.file('run')
 
-repositories {
-	maven {
-		url = "http://dvs1.progwml6.com/files/maven"
-	}
+            property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
+            property 'forge.logging.console.level', 'info'
+
+            ideaModule "${project.name}.main"
+            environment 'MOD_CLASSES', "${project.file("out/production/resources").canonicalPath};${project.file("out/production/classes").canonicalPath}"
+        }
+
+        server {
+            workingDirectory project.file('run')
+
+            property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
+            property 'forge.logging.console.level', 'info'
+
+            ideaModule "${project.name}.main"
+            environment 'MOD_CLASSES', "${project.file("out/production/resources").canonicalPath};${project.file("out/production/classes").canonicalPath}"
+        }
+    }
 }
 
 dependencies {
-	deobfCompile "mezz.jei:jei_1.12.2:4.15.0.268:api"
-	runtime "mezz.jei:jei_1.12.2:4.15.0.268"
+    minecraft 'net.minecraftforge:forge:1.14.4-28.1.26'
+
+    compile files('../Cucumber/build/libs/Cucumber-1.14.4-2.0.4-deobf.jar')
+    compile fg.deobf('mcp.mobius.waila:Hwyla:1.10.5-B66_1.14.4')
+    compileOnly fg.deobf("mezz.jei:jei-1.14.4:6.0.0.10:api")
+    runtimeOnly fg.deobf("mezz.jei:jei-1.14.4:6.0.0.10")
 }
 
-processResources {
-    // this will ensure that this task is redone when the versions change.
-    inputs.property "version", project.version
-    inputs.property "mcversion", project.minecraft.version
+//task apiJar(type: Jar) {
+//    // Remove sources from the api jar when MinecraftForge/ForgeGradle#369 is fixed
+//    from(sourceSets.main.allJava)
+//    from(sourceSets.main.output)
+//    include 'com/blakebr0/mysticalagriculture/api/**'
+//
+//    classifier = 'api'
+//    archiveName = "${baseName}-${version}-api.${extension}"
+//}
 
-    // replace stuff in mcmod.info, nothing else
-    from(sourceSets.main.resources.srcDirs) {
-        include 'mcmod.info'
-                
-        // replace version and mcversion
-        expand 'version':project.version, 'mcversion':project.minecraft.version
-    }
-        
-    // copy everything else except the mcmod.info
-    from(sourceSets.main.resources.srcDirs) {
-        exclude 'mcmod.info'
-    }
-}
+//artifacts {
+//    archives apiJar
+//}
 
-task deobfJar(type: Jar) {
+jar {
     from sourceSets.main.output
-    classifier = 'deobf'
-}
-
-artifacts {
-    archives deobfJar
+    manifest {
+        attributes([
+                "Specification-Title": "Extended Crafting",
+                "Specification-Vendor": "BlakeBr0",
+                "Specification-Version": "1",
+                "Implementation-Title": project.name,
+                "Implementation-Version": "${version}",
+                "Implementation-Vendor" :"BlakeBr0",
+                "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
+        ])
+    }
 }

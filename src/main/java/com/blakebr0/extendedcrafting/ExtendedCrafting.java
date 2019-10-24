@@ -1,5 +1,6 @@
 package com.blakebr0.extendedcrafting;
 
+import net.minecraft.item.ItemGroup;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -20,13 +21,9 @@ public class ExtendedCrafting {
 
 	public static final String MOD_ID = "extendedcrafting";
 	public static final String NAME = "Extended Crafting";
-	public static final String VERSION = "${version}";
-	public static final String GUI_FACTORY = "com.blakebr0.extendedcrafting.config.GuiFactory";
-	public static final String DEPENDENCIES = "required-after:cucumber@[1.1.2,)";
 
-	public static final ModRegistry REGISTRY = ModRegistry.create(MOD_ID);
 	public static final Logger LOGGER = LogManager.getLogger(MOD_ID);
-	public static final CreativeTabs CREATIVE_TAB = new ECCreativeTab();
+	public static final ItemGroup CREATIVE_TAB = new ECCreativeTab();
 
 	public static final boolean DEBUG = false;
 

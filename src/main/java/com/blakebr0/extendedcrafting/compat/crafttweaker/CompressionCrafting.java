@@ -3,7 +3,7 @@ package com.blakebr0.extendedcrafting.compat.crafttweaker;
 import java.util.Arrays;
 import java.util.List;
 
-import com.blakebr0.extendedcrafting.crafting.CompressorRecipe;
+import com.blakebr0.extendedcrafting.crafting.recipe.CompressorRecipe;
 import com.blakebr0.extendedcrafting.crafting.CompressorRecipeManager;
 
 import crafttweaker.CraftTweakerAPI;

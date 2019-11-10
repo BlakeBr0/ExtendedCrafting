@@ -35,7 +35,7 @@ public class ItemSingularityCustom extends ItemMeta implements IModelHelper, IEn
 
 	public ItemSingularityCustom() {
 		super("ec.singularity_custom", ExtendedCrafting.REGISTRY);
-		this.setCreativeTab(ExtendedCrafting.CREATIVE_TAB);
+		this.setCreativeTab(ExtendedCrafting.ITEM_GROUP);
 	}
 
 	@Override

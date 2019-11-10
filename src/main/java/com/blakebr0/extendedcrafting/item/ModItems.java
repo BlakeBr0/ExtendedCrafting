@@ -1,15 +1,65 @@
 package com.blakebr0.extendedcrafting.item;
 
-import com.blakebr0.cucumber.guide.ItemGuide;
-import com.blakebr0.cucumber.registry.ModRegistry;
+import com.blakebr0.cucumber.item.BaseItem;
 import com.blakebr0.extendedcrafting.ExtendedCrafting;
-import com.blakebr0.extendedcrafting.lib.ModGuide;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.event.RegistryEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.RegistryObject;
+import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraftforge.registries.IForgeRegistry;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Supplier;
+
+import static com.blakebr0.extendedcrafting.ExtendedCrafting.ITEM_GROUP;
 
 public class ModItems {
-	
-	public static ItemGuide itemGuide = new ItemGuide("extendedcrafting", ExtendedCrafting.CREATIVE_TAB, ModGuide.GUIDE);
+	public static final List<Supplier<? extends Item>> ENTRIES = new ArrayList<>();
 
-	public static ItemMaterial itemMaterial = new ItemMaterial();
+	public static final RegistryObject<BaseItem> LUMINESSENCE = register("luminessence");
+	public static final RegistryObject<BaseItem> BLACK_IRON_INGOT = register("black_iron");
+	public static final RegistryObject<BaseItem> REDSTONE_INGOT = register("redstone_ingot");
+	public static final RegistryObject<BaseItem> ENDER_INGOT = register("ender_ingot");
+	public static final RegistryObject<BaseItem> CRYSTALTINE_INGOT = register("crystaltine_ingot");
+	public static final RegistryObject<BaseItem> THE_ULTIMATE_INGOT = register("the_ultimate_ingot");
+	public static final RegistryObject<BaseItem> BLACK_IRON_NUGGET = register("black_iron_nugget");
+	public static final RegistryObject<BaseItem> REDSTONE_NUGGET = register("redstone_nugget");
+	public static final RegistryObject<BaseItem> ENDER_NUGGET = register("ender_nugget");
+	public static final RegistryObject<BaseItem> CRYSTALTINE_NUGGET = register("crystaltine_nugget");
+	public static final RegistryObject<BaseItem> THE_ULTIMATE_NUGGET = register("the_ultimate_nugget");
+
+
+
+	public static ItemStack itemBlackIronSlate;
+	public static ItemStack itemBlackIronRod;
+
+	public static ItemStack itemBasicCatalyst;
+	public static ItemStack itemAdvancedCatalyst;
+	public static ItemStack itemEliteCatalyst;
+	public static ItemStack itemUltimateCatalyst;
+	public static ItemStack itemCrystaltineCatalyst;
+	public static ItemStack itemTheUltimateCatalyst;
+
+	public static ItemStack itemBasicComponent;
+	public static ItemStack itemAdvancedComponent;
+	public static ItemStack itemEliteComponent;
+	public static ItemStack itemUltimateComponent;
+	public static ItemStack itemCrystaltineComponent;
+	public static ItemStack itemTheUltimateComponent;
+
+	public static ItemStack itemEnderStar;
+	public static ItemStack itemEnderStarNugget;
+
+	public static ItemStack itemEnhancedEnderIngot;
+	public static ItemStack itemEnhancedEnderNugget;
+
+	public static ItemStack itemDiamondNugget;
+	public static ItemStack itemEmeraldNugget;
+	public static ItemStack itemNetherStarNugget;
 
 	public static ItemHandheldTable itemHandheldTable = new ItemHandheldTable();
 	
@@ -19,19 +69,20 @@ public class ModItems {
 	public static ItemSingularityCustom itemSingularityCustom = new ItemSingularityCustom();
 	public static ItemSingularityUltimate itemSingularityUltimate = new ItemSingularityUltimate();
 
-	public static void init() {
-		final ModRegistry registry = ExtendedCrafting.REGISTRY;
-		
-		registry.register(itemGuide, "guide");
+	@SubscribeEvent
+	public void onRegisterItems(RegistryEvent.Register<Item> event) {
+		IForgeRegistry<Item> registry = event.getRegistry();
 
-		registry.register(itemMaterial, "material");
+		ENTRIES.stream().map(Supplier::get).forEach(registry::register);
+	}
 
-		registry.register(itemHandheldTable, "handheld_table");
-		
-		registry.register(itemRecipeMaker, "recipe_maker");
+	private static <T extends Item> RegistryObject<T> register(String name) {
+		return register(name, () -> new BaseItem(p -> p.group(ITEM_GROUP)));
+	}
 
-		registry.register(itemSingularity, "singularity");
-		registry.register(itemSingularityCustom, "singularity_custom");
-		registry.register(itemSingularityUltimate, "singularity_ultimate");
+	private static <T extends Item> RegistryObject<T> register(String name, Supplier<? extends Item> item) {
+		ResourceLocation loc = new ResourceLocation(ExtendedCrafting.MOD_ID, name);
+		ENTRIES.add(() -> item.get().setRegistryName(loc));
+		return RegistryObject.of(loc, ForgeRegistries.ITEMS);
 	}
 }

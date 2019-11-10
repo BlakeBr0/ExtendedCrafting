@@ -32,7 +32,7 @@ public class ItemSingularity extends ItemMeta implements IEnableable {
 
 	public ItemSingularity() {
 		super("ec.singularity", ExtendedCrafting.REGISTRY);
-		this.setCreativeTab(ExtendedCrafting.CREATIVE_TAB);
+		this.setCreativeTab(ExtendedCrafting.ITEM_GROUP);
 	}
 
 	@Override

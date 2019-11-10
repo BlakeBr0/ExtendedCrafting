@@ -1,50 +1,54 @@
 package com.blakebr0.extendedcrafting;
 
+import com.blakebr0.extendedcrafting.block.ModBlocks;
+import com.blakebr0.extendedcrafting.crafting.ExtendedRecipeManager;
+import com.blakebr0.extendedcrafting.item.ModItems;
 import net.minecraft.item.ItemGroup;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
+import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
+import net.minecraftforge.fml.event.lifecycle.InterModEnqueueEvent;
+import net.minecraftforge.fml.event.lifecycle.InterModProcessEvent;
+import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.blakebr0.cucumber.registry.ModRegistry;
-import com.blakebr0.extendedcrafting.proxy.CommonProxy;
-
-import net.minecraft.creativetab.CreativeTabs;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.common.Mod.EventHandler;
-import net.minecraftforge.fml.common.Mod.Instance;
-import net.minecraftforge.fml.common.SidedProxy;
-import net.minecraftforge.fml.common.event.FMLInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
-
-@Mod(modid = ExtendedCrafting.MOD_ID, name = ExtendedCrafting.NAME, version = ExtendedCrafting.VERSION, dependencies = ExtendedCrafting.DEPENDENCIES, guiFactory = ExtendedCrafting.GUI_FACTORY)
+@Mod(ExtendedCrafting.MOD_ID)
 public class ExtendedCrafting {
-
 	public static final String MOD_ID = "extendedcrafting";
 	public static final String NAME = "Extended Crafting";
 
-	public static final Logger LOGGER = LogManager.getLogger(MOD_ID);
-	public static final ItemGroup CREATIVE_TAB = new ECCreativeTab();
+	public static final Logger LOGGER = LogManager.getLogger(NAME);
+	public static final ItemGroup ITEM_GROUP = new ECItemGroup();
 
-	public static final boolean DEBUG = false;
+	public ExtendedCrafting() {
+		IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
 
-	@SidedProxy(clientSide = "com.blakebr0.extendedcrafting.proxy.ClientProxy", serverSide = "com.blakebr0.extendedcrafting.proxy.ServerProxy")
-	public static CommonProxy proxy;
-
-	@Instance(ExtendedCrafting.MOD_ID)
-	public static ExtendedCrafting instance = new ExtendedCrafting();
-
-	@EventHandler
-	public void preInit(FMLPreInitializationEvent event) {
-		proxy.preInit(event);
+		bus.register(this);
+		bus.register(new ModBlocks());
+		bus.register(new ModItems());
 	}
 
-	@EventHandler
-	public void init(FMLInitializationEvent event) {
-		proxy.init(event);
+	@SubscribeEvent
+	public void onCommonSetup(FMLCommonSetupEvent event) {
+		MinecraftForge.EVENT_BUS.register(ExtendedRecipeManager.getInstance());
 	}
 
-	@EventHandler
-	public void postInit(FMLPostInitializationEvent event) {
-		proxy.postInit(event);
+	@SubscribeEvent
+	public void onInterModEnqueue(InterModEnqueueEvent event) {
+
+	}
+
+	@SubscribeEvent
+	public void onInterModProcess(InterModProcessEvent event) {
+
+	}
+
+	@SubscribeEvent
+	public void onClientSetup(FMLClientSetupEvent event) {
+
 	}
 }

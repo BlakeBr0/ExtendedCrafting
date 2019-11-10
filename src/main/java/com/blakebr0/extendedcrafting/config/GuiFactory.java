@@ -1,13 +1,12 @@
 package com.blakebr0.extendedcrafting.config;
 
-import java.util.Set;
-
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.gui.screen.Screen;
 import net.minecraftforge.fml.client.IModGuiFactory;
 
-public class GuiFactory implements IModGuiFactory {
+import java.util.Set;
 
+public class GuiFactory implements IModGuiFactory {
 	@Override
 	public void initialize(Minecraft minecraft) {
 
@@ -24,7 +23,7 @@ public class GuiFactory implements IModGuiFactory {
 	}
 
 	@Override
-	public GuiScreen createConfigGui(GuiScreen parent) {
-		return new ConfigGui(parent);
+	public Screen createConfigGui(Screen parentScreen) {
+		return null;
 	}
 }

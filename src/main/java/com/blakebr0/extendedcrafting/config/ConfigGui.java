@@ -7,10 +7,11 @@ import com.blakebr0.extendedcrafting.ExtendedCrafting;
 
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraftforge.common.config.ConfigElement;
+import net.minecraftforge.fml.client.config.ConfigGuiType;
 import net.minecraftforge.fml.client.config.GuiConfig;
 import net.minecraftforge.fml.client.config.IConfigElement;
 
-public class ConfigGui extends GuiConfig {
+public class ConfigGui extends ConfigGuiType {
 
 	public ConfigGui(GuiScreen parent) {
 		super(parent, getConfigElements(), ExtendedCrafting.MOD_ID, false, false,

@@ -27,7 +27,7 @@ public class ItemSingularityUltimate extends ItemBase implements IEnableable {
 
 	public ItemSingularityUltimate() {
 		super("ec.singularity_ultimate");
-		this.setCreativeTab(ExtendedCrafting.CREATIVE_TAB);
+		this.setCreativeTab(ExtendedCrafting.ITEM_GROUP);
 		this.setMaxStackSize(16);
 	}
 

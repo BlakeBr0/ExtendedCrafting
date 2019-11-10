@@ -3,8 +3,8 @@ package com.blakebr0.extendedcrafting.client.tesr;
 import com.blakebr0.cucumber.render.GhostItemRenderer;
 import com.blakebr0.extendedcrafting.block.ModBlocks;
 import com.blakebr0.extendedcrafting.config.ModConfig;
-import com.blakebr0.extendedcrafting.crafting.CompressorRecipe;
-import com.blakebr0.extendedcrafting.tile.TileCompressor;
+import com.blakebr0.extendedcrafting.crafting.recipe.CompressorRecipe;
+import com.blakebr0.extendedcrafting.tileentity.CompressorTileEntity;
 
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
@@ -17,10 +17,10 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
-public class RenderCompressor extends TileEntitySpecialRenderer<TileCompressor> {
+public class RenderCompressor extends TileEntitySpecialRenderer<CompressorTileEntity> {
 
 	@Override
-	public void render(TileCompressor tile, double x, double y, double z, float partialTick, int destroyStage, float alpha) {
+	public void render(CompressorTileEntity tile, double x, double y, double z, float partialTick, int destroyStage, float alpha) {
 		if (!ModConfig.confCompressorRenderer) return;
 		
 		IBlockState state = tile.getWorld().getBlockState(tile.getPos());

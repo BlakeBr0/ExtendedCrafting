@@ -16,7 +16,7 @@ import com.blakebr0.extendedcrafting.compat.crafttweaker.CraftTweakerUtils;
 import com.blakebr0.extendedcrafting.compat.jei.CompatJEI;
 import com.blakebr0.extendedcrafting.config.ModConfig;
 import com.blakebr0.extendedcrafting.lib.IExtendedTable;
-import com.blakebr0.extendedcrafting.tile.TileEnderCrafter;
+import com.blakebr0.extendedcrafting.tileentity.TileEnderCrafter;
 
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.creativetab.CreativeTabs;
@@ -42,7 +42,7 @@ public class ItemRecipeMaker extends ItemBase implements IEnableable {
 
 	public ItemRecipeMaker() {
 		super("ec.recipe_maker");
-		this.setCreativeTab(ExtendedCrafting.CREATIVE_TAB);
+		this.setCreativeTab(ExtendedCrafting.ITEM_GROUP);
 		this.setMaxStackSize(1);
 		this.setHasSubtypes(true);
 		

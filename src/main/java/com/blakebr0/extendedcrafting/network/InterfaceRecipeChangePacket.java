@@ -1,6 +1,6 @@
 package com.blakebr0.extendedcrafting.network;
 
-import com.blakebr0.extendedcrafting.tile.TileAutomationInterface;
+import com.blakebr0.extendedcrafting.tileentity.TileAutomationInterface;
 
 import io.netty.buffer.ByteBuf;
 import net.minecraft.tileentity.TileEntity;

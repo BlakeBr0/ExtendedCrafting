@@ -6,7 +6,7 @@ import java.util.Collections;
 import java.util.List;
 
 import com.blakebr0.cucumber.util.Utils;
-import com.blakebr0.extendedcrafting.crafting.CompressorRecipe;
+import com.blakebr0.extendedcrafting.crafting.recipe.CompressorRecipe;
 
 import mezz.jei.api.IJeiHelpers;
 import mezz.jei.api.ingredients.IIngredients;

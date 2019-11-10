@@ -17,7 +17,7 @@ public class BlockEnderAlternator extends BlockBase implements IEnableable {
 
 	public BlockEnderAlternator() {
 		super("ec.ender_alternator", Material.IRON, SoundType.METAL, 5.0F, 10.0F);
-		this.setCreativeTab(ExtendedCrafting.CREATIVE_TAB);
+		this.setCreativeTab(ExtendedCrafting.ITEM_GROUP);
 	}
 	
 	@Override

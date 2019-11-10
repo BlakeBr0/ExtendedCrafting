@@ -3,7 +3,7 @@ package com.blakebr0.extendedcrafting.client.tesr;
 import com.blakebr0.cucumber.render.GhostItemRenderer;
 import com.blakebr0.extendedcrafting.block.ModBlocks;
 import com.blakebr0.extendedcrafting.config.ModConfig;
-import com.blakebr0.extendedcrafting.tile.TileAutomationInterface;
+import com.blakebr0.extendedcrafting.tileentity.TileAutomationInterface;
 
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;

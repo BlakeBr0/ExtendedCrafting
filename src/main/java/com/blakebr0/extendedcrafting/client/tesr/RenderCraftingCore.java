@@ -1,7 +1,7 @@
 package com.blakebr0.extendedcrafting.client.tesr;
 
 import com.blakebr0.extendedcrafting.block.ModBlocks;
-import com.blakebr0.extendedcrafting.tile.TileCraftingCore;
+import com.blakebr0.extendedcrafting.tileentity.CraftingCoreTileEntity;
 
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
@@ -15,10 +15,10 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
-public class RenderCraftingCore extends TileEntitySpecialRenderer<TileCraftingCore> {
+public class RenderCraftingCore extends TileEntitySpecialRenderer<CraftingCoreTileEntity> {
 
 	@Override
-	public void render(TileCraftingCore tile, double x, double y, double z, float partialTick, int destroyStage, float alpha) {
+	public void render(CraftingCoreTileEntity tile, double x, double y, double z, float partialTick, int destroyStage, float alpha) {
 		IBlockState state = tile.getWorld().getBlockState(tile.getPos());
 
 		if (state == null || state.getBlock() != ModBlocks.blockCraftingCore)

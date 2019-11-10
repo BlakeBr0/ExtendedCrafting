@@ -3,9 +3,9 @@ package com.blakebr0.extendedcrafting.block;
 import com.blakebr0.cucumber.block.BlockBase;
 import com.blakebr0.cucumber.iface.IEnableable;
 import com.blakebr0.extendedcrafting.ExtendedCrafting;
-import com.blakebr0.extendedcrafting.client.gui.GuiHandler;
+import com.blakebr0.extendedcrafting.client.screen.GuiHandler;
 import com.blakebr0.extendedcrafting.config.ModConfig;
-import com.blakebr0.extendedcrafting.tile.TileEnderCrafter;
+import com.blakebr0.extendedcrafting.tileentity.TileEnderCrafter;
 
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.SoundType;
@@ -24,7 +24,7 @@ public class BlockEnderCrafter extends BlockBase implements ITileEntityProvider,
 
 	public BlockEnderCrafter() {
 		super("ec.ender_crafter", Material.IRON, SoundType.METAL, 6.0F, 12.0F);
-		this.setCreativeTab(ExtendedCrafting.CREATIVE_TAB);
+		this.setCreativeTab(ExtendedCrafting.ITEM_GROUP);
 	}
 	
 	@Override

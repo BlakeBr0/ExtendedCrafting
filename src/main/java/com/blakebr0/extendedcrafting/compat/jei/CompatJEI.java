@@ -6,20 +6,20 @@ import java.util.List;
 import com.blakebr0.cucumber.helper.ResourceHelper;
 import com.blakebr0.extendedcrafting.ExtendedCrafting;
 import com.blakebr0.extendedcrafting.block.ModBlocks;
-import com.blakebr0.extendedcrafting.client.container.ContainerAdvancedTable;
-import com.blakebr0.extendedcrafting.client.container.ContainerBasicTable;
-import com.blakebr0.extendedcrafting.client.container.ContainerEliteTable;
-import com.blakebr0.extendedcrafting.client.container.ContainerEnderCrafter;
-import com.blakebr0.extendedcrafting.client.container.ContainerHandheldTable;
-import com.blakebr0.extendedcrafting.client.container.ContainerUltimateTable;
-import com.blakebr0.extendedcrafting.client.gui.GuiAdvancedTable;
-import com.blakebr0.extendedcrafting.client.gui.GuiBasicTable;
-import com.blakebr0.extendedcrafting.client.gui.GuiCompressor;
-import com.blakebr0.extendedcrafting.client.gui.GuiCraftingCore;
-import com.blakebr0.extendedcrafting.client.gui.GuiEliteTable;
-import com.blakebr0.extendedcrafting.client.gui.GuiEnderCrafter;
-import com.blakebr0.extendedcrafting.client.gui.GuiHandheldTable;
-import com.blakebr0.extendedcrafting.client.gui.GuiUltimateTable;
+import com.blakebr0.extendedcrafting.container.ContainerAdvancedTable;
+import com.blakebr0.extendedcrafting.container.ContainerBasicTable;
+import com.blakebr0.extendedcrafting.container.ContainerEliteTable;
+import com.blakebr0.extendedcrafting.container.ContainerEnderCrafter;
+import com.blakebr0.extendedcrafting.container.ContainerHandheldTable;
+import com.blakebr0.extendedcrafting.container.ContainerUltimateTable;
+import com.blakebr0.extendedcrafting.client.screen.GuiAdvancedTable;
+import com.blakebr0.extendedcrafting.client.screen.GuiBasicTable;
+import com.blakebr0.extendedcrafting.client.screen.CompressorScreen;
+import com.blakebr0.extendedcrafting.client.screen.GuiCraftingCore;
+import com.blakebr0.extendedcrafting.client.screen.GuiEliteTable;
+import com.blakebr0.extendedcrafting.client.screen.GuiEnderCrafter;
+import com.blakebr0.extendedcrafting.client.screen.GuiHandheldTable;
+import com.blakebr0.extendedcrafting.client.screen.GuiUltimateTable;
 import com.blakebr0.extendedcrafting.compat.jei.combinationcrafting.CombinationCraftingCategory;
 import com.blakebr0.extendedcrafting.compat.jei.combinationcrafting.CombinationCraftingWrapper;
 import com.blakebr0.extendedcrafting.compat.jei.compressor.CompressorCraftingCategory;
@@ -34,7 +34,7 @@ import com.blakebr0.extendedcrafting.compat.jei.tablecrafting.UltimateTableCateg
 import com.blakebr0.extendedcrafting.config.ModConfig;
 import com.blakebr0.extendedcrafting.crafting.CombinationRecipe;
 import com.blakebr0.extendedcrafting.crafting.CombinationRecipeManager;
-import com.blakebr0.extendedcrafting.crafting.CompressorRecipe;
+import com.blakebr0.extendedcrafting.crafting.recipe.CompressorRecipe;
 import com.blakebr0.extendedcrafting.crafting.CompressorRecipeManager;
 import com.blakebr0.extendedcrafting.crafting.endercrafter.EnderCrafterRecipeManager;
 import com.blakebr0.extendedcrafting.crafting.table.TableRecipeManager;
@@ -144,7 +144,7 @@ public class CompatJEI implements IModPlugin {
 		if (ModConfig.confCompressorEnabled) {
 			registry.addRecipeCatalyst(new ItemStack(ModBlocks.blockCompressor), CompressorCraftingCategory.UID);
 			registry.handleRecipes(CompressorRecipe.class, recipe -> new CompressorCraftingWrapper(helpers, recipe), CompressorCraftingCategory.UID);
-			registry.addRecipeClickArea(GuiCompressor.class, 97, 47, 21, 14, CompressorCraftingCategory.UID);
+			registry.addRecipeClickArea(CompressorScreen.class, 97, 47, 21, 14, CompressorCraftingCategory.UID);
 			registry.addRecipes(CompressorRecipeManager.getInstance().getValidRecipes(), CompressorCraftingCategory.UID);
 		}
 		

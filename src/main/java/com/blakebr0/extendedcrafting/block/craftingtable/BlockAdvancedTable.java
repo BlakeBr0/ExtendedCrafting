@@ -6,9 +6,9 @@ import com.blakebr0.cucumber.block.BlockBase;
 import com.blakebr0.cucumber.iface.IEnableable;
 import com.blakebr0.cucumber.util.Utils;
 import com.blakebr0.extendedcrafting.ExtendedCrafting;
-import com.blakebr0.extendedcrafting.client.gui.GuiHandler;
+import com.blakebr0.extendedcrafting.client.screen.GuiHandler;
 import com.blakebr0.extendedcrafting.config.ModConfig;
-import com.blakebr0.extendedcrafting.tile.TileAdvancedCraftingTable;
+import com.blakebr0.extendedcrafting.tileentity.TileAdvancedCraftingTable;
 
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.SoundType;
@@ -30,7 +30,7 @@ public class BlockAdvancedTable extends BlockBase implements ITileEntityProvider
 
 	public BlockAdvancedTable() {
 		super("ec.table_advanced", Material.IRON, SoundType.METAL, 5.0F, 10.0F);
-		this.setCreativeTab(ExtendedCrafting.CREATIVE_TAB);
+		this.setCreativeTab(ExtendedCrafting.ITEM_GROUP);
 	}
 
 	@Override

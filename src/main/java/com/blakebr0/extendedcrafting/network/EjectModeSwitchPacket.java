@@ -1,6 +1,6 @@
 package com.blakebr0.extendedcrafting.network;
 
-import com.blakebr0.extendedcrafting.tile.TileCompressor;
+import com.blakebr0.extendedcrafting.tileentity.CompressorTileEntity;
 
 import io.netty.buffer.ByteBuf;
 import net.minecraft.tileentity.TileEntity;
@@ -42,8 +42,8 @@ public class EjectModeSwitchPacket implements IMessage {
 
 		private void handle(EjectModeSwitchPacket message, MessageContext ctx) {
 			TileEntity tile = ctx.getServerHandler().player.world.getTileEntity(BlockPos.fromLong(message.pos));
-			if (tile instanceof TileCompressor) {
-				TileCompressor compressor = (TileCompressor) tile;
+			if (tile instanceof CompressorTileEntity) {
+				CompressorTileEntity compressor = (CompressorTileEntity) tile;
 				compressor.toggleEjecting();
 			}
 		}

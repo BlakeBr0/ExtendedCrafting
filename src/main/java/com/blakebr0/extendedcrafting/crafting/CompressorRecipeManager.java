@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import com.blakebr0.extendedcrafting.config.ModConfig;
 
+import com.blakebr0.extendedcrafting.crafting.recipe.CompressorRecipe;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
 

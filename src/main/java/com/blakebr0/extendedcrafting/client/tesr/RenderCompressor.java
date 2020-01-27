@@ -2,7 +2,7 @@ package com.blakebr0.extendedcrafting.client.tesr;
 
 import com.blakebr0.cucumber.render.GhostItemRenderer;
 import com.blakebr0.extendedcrafting.block.ModBlocks;
-import com.blakebr0.extendedcrafting.config.ModConfig;
+import com.blakebr0.extendedcrafting.config.ModConfigs;
 import com.blakebr0.extendedcrafting.crafting.recipe.CompressorRecipe;
 import com.blakebr0.extendedcrafting.tileentity.CompressorTileEntity;
 
@@ -21,7 +21,7 @@ public class RenderCompressor extends TileEntitySpecialRenderer<CompressorTileEn
 
 	@Override
 	public void render(CompressorTileEntity tile, double x, double y, double z, float partialTick, int destroyStage, float alpha) {
-		if (!ModConfig.confCompressorRenderer) return;
+		if (!ModConfigs.confCompressorRenderer) return;
 		
 		IBlockState state = tile.getWorld().getBlockState(tile.getPos());
 

@@ -3,7 +3,7 @@ package com.blakebr0.extendedcrafting.block;
 import com.blakebr0.cucumber.block.BlockBase;
 import com.blakebr0.cucumber.iface.IEnableable;
 import com.blakebr0.extendedcrafting.ExtendedCrafting;
-import com.blakebr0.extendedcrafting.config.ModConfig;
+import com.blakebr0.extendedcrafting.config.ModConfigs;
 
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
@@ -37,6 +37,6 @@ public class BlockEnderAlternator extends BlockBase implements IEnableable {
 
 	@Override
 	public boolean isEnabled() {
-		return ModConfig.confEnderEnabled;
+		return ModConfigs.confEnderEnabled;
 	}
 }

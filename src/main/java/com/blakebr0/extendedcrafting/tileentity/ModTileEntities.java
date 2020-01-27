@@ -2,7 +2,7 @@ package com.blakebr0.extendedcrafting.tileentity;
 
 import com.blakebr0.extendedcrafting.ExtendedCrafting;
 import com.blakebr0.extendedcrafting.block.ModBlocks;
-import com.blakebr0.extendedcrafting.config.ModConfig;
+import com.blakebr0.extendedcrafting.config.ModConfigs;
 
 import net.minecraft.block.Block;
 import net.minecraft.tileentity.TileEntity;
@@ -27,7 +27,7 @@ public class ModTileEntities {
 	// TODO: 1.13, correct the namespaces
 	public static void init() {
 
-		if (ModConfig.confTableEnabled) {
+		if (ModConfigs.confTableEnabled) {
 			GameRegistry.registerTileEntity(TileBasicCraftingTable.class, "EC_Basic_Table");
 			GameRegistry.registerTileEntity(TileAdvancedCraftingTable.class, "EC_Advanced_Table");
 			GameRegistry.registerTileEntity(TileEliteCraftingTable.class, "EC_Elite_Table");
@@ -35,7 +35,7 @@ public class ModTileEntities {
 		}
 
 		
-		if (ModConfig.confEnderEnabled) {
+		if (ModConfigs.confEnderEnabled) {
 			GameRegistry.registerTileEntity(TileEnderCrafter.class, ExtendedCrafting.MOD_ID + "ender_crafter");
 		}
 	}

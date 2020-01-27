@@ -3,7 +3,7 @@ package com.blakebr0.extendedcrafting.compat.crafttweaker;
 import java.util.Arrays;
 import java.util.List;
 
-import com.blakebr0.extendedcrafting.config.ModConfig;
+import com.blakebr0.extendedcrafting.config.ModConfigs;
 import com.blakebr0.extendedcrafting.crafting.endercrafter.EnderCrafterRecipeManager;
 import com.blakebr0.extendedcrafting.crafting.table.TableRecipeShaped;
 import com.blakebr0.extendedcrafting.crafting.table.TableRecipeShapeless;
@@ -26,7 +26,7 @@ public class EnderCrafting {
 	
 	@ZenMethod
 	public static void addShaped(IItemStack output, IIngredient[][] ingredients) {
-		addShaped(output, ingredients, ModConfig.confEnderTimeRequired);
+		addShaped(output, ingredients, ModConfigs.confEnderTimeRequired);
 	}
 
 	@ZenMethod
@@ -60,7 +60,7 @@ public class EnderCrafting {
 	
 	@ZenMethod
 	public static void addShapeless(IItemStack output, IIngredient[] ingredients) {
-		addShapeless(output, ingredients, ModConfig.confEnderTimeRequired);
+		addShapeless(output, ingredients, ModConfigs.confEnderTimeRequired);
 	}
 
 	@ZenMethod

@@ -10,12 +10,12 @@ import com.blakebr0.extendedcrafting.block.BlockEnderCrafter;
 import com.blakebr0.extendedcrafting.block.BlockLamp;
 import com.blakebr0.extendedcrafting.block.PedestalBlock;
 import com.blakebr0.extendedcrafting.block.BlockTrimmed;
-import com.blakebr0.extendedcrafting.block.craftingtable.BlockAdvancedTable;
-import com.blakebr0.extendedcrafting.block.craftingtable.BlockBasicTable;
-import com.blakebr0.extendedcrafting.block.craftingtable.BlockEliteTable;
-import com.blakebr0.extendedcrafting.block.craftingtable.BlockUltimateTable;
-import com.blakebr0.extendedcrafting.config.ModConfig;
-import com.blakebr0.extendedcrafting.crafting.CombinationRecipe;
+import com.blakebr0.extendedcrafting.block.craftingtable.AdvancedTableBlock;
+import com.blakebr0.extendedcrafting.block.craftingtable.BasicTableBlock;
+import com.blakebr0.extendedcrafting.block.craftingtable.EliteTableBlock;
+import com.blakebr0.extendedcrafting.block.craftingtable.UltimateTableBlock;
+import com.blakebr0.extendedcrafting.config.ModConfigs;
+import com.blakebr0.extendedcrafting.crafting.recipe.CombinationRecipe;
 import com.blakebr0.extendedcrafting.crafting.recipe.CompressorRecipe;
 import com.blakebr0.extendedcrafting.tileentity.TileAutomationInterface;
 import com.blakebr0.extendedcrafting.tileentity.CompressorTileEntity;
@@ -40,10 +40,10 @@ public class WailaDataProvider implements IWailaDataProvider {
 	public static void callbackRegister(IWailaRegistrar registrar) {
 		registrar.registerBodyProvider(new WailaDataProvider(), BlockLamp.class);
 		registrar.registerBodyProvider(new WailaDataProvider(), BlockTrimmed.class);
-		registrar.registerBodyProvider(new WailaDataProvider(), BlockBasicTable.class);
-		registrar.registerBodyProvider(new WailaDataProvider(), BlockAdvancedTable.class);
-		registrar.registerBodyProvider(new WailaDataProvider(), BlockEliteTable.class);
-		registrar.registerBodyProvider(new WailaDataProvider(), BlockUltimateTable.class);
+		registrar.registerBodyProvider(new WailaDataProvider(), BasicTableBlock.class);
+		registrar.registerBodyProvider(new WailaDataProvider(), AdvancedTableBlock.class);
+		registrar.registerBodyProvider(new WailaDataProvider(), EliteTableBlock.class);
+		registrar.registerBodyProvider(new WailaDataProvider(), UltimateTableBlock.class);
 		registrar.registerBodyProvider(new WailaDataProvider(), PedestalBlock.class);
 		registrar.registerBodyProvider(new WailaDataProvider(), CraftingCoreBlock.class);
 		registrar.registerBodyProvider(new WailaDataProvider(), BlockAutomationInterface.class);
@@ -80,7 +80,7 @@ public class WailaDataProvider implements IWailaDataProvider {
 		if (block instanceof CraftingCoreBlock && tile instanceof CraftingCoreTileEntity && !tile.isInvalid()) {
 			CraftingCoreTileEntity core = (CraftingCoreTileEntity) tile;
 			
-			if (ModConfig.confEnergyInWaila) {
+			if (ModConfigs.confEnergyInWaila) {
 				tooltip.add(Utils.format(core.getEnergy().getEnergyStored()) + " FE");
 			}
 			
@@ -91,15 +91,15 @@ public class WailaDataProvider implements IWailaDataProvider {
 			}
 		}
 		
-		if (block instanceof BlockBasicTable) tooltip.add(Utils.localize("tooltip.ec.tier", 1));
-		if (block instanceof BlockAdvancedTable) tooltip.add(Utils.localize("tooltip.ec.tier", 2));
-		if (block instanceof BlockEliteTable) tooltip.add(Utils.localize("tooltip.ec.tier", 3));
-		if (block instanceof BlockUltimateTable) tooltip.add(Utils.localize("tooltip.ec.tier", 4));
+		if (block instanceof BasicTableBlock) tooltip.add(Utils.localize("tooltip.ec.tier", 1));
+		if (block instanceof AdvancedTableBlock) tooltip.add(Utils.localize("tooltip.ec.tier", 2));
+		if (block instanceof EliteTableBlock) tooltip.add(Utils.localize("tooltip.ec.tier", 3));
+		if (block instanceof UltimateTableBlock) tooltip.add(Utils.localize("tooltip.ec.tier", 4));
 		
 		if (block instanceof BlockAutomationInterface && tile instanceof TileAutomationInterface && !tile.isInvalid()) {
 			TileAutomationInterface auto = (TileAutomationInterface) tile;
 			
-			if (ModConfig.confEnergyInWaila) {
+			if (ModConfigs.confEnergyInWaila) {
 				tooltip.add(Utils.format(auto.getEnergy().getEnergyStored()) + " FE");
 			}
 			
@@ -120,7 +120,7 @@ public class WailaDataProvider implements IWailaDataProvider {
 		if (block instanceof CompressorBlock && tile instanceof CompressorTileEntity && !tile.isInvalid()) {
 			CompressorTileEntity compressor = (CompressorTileEntity) tile;
 			
-			if (ModConfig.confEnergyInWaila) {
+			if (ModConfigs.confEnergyInWaila) {
 				tooltip.add(Utils.format(compressor.getEnergy().getEnergyStored()) + " FE");
 			}
 			

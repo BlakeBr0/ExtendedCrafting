@@ -3,10 +3,10 @@ package com.blakebr0.extendedcrafting.block;
 import com.blakebr0.cucumber.block.BaseBlock;
 import com.blakebr0.cucumber.item.BaseBlockItem;
 import com.blakebr0.extendedcrafting.ExtendedCrafting;
-import com.blakebr0.extendedcrafting.block.craftingtable.BlockAdvancedTable;
-import com.blakebr0.extendedcrafting.block.craftingtable.BlockBasicTable;
-import com.blakebr0.extendedcrafting.block.craftingtable.BlockEliteTable;
-import com.blakebr0.extendedcrafting.block.craftingtable.BlockUltimateTable;
+import com.blakebr0.extendedcrafting.block.craftingtable.AdvancedTableBlock;
+import com.blakebr0.extendedcrafting.block.craftingtable.BasicTableBlock;
+import com.blakebr0.extendedcrafting.block.craftingtable.EliteTableBlock;
+import com.blakebr0.extendedcrafting.block.craftingtable.UltimateTableBlock;
 import com.blakebr0.extendedcrafting.item.ModItems;
 import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
@@ -27,7 +27,7 @@ import java.util.function.Supplier;
 import static com.blakebr0.extendedcrafting.ExtendedCrafting.ITEM_GROUP;
 
 public class ModBlocks {
-	public static final List<Supplier<? extends Block>> ENTRIES = new ArrayList<>();
+	public static final List<Supplier<Block>> ENTRIES = new ArrayList<>();
 
 	public static final RegistryObject<BaseBlock> LUMINESSENCE_BLOCK = register("luminessence_block", () -> new BaseBlock(Material.ROCK, SoundType.STONE, 5.0F, 10.0F));
 	public static final RegistryObject<BaseBlock> BLACK_IRON_BLOCK = register("black_iron_block", () -> new BaseBlock(Material.IRON, SoundType.METAL, 5.0F, 10.0F));
@@ -41,10 +41,10 @@ public class ModBlocks {
 	public static final RegistryObject<PedestalBlock> PEDESTAL = register("pedestal", PedestalBlock::new);
 	public static final RegistryObject<CraftingCoreBlock> CRAFTING_CORE = register("crafting_core", CraftingCoreBlock::new);
 
-	public static BlockBasicTable blockBasicTable = new BlockBasicTable();
-	public static BlockAdvancedTable blockAdvancedTable = new BlockAdvancedTable();
-	public static BlockEliteTable blockEliteTable = new BlockEliteTable();
-	public static BlockUltimateTable blockUltimateTable = new BlockUltimateTable();
+	public static final RegistryObject<BasicTableBlock> BASIC_TABLE = register("basic_table", BasicTableBlock::new);
+	public static final RegistryObject<AdvancedTableBlock> ADVANCED_TABLE = register("advanced_table", AdvancedTableBlock::new);
+	public static final RegistryObject<EliteTableBlock> ELITE_TABLE = register("elite_table", EliteTableBlock::new);
+	public static final RegistryObject<UltimateTableBlock> ULTIMATE_TABLE = register("ultimate_table", UltimateTableBlock::new);
 
 	public static final RegistryObject<CompressorBlock> COMPRESSOR = register("compressor", CompressorBlock::new);
 	

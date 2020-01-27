@@ -14,7 +14,7 @@ import com.blakebr0.cucumber.util.Utils;
 import com.blakebr0.extendedcrafting.ExtendedCrafting;
 import com.blakebr0.extendedcrafting.compat.crafttweaker.CraftTweakerUtils;
 import com.blakebr0.extendedcrafting.compat.jei.CompatJEI;
-import com.blakebr0.extendedcrafting.config.ModConfig;
+import com.blakebr0.extendedcrafting.config.ModConfigs;
 import com.blakebr0.extendedcrafting.lib.IExtendedTable;
 import com.blakebr0.extendedcrafting.tileentity.TileEnderCrafter;
 
@@ -53,7 +53,7 @@ public class ItemRecipeMaker extends ItemBase implements IEnableable {
 	
 	@Override
 	public boolean isEnabled() {
-		return ModConfig.confRMEnabled;
+		return ModConfigs.confRMEnabled;
 	}
 	
 	@Override
@@ -78,7 +78,7 @@ public class ItemRecipeMaker extends ItemBase implements IEnableable {
 				setClipboard(tile, stack);
 				player.sendMessage(new TextComponentTranslation("message.ec.copied_recipe"));
 				
-				if (ModConfig.confRMNBT && !Loader.isModLoaded("crafttweaker")) {
+				if (ModConfigs.confRMNBT && !Loader.isModLoaded("crafttweaker")) {
 					player.sendMessage(new TextComponentTranslation("message.ec.nbt_requires_crafttweaker"));
 				}
 			}
@@ -139,7 +139,7 @@ public class ItemRecipeMaker extends ItemBase implements IEnableable {
 			ItemStack stack = matrix.get(i);
 			
 			String item = "";
-			if (ModConfig.confRMOredict && !stack.isEmpty()) {
+			if (ModConfigs.confRMOredict && !stack.isEmpty()) {
 				int[] oreIds = OreDictionary.getOreIDs(stack);
 				if (oreIds.length > 0) {
 					item = "ore:" + OreDictionary.getOreName(oreIds[0]);
@@ -157,7 +157,7 @@ public class ItemRecipeMaker extends ItemBase implements IEnableable {
 			if (!item.equalsIgnoreCase("null")) {
 				string += "<" + item + ">";
 				
-				if (ModConfig.confRMNBT && !stack.isEmpty() && stack.hasTagCompound() && Loader.isModLoaded("crafttweaker")) {
+				if (ModConfigs.confRMNBT && !stack.isEmpty() && stack.hasTagCompound() && Loader.isModLoaded("crafttweaker")) {
 					NBTBase nbt = stack.serializeNBT().getTag("tag");
 					String tag = CraftTweakerUtils.writeTag(nbt);
 					string += ".withTag(" + tag + ")";
@@ -201,7 +201,7 @@ public class ItemRecipeMaker extends ItemBase implements IEnableable {
 			ItemStack stack = matrix.get(i);
 			int[] oreIds = OreDictionary.getOreIDs(stack);
 			String item = "";
-			if (ModConfig.confRMOredict && oreIds.length > 0) {
+			if (ModConfigs.confRMOredict && oreIds.length > 0) {
 				item = "ore:" + OreDictionary.getOreName(oreIds[0]);
 			} else {
 				String reg = stack.getItem().getRegistryName().toString();
@@ -213,7 +213,7 @@ public class ItemRecipeMaker extends ItemBase implements IEnableable {
 					
 			string += "<" + item + ">";
 			
-			if (ModConfig.confRMNBT && !stack.isEmpty() && stack.hasTagCompound() && Loader.isModLoaded("crafttweaker")) {
+			if (ModConfigs.confRMNBT && !stack.isEmpty() && stack.hasTagCompound() && Loader.isModLoaded("crafttweaker")) {
 				NBTBase nbt = stack.serializeNBT().getTag("tag");
 				String tag = CraftTweakerUtils.writeTag(nbt);
 				string += ".withTag(" + tag + ")";

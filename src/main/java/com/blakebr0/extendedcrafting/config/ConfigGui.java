@@ -15,14 +15,14 @@ public class ConfigGui extends ConfigGuiType {
 
 	public ConfigGui(GuiScreen parent) {
 		super(parent, getConfigElements(), ExtendedCrafting.MOD_ID, false, false,
-				GuiConfig.getAbridgedConfigPath(ModConfig.config.toString()));
+				GuiConfig.getAbridgedConfigPath(ModConfigs.config.toString()));
 	}
 
 	private static List<IConfigElement> getConfigElements() {
 		List<IConfigElement> list = new ArrayList<IConfigElement>();
 
-		for (String category : ModConfig.config.getCategoryNames()) {
-			list.add(new ConfigElement(ModConfig.config.getCategory(category)));
+		for (String category : ModConfigs.config.getCategoryNames()) {
+			list.add(new ConfigElement(ModConfigs.config.getCategory(category)));
 		}
 
 		return list;

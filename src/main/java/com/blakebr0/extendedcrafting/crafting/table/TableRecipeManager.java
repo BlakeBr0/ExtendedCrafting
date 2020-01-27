@@ -3,7 +3,7 @@ package com.blakebr0.extendedcrafting.crafting.table;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.blakebr0.extendedcrafting.config.ModConfig;
+import com.blakebr0.extendedcrafting.config.ModConfigs;
 
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.Item;
@@ -30,7 +30,7 @@ public class TableRecipeManager {
 	public TableRecipeShaped addShaped(int tier, ItemStack result, Object... recipe) {
 		TableRecipeShaped craft = new TableRecipeShaped(tier, result, recipe);
 		
-		if (ModConfig.confTableEnabled) {
+		if (ModConfigs.confTableEnabled) {
 			this.recipes.add(craft);
 		}
 		
@@ -44,7 +44,7 @@ public class TableRecipeManager {
 	public TableRecipeShapeless addShapeless(int tier, ItemStack result, Object... ingredients) {
 		TableRecipeShapeless recipe = new TableRecipeShapeless(tier, result, ingredients);
 		
-		if (ModConfig.confTableEnabled) {
+		if (ModConfigs.confTableEnabled) {
 			this.recipes.add(recipe);
 		}
 		
@@ -91,7 +91,7 @@ public class TableRecipeManager {
 				}
 			}
 
-			if (ModConfig.confTableUseRecipes && grid.getWidth() == 3 && grid.getHeight() == 3) {
+			if (ModConfigs.confTableUseRecipes && grid.getWidth() == 3 && grid.getHeight() == 3) {
 				for (IRecipe recipe : ForgeRegistries.RECIPES.getValuesCollection()) {
 					if (recipe.matches(grid, world)) {
 						return recipe.getCraftingResult(grid);

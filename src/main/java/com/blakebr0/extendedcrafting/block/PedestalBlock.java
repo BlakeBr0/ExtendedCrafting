@@ -4,7 +4,7 @@ import com.blakebr0.cucumber.block.BaseTileEntityBlock;
 import com.blakebr0.cucumber.block.BlockBase;
 import com.blakebr0.cucumber.helper.StackHelper;
 import com.blakebr0.cucumber.iface.IEnableable;
-import com.blakebr0.extendedcrafting.config.ModConfig;
+import com.blakebr0.extendedcrafting.config.ModConfigs;
 import com.blakebr0.extendedcrafting.tileentity.PedestalTileEntity;
 
 import net.minecraft.block.SoundType;
@@ -100,6 +100,6 @@ public class PedestalBlock extends BaseTileEntityBlock implements IEnableable {
 
 	@Override
 	public boolean isEnabled() {
-		return ModConfig.confCraftingCoreEnabled;
+		return ModConfigs.confCraftingCoreEnabled;
 	}
 }

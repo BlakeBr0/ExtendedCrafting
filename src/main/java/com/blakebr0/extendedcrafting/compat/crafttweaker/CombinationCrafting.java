@@ -3,7 +3,7 @@ package com.blakebr0.extendedcrafting.compat.crafttweaker;
 import java.util.Arrays;
 import java.util.List;
 
-import com.blakebr0.extendedcrafting.crafting.CombinationRecipe;
+import com.blakebr0.extendedcrafting.crafting.recipe.CombinationRecipe;
 import com.blakebr0.extendedcrafting.crafting.CombinationRecipeManager;
 
 import crafttweaker.CraftTweakerAPI;

@@ -8,7 +8,7 @@ import com.blakebr0.cucumber.energy.EnergyStorageCustom;
 import com.blakebr0.cucumber.helper.StackHelper;
 import com.blakebr0.cucumber.util.Utils;
 import com.blakebr0.cucumber.util.VanillaPacketDispatcher;
-import com.blakebr0.extendedcrafting.config.ModConfig;
+import com.blakebr0.extendedcrafting.config.ModConfigs;
 import com.blakebr0.extendedcrafting.crafting.endercrafter.EnderCrafterRecipeManager;
 import com.blakebr0.extendedcrafting.crafting.table.TableCrafting;
 import com.blakebr0.extendedcrafting.crafting.table.TableRecipeManager;
@@ -41,7 +41,7 @@ public class TileAutomationInterface extends TileEntity implements ITickable, IS
 	
 	private final ItemStackHandler inventory = new StackHandler(2);
 	private final ItemStackHandler recipe = new FakeRecipeHandler();
-	private final EnergyStorageCustom energy = new EnergyStorageCustom(ModConfig.confInterfaceRFCapacity);
+	private final EnergyStorageCustom energy = new EnergyStorageCustom(ModConfigs.confInterfaceRFCapacity);
 	private int oldEnergy;
 	private ItemStack result = ItemStack.EMPTY;
 	private boolean hasRecipe = false;
@@ -61,15 +61,15 @@ public class TileAutomationInterface extends TileEntity implements ITickable, IS
 			ItemStack output = this.getInventory().getStackInSlot(1);
 			boolean hasTable = this.hasTable();
 
-			if (!input.isEmpty() && this.getEnergy().getEnergyStored() >= ModConfig.confInterfaceRFRate) {
+			if (!input.isEmpty() && this.getEnergy().getEnergyStored() >= ModConfigs.confInterfaceRFRate) {
 				this.handleInput(input, hasTable && this.hasRecipe());
 			}
 			
-			if (hasTable && this.hasRecipe() && this.getEnergy().getEnergyStored() >= ModConfig.confInterfaceRFRate && this.ticks % 10 == 0) {
+			if (hasTable && this.hasRecipe() && this.getEnergy().getEnergyStored() >= ModConfigs.confInterfaceRFRate && this.ticks % 10 == 0) {
 				this.handleOutput(output);
 			}
 			
-			if (this.getInserterFace() != null && this.getEnergy().getEnergyStored() >= ModConfig.confInterfaceRFRate && this.ticks % 4 == 0) {
+			if (this.getInserterFace() != null && this.getEnergy().getEnergyStored() >= ModConfigs.confInterfaceRFRate && this.ticks % 4 == 0) {
 				TileEntity tile = this.getWorld().getTileEntity(this.getPos().offset(this.getInserterFace()));
 				if (tile != null && tile.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, EnumFacing.DOWN)) {
 					IItemHandler handler = tile.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, EnumFacing.DOWN);
@@ -81,7 +81,7 @@ public class TileAutomationInterface extends TileEntity implements ITickable, IS
 								if (input.isEmpty() || (StackHelper.canCombineStacks(input, toInsert))) {
 									this.getInventory().insertItem(0, toInsert, false);
 									handler.extractItem(i, 1, false);
-									this.getEnergy().extractEnergy(ModConfig.confInterfaceRFRate, false);
+									this.getEnergy().extractEnergy(ModConfigs.confInterfaceRFRate, false);
 									break;
 								}
 							}
@@ -90,7 +90,7 @@ public class TileAutomationInterface extends TileEntity implements ITickable, IS
 				}
 			}
 			
-			if (this.getExtractorFace() != null && this.getEnergy().getEnergyStored() >= ModConfig.confInterfaceRFRate && this.ticks % 4 == 0) {
+			if (this.getExtractorFace() != null && this.getEnergy().getEnergyStored() >= ModConfigs.confInterfaceRFRate && this.ticks % 4 == 0) {
 				TileEntity tile = this.getWorld().getTileEntity(this.getPos().offset(this.getExtractorFace()));
 				if (tile != null && tile.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, EnumFacing.UP)) {
 					IItemHandler handler = tile.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, EnumFacing.UP);
@@ -101,7 +101,7 @@ public class TileAutomationInterface extends TileEntity implements ITickable, IS
 							if (stack.isEmpty() || (StackHelper.canCombineStacks(stack, toInsert))) {
 								handler.insertItem(i, toInsert, false);
 								output.shrink(1);
-								this.getEnergy().extractEnergy(ModConfig.confInterfaceRFRate, false);
+								this.getEnergy().extractEnergy(ModConfigs.confInterfaceRFRate, false);
 								break;
 							}
 						}
@@ -165,11 +165,11 @@ public class TileAutomationInterface extends TileEntity implements ITickable, IS
 				table.setResult(TableRecipeManager.getInstance().findMatchingRecipe(new TableCrafting(new EmptyContainer(), table), this.getWorld()));
 			}
 
-			this.getEnergy().extractEnergy(ModConfig.confInterfaceRFRate, false);
+			this.getEnergy().extractEnergy(ModConfigs.confInterfaceRFRate, false);
 		} else if (this.getAutoEject() && (output.isEmpty() || StackHelper.canCombineStacks(output, toInsert))) { 
 			this.getInventory().insertItem(1, toInsert, false);
 			input.shrink(1);
-			this.getEnergy().extractEnergy(ModConfig.confInterfaceRFRate, false);
+			this.getEnergy().extractEnergy(ModConfigs.confInterfaceRFRate, false);
 		}
 	}
 	
@@ -178,7 +178,7 @@ public class TileAutomationInterface extends TileEntity implements ITickable, IS
 		ItemStack result = table.getResult();
 		IInventory matrix = (IInventory) table;
 		if (!result.isEmpty() && (output.isEmpty() || StackHelper.canCombineStacks(output, result))) {				
-			if (this.getEnergy().getEnergyStored() >= ModConfig.confInterfaceRFRate) {
+			if (this.getEnergy().getEnergyStored() >= ModConfigs.confInterfaceRFRate) {
 				ItemStack toInsert = result.copy();
 				
 				if (this.isEnderCrafter()) {
@@ -217,7 +217,7 @@ public class TileAutomationInterface extends TileEntity implements ITickable, IS
 				}
 				
 				this.getInventory().insertItem(1, toInsert, false);
-				this.getEnergy().extractEnergy(ModConfig.confInterfaceRFRate, false);
+				this.getEnergy().extractEnergy(ModConfigs.confInterfaceRFRate, false);
 			}
 		}
 	}

@@ -3,7 +3,7 @@ package com.blakebr0.extendedcrafting.crafting.endercrafter;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.blakebr0.extendedcrafting.config.ModConfig;
+import com.blakebr0.extendedcrafting.config.ModConfigs;
 import com.blakebr0.extendedcrafting.crafting.table.ITieredRecipe;
 import com.blakebr0.extendedcrafting.crafting.table.TableCrafting;
 import com.blakebr0.extendedcrafting.crafting.table.TableRecipeShaped;
@@ -25,7 +25,7 @@ public class EnderCrafterRecipeManager {
 	public TableRecipeShaped addShaped(ItemStack result, int time, Object... recipe) {
 		TableRecipeShaped craft = new TableRecipeShaped(1, result, recipe);
 		
-		if (ModConfig.confEnderEnabled) {
+		if (ModConfigs.confEnderEnabled) {
 			craft.enderCrafterRecipeTimeRequired = time;
 			this.recipes.add(craft);
 		}
@@ -36,7 +36,7 @@ public class EnderCrafterRecipeManager {
 	public TableRecipeShapeless addShapeless(ItemStack result, int time, Object... ingredients) {
 		TableRecipeShapeless recipe = new TableRecipeShapeless(1, result, ingredients);
 		
-		if (ModConfig.confEnderEnabled) {
+		if (ModConfigs.confEnderEnabled) {
 			recipe.enderCrafterRecipeTimeRequired = time;
 			this.recipes.add(recipe);
 		}

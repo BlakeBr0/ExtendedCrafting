@@ -1,27 +1,27 @@
 package com.blakebr0.extendedcrafting.config;
 
-import java.io.File;
-
 import com.blakebr0.extendedcrafting.ExtendedCrafting;
 import com.blakebr0.extendedcrafting.item.ModItems;
-
+import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.common.config.ConfigCategory;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.fml.client.event.ConfigChangedEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
-public class ModConfig {
+import java.io.File;
 
-	public static Configuration config;
-	public static ModConfig instance;
+public class ModConfigs {
+	public static final ForgeConfigSpec COMMON;
+
+	public static final ForgeConfigSpec.BooleanValue ENABLE_HANDHELD_WORKBENCH;
 	
 	public static boolean confGuideEnabled;
 	public static boolean confHandheldTableEnabled;
 	public static boolean confEnergyInWaila;
 
-	public static boolean confCraftingCoreEnabled;
-	public static int confCraftingCoreRFCapacity;
-	public static int confCraftingCoreRFRate;
+	public static final ForgeConfigSpec.BooleanValue ENABLE_CRAFTING_CORE;
+	public static final ForgeConfigSpec.IntValue CRAFTING_CORE_POWER_CAPACITY;
+	public static final ForgeConfigSpec.IntValue CRAFTING_CORE_POWER_RATE;
 	
 	public static boolean confInterfaceEnabled;
 	public static int confInterfaceRFCapacity;
@@ -51,21 +51,35 @@ public class ModConfig {
 	public static boolean confUltimateSingularityRecipe;
 	public static String confSingularityCatalyst;
 
-	@SubscribeEvent
-	public void onConfigChanged(ConfigChangedEvent.OnConfigChangedEvent event) {
-		if (event.getModID().equals(ExtendedCrafting.MOD_ID)) {
-			ModConfig.init();
-		}
-	}
+	// Common
+	static {
+		final ForgeConfigSpec.Builder common = new ForgeConfigSpec.Builder();
+		common.comment("Settings for general things.").push("General");
+		ENABLE_HANDHELD_WORKBENCH = common
+				.comment("Should the Handheld Crafting Table be enabled?")
+				.translation("configGui.extendedcrafting.enable_handheld_workbench")
+				.define("handheldWorkbench", true);
+		common.pop();
 
-	public static void init(File file) {
-		config = new Configuration(file);
-		config.load();
-		init();
+		common.comment("Settings for the Crafting Core.").push("Combination Crafting");
+		ENABLE_CRAFTING_CORE = common
+				.comment("Should the Crafting Core be enabled?")
+				.translation("configGui.extendedcrafting.enable_crafting_core")
+				.define("enabled", true);
+		CRAFTING_CORE_POWER_CAPACITY = common
+				.comment("How much FE the Crafting Core should hold.")
+				.translation("configGui.extendedcrafting.crafting_core_power_capacity")
+				.defineInRange("powerCapacity", 5000000, 0, Integer.MAX_VALUE);
+		CRAFTING_CORE_POWER_RATE = common
+				.comment("How much FE/t the Crafting Core should use when crafting by default.")
+				.translation("configGui.extendedcrafting.crafting_core_power_rate")
+				.defineInRange("powerRate", 500, 0, Integer.MAX_VALUE);
+		common.pop();
+
+		COMMON = common.build();
 	}
 
 	public static void init() {
-		updateConfig();
 		
 		String category;
 		
@@ -126,43 +140,5 @@ public class ModConfig {
 		if (config.hasChanged()) {
 			config.save();
 		}
-	}
-	
-	private static void updateConfig() {
-		if (config.hasCategory("settings")) {
-			updateProperty("crafting_core_rf_capacity", "energy_capacity", "settings", "combination_crafting");
-			updateProperty("crafting_core_rf_rate", "energy_rate", "settings", "combination_crafting");
-			updateProperty("compressor_rf_capacity", "energy_capacity", "settings", "quantum_compression");
-			updateProperty("compressor_rf_rate", "energy_rate", "settings", "quantum_compression");
-			updateProperty("interface_rf_capacity", "energy_capacity", "settings", "automation_interface");
-			updateProperty("interface_rf_rate", "energy_rate", "settings", "automation_interface");
-			
-			ConfigCategory settings = config.getCategory("settings");
-			settings.remove("compressor_item_rate");
-			config.removeCategory(settings);
-			
-			config.renameProperty("recipe_maker", "recipe_maker_oredict", "use_oredictionary");
-			config.renameProperty("recipe_maker", "recipe_maker_nbt", "use_nbt");
-			
-			config.renameProperty("singularity", "_singularity_amount", "material_amount");
-			config.renameProperty("singularity", "_singularity_rf", "energy_cost");
-			config.renameProperty("singularity", "_singularity_catalyst", "default_catalyst");
-			config.renameProperty("singularity", "_singularity_recipes", "default_recipes");
-			config.renameProperty("singularity", "_ultimate_singularity_recipe", "ultimate_singularity_recipe");
-			config.renameProperty("singularity", "_custom_singularities", "custom_singularities");
-			config.renameProperty("singularity", "_ultimate_blacklist", "ultimate_singularity_recipe_blacklist");
-		}
-	}
-	
-	private static void updateProperty(String oldName, String newName, String oldCategory, String newCategory) {
-		config.moveProperty(oldCategory, oldName, newCategory);
-		config.renameProperty(newCategory, oldName, newName);
-	}
-	
-	public static boolean removeSingularity(String name) {
-		boolean value = config.get("singularity", name, true).getBoolean();
-		config.getCategory("singularity").remove(name);
-		
-		return value;
 	}
 }

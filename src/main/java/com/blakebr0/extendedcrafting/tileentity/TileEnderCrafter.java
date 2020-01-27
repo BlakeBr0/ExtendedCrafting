@@ -6,7 +6,7 @@ import java.util.List;
 import com.blakebr0.cucumber.helper.StackHelper;
 import com.blakebr0.cucumber.tile.TileEntityBase;
 import com.blakebr0.extendedcrafting.block.BlockEnderAlternator;
-import com.blakebr0.extendedcrafting.config.ModConfig;
+import com.blakebr0.extendedcrafting.config.ModConfigs;
 import com.blakebr0.extendedcrafting.crafting.endercrafter.EnderCrafterRecipeManager;
 import com.blakebr0.extendedcrafting.crafting.endercrafter.IEnderCraftingRecipe;
 import com.blakebr0.extendedcrafting.crafting.table.TableCrafting;
@@ -155,7 +155,7 @@ public class TileEnderCrafter extends TileEntityBase implements IInventory, ITic
 		this.progress++;
 		
 		int timeReq = 20 * timeRequired;
-		this.progressReq = (int) Math.max(timeReq - (timeReq * (ModConfig.confEnderAlternatorEff * alternators)), 20);
+		this.progressReq = (int) Math.max(timeReq - (timeReq * (ModConfigs.confEnderAlternatorEff * alternators)), 20);
 	}
 	
 	public int getProgressRequired() {

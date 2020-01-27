@@ -4,19 +4,22 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import com.blakebr0.cucumber.energy.CustomEnergyStorage;
 import com.blakebr0.cucumber.energy.EnergyStorageCustom;
 import com.blakebr0.cucumber.helper.StackHelper;
+import com.blakebr0.cucumber.inventory.BaseItemStackHandler;
 import com.blakebr0.cucumber.tileentity.BaseInventoryTileEntity;
 import com.blakebr0.cucumber.util.VanillaPacketDispatcher;
 import com.blakebr0.extendedcrafting.block.PedestalBlock;
-import com.blakebr0.extendedcrafting.config.ModConfig;
-import com.blakebr0.extendedcrafting.crafting.CombinationRecipe;
+import com.blakebr0.extendedcrafting.config.ModConfigs;
+import com.blakebr0.extendedcrafting.crafting.recipe.CombinationRecipe;
 import com.blakebr0.extendedcrafting.crafting.CombinationRecipeManager;
 
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SPacketUpdateTileEntity;
@@ -35,36 +38,45 @@ import net.minecraftforge.items.ItemStackHandler;
 import net.minecraftforge.oredict.OreDictionary;
 
 public class CraftingCoreTileEntity extends BaseInventoryTileEntity implements ITickableTileEntity, INamedContainerProvider {
-
-	private final ItemStackHandler inventory = new StackHandler(1);
-	private final EnergyStorageCustom energy = new EnergyStorageCustom(ModConfig.confCraftingCoreRFCapacity);
-
+	private final BaseItemStackHandler inventory = new BaseItemStackHandler(1);
+	private final CustomEnergyStorage energy = new CustomEnergyStorage(ModConfigs.CRAFTING_CORE_POWER_CAPACITY.get());
 	private int progress;
 	private int oldEnergy;
 	private int pedestalCount;
 
-	private static List<CombinationRecipe> getValidRecipes(ItemStack stack) {
-		List<CombinationRecipe> valid = new ArrayList<>();
-		
-		if (!stack.isEmpty()) {
-			for (CombinationRecipe recipe : CombinationRecipeManager.getInstance().getRecipes()) {
-				ItemStack input = recipe.getInput();
-				if (!input.isEmpty() && input.isItemEqual(stack) && StackHelper.compareTags(input, stack)) {
-					valid.add(recipe);
-				}
-			}
-		}
-		
-		return valid;
+	public CraftingCoreTileEntity() {
+		super(ModTileEntities.CRAFTING_CORE.get());
 	}
 
 	@Override
-	public void update() {
+	public BaseItemStackHandler getInventory() {
+		return this.inventory;
+	}
+
+	@Override
+	public void read(CompoundNBT tag) {
+		super.read(tag);
+		this.inventory.deserializeNBT(tag);
+		this.progress = tag.getInt("Progress");
+		this.energy.setEnergy(tag.getInt("Energy"));
+	}
+
+	@Override
+	public CompoundNBT write(CompoundNBT tag) {
+		tag = super.write(tag);
+		tag.putInt("Progress", this.progress);
+		tag.putInt("Energy", this.energy.getEnergyStored());
+
+		return tag;
+	}
+
+	@Override
+	public void tick() {
 		boolean mark = false;
 
 		List<BlockPos> pedestalLocations = this.locatePedestals();
 
-		if (!this.getWorld().isRemote) {
+		if (this.getWorld() != null && !this.getWorld().isRemote()) {
 			CombinationRecipe recipe = this.getRecipe();
 			if (recipe != null) {
 				if (this.getEnergy().getEnergyStored() > 0) {
@@ -92,29 +104,27 @@ public class CraftingCoreTileEntity extends BaseInventoryTileEntity implements I
 
 		if (this.oldEnergy != this.energy.getEnergyStored()) {
 			this.oldEnergy = this.energy.getEnergyStored();
-			if (!mark) {
+			if (!mark)
 				mark = true;
-			}
 		}
 
-		if (mark) {
+		if (mark)
 			this.markDirty();
-		}
 	}
 
 	private List<BlockPos> locatePedestals() {
 		ArrayList<BlockPos> pedestals = new ArrayList<>();
 		Iterable<BlockPos> blocks = BlockPos.getAllInBox(this.getPos().add(-3, 0, -3), this.getPos().add(3, 0, 3));
-		
+
 		for (BlockPos aoePos : blocks) {
 			Block block = this.getWorld().getBlockState(aoePos).getBlock();
 			if (block instanceof PedestalBlock) {
 				pedestals.add(aoePos);
 			}
 		}
-		
+
 		this.pedestalCount = pedestals.size();
-		
+
 		return pedestals;
 	}
 
@@ -143,7 +153,7 @@ public class CraftingCoreTileEntity extends BaseInventoryTileEntity implements I
 							if (match) break;
 						}
 					}
-					
+
 					if (match) {
 						pedestals.add(pedestal);
 						remaining.remove(next);
@@ -152,35 +162,39 @@ public class CraftingCoreTileEntity extends BaseInventoryTileEntity implements I
 				}
 			}
 		}
-		
-		if (pedestals.size() != recipe.getPedestalItems().size()) 
+
+		if (pedestals.size() != recipe.getPedestalItems().size())
 			return null;
-		
+
 		if (!remaining.isEmpty()) return null;
-		
+
 		return pedestals;
 	}
 
 	private boolean process(CombinationRecipe recipe) {
-		int extract = recipe.getPerTick();
-		long difference = recipe.getCost() - this.progress;
-		if (difference < recipe.getPerTick()) {
+		int extract = recipe.getPowerRate();
+		long difference = recipe.getPowerCost() - this.progress;
+		if (difference < recipe.getPowerRate()) {
 			extract = (int) difference;
 		}
-		
-		int extracted = this.getEnergy().extractEnergy(extract, false);
+
+		int extracted = this.energy.extractEnergy(extract, false);
 		this.progress += extracted;
 
-		return this.progress >= recipe.getCost();
+		return this.progress >= recipe.getPowerCost();
 	}
-	
+
+	public CustomEnergyStorage getEnergy() {
+		return this.energy;
+	}
+
 	public CombinationRecipe getRecipe() {
 		return getRecipe(locatePedestals());
 	}
 
 	public CombinationRecipe getRecipe(List<BlockPos> locations) {
 		List<CombinationRecipe> recipes = getValidRecipes(this.getInventory().getStackInSlot(0));
-		
+
 		if (!recipes.isEmpty()) {
 			for (CombinationRecipe recipe : recipes) {
 				List<PedestalTileEntity> pedestals = this.getPedestalsWithStuff(recipe, locations);
@@ -189,98 +203,15 @@ public class CraftingCoreTileEntity extends BaseInventoryTileEntity implements I
 				}
 			}
 		}
-		
+
 		return null;
 	}
 
 	public int getProgress() {
 		return this.progress;
 	}
-	
-	public IItemHandlerModifiable getInventory() {
-		return this.inventory;
-	}
-
-	public EnergyStorageCustom getEnergy() {
-		return this.energy;
-	}
 
 	public int getPedestalCount() {
 		return this.pedestalCount;
-	}
-
-	@Override
-	public void readFromNBT(NBTTagCompound tag) {
-		super.readFromNBT(tag);
-		this.inventory.deserializeNBT(tag);
-		this.progress = tag.getInteger("Progress");
-		this.energy.setEnergy(tag.getInteger("Energy"));
-	}
-
-	@Override
-	public NBTTagCompound writeToNBT(NBTTagCompound tag) {
-		tag = super.writeToNBT(tag);
-		tag.merge(this.inventory.serializeNBT());
-		tag.setInteger("Progress", this.progress);
-		tag.setInteger("Energy", this.energy.getEnergyStored());
-		
-		return tag;
-	}
-
-	@Override
-	public SPacketUpdateTileEntity getUpdatePacket() {
-		return new SPacketUpdateTileEntity(this.getPos(), -1, this.getUpdateTag());
-	}
-
-	@Override
-	public void onDataPacket(NetworkManager manager, SPacketUpdateTileEntity packet) {
-		this.readFromNBT(packet.getNbtCompound());
-	}
-
-	@Override
-	public final NBTTagCompound getUpdateTag() {
-		return this.writeToNBT(new NBTTagCompound());
-	}
-
-	@Override
-	public void markDirty() {
-		super.markDirty();
-		VanillaPacketDispatcher.dispatchTEToNearbyPlayers(this);
-	}
-
-	@Override
-	public boolean hasCapability(Capability<?> capability, EnumFacing side) {
-		return this.getCapability(capability, side) != null;
-	}
-
-	@Override
-	public <T> T getCapability(Capability<T> capability, EnumFacing side) {
-		if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
-			return CapabilityItemHandler.ITEM_HANDLER_CAPABILITY.cast(this.inventory);
-		} else if (capability == CapabilityEnergy.ENERGY) {
-			return CapabilityEnergy.ENERGY.cast(this.energy);
-		}
-		
-		return super.getCapability(capability, side);
-	}
-	
-	public boolean isUseableByPlayer(EntityPlayer player) {
-		return this.getWorld().getTileEntity(this.getPos()) == this && player.getDistanceSq(this.getPos().add(0.5, 0.5, 0.5)) <= 64;
-	}
-
-	class StackHandler extends ItemStackHandler {
-		StackHandler(int size) {
-			super(size);
-		}
-
-		@Override
-		protected int getStackLimit(int slot, ItemStack stack) {
-			return 1;
-		}
-
-		@Override
-		public void onContentsChanged(int slot) {
-			CraftingCoreTileEntity.this.markDirty();
-		}
 	}
 }

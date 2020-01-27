@@ -2,7 +2,7 @@ package com.blakebr0.extendedcrafting.client.tesr;
 
 import com.blakebr0.cucumber.render.GhostItemRenderer;
 import com.blakebr0.extendedcrafting.block.ModBlocks;
-import com.blakebr0.extendedcrafting.config.ModConfig;
+import com.blakebr0.extendedcrafting.config.ModConfigs;
 import com.blakebr0.extendedcrafting.tileentity.TileAutomationInterface;
 
 import net.minecraft.block.state.IBlockState;
@@ -20,7 +20,7 @@ public class RenderAutomationInterface extends TileEntitySpecialRenderer<TileAut
 
 	@Override
 	public void render(TileAutomationInterface tile, double x, double y, double z, float partialTick, int destroyStage, float alpha) {
-		if (!ModConfig.confInterfaceRenderer) return;
+		if (!ModConfigs.confInterfaceRenderer) return;
 		
 		IBlockState state = tile.getWorld().getBlockState(tile.getPos());
 

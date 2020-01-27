@@ -9,7 +9,7 @@ import com.blakebr0.cucumber.gui.button.IconButton;
 import com.blakebr0.cucumber.lib.Colors;
 import com.blakebr0.cucumber.util.Utils;
 import com.blakebr0.extendedcrafting.network.InterfaceAutoChangePacket;
-import com.blakebr0.extendedcrafting.network.NetworkThingy;
+import com.blakebr0.extendedcrafting.network.NetworkHandler;
 import com.blakebr0.extendedcrafting.tileentity.TileAutomationInterface;
 
 import net.minecraft.client.Minecraft;
@@ -83,30 +83,30 @@ public class GuiInterfaceConfig extends GuiContainer {
 			Minecraft.getMinecraft().displayGuiScreen(this.parent);
 		} else if (button == this.insert) {
 			if (Utils.isShiftKeyDown()) {
-				NetworkThingy.THINGY.sendToServer(new InterfaceAutoChangePacket(this.tile.getPos(), 4));
+				NetworkHandler.THINGY.sendToServer(new InterfaceAutoChangePacket(this.tile.getPos(), 4));
 				this.insert.facing = null;
 			} else {
-				NetworkThingy.THINGY.sendToServer(new InterfaceAutoChangePacket(this.tile.getPos(), 0));
+				NetworkHandler.THINGY.sendToServer(new InterfaceAutoChangePacket(this.tile.getPos(), 0));
 				this.insert.facing = this.incrementFace(this.insert.facing);
 			}
 			
 			this.insert.tooltip = this.getButtonTooltip(this.insert);
 		} else if (button == this.extract) {
 			if (Utils.isShiftKeyDown()) {
-				NetworkThingy.THINGY.sendToServer(new InterfaceAutoChangePacket(this.tile.getPos(), 5));
+				NetworkHandler.THINGY.sendToServer(new InterfaceAutoChangePacket(this.tile.getPos(), 5));
 				this.extract.facing = null;
 			} else {
-				NetworkThingy.THINGY.sendToServer(new InterfaceAutoChangePacket(this.tile.getPos(), 1));
+				NetworkHandler.THINGY.sendToServer(new InterfaceAutoChangePacket(this.tile.getPos(), 1));
 				this.extract.facing = this.incrementFace(this.extract.facing);
 			}
 
 			this.extract.tooltip = this.getButtonTooltip(this.extract);
 		} else if (button == this.eject) {
-			NetworkThingy.THINGY.sendToServer(new InterfaceAutoChangePacket(this.tile.getPos(), 2));
+			NetworkHandler.THINGY.sendToServer(new InterfaceAutoChangePacket(this.tile.getPos(), 2));
 			this.eject.on = !this.eject.on;
 			this.eject.tooltip = this.getButtonTooltip(this.eject);
 		} else if (button == this.smart) {
-			NetworkThingy.THINGY.sendToServer(new InterfaceAutoChangePacket(this.tile.getPos(), 3));
+			NetworkHandler.THINGY.sendToServer(new InterfaceAutoChangePacket(this.tile.getPos(), 3));
 			this.smart.on = !this.smart.on;
 			this.smart.tooltip = this.getButtonTooltip(this.smart);
 		}

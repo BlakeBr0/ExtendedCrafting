@@ -5,7 +5,7 @@ import java.util.function.Function;
 
 import com.blakebr0.cucumber.helper.RecipeHelper;
 import com.blakebr0.cucumber.helper.StackHelper;
-import com.blakebr0.extendedcrafting.config.ModConfig;
+import com.blakebr0.extendedcrafting.config.ModConfigs;
 import com.blakebr0.extendedcrafting.crafting.endercrafter.IEnderCraftingRecipe;
 
 import net.minecraft.block.Block;
@@ -34,7 +34,7 @@ public class TableRecipeShaped implements IRecipe, ITieredRecipe, IEnderCrafting
 	protected ResourceLocation group;
 	protected int tier;
 	protected Map<Integer, Function<ItemStack, ItemStack>> transformers;
-	public int enderCrafterRecipeTimeRequired = ModConfig.confEnderTimeRequired;
+	public int enderCrafterRecipeTimeRequired = ModConfigs.confEnderTimeRequired;
 
 	public TableRecipeShaped(int tier, Block result, Object... recipe) {
 		this(tier, new ItemStack(result), recipe);

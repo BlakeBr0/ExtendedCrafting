@@ -4,7 +4,7 @@ import com.blakebr0.cucumber.helper.ResourceHelper;
 import com.blakebr0.cucumber.util.Utils;
 import com.blakebr0.extendedcrafting.ExtendedCrafting;
 import com.blakebr0.extendedcrafting.container.ContainerCraftingCore;
-import com.blakebr0.extendedcrafting.crafting.CombinationRecipe;
+import com.blakebr0.extendedcrafting.crafting.recipe.CombinationRecipe;
 import com.blakebr0.extendedcrafting.tileentity.CraftingCoreTileEntity;
 
 import net.minecraft.client.gui.FontRenderer;
@@ -34,7 +34,7 @@ public class GuiCraftingCore extends GuiContainer {
 
 	private int getProgressBarScaled(int pixels) {
 		int i = this.tile.getProgress();
-		long j = this.tile.getRecipe().getCost();
+		long j = this.tile.getRecipe().getPowerCost();
 		return (int) (j != 0 && i != 0 ? (long) i * pixels / j : 0);
 	}
 
@@ -51,9 +51,9 @@ public class GuiCraftingCore extends GuiContainer {
 		if (recipe == null) {
 			this.fontRenderer.drawString(Utils.localize("ec.ccore.no_recipe"), 36, 56, -1);
 		} else {
-			this.fontRenderer.drawString(Utils.localize("ec.ccore.rf_cost", Utils.format(recipe.getCost())) + " FE", 36, 56, -1);
-			this.fontRenderer.drawString(Utils.localize("ec.ccore.rf_rate", Utils.format(recipe.getPerTick())) + " FE/t", 36, 66, -1);
-			if (this.tile.getEnergy().getEnergyStored() < recipe.getPerTick()) {
+			this.fontRenderer.drawString(Utils.localize("ec.ccore.rf_cost", Utils.format(recipe.getPowerCost())) + " FE", 36, 56, -1);
+			this.fontRenderer.drawString(Utils.localize("ec.ccore.rf_rate", Utils.format(recipe.getPowerRate())) + " FE/t", 36, 66, -1);
+			if (this.tile.getEnergy().getEnergyStored() < recipe.getPowerRate()) {
 				this.fontRenderer.drawString(Utils.localize("ec.ccore.no_power"), 36, 86, -1);
 			}
 		}
@@ -94,7 +94,7 @@ public class GuiCraftingCore extends GuiContainer {
 
 		CombinationRecipe recipe = this.tile.getRecipe();
 		if (this.tile != null && recipe != null) {
-			if (this.tile.getProgress() > 0 && recipe.getCost() > 0) {
+			if (this.tile.getProgress() > 0 && recipe.getPowerCost() > 0) {
 				int i2 = getProgressBarScaled(24);
 				this.drawTexturedModalRect(x + 116, y + 47, 194, 0, i2 + 1, 16);
 			}

@@ -6,7 +6,7 @@ import com.blakebr0.extendedcrafting.ExtendedCrafting;
 import com.blakebr0.extendedcrafting.container.CompressorContainer;
 import com.blakebr0.extendedcrafting.network.EjectModeSwitchPacket;
 import com.blakebr0.extendedcrafting.network.InputLimitSwitchPacket;
-import com.blakebr0.extendedcrafting.network.NetworkThingy;
+import com.blakebr0.extendedcrafting.network.NetworkHandler;
 import com.blakebr0.extendedcrafting.tileentity.CompressorTileEntity;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
@@ -104,9 +104,9 @@ public class CompressorScreen extends ContainerScreen<CompressorContainer> {
 	@Override
 	public void actionPerformed(GuiButton button) throws IOException {
 		if (button.id == 1) {
-			NetworkThingy.THINGY.sendToServer(new EjectModeSwitchPacket(this.tile.getPos().toLong()));
+			NetworkHandler.THINGY.sendToServer(new EjectModeSwitchPacket(this.tile.getPos().toLong()));
 		} else if (button.id == 2) {
-			NetworkThingy.THINGY.sendToServer(new InputLimitSwitchPacket(this.tile.getPos().toLong()));
+			NetworkHandler.THINGY.sendToServer(new InputLimitSwitchPacket(this.tile.getPos().toLong()));
 		}
 	}
 

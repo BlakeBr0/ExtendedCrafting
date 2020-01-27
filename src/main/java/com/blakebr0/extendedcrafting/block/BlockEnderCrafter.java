@@ -4,7 +4,7 @@ import com.blakebr0.cucumber.block.BlockBase;
 import com.blakebr0.cucumber.iface.IEnableable;
 import com.blakebr0.extendedcrafting.ExtendedCrafting;
 import com.blakebr0.extendedcrafting.client.screen.GuiHandler;
-import com.blakebr0.extendedcrafting.config.ModConfig;
+import com.blakebr0.extendedcrafting.config.ModConfigs;
 import com.blakebr0.extendedcrafting.tileentity.TileEnderCrafter;
 
 import net.minecraft.block.ITileEntityProvider;
@@ -58,6 +58,6 @@ public class BlockEnderCrafter extends BlockBase implements ITileEntityProvider,
 
 	@Override
 	public boolean isEnabled() {
-		return ModConfig.confEnderEnabled;
+		return ModConfigs.confEnderEnabled;
 	}
 }

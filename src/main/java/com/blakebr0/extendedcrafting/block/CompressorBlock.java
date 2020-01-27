@@ -2,7 +2,7 @@ package com.blakebr0.extendedcrafting.block;
 
 import com.blakebr0.cucumber.block.BaseTileEntityBlock;
 import com.blakebr0.cucumber.iface.IEnableable;
-import com.blakebr0.extendedcrafting.config.ModConfig;
+import com.blakebr0.extendedcrafting.config.ModConfigs;
 import com.blakebr0.extendedcrafting.tileentity.CompressorTileEntity;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -101,6 +101,6 @@ public class CompressorBlock extends BaseTileEntityBlock implements IEnableable 
 
 	@Override
 	public boolean isEnabled() {
-		return ModConfig.confCompressorEnabled;
+		return ModConfigs.confCompressorEnabled;
 	}
 }

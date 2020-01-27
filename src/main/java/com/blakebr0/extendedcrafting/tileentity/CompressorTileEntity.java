@@ -5,7 +5,7 @@ import com.blakebr0.cucumber.helper.StackHelper;
 import com.blakebr0.cucumber.inventory.BaseItemStackHandler;
 import com.blakebr0.cucumber.lib.Localizable;
 import com.blakebr0.cucumber.tileentity.BaseInventoryTileEntity;
-import com.blakebr0.extendedcrafting.config.ModConfig;
+import com.blakebr0.extendedcrafting.config.ModConfigs;
 import com.blakebr0.extendedcrafting.container.CompressorContainer;
 import com.blakebr0.extendedcrafting.crafting.ExtendedRecipeManager;
 import com.blakebr0.extendedcrafting.crafting.SpecialRecipeTypes;
@@ -18,15 +18,12 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.util.IIntArray;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.items.ItemStackHandler;
 
-import javax.annotation.Nullable;
-
 public class CompressorTileEntity extends BaseInventoryTileEntity implements ITickableTileEntity, INamedContainerProvider {
 	private final BaseItemStackHandler inventory = new BaseItemStackHandler(3);
-	private final CustomEnergyStorage energy = new CustomEnergyStorage(ModConfig.confCompressorRFCapacity);
+	private final CustomEnergyStorage energy = new CustomEnergyStorage(ModConfigs.confCompressorRFCapacity);
 	private final ItemStackHandler recipeInventory = new ItemStackHandler(2);
 	private CompressorRecipe recipe;
 	private ItemStack materialStack = ItemStack.EMPTY;
@@ -92,79 +89,79 @@ public class CompressorTileEntity extends BaseInventoryTileEntity implements ITi
 
 	@Override
 	public void tick() {
-		if (this.getWorld() == null || this.getWorld().isRemote())
-			return;
-
 		boolean mark = false;
-		ItemStack output = this.inventory.getStackInSlot(0);
-		ItemStack input = this.inventory.getStackInSlot(1);
-		ItemStack catalyst = this.inventory.getStackInSlot(2);
 
-		this.recipeInventory.setStackInSlot(0, this.materialStack);
-		this.recipeInventory.setStackInSlot(1, catalyst);
+		if (this.getWorld() != null && !this.getWorld().isRemote()) {
+			ItemStack output = this.inventory.getStackInSlot(0);
+			ItemStack input = this.inventory.getStackInSlot(1);
+			ItemStack catalyst = this.inventory.getStackInSlot(2);
 
-		if (this.recipe == null || this.recipe.matches(this.recipeInventory)) {
-			this.recipe = (CompressorRecipe) ExtendedRecipeManager.getInstance().getRecipe(SpecialRecipeTypes.COMPRESSOR, this.recipeInventory);
-		}
+			this.recipeInventory.setStackInSlot(0, this.materialStack);
+			this.recipeInventory.setStackInSlot(1, catalyst);
 
-		if (!input.isEmpty()) {
-			if (this.materialStack.isEmpty()) {
-				this.materialStack = input.copy();
-				mark = true;
+			if (this.recipe == null || this.recipe.matches(this.recipeInventory)) {
+				this.recipe = (CompressorRecipe) ExtendedRecipeManager.getInstance().getRecipe(SpecialRecipeTypes.COMPRESSOR, this.recipeInventory);
 			}
 
-			if (!this.inputLimit || (this.recipe != null && this.materialCount < this.recipe.getInputCount())) {
-				if (StackHelper.areStacksEqual(input, this.materialStack)) {
-					int consumeAmount = input.getCount();
-					if (this.inputLimit) {
-						consumeAmount = Math.min(consumeAmount, this.recipe.getInputCount() - this.materialCount);
-					}
+			if (!input.isEmpty()) {
+				if (this.materialStack.isEmpty()) {
+					this.materialStack = input.copy();
+					mark = true;
+				}
 
-					StackHelper.decrease(input, consumeAmount, false);
-					this.materialCount += consumeAmount;
-					if (!mark)
-						mark = true;
+				if (!this.inputLimit || (this.recipe != null && this.materialCount < this.recipe.getInputCount())) {
+					if (StackHelper.areStacksEqual(input, this.materialStack)) {
+						int consumeAmount = input.getCount();
+						if (this.inputLimit) {
+							consumeAmount = Math.min(consumeAmount, this.recipe.getInputCount() - this.materialCount);
+						}
+
+						StackHelper.decrease(input, consumeAmount, false);
+						this.materialCount += consumeAmount;
+						if (!mark)
+							mark = true;
+					}
 				}
 			}
-		}
 
-		if (this.recipe != null && this.getEnergy().getEnergyStored() > 0) {
-			if (this.materialCount >= this.recipe.getInputCount()) {
-				this.process(this.recipe);
-				if (this.progress == this.recipe.getPowerCost()) {
-					ItemStack recipeOutput = this.recipe.getOutput();
-					if ((output.isEmpty() || StackHelper.areStacksEqual(output, recipeOutput)) && output.getCount() < recipeOutput.getMaxStackSize()) {
-						this.inventory.insertItem(0, this.recipe.getOutput().copy(), false);
-						this.progress = 0;
-						this.materialCount -= this.recipe.getInputCount();
+			if (this.recipe != null && this.getEnergy().getEnergyStored() > 0) {
+				if (this.materialCount >= this.recipe.getInputCount()) {
+					this.process(this.recipe);
+					if (this.progress == this.recipe.getPowerCost()) {
+						ItemStack recipeOutput = this.recipe.getOutput();
+						if ((output.isEmpty() || StackHelper.areStacksEqual(output, recipeOutput)) && output.getCount() < recipeOutput.getMaxStackSize()) {
+							this.inventory.insertItem(0, this.recipe.getOutput().copy(), false);
+							this.progress = 0;
+							this.materialCount -= this.recipe.getInputCount();
 
-						if (this.materialCount <= 0) {
-							this.materialStack = ItemStack.EMPTY;
+							if (this.materialCount <= 0) {
+								this.materialStack = ItemStack.EMPTY;
+							}
 						}
 					}
 				}
 			}
-		}
 
-		if (this.ejecting) {
-			if (this.materialCount > 0 && !this.materialStack.isEmpty()) {
-				ItemStack toAdd = this.materialStack.copy();
-				int addCount = Math.min(this.materialCount, toAdd.getMaxStackSize());
-				toAdd.setCount(addCount);
+			if (this.ejecting) {
+				if (this.materialCount > 0 && !this.materialStack.isEmpty()) {
+					ItemStack toAdd = this.materialStack.copy();
+					int addCount = Math.min(this.materialCount, toAdd.getMaxStackSize());
+					toAdd.setCount(addCount);
 
-				int added = toAdd.getCount() - this.inventory.insertItem(0, toAdd, false).getCount();
-				if (added > 0) {
-					this.materialCount -= added;
-					if (this.materialCount < 1) {
-						this.materialStack = ItemStack.EMPTY;
-						this.ejecting = false;
+					int added = toAdd.getCount() - this.inventory.insertItem(0, toAdd, false).getCount();
+					if (added > 0) {
+						this.materialCount -= added;
+						if (this.materialCount < 1) {
+							this.materialStack = ItemStack.EMPTY;
+							this.ejecting = false;
+						}
+
+						if (this.progress > 0)
+							this.progress = 0;
+
+						if (!mark)
+							mark = true;
 					}
-
-					if (this.progress > 0)
-						this.progress = 0;
-
-					if (!mark)
-						mark = true;
 				}
 			}
 		}

@@ -10,7 +10,7 @@ import com.blakebr0.extendedcrafting.ExtendedCrafting;
 import com.blakebr0.extendedcrafting.container.automationinterface.ContainerAutomationInterface;
 import com.blakebr0.extendedcrafting.lib.ViewRecipeInfo;
 import com.blakebr0.extendedcrafting.network.InterfaceRecipeChangePacket;
-import com.blakebr0.extendedcrafting.network.NetworkThingy;
+import com.blakebr0.extendedcrafting.network.NetworkHandler;
 import com.blakebr0.extendedcrafting.tileentity.TileAutomationInterface;
 
 import net.minecraft.client.gui.FontRenderer;
@@ -68,12 +68,12 @@ public class GuiAutomationInterface extends GuiContainer {
 	@Override
 	protected void actionPerformed(GuiButton button) throws IOException {
 		if (button == this.save) {
-			NetworkThingy.THINGY.sendToServer(new InterfaceRecipeChangePacket(this.tile.getPos().toLong(), 0));
+			NetworkHandler.THINGY.sendToServer(new InterfaceRecipeChangePacket(this.tile.getPos().toLong(), 0));
 			this.save.enabled = false;
 			this.clear.enabled = true;
 			this.view.enabled = true;
 		} else if (button == this.clear) {
-			NetworkThingy.THINGY.sendToServer(new InterfaceRecipeChangePacket(this.tile.getPos().toLong(), 1));
+			NetworkHandler.THINGY.sendToServer(new InterfaceRecipeChangePacket(this.tile.getPos().toLong(), 1));
 			this.save.enabled = true;
 			this.clear.enabled = false;
 			this.view.enabled = false;

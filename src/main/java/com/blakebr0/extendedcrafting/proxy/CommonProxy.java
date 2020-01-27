@@ -9,11 +9,11 @@ import com.blakebr0.extendedcrafting.compat.crafttweaker.CombinationCrafting;
 import com.blakebr0.extendedcrafting.compat.crafttweaker.CompressionCrafting;
 import com.blakebr0.extendedcrafting.compat.crafttweaker.EnderCrafting;
 import com.blakebr0.extendedcrafting.compat.crafttweaker.TableCrafting;
-import com.blakebr0.extendedcrafting.config.ModConfig;
+import com.blakebr0.extendedcrafting.config.ModConfigs;
 import com.blakebr0.extendedcrafting.crafting.ModRecipes;
 import com.blakebr0.extendedcrafting.item.ModItems;
 import com.blakebr0.extendedcrafting.lib.ModGuide;
-import com.blakebr0.extendedcrafting.network.NetworkThingy;
+import com.blakebr0.extendedcrafting.network.NetworkHandler;
 import com.blakebr0.extendedcrafting.tileentity.ModTileEntities;
 
 import crafttweaker.CraftTweakerAPI;
@@ -31,8 +31,8 @@ import net.minecraftforge.fml.common.network.NetworkRegistry;
 public class CommonProxy {
 
 	public void preInit(FMLPreInitializationEvent event) {
-		ModConfig.init(new File(event.getModConfigurationDirectory(), ExtendedCrafting.MOD_ID + ".cfg"));
-		MinecraftForge.EVENT_BUS.register(new ModConfig());
+		ModConfigs.init(new File(event.getModConfigurationDirectory(), ExtendedCrafting.MOD_ID + ".cfg"));
+		MinecraftForge.EVENT_BUS.register(new ModConfigs());
 
 		ModBlocks.init();
 		ModItems.init();
@@ -50,7 +50,7 @@ public class CommonProxy {
 	}
 
 	public void init(FMLInitializationEvent event) {		
-		NetworkThingy.init();
+		NetworkHandler.init();
 		NetworkRegistry.INSTANCE.registerGuiHandler(ExtendedCrafting.instance, new GuiHandler());
 		FMLInterModComms.sendMessage("waila", "register", "com.blakebr0.extendedcrafting.compat.WailaDataProvider.callbackRegister");
 		//ModRecipes.init();

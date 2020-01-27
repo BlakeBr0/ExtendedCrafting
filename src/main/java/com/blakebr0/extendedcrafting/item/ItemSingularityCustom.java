@@ -12,7 +12,7 @@ import com.blakebr0.cucumber.iface.IModelHelper;
 import com.blakebr0.cucumber.item.ItemMeta;
 import com.blakebr0.cucumber.util.Utils;
 import com.blakebr0.extendedcrafting.ExtendedCrafting;
-import com.blakebr0.extendedcrafting.config.ModConfig;
+import com.blakebr0.extendedcrafting.config.ModConfigs;
 import com.blakebr0.extendedcrafting.crafting.CompressorRecipeManager;
 
 import net.minecraft.client.renderer.color.IItemColor;
@@ -31,7 +31,7 @@ public class ItemSingularityCustom extends ItemMeta implements IModelHelper, IEn
 	public static ArrayList<CustomSingularity> singularities = new ArrayList<>();
 	public static Map<Integer, Integer> singularityColors = new HashMap<>();
 	public static Map<Integer, Object> singularityMaterials = new HashMap<>();
-	private Configuration config = ModConfig.instance.config;
+	private Configuration config = ModConfigs.instance.config;
 
 	public ItemSingularityCustom() {
 		super("ec.singularity_custom", ExtendedCrafting.REGISTRY);
@@ -107,7 +107,7 @@ public class ItemSingularityCustom extends ItemMeta implements IModelHelper, IEn
 	
 	@Override
 	public boolean isEnabled() {
-		return ModConfig.confSingularityEnabled;
+		return ModConfigs.confSingularityEnabled;
 	}
 
 	public ItemStack addSingularity(int meta, String name, String material, int color) {
@@ -141,21 +141,21 @@ public class ItemSingularityCustom extends ItemMeta implements IModelHelper, IEn
 					item = ForgeRegistries.ITEMS.getValue(new ResourceLocation(parts[0], parts[1]));
 					stack = new ItemStack(item, 1, matMeta);
 					if (!stack.isEmpty()) {
-						CompressorRecipeManager.getInstance().addRecipe(new ItemStack(this, 1, meta), stack.copy(), ModConfig.confSingularityAmount, ItemSingularity.getCatalystStack(), false, ModConfig.confSingularityRF);
+						CompressorRecipeManager.getInstance().addRecipe(new ItemStack(this, 1, meta), stack.copy(), ModConfigs.confSingularityAmount, ItemSingularity.getCatalystStack(), false, ModConfigs.confSingularityRF);
 					}
 				} else if (parts.length == 2) {
 					if (((String) value).startsWith("ore:")) {
 						String ore = ((String) value).substring(4);
 						if (OreDictionary.doesOreNameExist(ore)) {
 							if (!OreDictionary.getOres(ore).isEmpty()) {
-								CompressorRecipeManager.getInstance().addRecipe(new ItemStack(this, 1, meta), ore, ModConfig.confSingularityAmount, ItemSingularity.getCatalystStack(), false, ModConfig.confSingularityRF);
+								CompressorRecipeManager.getInstance().addRecipe(new ItemStack(this, 1, meta), ore, ModConfigs.confSingularityAmount, ItemSingularity.getCatalystStack(), false, ModConfigs.confSingularityRF);
 							}
 						}
 					} else {
 						item = ForgeRegistries.ITEMS.getValue(new ResourceLocation(parts[0], parts[1]));
 						stack = new ItemStack(item);
 						if (!stack.isEmpty()) {
-							CompressorRecipeManager.getInstance().addRecipe(new ItemStack(this, 1, meta), stack.copy(), ModConfig.confSingularityAmount, ItemSingularity.getCatalystStack(), false, ModConfig.confSingularityRF);
+							CompressorRecipeManager.getInstance().addRecipe(new ItemStack(this, 1, meta), stack.copy(), ModConfigs.confSingularityAmount, ItemSingularity.getCatalystStack(), false, ModConfigs.confSingularityRF);
 						}
 					}
 				} else {

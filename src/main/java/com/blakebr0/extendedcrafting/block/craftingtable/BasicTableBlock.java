@@ -7,7 +7,7 @@ import com.blakebr0.cucumber.iface.IEnableable;
 import com.blakebr0.cucumber.util.Utils;
 import com.blakebr0.extendedcrafting.ExtendedCrafting;
 import com.blakebr0.extendedcrafting.client.screen.GuiHandler;
-import com.blakebr0.extendedcrafting.config.ModConfig;
+import com.blakebr0.extendedcrafting.config.ModConfigs;
 import com.blakebr0.extendedcrafting.tileentity.TileBasicCraftingTable;
 
 import net.minecraft.block.ITileEntityProvider;
@@ -26,9 +26,9 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
-public class BlockBasicTable extends BlockBase implements ITileEntityProvider, IEnableable {
+public class BasicTableBlock extends BlockBase implements ITileEntityProvider, IEnableable {
 
-	public BlockBasicTable() {
+	public BasicTableBlock() {
 		super("ec.table_basic", Material.IRON, SoundType.METAL, 5.0F, 10.0F);
 		this.setCreativeTab(ExtendedCrafting.ITEM_GROUP);
 	}
@@ -84,6 +84,6 @@ public class BlockBasicTable extends BlockBase implements ITileEntityProvider, I
 
 	@Override
 	public boolean isEnabled() {
-		return ModConfig.confTableEnabled;
+		return ModConfigs.confTableEnabled;
 	}
 }

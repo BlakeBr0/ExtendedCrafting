@@ -6,7 +6,7 @@ import java.util.Collections;
 import java.util.List;
 
 import com.blakebr0.cucumber.util.Utils;
-import com.blakebr0.extendedcrafting.crafting.CombinationRecipe;
+import com.blakebr0.extendedcrafting.crafting.recipe.CombinationRecipe;
 
 import mezz.jei.api.IJeiHelpers;
 import mezz.jei.api.ingredients.IIngredients;
@@ -27,7 +27,7 @@ public class CombinationCraftingWrapper implements IRecipeWrapper {
 	@Override
 	public List<String> getTooltipStrings(int mouseX, int mouseY) {
 		if (mouseX > 1 && mouseX < 14 && mouseY > 9 && mouseY < 86) {
-			return Arrays.asList(Utils.format(this.recipe.getCost()) + " FE", Utils.format(this.recipe.getPerTick()) + " FE/t");
+			return Arrays.asList(Utils.format(this.recipe.getPowerCost()) + " FE", Utils.format(this.recipe.getPowerRate()) + " FE/t");
 		}
 		
 		if (mouseX > 5 && mouseX < 23 && mouseY > 144 && mouseY < 165) {

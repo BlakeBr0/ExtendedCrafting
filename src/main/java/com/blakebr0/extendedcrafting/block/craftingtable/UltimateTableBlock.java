@@ -7,8 +7,8 @@ import com.blakebr0.cucumber.iface.IEnableable;
 import com.blakebr0.cucumber.util.Utils;
 import com.blakebr0.extendedcrafting.ExtendedCrafting;
 import com.blakebr0.extendedcrafting.client.screen.GuiHandler;
-import com.blakebr0.extendedcrafting.config.ModConfig;
-import com.blakebr0.extendedcrafting.tileentity.TileEliteCraftingTable;
+import com.blakebr0.extendedcrafting.config.ModConfigs;
+import com.blakebr0.extendedcrafting.tileentity.TileUltimateCraftingTable;
 
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.SoundType;
@@ -26,16 +26,16 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
-public class BlockEliteTable extends BlockBase implements ITileEntityProvider, IEnableable {
+public class UltimateTableBlock extends BlockBase implements ITileEntityProvider, IEnableable {
 
-	public BlockEliteTable() {
-		super("ec.table_elite", Material.IRON, SoundType.METAL, 5.0F, 10.0F);
+	public UltimateTableBlock() {
+		super("ec.table_ultimate", Material.IRON, SoundType.METAL, 5.0F, 10.0F);
 		this.setCreativeTab(ExtendedCrafting.ITEM_GROUP);
 	}
 
 	@Override
 	public TileEntity createNewTileEntity(World world, int meta) {
-		return new TileEliteCraftingTable();
+		return new TileUltimateCraftingTable();
 	}
 
 	@Override
@@ -45,8 +45,8 @@ public class BlockEliteTable extends BlockBase implements ITileEntityProvider, I
 		} else {
 			TileEntity tile = world.getTileEntity(pos);
 
-			if (tile instanceof TileEliteCraftingTable) {
-				player.openGui(ExtendedCrafting.instance, GuiHandler.ELITE_TABLE, world, pos.getX(), pos.getY(), pos.getZ());
+			if (tile instanceof TileUltimateCraftingTable) {
+				player.openGui(ExtendedCrafting.instance, GuiHandler.ULTIMATE_TABLE, world, pos.getX(), pos.getY(), pos.getZ());
 			}
 			
 			return true;
@@ -55,7 +55,7 @@ public class BlockEliteTable extends BlockBase implements ITileEntityProvider, I
 
 	@Override
 	public void breakBlock(World world, BlockPos pos, IBlockState state) {
-		TileEliteCraftingTable tile = (TileEliteCraftingTable) world.getTileEntity(pos);
+		TileUltimateCraftingTable tile = (TileUltimateCraftingTable) world.getTileEntity(pos);
 		if (tile != null) {
 			NonNullList<ItemStack> matrix = tile.getMatrix();
 			for (int i = 0; i < matrix.size(); i++) {
@@ -79,11 +79,11 @@ public class BlockEliteTable extends BlockBase implements ITileEntityProvider, I
 	
 	@Override
 	public void addInformation(ItemStack stack, World world, List<String> tooltip, ITooltipFlag flag) {
-		tooltip.add(Utils.localize("tooltip.ec.tier", 3));
+		tooltip.add(Utils.localize("tooltip.ec.tier", 4));
 	}
 
 	@Override
 	public boolean isEnabled() {
-		return ModConfig.confTableEnabled;
+		return ModConfigs.confTableEnabled;
 	}
 }

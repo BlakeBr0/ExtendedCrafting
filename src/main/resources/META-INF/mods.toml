@@ -2,13 +2,13 @@ modLoader="javafml"
 loaderVersion="[31,)"
 
 [[mods]]
-  issueTrackerURL="https://github.com/BlakeBr0/ExtendedCrafting/issues" #optional
+  issueTrackerURL="https://github.com/BlakeBr0/ExtendedCrafting/issues"
   modId="extendedcrafting"
   version="${file.jarVersion}"
   displayName="Extended Crafting"
   # updateJSONURL="http://myurl.me/"
   displayURL="https://www.curseforge.com/minecraft/mc-mods/extended-crafting"
-  #logoFile="examplemod.png" #optional
+  #logoFile="examplemod.png"
   authors="BlakeBr0"
   credits="SpitefulFox"
   description='''

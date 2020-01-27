@@ -3,7 +3,7 @@ package com.blakebr0.extendedcrafting.item;
 import com.blakebr0.cucumber.iface.IEnableable;
 import com.blakebr0.cucumber.item.BaseItem;
 import com.blakebr0.cucumber.lib.Localizable;
-import com.blakebr0.extendedcrafting.config.ModConfig;
+import com.blakebr0.extendedcrafting.config.ModConfigs;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.inventory.container.SimpleNamedContainerProvider;
@@ -33,7 +33,7 @@ public class ItemHandheldTable extends BaseItem implements IEnableable {
 
 	@Override
 	public boolean isEnabled() {
-		return ModConfig.confHandheldTableEnabled;
+		return ModConfigs.ENABLE_HANDHELD_WORKBENCH.get();
 	}
 
 	private INamedContainerProvider getContainer(World world, BlockPos pos) {

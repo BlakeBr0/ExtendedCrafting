@@ -11,7 +11,7 @@ import com.blakebr0.cucumber.iface.IEnableable;
 import com.blakebr0.cucumber.item.ItemMeta;
 import com.blakebr0.cucumber.util.Utils;
 import com.blakebr0.extendedcrafting.ExtendedCrafting;
-import com.blakebr0.extendedcrafting.config.ModConfig;
+import com.blakebr0.extendedcrafting.config.ModConfigs;
 import com.blakebr0.extendedcrafting.crafting.CompressorRecipeManager;
 
 import net.minecraft.client.renderer.color.IItemColor;
@@ -28,7 +28,7 @@ public class ItemSingularity extends ItemMeta implements IEnableable {
 
 	public static Map<Integer, Integer> singularityColors = new HashMap<>();
 	public static Map<Integer, Object> singularityMaterials = new HashMap<>();
-	private Configuration config = ModConfig.instance.config;
+	private Configuration config = ModConfigs.instance.config;
 
 	public ItemSingularity() {
 		super("ec.singularity", ExtendedCrafting.REGISTRY);
@@ -102,7 +102,7 @@ public class ItemSingularity extends ItemMeta implements IEnableable {
 	
 	@Override
 	public boolean isEnabled() {
-		return ModConfig.confSingularityEnabled;
+		return ModConfigs.confSingularityEnabled;
 	}
 
 	public ItemStack addSingularity(int meta, String name, ItemStack material, int color) {
@@ -134,7 +134,7 @@ public class ItemSingularity extends ItemMeta implements IEnableable {
 	}
 	
 	public void initRecipes() {
-		if (!ModConfig.confSingularityRecipes || !this.isEnabled()) 
+		if (!ModConfigs.confSingularityRecipes || !this.isEnabled())
 			return;
 		
 		for (Map.Entry<Integer, Object> obj : singularityMaterials.entrySet()) {
@@ -143,11 +143,11 @@ public class ItemSingularity extends ItemMeta implements IEnableable {
 			if (value instanceof ItemStack) {
 				ItemStack stack = (ItemStack) value;
 				if (!stack.isEmpty()) {
-					CompressorRecipeManager.getInstance().addRecipe(new ItemStack(this, 1, meta), stack.copy(), ModConfig.confSingularityAmount, ItemSingularity.getCatalystStack(), false, ModConfig.confSingularityRF);
+					CompressorRecipeManager.getInstance().addRecipe(new ItemStack(this, 1, meta), stack.copy(), ModConfigs.confSingularityAmount, ItemSingularity.getCatalystStack(), false, ModConfigs.confSingularityRF);
 				}
 			} else if (value instanceof String) {
 				String name = (String) value;
-				CompressorRecipeManager.getInstance().addRecipe(new ItemStack(this, 1, meta), name, ModConfig.confSingularityAmount, ItemSingularity.getCatalystStack(), false, ModConfig.confSingularityRF);
+				CompressorRecipeManager.getInstance().addRecipe(new ItemStack(this, 1, meta), name, ModConfigs.confSingularityAmount, ItemSingularity.getCatalystStack(), false, ModConfigs.confSingularityRF);
 			} else {
 				ExtendedCrafting.LOGGER.error("Invalid material for singularity: " + value.toString());
 				continue;
@@ -156,7 +156,7 @@ public class ItemSingularity extends ItemMeta implements IEnableable {
 	}
 	
 	public static ItemStack getCatalystStack() {
-		String[] parts = ModConfig.confSingularityCatalyst.split(":");
+		String[] parts = ModConfigs.confSingularityCatalyst.split(":");
 		if (parts.length != 3) {
 			return ModItems.itemMaterial.itemUltimateCatalyst;
 		}
@@ -191,7 +191,7 @@ public class ItemSingularity extends ItemMeta implements IEnableable {
 				if (i < values.length) {
 					newValues[i] = values[i];
 				} else {
-					newValues[i] = name + "=" + ModConfig.removeSingularity(name);
+					newValues[i] = name + "=" + ModConfigs.removeSingularity(name);
 				}
 			}
 			

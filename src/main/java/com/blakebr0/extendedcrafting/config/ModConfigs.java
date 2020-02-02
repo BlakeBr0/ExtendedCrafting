@@ -1,14 +1,7 @@
 package com.blakebr0.extendedcrafting.config;
 
-import com.blakebr0.extendedcrafting.ExtendedCrafting;
 import com.blakebr0.extendedcrafting.item.ModItems;
 import net.minecraftforge.common.ForgeConfigSpec;
-import net.minecraftforge.common.config.ConfigCategory;
-import net.minecraftforge.common.config.Configuration;
-import net.minecraftforge.fml.client.event.ConfigChangedEvent;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-
-import java.io.File;
 
 public class ModConfigs {
 	public static final ForgeConfigSpec COMMON;
@@ -28,15 +21,15 @@ public class ModConfigs {
 	public static int confInterfaceRFRate;
 	public static boolean confInterfaceRenderer;
 	
-	public static boolean confTableEnabled;
+	public static final ForgeConfigSpec.BooleanValue ENABLE_TABLES;
 	public static boolean confTableUseRecipes;
 	
-	public static boolean confCompressorEnabled;
+	public static final ForgeConfigSpec.BooleanValue ENABLE_COMPRESSOR;
 	public static int confCompressorRFCapacity;
 	public static int confCompressorRFRate;
 	public static boolean confCompressorRenderer;
 	
-	public static boolean confEnderEnabled;
+	public static final ForgeConfigSpec.BooleanValue ENABLE_ENDER_CRAFTER;
 	public static int confEnderTimeRequired;
 	public static float confEnderAlternatorEff;
 	
@@ -74,6 +67,27 @@ public class ModConfigs {
 				.comment("How much FE/t the Crafting Core should use when crafting by default.")
 				.translation("configGui.extendedcrafting.crafting_core_power_rate")
 				.defineInRange("powerRate", 500, 0, Integer.MAX_VALUE);
+		common.pop();
+
+		common.comment("Settings for the Extended Crafting Tables.").push("Table Crafting");
+		ENABLE_TABLES = common
+				.comment("Should the Extended Crafting Tables be enabled?")
+				.translation("configGui.extendedcrafting.enable_tables")
+				.define("enabled", true);
+		common.pop();
+
+		common.comment("Settings for the Quantum Compressor.").push("Quantum Compression");
+		ENABLE_COMPRESSOR = common
+				.comment("Should the Quantum Compressor be enabled?")
+				.translation("configGui.extendedcrafting.enable_compressor")
+				.define("enabled", true);
+		common.pop();
+
+		common.comment("Settings for the Ender Crafter.").push("Ender Crafting");
+		ENABLE_ENDER_CRAFTER = common
+				.comment("Should the Ender Crafter be enabled?")
+				.translation("configGui.extendedcrafting.enable_ender_crafter")
+				.define("enabled", true);
 		common.pop();
 
 		COMMON = common.build();

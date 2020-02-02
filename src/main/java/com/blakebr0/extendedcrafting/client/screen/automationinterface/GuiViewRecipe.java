@@ -6,10 +6,10 @@ import com.blakebr0.cucumber.gui.button.GuiButtonArrow;
 import com.blakebr0.cucumber.helper.RenderHelper;
 import com.blakebr0.cucumber.util.Utils;
 import com.blakebr0.extendedcrafting.container.automationinterface.ContainerViewRecipe;
-import com.blakebr0.extendedcrafting.client.screen.GuiAdvancedTable;
-import com.blakebr0.extendedcrafting.client.screen.GuiBasicTable;
-import com.blakebr0.extendedcrafting.client.screen.GuiEliteTable;
-import com.blakebr0.extendedcrafting.client.screen.GuiUltimateTable;
+import com.blakebr0.extendedcrafting.client.screen.AdvancedTableScreen;
+import com.blakebr0.extendedcrafting.client.screen.BasicTableScreen;
+import com.blakebr0.extendedcrafting.client.screen.EliteTableScreen;
+import com.blakebr0.extendedcrafting.client.screen.UltimateTableScreen;
 import com.blakebr0.extendedcrafting.lib.ViewRecipeInfo;
 
 import net.minecraft.client.Minecraft;
@@ -37,15 +37,15 @@ public class GuiViewRecipe extends GuiContainer {
 		
 		switch (width) {
 		case 3:
-			this.grid = GuiBasicTable.GUI; break;
+			this.grid = BasicTableScreen.BACKGROUND; break;
 		case 5:
-			this.grid = GuiAdvancedTable.GUI; break;
+			this.grid = AdvancedTableScreen.BACKGROUND; break;
 		case 7:
-			this.grid = GuiEliteTable.GUI; break;
+			this.grid = EliteTableScreen.BACKGROUND; break;
 		case 9:
-			this.grid = GuiUltimateTable.GUI; break;
+			this.grid = UltimateTableScreen.BACKGROUND; break;
 		default:
-			this.grid = GuiBasicTable.GUI; break;
+			this.grid = BasicTableScreen.BACKGROUND; break;
 		}
 	}
 	
@@ -124,7 +124,7 @@ public class GuiViewRecipe extends GuiContainer {
 		int x = (this.width - this.xSize) / 2;
 		int y = (this.height - this.ySize) / 2;
 		
-		if (this.grid == GuiUltimateTable.GUI) {
+		if (this.grid == UltimateTableScreen.BACKGROUND) {
 			RenderHelper.drawTexturedModelRect(x, y, 0, 0, this.xSize, this.ySize, 512, 512);
 		} else {
 			this.drawTexturedModalRect(x, y, 0, 0, this.xSize, this.ySize);

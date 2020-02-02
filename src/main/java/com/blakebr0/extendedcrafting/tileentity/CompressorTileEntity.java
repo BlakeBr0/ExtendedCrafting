@@ -8,7 +8,7 @@ import com.blakebr0.cucumber.tileentity.BaseInventoryTileEntity;
 import com.blakebr0.extendedcrafting.config.ModConfigs;
 import com.blakebr0.extendedcrafting.container.CompressorContainer;
 import com.blakebr0.extendedcrafting.crafting.ExtendedRecipeManager;
-import com.blakebr0.extendedcrafting.crafting.SpecialRecipeTypes;
+import com.blakebr0.extendedcrafting.api.crafting.RecipeTypes;
 import com.blakebr0.extendedcrafting.crafting.recipe.CompressorRecipe;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
@@ -100,7 +100,7 @@ public class CompressorTileEntity extends BaseInventoryTileEntity implements ITi
 			this.recipeInventory.setStackInSlot(1, catalyst);
 
 			if (this.recipe == null || this.recipe.matches(this.recipeInventory)) {
-				this.recipe = (CompressorRecipe) ExtendedRecipeManager.getInstance().getRecipe(SpecialRecipeTypes.COMPRESSOR, this.recipeInventory);
+				this.recipe = (CompressorRecipe) ExtendedRecipeManager.getInstance().getRecipe(RecipeTypes.COMPRESSOR, this.recipeInventory);
 			}
 
 			if (!input.isEmpty()) {

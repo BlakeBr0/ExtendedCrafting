@@ -18,6 +18,7 @@ import java.util.function.Supplier;
 import static com.blakebr0.extendedcrafting.ExtendedCrafting.ITEM_GROUP;
 
 public class ModItems {
+	public static final List<Supplier<? extends Item>> BLOCK_ENTRIES = new ArrayList<>();
 	public static final List<Supplier<? extends Item>> ENTRIES = new ArrayList<>();
 
 	public static final RegistryObject<BaseItem> LUMINESSENCE = register("luminessence");
@@ -61,7 +62,7 @@ public class ModItems {
 	public static ItemStack itemEmeraldNugget;
 	public static ItemStack itemNetherStarNugget;
 
-	public static ItemHandheldTable itemHandheldTable = new ItemHandheldTable();
+	public static HandheldTableItem itemHandheldTable = new HandheldTableItem(p -> p.group(ITEM_GROUP));
 	
 	public static ItemRecipeMaker itemRecipeMaker = new ItemRecipeMaker();
 
@@ -73,6 +74,7 @@ public class ModItems {
 	public void onRegisterItems(RegistryEvent.Register<Item> event) {
 		IForgeRegistry<Item> registry = event.getRegistry();
 
+		BLOCK_ENTRIES.stream().map(Supplier::get).forEach(registry::register);
 		ENTRIES.stream().map(Supplier::get).forEach(registry::register);
 	}
 

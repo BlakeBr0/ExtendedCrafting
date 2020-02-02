@@ -31,13 +31,13 @@ public class CompressorContainer extends Container {
 		this.addSlot(new SlotItemHandler(inventory, 1, 65, 48));
 		this.addSlot(new SlotItemHandler(inventory, 2, 38, 48)); // slot single
 
-		for (int i = 0; i < 3; ++i) {
-			for (int j = 0; j < 9; ++j) {
+		for (int i = 0; i < 3; i++) {
+			for (int j = 0; j < 9; j++) {
 				this.addSlot(new Slot(playerInventory, j + i * 9 + 9, 8 + j * 18, 112 + i * 18));
 			}
 		}
 
-		for (int i = 0; i < 9; ++i) {
+		for (int i = 0; i < 9; i++) {
 			this.addSlot(new Slot(playerInventory, i, 8 + i * 18, 170));
 		}
 

@@ -1,21 +1,23 @@
 package com.blakebr0.extendedcrafting.crafting.recipe;
 
 import com.blakebr0.cucumber.crafting.ISpecialRecipe;
-import com.blakebr0.cucumber.crafting.ISpecialRecipeSerializer;
-import com.blakebr0.cucumber.crafting.ISpecialRecipeType;
+import com.blakebr0.extendedcrafting.api.crafting.RecipeTypes;
 import com.blakebr0.extendedcrafting.config.ModConfigs;
 import com.blakebr0.extendedcrafting.crafting.ModRecipeSerializers;
-import com.blakebr0.extendedcrafting.crafting.SpecialRecipeTypes;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.IRecipeSerializer;
+import net.minecraft.item.crafting.IRecipeType;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.item.crafting.ShapedRecipe;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.JSONUtils;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.items.IItemHandler;
+import net.minecraftforge.registries.ForgeRegistryEntry;
 
 public class CombinationRecipe implements ISpecialRecipe {
 	private final ResourceLocation recipeId;
@@ -37,7 +39,12 @@ public class CombinationRecipe implements ISpecialRecipe {
 	}
 
 	@Override
-	public ItemStack getOutput() {
+	public boolean canFit(int width, int height) {
+		return true;
+	}
+
+	@Override
+	public ItemStack getRecipeOutput() {
 		return this.output;
 	}
 
@@ -52,13 +59,18 @@ public class CombinationRecipe implements ISpecialRecipe {
 	}
 
 	@Override
-	public ISpecialRecipeSerializer<?> getSerializer() {
-		return ModRecipeSerializers.SPECIAL_COMBINATION;
+	public IRecipeSerializer<?> getSerializer() {
+		return ModRecipeSerializers.COMBINATION;
 	}
 
 	@Override
-	public ISpecialRecipeType<?> getType() {
-		return SpecialRecipeTypes.COMBINATION;
+	public IRecipeType<?> getType() {
+		return RecipeTypes.COMBINATION;
+	}
+
+	@Override
+	public ItemStack getCraftingResult(IItemHandler inventory) {
+		return this.output.copy();
 	}
 
 	public int getPowerCost() {
@@ -69,7 +81,7 @@ public class CombinationRecipe implements ISpecialRecipe {
 		return this.powerRate;
 	}
 
-	public static class Serializer implements ISpecialRecipeSerializer<CombinationRecipe> {
+	public static class Serializer extends ForgeRegistryEntry<IRecipeSerializer<?>> implements IRecipeSerializer<CombinationRecipe> {
 		@Override
 		public CombinationRecipe read(ResourceLocation recipeId, JsonObject json) {
 			JsonArray ingredients = JSONUtils.getJsonArray(json, "ingredients");

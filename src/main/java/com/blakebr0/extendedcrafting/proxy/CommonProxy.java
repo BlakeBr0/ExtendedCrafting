@@ -31,15 +31,6 @@ import net.minecraftforge.fml.common.network.NetworkRegistry;
 public class CommonProxy {
 
 	public void preInit(FMLPreInitializationEvent event) {
-		ModConfigs.init(new File(event.getModConfigurationDirectory(), ExtendedCrafting.MOD_ID + ".cfg"));
-		MinecraftForge.EVENT_BUS.register(new ModConfigs());
-
-		ModBlocks.init();
-		ModItems.init();
-		ModTileEntities.init();
-
-		MinecraftForge.EVENT_BUS.register(ExtendedCrafting.REGISTRY);
-		MinecraftForge.EVENT_BUS.register(this);
 		
 		if (Loader.isModLoaded("crafttweaker")) {
 			CraftTweakerAPI.registerClass(TableCrafting.class);
@@ -51,9 +42,6 @@ public class CommonProxy {
 
 	public void init(FMLInitializationEvent event) {		
 		NetworkHandler.init();
-		NetworkRegistry.INSTANCE.registerGuiHandler(ExtendedCrafting.instance, new GuiHandler());
-		FMLInterModComms.sendMessage("waila", "register", "com.blakebr0.extendedcrafting.compat.WailaDataProvider.callbackRegister");
-		//ModRecipes.init();
 /*		CombinationRecipeManager.getInstance().addRecipe(new ItemStack(Items.DIAMOND), 50000, 100,
 				new ItemStack(Items.COAL), new ItemStack(Items.STICK), new ItemStack(Items.LAVA_BUCKET), "ingotIron",
 				new ItemStack(Items.WHEAT), new ItemStack(Items.WHEAT), new ItemStack(Items.WHEAT),
@@ -93,13 +81,4 @@ public class CommonProxy {
 		CompressorRecipeManager.getInstance().addRecipe(new ItemStack(Blocks.ACACIA_FENCE), "sand", 50, ModItems.itemMaterial.itemUltimateCatalyst, false, 1000000);
 */	} // TODO: remember to remove this LUL
 
-	public void postInit(FMLPostInitializationEvent event) {
-		ModRecipes.post();
-		ModGuide.setup();
-	}
-	
-	@SubscribeEvent
-	public void registerRecipes(RegistryEvent.Register<IRecipe> event) {
-		ModRecipes.init();
-	}
 }

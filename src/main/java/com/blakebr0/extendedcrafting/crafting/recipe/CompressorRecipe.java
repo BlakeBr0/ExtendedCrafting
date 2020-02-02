@@ -5,11 +5,12 @@ import com.blakebr0.cucumber.crafting.ISpecialRecipeSerializer;
 import com.blakebr0.cucumber.crafting.ISpecialRecipeType;
 import com.blakebr0.extendedcrafting.config.ModConfigs;
 import com.blakebr0.extendedcrafting.crafting.ModRecipeSerializers;
-import com.blakebr0.extendedcrafting.crafting.SpecialRecipeTypes;
-import com.google.gson.JsonArray;
+import com.blakebr0.extendedcrafting.api.crafting.RecipeTypes;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.IRecipeSerializer;
+import net.minecraft.item.crafting.IRecipeType;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.item.crafting.ShapedRecipe;
 import net.minecraft.network.PacketBuffer;
@@ -17,6 +18,7 @@ import net.minecraft.util.JSONUtils;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.items.IItemHandler;
+import net.minecraftforge.registries.ForgeRegistryEntry;
 
 public class CompressorRecipe implements ISpecialRecipe {
 	private final ResourceLocation recipeId;
@@ -42,7 +44,12 @@ public class CompressorRecipe implements ISpecialRecipe {
 	}
 
 	@Override
-	public ItemStack getOutput() {
+	public boolean canFit(int width, int height) {
+		return true;
+	}
+
+	@Override
+	public ItemStack getRecipeOutput() {
 		return this.output;
 	}
 
@@ -57,13 +64,18 @@ public class CompressorRecipe implements ISpecialRecipe {
 	}
 
 	@Override
-	public ISpecialRecipeSerializer<?> getSerializer() {
-		return ModRecipeSerializers.SPECIAL_COMPRESSOR;
+	public IRecipeSerializer<?> getSerializer() {
+		return ModRecipeSerializers.COMPRESSOR;
 	}
 
 	@Override
-	public ISpecialRecipeType<?> getType() {
-		return SpecialRecipeTypes.COMPRESSOR;
+	public IRecipeType<?> getType() {
+		return RecipeTypes.COMPRESSOR;
+	}
+
+	@Override
+	public ItemStack getCraftingResult(IItemHandler inventory) {
+		return this.output.copy();
 	}
 
 	@Override
@@ -89,7 +101,7 @@ public class CompressorRecipe implements ISpecialRecipe {
 		return this.powerRate;
 	}
 
-	public static class Serializer implements ISpecialRecipeSerializer<CompressorRecipe> {
+	public static class Serializer extends ForgeRegistryEntry<IRecipeSerializer<?>> implements IRecipeSerializer<CompressorRecipe> {
 		@Override
 		public CompressorRecipe read(ResourceLocation recipeId, JsonObject json) {
 			Ingredient input = Ingredient.deserialize(json.getAsJsonObject("ingredient"));

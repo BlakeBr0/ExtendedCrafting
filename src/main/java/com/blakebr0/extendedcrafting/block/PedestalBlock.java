@@ -1,105 +1,92 @@
 package com.blakebr0.extendedcrafting.block;
 
 import com.blakebr0.cucumber.block.BaseTileEntityBlock;
-import com.blakebr0.cucumber.block.BlockBase;
 import com.blakebr0.cucumber.helper.StackHelper;
 import com.blakebr0.cucumber.iface.IEnableable;
+import com.blakebr0.cucumber.inventory.BaseItemStackHandler;
+import com.blakebr0.cucumber.util.VoxelShapeBuilder;
 import com.blakebr0.extendedcrafting.config.ModConfigs;
 import com.blakebr0.extendedcrafting.tileentity.PedestalTileEntity;
-
+import net.minecraft.block.BlockState;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
-import net.minecraft.block.state.BlockFaceShape;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.item.EntityItem;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.SoundEvents;
+import net.minecraft.entity.item.ItemEntity;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
+import net.minecraft.util.ActionResultType;
+import net.minecraft.util.Hand;
 import net.minecraft.util.SoundCategory;
+import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IBlockAccess;
+import net.minecraft.util.math.BlockRayTraceResult;
+import net.minecraft.util.math.shapes.ISelectionContext;
+import net.minecraft.util.math.shapes.VoxelShape;
+import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 
 public class PedestalBlock extends BaseTileEntityBlock implements IEnableable {
-
-	public static final AxisAlignedBB AABB = new AxisAlignedBB(0.0625D, 0.0D, 0.0625D, 0.9375D, 1.0D, 0.9375D);
+	public static final VoxelShape PEDESTAL_SHAPE = new VoxelShapeBuilder()
+			.cuboid(15.0, 2.0, 15.0, 1.0, 0.0, 1.0)
+			.cuboid(13.0, 14.0, 13.0, 3.0, 2.0, 3.0)
+			.cuboid(14.0, 16.0, 14.0, 2.0, 14.0, 2.0)
+			.build();
 
 	public PedestalBlock() {
-		super("ec.pedestal", Material.IRON, SoundType.METAL, 5.0F, 10.0F);
+		super(Material.IRON, SoundType.METAL, 5.0F, 10.0F);
 	}
 
 	@Override
-	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
-		ItemStack held = player.getHeldItem(hand);
-		if (!world.isRemote) {
-			PedestalTileEntity tile = (PedestalTileEntity) world.getTileEntity(pos);
-			if (tile != null) {
-				ItemStack stack = tile.getInventory().getStackInSlot(0);
-				if (stack.isEmpty()) {
-					if (!held.isEmpty()) {
-						tile.getInventory().setStackInSlot(0, StackHelper.withSize(held.copy(), 1, false));
-						player.setHeldItem(hand, StackHelper.decrease(held, 1, false));
-						world.playSound(null, pos, SoundEvents.ENTITY_ITEM_PICKUP, SoundCategory.BLOCKS, 1.0F, 1.0F);
-					}
-				} else {
-					EntityItem item = new EntityItem(world, player.posX, player.posY, player.posZ, stack);
-					item.setNoPickupDelay();
-					world.spawnEntity(item);
-					tile.getInventory().setStackInSlot(0, ItemStack.EMPTY);
-				}
-			}
-		}
-		
-		return true;
-	}
-
-	@Override
-	public void breakBlock(World world, BlockPos pos, IBlockState state) {
-		PedestalTileEntity tile = (PedestalTileEntity) world.getTileEntity(pos);
-		if (tile != null) {
-			ItemStack stack = tile.getInventory().getStackInSlot(0);
-			this.spawnAsEntity(world, pos, stack);
-		}
-		
-		super.breakBlock(world, pos, state);
-	}
-
-	@Override
-	public TileEntity createNewTileEntity(World world, int meta) {
+	public TileEntity createTileEntity(BlockState state, IBlockReader world) {
 		return new PedestalTileEntity();
 	}
 
 	@Override
-	public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos) {
-		return AABB;
+	public ActionResultType onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult trace) {
+		TileEntity tile = world.getTileEntity(pos);
+		if (tile instanceof PedestalTileEntity) {
+			PedestalTileEntity pedestal = (PedestalTileEntity) tile;
+			BaseItemStackHandler inventory = pedestal.getInventory();
+			ItemStack input = inventory.getStackInSlot(0);
+			ItemStack held = player.getHeldItem(hand);
+			if (input.isEmpty() && !held.isEmpty()) {
+				inventory.setStackInSlot(0, StackHelper.withSize(held.copy(), 1, false));
+				player.setHeldItem(hand, StackHelper.decrease(held, 1, false));
+				world.playSound(null, pos, SoundEvents.ENTITY_ITEM_PICKUP, SoundCategory.BLOCKS, 1.0F, 1.0F);
+			} else if (!input.isEmpty()) {
+				BlockPos playerPos = player.getPosition();
+				ItemEntity item = new ItemEntity(world, playerPos.getX(), playerPos.getY(), playerPos.getZ(), input);
+				item.setNoPickupDelay();
+				world.addEntity(item);
+				inventory.setStackInSlot(0, ItemStack.EMPTY);
+			}
+		}
+
+		return ActionResultType.SUCCESS;
 	}
 
 	@Override
-	public AxisAlignedBB getCollisionBoundingBox(IBlockState state, IBlockAccess world, BlockPos pos) {
-		return FULL_BLOCK_AABB;
-	}
-	
-	@Override
-	public BlockFaceShape getBlockFaceShape(IBlockAccess world, IBlockState state, BlockPos pos, EnumFacing facing) {
-		return facing == EnumFacing.UP ? BlockFaceShape.SOLID : BlockFaceShape.UNDEFINED;
+	public void onReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean isMoving) {
+		if (state.getBlock() != newState.getBlock()) {
+			TileEntity tile = world.getTileEntity(pos);
+			if (tile instanceof PedestalTileEntity) {
+				PedestalTileEntity pedestal = (PedestalTileEntity) tile;
+				InventoryHelper.dropItems(world, pos, pedestal.getInventory().getStacks());
+			}
+		}
+
+		super.onReplaced(state, world, pos, newState, isMoving);
 	}
 
 	@Override
-	public boolean isOpaqueCube(IBlockState state) {
-		return false;
-	}
-	
-	@Override
-	public boolean isFullCube(IBlockState state) {
-		return false;
+	public VoxelShape getShape(BlockState state, IBlockReader world, BlockPos pos, ISelectionContext context) {
+		return PEDESTAL_SHAPE;
 	}
 
 	@Override
 	public boolean isEnabled() {
-		return ModConfigs.confCraftingCoreEnabled;
+		return ModConfigs.ENABLE_CRAFTING_CORE.get();
 	}
 }

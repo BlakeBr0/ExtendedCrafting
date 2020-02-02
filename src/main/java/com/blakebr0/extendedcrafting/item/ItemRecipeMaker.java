@@ -16,7 +16,7 @@ import com.blakebr0.extendedcrafting.compat.crafttweaker.CraftTweakerUtils;
 import com.blakebr0.extendedcrafting.compat.jei.CompatJEI;
 import com.blakebr0.extendedcrafting.config.ModConfigs;
 import com.blakebr0.extendedcrafting.lib.IExtendedTable;
-import com.blakebr0.extendedcrafting.tileentity.TileEnderCrafter;
+import com.blakebr0.extendedcrafting.tileentity.EnderCrafterTileEntity;
 
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.creativetab.CreativeTabs;
@@ -111,7 +111,7 @@ public class ItemRecipeMaker extends ItemBase implements IEnableable {
 
 	private void setClipboard(TileEntity table, ItemStack stack) {
 		if (Desktop.isDesktopSupported()) {
-			String string = "mods.extendedcrafting." + (table instanceof TileEnderCrafter ? "EnderCrafting" : "TableCrafting");
+			String string = "mods.extendedcrafting." + (table instanceof EnderCrafterTileEntity ? "EnderCrafting" : "TableCrafting");
 			
 			if (isShapeless(stack)) {
 				string += ".addShapeless(0, <>, [" + makeItemArrayShapeless((IExtendedTable) table);

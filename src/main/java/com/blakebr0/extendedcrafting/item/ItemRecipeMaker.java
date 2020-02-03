@@ -13,7 +13,7 @@ import com.blakebr0.cucumber.item.ItemBase;
 import com.blakebr0.cucumber.util.Utils;
 import com.blakebr0.extendedcrafting.ExtendedCrafting;
 import com.blakebr0.extendedcrafting.compat.crafttweaker.CraftTweakerUtils;
-import com.blakebr0.extendedcrafting.compat.jei.CompatJEI;
+import com.blakebr0.extendedcrafting.compat.jei.JeiCompat;
 import com.blakebr0.extendedcrafting.config.ModConfigs;
 import com.blakebr0.extendedcrafting.lib.IExtendedTable;
 import com.blakebr0.extendedcrafting.tileentity.EnderCrafterTileEntity;
@@ -47,7 +47,7 @@ public class ItemRecipeMaker extends ItemBase implements IEnableable {
 		this.setHasSubtypes(true);
 		
 		if (Loader.isModLoaded("jei") && this.isEnabled()) {
-			CompatJEI.items.add(this);
+			JeiCompat.items.add(this);
 		}
 	}
 	

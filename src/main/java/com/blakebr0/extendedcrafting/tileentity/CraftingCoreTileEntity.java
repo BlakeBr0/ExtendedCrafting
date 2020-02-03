@@ -1,41 +1,35 @@
 package com.blakebr0.extendedcrafting.tileentity;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-
 import com.blakebr0.cucumber.energy.CustomEnergyStorage;
-import com.blakebr0.cucumber.energy.EnergyStorageCustom;
 import com.blakebr0.cucumber.helper.StackHelper;
 import com.blakebr0.cucumber.inventory.BaseItemStackHandler;
+import com.blakebr0.cucumber.lib.Localizable;
 import com.blakebr0.cucumber.tileentity.BaseInventoryTileEntity;
-import com.blakebr0.cucumber.util.VanillaPacketDispatcher;
 import com.blakebr0.extendedcrafting.block.PedestalBlock;
 import com.blakebr0.extendedcrafting.config.ModConfigs;
+import com.blakebr0.extendedcrafting.container.CraftingCoreContainer;
 import com.blakebr0.extendedcrafting.crafting.recipe.CombinationRecipe;
-import com.blakebr0.extendedcrafting.crafting.CombinationRecipeManager;
-
 import net.minecraft.block.Block;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.network.NetworkManager;
-import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumParticleTypes;
-import net.minecraft.util.ITickable;
+import net.minecraft.util.IIntArray;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.energy.CapabilityEnergy;
-import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandlerModifiable;
-import net.minecraftforge.items.ItemStackHandler;
 import net.minecraftforge.oredict.OreDictionary;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 public class CraftingCoreTileEntity extends BaseInventoryTileEntity implements ITickableTileEntity, INamedContainerProvider {
 	private final BaseItemStackHandler inventory = new BaseItemStackHandler(1);
@@ -43,6 +37,27 @@ public class CraftingCoreTileEntity extends BaseInventoryTileEntity implements I
 	private int progress;
 	private int oldEnergy;
 	private int pedestalCount;
+	protected IIntArray data = new IIntArray() {
+		@Override
+		public int get(int i) {
+			switch (i) {
+				case 0:
+					return 0;
+				default:
+					return 0;
+			}
+		}
+
+		@Override
+		public void set(int i, int value) {
+
+		}
+
+		@Override
+		public int size() {
+			return 0;
+		}
+	};
 
 	public CraftingCoreTileEntity() {
 		super(ModTileEntities.CRAFTING_CORE.get());
@@ -56,7 +71,6 @@ public class CraftingCoreTileEntity extends BaseInventoryTileEntity implements I
 	@Override
 	public void read(CompoundNBT tag) {
 		super.read(tag);
-		this.inventory.deserializeNBT(tag);
 		this.progress = tag.getInt("Progress");
 		this.energy.setEnergy(tag.getInt("Energy"));
 	}
@@ -75,8 +89,8 @@ public class CraftingCoreTileEntity extends BaseInventoryTileEntity implements I
 		boolean mark = false;
 
 		List<BlockPos> pedestalLocations = this.locatePedestals();
-
-		if (this.getWorld() != null && !this.getWorld().isRemote()) {
+		World world = this.getWorld();
+		if (world != null && !world.isRemote()) {
 			CombinationRecipe recipe = this.getRecipe();
 			if (recipe != null) {
 				if (this.getEnergy().getEnergyStored() > 0) {
@@ -87,14 +101,14 @@ public class CraftingCoreTileEntity extends BaseInventoryTileEntity implements I
 							IItemHandlerModifiable inventory = pedestal.getInventory();
 							inventory.setStackInSlot(0, StackHelper.decrease(inventory.getStackInSlot(0), 1, true));
 							pedestal.markDirty();
-							((WorldServer) this.getWorld()).spawnParticle(EnumParticleTypes.SMOKE_NORMAL, false, pedestal.getPos().getX() + 0.5D, pedestal.getPos().getY() + 1.1D, pedestal.getPos().getZ() + 0.5D, 20, 0, 0, 0, 0.1D);
+							((WorldServer) world).spawnParticle(EnumParticleTypes.SMOKE_NORMAL, false, pedestal.getPos().getX() + 0.5D, pedestal.getPos().getY() + 1.1D, pedestal.getPos().getZ() + 0.5D, 20, 0, 0, 0, 0.1D);
 						}
-						((WorldServer) this.getWorld()).spawnParticle(EnumParticleTypes.END_ROD, false, this.getPos().getX() + 0.5D, this.getPos().getY() + 1.1D, this.getPos().getZ() + 0.5D, 50, 0, 0, 0, 0.1D);
+						((WorldServer) world).spawnParticle(EnumParticleTypes.END_ROD, false, this.getPos().getX() + 0.5D, this.getPos().getY() + 1.1D, this.getPos().getZ() + 0.5D, 50, 0, 0, 0, 0.1D);
 						this.getInventory().setStackInSlot(0, recipe.getOutput().copy());
 						this.progress = 0;
 						mark = true;
 					} else {
-						((WorldServer) this.getWorld()).spawnParticle(EnumParticleTypes.SPELL, false, this.getPos().getX() + 0.5D, this.getPos().getY() + 1.1D, this.getPos().getZ() + 0.5D, 2, 0, 0, 0, 0.1D);
+						((WorldServer) world).spawnParticle(EnumParticleTypes.SPELL, false, this.getPos().getX() + 0.5D, this.getPos().getY() + 1.1D, this.getPos().getZ() + 0.5D, 2, 0, 0, 0, 0.1D);
 					}
 				}
 			} else {
@@ -213,5 +227,15 @@ public class CraftingCoreTileEntity extends BaseInventoryTileEntity implements I
 
 	public int getPedestalCount() {
 		return this.pedestalCount;
+	}
+
+	@Override
+	public ITextComponent getDisplayName() {
+		return Localizable.of("container.extendedcrafting.crafting_core").build();
+	}
+
+	@Override
+	public Container createMenu(int windowId, PlayerInventory playerInventory, PlayerEntity player) {
+		return CraftingCoreContainer.create(windowId, playerInventory, this::isUsableByPlayer, this.data);
 	}
 }

@@ -1,6 +1,7 @@
 package com.blakebr0.extendedcrafting.crafting.recipe;
 
 import com.blakebr0.cucumber.crafting.ISpecialRecipe;
+import com.blakebr0.extendedcrafting.api.crafting.ICombinationRecipe;
 import com.blakebr0.extendedcrafting.api.crafting.RecipeTypes;
 import com.blakebr0.extendedcrafting.config.ModConfigs;
 import com.blakebr0.extendedcrafting.crafting.ModRecipeSerializers;
@@ -19,7 +20,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.registries.ForgeRegistryEntry;
 
-public class CombinationRecipe implements ISpecialRecipe {
+public class CombinationRecipe implements ISpecialRecipe, ICombinationRecipe {
 	private final ResourceLocation recipeId;
 	private final ItemStack output;
 	private final NonNullList<Ingredient> inputs;
@@ -73,10 +74,12 @@ public class CombinationRecipe implements ISpecialRecipe {
 		return this.output.copy();
 	}
 
+	@Override
 	public int getPowerCost() {
 		return this.powerCost;
 	}
 
+	@Override
 	public int getPowerRate() {
 		return this.powerRate;
 	}

@@ -1,72 +1,60 @@
 package com.blakebr0.extendedcrafting.container;
 
-import com.blakebr0.extendedcrafting.crafting.table.TableCraftResult;
-import com.blakebr0.extendedcrafting.crafting.table.TableCrafting;
-import com.blakebr0.extendedcrafting.crafting.table.TableRecipeManager;
-import com.blakebr0.extendedcrafting.crafting.table.TableResultHandler;
-import com.blakebr0.extendedcrafting.tileentity.TileAdvancedCraftingTable;
-
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.InventoryPlayer;
+import com.blakebr0.extendedcrafting.container.slot.TableOutputSlot;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.InventoryCrafting;
-import net.minecraft.inventory.Slot;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.items.IItemHandler;
+import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.items.ItemStackHandler;
+import net.minecraftforge.items.SlotItemHandler;
 
 import java.util.function.Function;
 
 public class AdvancedTableContainer extends Container {
-
-	public InventoryCrafting matrix;
-	public IInventory result;
-	public TileAdvancedCraftingTable tile;
+	private final Function<PlayerEntity, Boolean> isUsableByPlayer;
+	private final IItemHandlerModifiable inventory;
 
 	private AdvancedTableContainer(ContainerType<?> type, int id, PlayerInventory playerInventory) {
-		this(type, id, playerInventory, p -> false, new ItemStackHandler(9));
+		this(type, id, playerInventory, p -> false, new ItemStackHandler(25));
 	}
 
-	private AdvancedTableContainer(ContainerType<?> type, int id, PlayerInventory playerInventory, Function<PlayerEntity, Boolean> isUsableByPlayer, IItemHandler inventory) {
+	private AdvancedTableContainer(ContainerType<?> type, int id, PlayerInventory playerInventory, Function<PlayerEntity, Boolean> isUsableByPlayer, IItemHandlerModifiable inventory) {
 		super(type, id);
-		this.tile = tile;
-		this.matrix = new TableCrafting(this, tile);
-		this.result = new TableCraftResult(tile);
-		
-		this.addSlot(new TableResultHandler(this.matrix, this.result, tile.getWorld(), 0, 142, 53));
+		this.isUsableByPlayer = isUsableByPlayer;
+		this.inventory = inventory;
+
+		this.addSlot(new TableOutputSlot(this, inventory, 0, 142, 53));
 		
 		int wy, ex;
 		for (wy = 0; wy < 5; wy++) {
 			for (ex = 0; ex < 5; ex++) {
-				this.addSlot(new Slot(this.matrix, ex + wy * 5, 14 + ex * 18, 18 + wy * 18));
+				this.addSlot(new SlotItemHandler(inventory, ex + wy * 5, 14 + ex * 18, 18 + wy * 18));
 			}
 		}
 
 		for (wy = 0; wy < 3; wy++) {
 			for (ex = 0; ex < 9; ex++) {
-				this.addSlot(new Slot(player, ex + wy * 9 + 9, 8 + ex * 18, 124 + wy * 18));
+				this.addSlot(new Slot(playerInventory, ex + wy * 9 + 9, 8 + ex * 18, 124 + wy * 18));
 			}
 		}
 
 		for (ex = 0; ex < 9; ex++) {
-			this.addSlot(new Slot(player, ex, 8 + ex * 18, 182));
+			this.addSlot(new Slot(playerInventory, ex, 8 + ex * 18, 182));
 		}
 	}
 
 	@Override
 	public void onCraftMatrixChanged(IInventory matrix) {
-		this.result.setInventorySlotContents(0, TableRecipeManager.getInstance().findMatchingRecipe(this.matrix, this.tile.getWorld()));
+
 	}
 
 	@Override
 	public boolean canInteractWith(PlayerEntity player) {
-		return this.tile.isUsableByPlayer(player);
+		return this.isUsableByPlayer.apply(player);
 	}
 
 	@Override
@@ -103,17 +91,16 @@ public class AdvancedTableContainer extends Container {
 			}
 
 			slot.onTake(player, itemstack1);
-			this.onCraftMatrixChanged(this.matrix);
 		}
 
 		return itemstack;
 	}
 
 	public static AdvancedTableContainer create(int windowId, PlayerInventory playerInventory) {
-		return new AdvancedTableContainer(ModContainerTypes.BASIC_TABLE.get(), windowId, playerInventory);
+		return new AdvancedTableContainer(ModContainerTypes.ADVANCED_TABLE.get(), windowId, playerInventory);
 	}
 
-	public static AdvancedTableContainer create(int windowId, PlayerInventory playerInventory, Function<PlayerEntity, Boolean> isUsableByPlayer, IItemHandler inventory) {
-		return new AdvancedTableContainer(ModContainerTypes.COMPRESSOR.get(), windowId, playerInventory, isUsableByPlayer, inventory);
+	public static AdvancedTableContainer create(int windowId, PlayerInventory playerInventory, Function<PlayerEntity, Boolean> isUsableByPlayer, IItemHandlerModifiable inventory) {
+		return new AdvancedTableContainer(ModContainerTypes.ADVANCED_TABLE.get(), windowId, playerInventory, isUsableByPlayer, inventory);
 	}
 }

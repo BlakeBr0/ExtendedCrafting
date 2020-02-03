@@ -49,6 +49,7 @@ public class ExtendedCrafting {
 	public void onClientSetup(FMLClientSetupEvent event) {
 		ModelHandler.onClientSetup();
 
+		ModTileEntities.onClientSetup();
 		ModContainerTypes.onClientSetup();
 	}
 }

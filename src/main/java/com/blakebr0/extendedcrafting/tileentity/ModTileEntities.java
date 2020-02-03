@@ -2,11 +2,17 @@ package com.blakebr0.extendedcrafting.tileentity;
 
 import com.blakebr0.extendedcrafting.ExtendedCrafting;
 import com.blakebr0.extendedcrafting.block.ModBlocks;
+import com.blakebr0.extendedcrafting.client.tesr.PedestalRenderer;
+import com.blakebr0.extendedcrafting.client.tesr.CompressorRenderer;
+import com.blakebr0.extendedcrafting.client.tesr.CraftingCoreRenderer;
 import net.minecraft.block.Block;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.RegistryObject;
+import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.ArrayList;
@@ -24,6 +30,13 @@ public class ModTileEntities {
 	public static final RegistryObject<TileEntityType<UltimateTableTileEntity>> ULTIMATE_TABLE = register("ultimate_table", UltimateTableTileEntity::new, () -> new Block[] { ModBlocks.ULTIMATE_TABLE.get() });
 	public static final RegistryObject<TileEntityType<CompressorTileEntity>> COMPRESSOR = register("compressor", CompressorTileEntity::new, () -> new Block[] { ModBlocks.COMPRESSOR.get() });
 	public static final RegistryObject<TileEntityType<EnderCrafterTileEntity>> ENDER_CRAFTER = register("ender_crafter", EnderCrafterTileEntity::new,  () -> new Block[] { ModBlocks.ENDER_CRAFTER.get() });
+
+	@OnlyIn(Dist.CLIENT)
+	public static void onClientSetup() {
+		ClientRegistry.bindTileEntityRenderer(PEDESTAL.get(), PedestalRenderer::new);
+		ClientRegistry.bindTileEntityRenderer(CRAFTING_CORE.get(), CraftingCoreRenderer::new);
+		ClientRegistry.bindTileEntityRenderer(COMPRESSOR.get(), CompressorRenderer::new);
+	}
 
 	private static <T extends TileEntityType<?>> RegistryObject<T> register(String name, Supplier<TileEntity> tile, Supplier<Block[]> blocks) {
 		ResourceLocation loc = new ResourceLocation(ExtendedCrafting.MOD_ID, name);

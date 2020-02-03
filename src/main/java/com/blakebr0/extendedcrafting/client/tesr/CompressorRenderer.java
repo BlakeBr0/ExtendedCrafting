@@ -6,18 +6,24 @@ import com.blakebr0.extendedcrafting.config.ModConfigs;
 import com.blakebr0.extendedcrafting.crafting.recipe.CompressorRecipe;
 import com.blakebr0.extendedcrafting.tileentity.CompressorTileEntity;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.RenderHelper;
+import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
+import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-@SideOnly(Side.CLIENT)
-public class RenderCompressor extends TileEntitySpecialRenderer<CompressorTileEntity> {
+public class CompressorRenderer extends TileEntityRenderer<CompressorTileEntity> {
+	public CompressorRenderer(TileEntityRendererDispatcher dispatcher) {
+		super(dispatcher);
+	}
 
 	@Override
 	public void render(CompressorTileEntity tile, double x, double y, double z, float partialTick, int destroyStage, float alpha) {
@@ -45,5 +51,10 @@ public class RenderCompressor extends TileEntitySpecialRenderer<CompressorTileEn
 			GlStateManager.enableLighting();
 			GlStateManager.popMatrix();
 		}
+	}
+
+	@Override
+	public void render(CompressorTileEntity compressorTileEntity, float v, MatrixStack matrixStack, IRenderTypeBuffer iRenderTypeBuffer, int i, int i1) {
+
 	}
 }

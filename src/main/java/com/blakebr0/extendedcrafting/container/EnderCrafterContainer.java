@@ -1,63 +1,61 @@
 package com.blakebr0.extendedcrafting.container;
 
-import com.blakebr0.extendedcrafting.crafting.endercrafter.EnderResultSlot;
-import com.blakebr0.extendedcrafting.crafting.table.TableCraftResult;
-import com.blakebr0.extendedcrafting.tileentity.EnderCrafterTileEntity;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.Slot;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.ContainerType;
+import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIntArray;
-import net.minecraftforge.items.IItemHandler;
+import net.minecraft.util.IntArray;
+import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.items.ItemStackHandler;
+import net.minecraftforge.items.SlotItemHandler;
 
 import java.util.function.Function;
 
 public class EnderCrafterContainer extends Container {
+	private final Function<PlayerEntity, Boolean> isUsableByPlayer;
+	private final IItemHandlerModifiable inventory;
+	private final IIntArray data;
 
-	public IInventory result;
-	public EnderCrafterTileEntity tile;
-
-	private EliteTableContainer(ContainerType<?> type, int id, PlayerInventory playerInventory) {
-		this(type, id, playerInventory, p -> false, new ItemStackHandler(9));
+	private EnderCrafterContainer(ContainerType<?> type, int id, PlayerInventory playerInventory) {
+		this(type, id, playerInventory, p -> false, new ItemStackHandler(9), new IntArray(1));
 	}
 
-	private EliteTableContainer(ContainerType<?> type, int id, PlayerInventory playerInventory, Function<PlayerEntity, Boolean> isUsableByPlayer, IItemHandler inventory) {
+	private EnderCrafterContainer(ContainerType<?> type, int id, PlayerInventory playerInventory, Function<PlayerEntity, Boolean> isUsableByPlayer, IItemHandlerModifiable inventory, IIntArray data) {
 		super(type, id);
-		this.tile = tile;
-		this.result = new TableCraftResult(tile);
-		
-		this.addSlotToContainer(new EnderResultSlot(this.result, 0, 124, 36));
+		this.isUsableByPlayer = isUsableByPlayer;
+		this.inventory = inventory;
+		this.data = data;
+
+		this.addSlot(new SlotItemHandler(inventory, 0, 124, 36)); // output slot
 		
 		int wy, ex;
 		for (wy = 0; wy < 3; wy++) {
 			for (ex = 0; ex < 3; ex++) {
-				this.addSlotToContainer(new Slot(this.tile, ex + wy * 3, 30 + ex * 18, 18 + wy * 18));
+				this.addSlot(new SlotItemHandler(inventory, ex + wy * 3, 30 + ex * 18, 18 + wy * 18));
 			}
 		}
 
 		for (wy = 0; wy < 3; wy++) {
 			for (ex = 0; ex < 9; ex++) {
-				this.addSlotToContainer(new Slot(player, ex + wy * 9 + 9, 8 + ex * 18, 88 + wy * 18));
+				this.addSlot(new Slot(playerInventory, ex + wy * 9 + 9, 8 + ex * 18, 88 + wy * 18));
 			}
 		}
 
 		for (ex = 0; ex < 9; ex++) {
-			this.addSlotToContainer(new Slot(player, ex, 8 + ex * 18, 146));
+			this.addSlot(new Slot(playerInventory, ex, 8 + ex * 18, 146));
 		}
 	}
 
 	@Override
-	public boolean canInteractWith(EntityPlayer player) {
-		return this.tile.isUsableByPlayer(player);
+	public boolean canInteractWith(PlayerEntity player) {
+		return this.isUsableByPlayer.apply(player);
 	}
 
 	@Override
-	public ItemStack transferStackInSlot(EntityPlayer player, int slotNumber) {
+	public ItemStack transferStackInSlot(PlayerEntity player, int slotNumber) {
 		ItemStack itemstack = ItemStack.EMPTY;
 		Slot slot = this.inventorySlots.get(slotNumber);
 
@@ -96,15 +94,10 @@ public class EnderCrafterContainer extends Container {
 	}
 
 	public static EnderCrafterContainer create(int windowId, PlayerInventory playerInventory) {
-		return new EnderCrafterContainer(ModContainerTypes.COMPRESSOR.get(), windowId, playerInventory);
+		return new EnderCrafterContainer(ModContainerTypes.ENDER_CRAFTER.get(), windowId, playerInventory);
 	}
 
-	public static EnderCrafterContainer create(int windowId, PlayerInventory playerInventory, Function<PlayerEntity, Boolean> isUsableByPlayer, IItemHandler inventory, IIntArray data) {
-		return new EnderCrafterContainer(ModContainerTypes.COMPRESSOR.get(), windowId, playerInventory, isUsableByPlayer, inventory, data);
-	}
-
-	@Override
-	public boolean canInteractWith(PlayerEntity p_75145_1_) {
-		return false;
+	public static EnderCrafterContainer create(int windowId, PlayerInventory playerInventory, Function<PlayerEntity, Boolean> isUsableByPlayer, IItemHandlerModifiable inventory, IIntArray data) {
+		return new EnderCrafterContainer(ModContainerTypes.ENDER_CRAFTER.get(), windowId, playerInventory, isUsableByPlayer, inventory, data);
 	}
 }

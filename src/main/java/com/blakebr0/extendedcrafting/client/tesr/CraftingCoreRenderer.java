@@ -3,19 +3,25 @@ package com.blakebr0.extendedcrafting.client.tesr;
 import com.blakebr0.extendedcrafting.block.ModBlocks;
 import com.blakebr0.extendedcrafting.tileentity.CraftingCoreTileEntity;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms.TransformType;
+import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
+import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-@SideOnly(Side.CLIENT)
-public class RenderCraftingCore extends TileEntitySpecialRenderer<CraftingCoreTileEntity> {
+public class CraftingCoreRenderer extends TileEntityRenderer<CraftingCoreTileEntity> {
+	public CraftingCoreRenderer(TileEntityRendererDispatcher dispatcher) {
+		super(dispatcher);
+	}
 
 	@Override
 	public void render(CraftingCoreTileEntity tile, double x, double y, double z, float partialTick, int destroyStage, float alpha) {
@@ -43,5 +49,10 @@ public class RenderCraftingCore extends TileEntitySpecialRenderer<CraftingCoreTi
 			GlStateManager.enableLighting();
 			GlStateManager.popMatrix();
 		}
+	}
+
+	@Override
+	public void render(CraftingCoreTileEntity craftingCoreTileEntity, float v, MatrixStack matrixStack, IRenderTypeBuffer iRenderTypeBuffer, int i, int i1) {
+
 	}
 }

@@ -4,31 +4,38 @@ import com.blakebr0.extendedcrafting.item.ModItems;
 import net.minecraftforge.common.ForgeConfigSpec;
 
 public class ModConfigs {
+	public static final ForgeConfigSpec CLIENT;
 	public static final ForgeConfigSpec COMMON;
 
+	public static final ForgeConfigSpec.BooleanValue ENABLE_COMPRESSOR_RENDERER;
+
+	// Client
+	static {
+		final ForgeConfigSpec.Builder client = new ForgeConfigSpec.Builder();
+		client.comment("Client settings.").push("General");
+		ENABLE_COMPRESSOR_RENDERER = client
+				.comment("Should the Quantum Compressor render the result item above it?")
+				.translation("configGui.extendedcrafting.enable_compressor_renderer")
+				.define("enableCompressorRenderer", true);
+		client.pop();
+
+		CLIENT = client.build();
+	}
+
+
 	public static final ForgeConfigSpec.BooleanValue ENABLE_HANDHELD_WORKBENCH;
-	
-	public static boolean confGuideEnabled;
-	public static boolean confHandheldTableEnabled;
-	public static boolean confEnergyInWaila;
 
 	public static final ForgeConfigSpec.BooleanValue ENABLE_CRAFTING_CORE;
 	public static final ForgeConfigSpec.IntValue CRAFTING_CORE_POWER_CAPACITY;
 	public static final ForgeConfigSpec.IntValue CRAFTING_CORE_POWER_RATE;
 	
-	public static boolean confInterfaceEnabled;
-	public static int confInterfaceRFCapacity;
-	public static int confInterfaceRFRate;
-	public static boolean confInterfaceRenderer;
-	
 	public static final ForgeConfigSpec.BooleanValue ENABLE_TABLES;
 	public static boolean confTableUseRecipes;
 	
 	public static final ForgeConfigSpec.BooleanValue ENABLE_COMPRESSOR;
-	public static int confCompressorRFCapacity;
-	public static int confCompressorRFRate;
-	public static boolean confCompressorRenderer;
-	
+	public static final ForgeConfigSpec.IntValue COMPRESSOR_POWER_CAPACITY;
+	public static final ForgeConfigSpec.IntValue COMPRESSOR_POWER_RATE;
+
 	public static final ForgeConfigSpec.BooleanValue ENABLE_ENDER_CRAFTER;
 	public static int confEnderTimeRequired;
 	public static float confEnderAlternatorEff;
@@ -81,6 +88,14 @@ public class ModConfigs {
 				.comment("Should the Quantum Compressor be enabled?")
 				.translation("configGui.extendedcrafting.enable_compressor")
 				.define("enabled", true);
+		COMPRESSOR_POWER_CAPACITY = common
+				.comment("How much FE the Quantum Compressor should hold.")
+				.translation("configGui.extendedcrafting.compressor_power_capacity")
+				.defineInRange("powerCapacity", 10000000, 0, Integer.MAX_VALUE);
+		COMPRESSOR_POWER_RATE = common
+				.comment("How much FE/t the Quantum Compressor should use when crafting by default.")
+				.translation("configGui.extendedcrafting.compressor_power_rate")
+				.defineInRange("powerRate", 5000, 0, Integer.MAX_VALUE);
 		common.pop();
 
 		common.comment("Settings for the Ender Crafter.").push("Ender Crafting");

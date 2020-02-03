@@ -1,47 +1,42 @@
 package com.blakebr0.extendedcrafting.container;
 
-import com.blakebr0.extendedcrafting.tileentity.CraftingCoreTileEntity;
-
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.Container;
-import net.minecraft.inventory.Slot;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.ContainerType;
+import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIntArray;
-import net.minecraftforge.items.IItemHandler;
-import net.minecraftforge.items.ItemStackHandler;
+import net.minecraft.util.IntArray;
 
 import java.util.function.Function;
 
 public class CraftingCoreContainer extends Container {
+	private final Function<PlayerEntity, Boolean> isUsableByPlayer;
+	private final IIntArray data;
 
-	private CraftingCoreTileEntity tile;
-
-	private EliteTableContainer(ContainerType<?> type, int id, PlayerInventory playerInventory) {
-		this(type, id, playerInventory, p -> false, new ItemStackHandler(9));
+	private CraftingCoreContainer(ContainerType<?> type, int id, PlayerInventory playerInventory) {
+		this(type, id, playerInventory, p -> false, new IntArray(5));
 	}
 
-	private EliteTableContainer(ContainerType<?> type, int id, PlayerInventory playerInventory, Function<PlayerEntity, Boolean> isUsableByPlayer, IItemHandler inventory) {
+	private CraftingCoreContainer(ContainerType<?> type, int id, PlayerInventory playerInventory, Function<PlayerEntity, Boolean> isUsableByPlayer, IIntArray data) {
 		super(type, id);
-		this.tile = tile;
+		this.isUsableByPlayer = isUsableByPlayer;
+		this.data = data;
 
 		for (int i = 0; i < 3; ++i) {
 			for (int j = 0; j < 9; ++j) {
-				this.addSlotToContainer(new Slot(player, j + i * 9 + 9, 8 + j * 18, 112 + i * 18));
+				this.addSlot(new Slot(playerInventory, j + i * 9 + 9, 8 + j * 18, 112 + i * 18));
 			}
 		}
 
 		for (int i = 0; i < 9; ++i) {
-			this.addSlotToContainer(new Slot(player, i, 8 + i * 18, 170));
+			this.addSlot(new Slot(playerInventory, i, 8 + i * 18, 170));
 		}
 	}
 
 	@Override
-	public ItemStack transferStackInSlot(EntityPlayer player, int slotNumber) {
+	public ItemStack transferStackInSlot(PlayerEntity player, int slotNumber) {
 		ItemStack itemstack = ItemStack.EMPTY;
 		Slot slot = this.inventorySlots.get(slotNumber);
 
@@ -78,20 +73,15 @@ public class CraftingCoreContainer extends Container {
 	}
 
 	@Override
-	public boolean canInteractWith(EntityPlayer player) {
-		return this.tile.isUseableByPlayer(player);
+	public boolean canInteractWith(PlayerEntity player) {
+		return this.isUsableByPlayer.apply(player);
 	}
 
 	public static CraftingCoreContainer create(int windowId, PlayerInventory playerInventory) {
 		return new CraftingCoreContainer(ModContainerTypes.CRAFTING_CORE.get(), windowId, playerInventory);
 	}
 
-	public static CraftingCoreContainer create(int windowId, PlayerInventory playerInventory, Function<PlayerEntity, Boolean> isUsableByPlayer, IItemHandler inventory, IIntArray data) {
-		return new CraftingCoreContainer(ModContainerTypes.CRAFTING_CORE.get(), windowId, playerInventory, isUsableByPlayer, inventory, data);
-	}
-
-	@Override
-	public boolean canInteractWith(PlayerEntity p_75145_1_) {
-		return false;
+	public static CraftingCoreContainer create(int windowId, PlayerInventory playerInventory, Function<PlayerEntity, Boolean> isUsableByPlayer, IIntArray data) {
+		return new CraftingCoreContainer(ModContainerTypes.CRAFTING_CORE.get(), windowId, playerInventory, isUsableByPlayer, data);
 	}
 }

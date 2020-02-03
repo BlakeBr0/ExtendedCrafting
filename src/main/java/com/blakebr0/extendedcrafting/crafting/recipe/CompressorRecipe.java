@@ -1,11 +1,10 @@
 package com.blakebr0.extendedcrafting.crafting.recipe;
 
 import com.blakebr0.cucumber.crafting.ISpecialRecipe;
-import com.blakebr0.cucumber.crafting.ISpecialRecipeSerializer;
-import com.blakebr0.cucumber.crafting.ISpecialRecipeType;
+import com.blakebr0.extendedcrafting.api.crafting.ICompressorRecipe;
+import com.blakebr0.extendedcrafting.api.crafting.RecipeTypes;
 import com.blakebr0.extendedcrafting.config.ModConfigs;
 import com.blakebr0.extendedcrafting.crafting.ModRecipeSerializers;
-import com.blakebr0.extendedcrafting.api.crafting.RecipeTypes;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
 import net.minecraft.item.ItemStack;
@@ -20,7 +19,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.registries.ForgeRegistryEntry;
 
-public class CompressorRecipe implements ISpecialRecipe {
+public class CompressorRecipe implements ISpecialRecipe, ICompressorRecipe {
 	private final ResourceLocation recipeId;
 	private final NonNullList<Ingredient> inputs;
 	private final ItemStack output;
@@ -30,7 +29,7 @@ public class CompressorRecipe implements ISpecialRecipe {
 	private final int powerRate;
 	
 	public CompressorRecipe(ResourceLocation recipeId, Ingredient input, ItemStack output, int inputCount, Ingredient catalyst, int powerCost) {
-		this(recipeId, input, output, inputCount, catalyst, powerCost, ModConfigs.confCompressorRFRate);
+		this(recipeId, input, output, inputCount, catalyst, powerCost, ModConfigs.COMPRESSOR_POWER_RATE.get());
 	}
 
 	public CompressorRecipe(ResourceLocation recipeId, Ingredient input, ItemStack output, int inputCount, Ingredient catalyst, int powerCost, int powerRate) {
@@ -85,18 +84,22 @@ public class CompressorRecipe implements ISpecialRecipe {
 		return this.inputs.get(0).test(input) && this.catalyst.test(catalyst);
 	}
 
+	@Override
 	public int getInputCount() {
 		return this.inputCount;
 	}
 
+	@Override
 	public Ingredient getCatalyst() {
 		return this.catalyst;
 	}
 
+	@Override
 	public int getPowerCost() {
 		return this.powerCost;
 	}
-	
+
+	@Override
 	public int getPowerRate() {
 		return this.powerRate;
 	}
@@ -111,7 +114,7 @@ public class CompressorRecipe implements ISpecialRecipe {
 			if (!json.has("powerCost"))
 				throw new JsonSyntaxException("Missing powerCost for compressor recipe");
 			int powerCost = JSONUtils.getInt(json, "powerCost");
-			int powerRate = JSONUtils.getInt(json, "powerRate", ModConfigs.confCompressorRFRate);
+			int powerRate = JSONUtils.getInt(json, "powerRate", ModConfigs.COMPRESSOR_POWER_RATE.get());
 
 			return new CompressorRecipe(recipeId, input, output, inputCount, catalyst, powerCost, powerRate);
 		}

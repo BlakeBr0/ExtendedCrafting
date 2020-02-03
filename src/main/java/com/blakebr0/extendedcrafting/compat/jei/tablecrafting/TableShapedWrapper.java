@@ -4,7 +4,7 @@ import java.util.Collections;
 import java.util.List;
 
 import com.blakebr0.cucumber.util.Utils;
-import com.blakebr0.extendedcrafting.compat.jei.CompatJEI;
+import com.blakebr0.extendedcrafting.compat.jei.JeiCompat;
 import com.blakebr0.extendedcrafting.crafting.table.TableRecipeShaped;
 
 import mezz.jei.api.IJeiHelpers;
@@ -27,13 +27,13 @@ public class TableShapedWrapper implements IShapedCraftingRecipeWrapper {
 	public TableShapedWrapper(IJeiHelpers helpers, TableRecipeShaped recipe) {
 		this.helpers = helpers;
 		this.recipe = recipe;
-		this.required = helpers.getGuiHelper().createDrawable(CompatJEI.ICONS, 0, 0, 15, 15);
+		this.required = helpers.getGuiHelper().createDrawable(JeiCompat.ICONS, 0, 0, 15, 15);
 	}
 
 	public TableShapedWrapper(IJeiHelpers helpers, TableRecipeShaped recipe, int iconsX, int iconsY) {
 		this.helpers = helpers;
 		this.recipe = recipe;
-		this.required = helpers.getGuiHelper().createDrawable(CompatJEI.ICONS, 0, 0, 15, 15);
+		this.required = helpers.getGuiHelper().createDrawable(JeiCompat.ICONS, 0, 0, 15, 15);
 		this.iconsX = iconsX;
 		this.iconsY = iconsY;
 		this.tiered = true;

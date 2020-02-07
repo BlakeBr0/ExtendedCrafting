@@ -96,7 +96,7 @@ public class HwylaCompat implements IWailaPlugin {
 		registrar.registerComponentProvider(new IComponentProvider() {
 			@Override
 			public void appendBody(List<ITextComponent> tooltip, IDataAccessor accessor, IPluginConfig config) {
-				CompressorTileEntity compressor = (CompressorTileEntity) tile;
+				CompressorTileEntity compressor = (CompressorTileEntity) accessor.getTileEntity();
 				CompressorRecipe recipe = compressor.getRecipe();
 				if (recipe != null) {
 					ItemStack output = recipe.getOutput();

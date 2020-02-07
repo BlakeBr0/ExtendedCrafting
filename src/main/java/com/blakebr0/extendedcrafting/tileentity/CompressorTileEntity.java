@@ -99,7 +99,7 @@ public class CompressorTileEntity extends BaseInventoryTileEntity implements ITi
 			this.recipeInventory.setStackInSlot(0, this.materialStack);
 			this.recipeInventory.setStackInSlot(1, catalyst);
 
-			if (this.recipe == null || this.recipe.matches(this.recipeInventory)) {
+			if (this.recipe == null || !this.recipe.matches(this.recipeInventory)) {
 				this.recipe = (CompressorRecipe) world.getRecipeManager().getRecipe(RecipeTypes.COMPRESSOR, this.recipeInventory.toIInventory(), world).orElse(null);
 			}
 

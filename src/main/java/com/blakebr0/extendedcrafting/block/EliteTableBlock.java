@@ -47,7 +47,7 @@ public class EliteTableBlock extends BaseBlock implements IEnableable {
 	}
 
 	@Override
-	public ActionResultType onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult trace) {
+	public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult trace) {
 		if (!world.isRemote()) {
 			TileEntity tile = world.getTileEntity(pos);
 

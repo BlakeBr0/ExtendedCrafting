@@ -47,7 +47,7 @@ public class CraftingCoreBlock extends BaseTileEntityBlock implements IEnableabl
 	}
 
 	@Override
-	public ActionResultType onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult trace) {
+	public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult trace) {
 		ItemStack held = player.getHeldItem(hand);
 		if (!world.isRemote()) {
 			TileEntity tile = world.getTileEntity(pos);

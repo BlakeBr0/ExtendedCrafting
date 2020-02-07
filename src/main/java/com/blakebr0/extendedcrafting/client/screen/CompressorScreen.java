@@ -4,15 +4,13 @@ import com.blakebr0.cucumber.helper.ResourceHelper;
 import com.blakebr0.cucumber.util.Utils;
 import com.blakebr0.extendedcrafting.ExtendedCrafting;
 import com.blakebr0.extendedcrafting.container.CompressorContainer;
-import com.blakebr0.extendedcrafting.network.EjectModeSwitchPacket;
-import com.blakebr0.extendedcrafting.network.InputLimitSwitchPacket;
 import com.blakebr0.extendedcrafting.network.NetworkHandler;
+import com.blakebr0.extendedcrafting.network.message.EjectModeSwitchMessage;
+import com.blakebr0.extendedcrafting.network.message.InputLimitSwitchMessage;
 import com.blakebr0.extendedcrafting.tileentity.CompressorTileEntity;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
-import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
@@ -20,13 +18,12 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.ITextComponent;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 public class CompressorScreen extends ContainerScreen<CompressorContainer> {
-	private static final ResourceLocation GUI = ResourceHelper.getResource(ExtendedCrafting.MOD_ID, "textures/gui/compressor.png");
+	private static final ResourceLocation BACKGROUND = ResourceHelper.getResource(ExtendedCrafting.MOD_ID, "textures/gui/compressor.png");
 
 	private CompressorTileEntity tile;
 
@@ -97,43 +94,40 @@ public class CompressorScreen extends ContainerScreen<CompressorContainer> {
 
 	@Override
 	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
-		String s = Utils.localize("container.ec.compressor");
-		this.fontRenderer.drawString(s, this.xSize / 2 - this.fontRenderer.getStringWidth(s) / 2, 6, 4210752);
-		this.fontRenderer.drawString(Utils.localize("container.inventory"), 8, this.ySize - 94, 4210752);	}
-
-	@Override
-	public void actionPerformed(GuiButton button) throws IOException {
-		if (button.id == 1) {
-			NetworkHandler.THINGY.sendToServer(new EjectModeSwitchPacket(this.tile.getPos().toLong()));
-		} else if (button.id == 2) {
-			NetworkHandler.THINGY.sendToServer(new InputLimitSwitchPacket(this.tile.getPos().toLong()));
-		}
+		String title = this.getTitle().getFormattedText();
+		this.font.drawString(title, (float) (this.xSize / 2 - this.font.getStringWidth(title) / 2), 6.0F, 4210752);
+		String inventory = this.playerInventory.getDisplayName().getFormattedText();
+		this.font.drawString(inventory, 20.0F, this.ySize - 94.0F, 4210752);
 	}
 
 	@Override
-	public void initGui() {
-		super.initGui();
-		this.buttonList.add(new GuiButton(1, this.guiLeft + 69, this.guiTop + 29, 11, 9, (String) null) {
+	public void init() {
+		super.init();
+		this.addButton(new Button(this.guiLeft + 69, this.guiTop + 29, 11, 9, "", button -> {
+			NetworkHandler.INSTANCE.sendToServer(new EjectModeSwitchMessage(this.tile.getPos().toLong()));
+		}) {
 			@Override
-			public void drawButton(Minecraft mc, int mouseX, int mouseY, float partialTicks) {
+			public void render(int mouseX, int mouseY, float partialTicks) {
 
 			}
 		});
-		this.buttonList.add(new GuiButton(2, this.guiLeft + 91, this.guiTop + 74, 7, 10, (String) null) {
+		this.addButton(new Button(this.guiLeft + 91, this.guiTop + 74, 7, 10, "", button -> {
+			NetworkHandler.INSTANCE.sendToServer(new InputLimitSwitchMessage(this.tile.getPos().toLong()));
+		}) {
 			@Override
-			public void drawButton(Minecraft mc, int mouseX, int mouseY, float partialTicks) {
+			public void render(int mouseX, int mouseY, float partialTicks) {
 
 			}
 		});
 	}
 
 	@Override
-	public void drawScreen(int mouseX, int mouseY, float partialTicks) {
+	public void render(int mouseX, int mouseY, float partialTicks) {
 		int left = this.guiLeft;
 		int top = this.guiTop;
 
-		this.drawDefaultBackground();
-		super.drawScreen(mouseX, mouseY, partialTicks);
+		this.renderBackground();
+		super.render(mouseX, mouseY, partialTicks);
 		this.renderHoveredToolTip(mouseX, mouseY);
 
 		if (mouseX > left + 7 && mouseX < guiLeft + 20 && mouseY > this.guiTop + 17 && mouseY < this.guiTop + 94) {
@@ -172,40 +166,39 @@ public class CompressorScreen extends ContainerScreen<CompressorContainer> {
 
 	@Override
 	protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
-		GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
-		this.mc.renderEngine.bindTexture(GUI);
+		this.getMinecraft().getTextureManager().bindTexture(BACKGROUND);
 		int x = (this.width - this.xSize) / 2;
 		int y = (this.height - this.ySize) / 2;
-		this.drawTexturedModalRect(x, y, 0, 0, this.xSize, this.ySize);
+		this.blit(x, y, 0, 0, this.xSize, this.ySize);
 
 		int i1 = this.getEnergyBarScaled(78);
-		this.drawTexturedModalRect(x + 7, y + 95 - i1, 178, 78 - i1, 15, i1 + 1);
+		this.blit(x + 7, y + 95 - i1, 178, 78 - i1, 15, i1 + 1);
 
 		if (this.tile != null && this.tile.getRecipe() != null) {
 			if (this.tile.getMaterialCount() > 0 && this.tile.getRecipe().getInputCount() > 0) {
 				int i2 = getMaterialBarScaled(26);
-				this.drawTexturedModalRect(x + 60, y + 74, 194, 19, i2 + 1, 10);
+				this.blit(x + 60, y + 74, 194, 19, i2 + 1, 10);
 			}
 			if (this.tile.getProgress() > 0 && this.tile.getRecipe().getPowerCost() > 0) {
 				int i2 = getProgressBarScaled(24);
-				this.drawTexturedModalRect(x + 96, y + 47, 194, 0, i2 + 1, 16);
+				this.blit(x + 96, y + 47, 194, 0, i2 + 1, 16);
 			}
 		}
 
 		if (mouseX > guiLeft + 68 && mouseX < guiLeft + 79 && mouseY > guiTop + 28 && mouseY < guiTop + 39) {
-			this.drawTexturedModalRect(x + 68, y + 30, 194, 32, 11, 9);
+			this.blit(x + 68, y + 30, 194, 32, 11, 9);
 		}
 		
 		
 		if (mouseX > guiLeft + 90 && mouseX < guiLeft + 98 && mouseY > guiTop + 73 && mouseY < guiTop + 84) {
 			if (this.tile.isLimitingInput()) {
-				this.drawTexturedModalRect(x + 90, y + 74, 194, 56, 9, 10);
+				this.blit(x + 90, y + 74, 194, 56, 9, 10);
 			} else {
-				this.drawTexturedModalRect(x + 90, y + 74, 194, 43, 9, 10);				
+				this.blit(x + 90, y + 74, 194, 43, 9, 10);
 			}
 		} else {
 			if (this.tile.isLimitingInput()) {
-				this.drawTexturedModalRect(x + 90, y + 74, 203, 56, 9, 10);
+				this.blit(x + 90, y + 74, 203, 56, 9, 10);
 			}
 		}
 	}

@@ -1,14 +1,12 @@
 package com.blakebr0.extendedcrafting.client.screen;
 
-import com.blakebr0.cucumber.helper.ResourceHelper;
 import com.blakebr0.cucumber.util.Utils;
 import com.blakebr0.extendedcrafting.ExtendedCrafting;
 import com.blakebr0.extendedcrafting.container.CraftingCoreContainer;
 import com.blakebr0.extendedcrafting.crafting.recipe.CombinationRecipe;
 import com.blakebr0.extendedcrafting.tileentity.CraftingCoreTileEntity;
-
+import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.player.PlayerInventory;
@@ -17,8 +15,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 
 public class CraftingCoreScreen extends ContainerScreen<CraftingCoreContainer> {
-
-	private static final ResourceLocation GUI = ResourceHelper.getResource(ExtendedCrafting.MOD_ID, "textures/gui/crafting_core.png");
+	private static final ResourceLocation BACKGROUND = new ResourceLocation(ExtendedCrafting.MOD_ID, "textures/gui/crafting_core.png");
 
 	private CraftingCoreTileEntity tile;
 
@@ -43,34 +40,35 @@ public class CraftingCoreScreen extends ContainerScreen<CraftingCoreContainer> {
 
 	@Override
 	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
-		String s = Utils.localize("container.ec.crafting_core");
-		this.fontRenderer.drawString(s, this.xSize / 2 - this.fontRenderer.getStringWidth(s) / 2, 6, 4210752);
-		this.fontRenderer.drawString(Utils.localize("container.inventory"), 8, this.ySize - 94, 4210752);
-		GlStateManager.pushMatrix();
-		GlStateManager.scale(0.75F, 0.75F, 0.75F);
-		this.fontRenderer.drawString(Utils.localize("ec.ccore.pedestals", this.tile.getPedestalCount()), 36, 36, -1);
+		String title = this.getTitle().getFormattedText();
+		this.font.drawString(title, (float) (this.xSize / 2 - this.font.getStringWidth(title) / 2), 6.0F, 4210752);
+		String inventory = this.playerInventory.getDisplayName().getFormattedText();
+		this.font.drawString(inventory, 20.0F, this.ySize - 94.0F, 4210752);
+		RenderSystem.pushMatrix();
+		RenderSystem.scalef(0.75F, 0.75F, 0.75F);
+		this.font.drawString(Utils.localize("ec.ccore.pedestals", this.tile.getPedestalCount()), 36, 36, -1);
 		
 		CombinationRecipe recipe = this.tile.getRecipe();
 		if (recipe == null) {
-			this.fontRenderer.drawString(Utils.localize("ec.ccore.no_recipe"), 36, 56, -1);
+			this.font.drawString(Utils.localize("ec.ccore.no_recipe"), 36, 56, -1);
 		} else {
-			this.fontRenderer.drawString(Utils.localize("ec.ccore.rf_cost", Utils.format(recipe.getPowerCost())) + " FE", 36, 56, -1);
-			this.fontRenderer.drawString(Utils.localize("ec.ccore.rf_rate", Utils.format(recipe.getPowerRate())) + " FE/t", 36, 66, -1);
+			this.font.drawString(Utils.localize("ec.ccore.rf_cost", Utils.format(recipe.getPowerCost())) + " FE", 36, 56, -1);
+			this.font.drawString(Utils.localize("ec.ccore.rf_rate", Utils.format(recipe.getPowerRate())) + " FE/t", 36, 66, -1);
 			if (this.tile.getEnergy().getEnergyStored() < recipe.getPowerRate()) {
-				this.fontRenderer.drawString(Utils.localize("ec.ccore.no_power"), 36, 86, -1);
+				this.font.drawString(Utils.localize("ec.ccore.no_power"), 36, 86, -1);
 			}
 		}
 		
-		GlStateManager.popMatrix();
+		RenderSystem.popMatrix();
 	}
 
 	@Override
-	public void drawScreen(int mouseX, int mouseY, float partialTicks) {
+	public void render(int mouseX, int mouseY, float partialTicks) {
 		int left = this.guiLeft;
 		int top = this.guiTop;
 
-		this.drawDefaultBackground();
-		super.drawScreen(mouseX, mouseY, partialTicks);
+		this.renderBackground();
+		super.render(mouseX, mouseY, partialTicks);
 		this.renderHoveredToolTip(mouseX, mouseY);
 		
 		if (this.tile.getRecipe() != null) {
@@ -86,20 +84,19 @@ public class CraftingCoreScreen extends ContainerScreen<CraftingCoreContainer> {
 
 	@Override
 	protected void drawGuiContainerBackgroundLayer(float par1, int par2, int par3) {
-		GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
-		this.mc.renderEngine.bindTexture(GUI);
+		this.getMinecraft().getTextureManager().bindTexture(BACKGROUND);
 		int x = (this.width - this.xSize) / 2;
 		int y = (this.height - this.ySize) / 2;
-		this.drawTexturedModalRect(x, y, 0, 0, this.xSize, this.ySize);
+		this.blit(x, y, 0, 0, this.xSize, this.ySize);
 
 		int i1 = this.getEnergyBarScaled(78);
-		this.drawTexturedModalRect(x + 7, y + 95 - i1, 178, 78 - i1, 15, i1 + 1);
+		this.blit(x + 7, y + 95 - i1, 178, 78 - i1, 15, i1 + 1);
 
 		CombinationRecipe recipe = this.tile.getRecipe();
 		if (this.tile != null && recipe != null) {
 			if (this.tile.getProgress() > 0 && recipe.getPowerCost() > 0) {
 				int i2 = getProgressBarScaled(24);
-				this.drawTexturedModalRect(x + 116, y + 47, 194, 0, i2 + 1, 16);
+				this.blit(x + 116, y + 47, 194, 0, i2 + 1, 16);
 			}
 		}
 	}

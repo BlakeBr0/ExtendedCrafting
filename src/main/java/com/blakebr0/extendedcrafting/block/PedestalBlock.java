@@ -44,7 +44,7 @@ public class PedestalBlock extends BaseTileEntityBlock implements IEnableable {
 	}
 
 	@Override
-	public ActionResultType onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult trace) {
+	public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult trace) {
 		TileEntity tile = world.getTileEntity(pos);
 		if (tile instanceof PedestalTileEntity) {
 			PedestalTileEntity pedestal = (PedestalTileEntity) tile;

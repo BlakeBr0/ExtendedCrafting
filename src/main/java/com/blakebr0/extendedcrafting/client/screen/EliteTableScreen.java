@@ -29,7 +29,6 @@ public class EliteTableScreen extends ContainerScreen<EliteTableContainer> {
 		this.font.drawString(title, 8.0F, 6.0F, 4210752);
 		String inventory = this.playerInventory.getDisplayName().getFormattedText();
 		this.font.drawString(inventory, 20.0F, this.ySize - 94.0F, 4210752);
-
 	}
 
 	@Override

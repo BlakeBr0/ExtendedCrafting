@@ -23,17 +23,19 @@ import net.minecraftforge.registries.ForgeRegistryEntry;
 public class CombinationRecipe implements ISpecialRecipe, ICombinationRecipe {
 	private final ResourceLocation recipeId;
 	private final ItemStack output;
-	private final NonNullList<Ingredient> inputs;
+	private final Ingredient input;
+	private final NonNullList<Ingredient> ingredients;
 	private final int powerCost;
 	private final int powerRate;
 	
-	public CombinationRecipe(ResourceLocation recipeId, NonNullList<Ingredient> inputs, ItemStack output, int powerCost) {
-		this(recipeId, inputs, output, powerCost, ModConfigs.CRAFTING_CORE_POWER_RATE.get());
+	public CombinationRecipe(ResourceLocation recipeId, Ingredient input, NonNullList<Ingredient> ingredients, ItemStack output, int powerCost) {
+		this(recipeId, input, ingredients, output, powerCost, ModConfigs.CRAFTING_CORE_POWER_RATE.get());
 	}
 
-	public CombinationRecipe(ResourceLocation recipeId, NonNullList<Ingredient> inputs, ItemStack output, int powerCost, int powerRate) {
+	public CombinationRecipe(ResourceLocation recipeId, Ingredient input, NonNullList<Ingredient> ingredients, ItemStack output, int powerCost, int powerRate) {
 		this.recipeId = recipeId;
-		this.inputs = inputs;
+		this.input = input;
+		this.ingredients = ingredients;
 		this.output = output;
 		this.powerCost = powerCost;
 		this.powerRate = powerRate;
@@ -51,7 +53,7 @@ public class CombinationRecipe implements ISpecialRecipe, ICombinationRecipe {
 
 	@Override
 	public NonNullList<Ingredient> getIngredients() {
-		return this.inputs;
+		return this.ingredients;
 	}
 
 	@Override
@@ -87,11 +89,12 @@ public class CombinationRecipe implements ISpecialRecipe, ICombinationRecipe {
 	public static class Serializer extends ForgeRegistryEntry<IRecipeSerializer<?>> implements IRecipeSerializer<CombinationRecipe> {
 		@Override
 		public CombinationRecipe read(ResourceLocation recipeId, JsonObject json) {
+			Ingredient input = Ingredient.deserialize(json.get("input"));
 			JsonArray ingredients = JSONUtils.getJsonArray(json, "ingredients");
-			NonNullList<Ingredient> inputs = NonNullList.create();
+			NonNullList<Ingredient> pedestals = NonNullList.create();
 			for (int i = 0; i < ingredients.size(); i++) {
 				Ingredient ingredient = Ingredient.deserialize(ingredients.get(i));
-				inputs.add(ingredient);
+				pedestals.add(ingredient);
 			}
 
 			ItemStack output = ShapedRecipe.deserializeItem(json.getAsJsonObject("result"));
@@ -100,30 +103,32 @@ public class CombinationRecipe implements ISpecialRecipe, ICombinationRecipe {
 			int powerCost = JSONUtils.getInt(json, "powerCost");
 			int powerRate = JSONUtils.getInt(json, "powerRate", ModConfigs.CRAFTING_CORE_POWER_RATE.get());
 
-			return new CombinationRecipe(recipeId, inputs, output, powerCost, powerRate);
+			return new CombinationRecipe(recipeId, input, pedestals, output, powerCost, powerRate);
 		}
 
 		@Override
 		public CombinationRecipe read(ResourceLocation recipeId, PacketBuffer buffer) {
 			int size = buffer.readVarInt();
+			Ingredient input = Ingredient.read(buffer);
 
-			NonNullList<Ingredient> inputs = NonNullList.withSize(size, Ingredient.EMPTY);
+			NonNullList<Ingredient> pedestals = NonNullList.withSize(size, Ingredient.EMPTY);
 			for (int i = 0; i < size; i++) {
-				inputs.add(Ingredient.read(buffer));
+				pedestals.add(Ingredient.read(buffer));
 			}
 
 			ItemStack output = buffer.readItemStack();
 			int powerCost = buffer.readInt();
 			int powerRate = buffer.readInt();
 
-			return new CombinationRecipe(recipeId, inputs, output, powerCost, powerRate);
+			return new CombinationRecipe(recipeId, input, pedestals, output, powerCost, powerRate);
 		}
 
 		@Override
 		public void write(PacketBuffer buffer, CombinationRecipe recipe) {
-			buffer.writeInt(recipe.inputs.size());
+			buffer.writeInt(recipe.ingredients.size());
+			recipe.input.write(buffer);
 
-			for (Ingredient ingredient : recipe.inputs) {
+			for (Ingredient ingredient : recipe.ingredients) {
 				ingredient.write(buffer);
 			}
 

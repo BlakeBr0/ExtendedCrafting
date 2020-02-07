@@ -1,24 +1,15 @@
 package com.blakebr0.extendedcrafting.client.tesr;
 
-import com.blakebr0.cucumber.render.GhostItemRenderer;
-import com.blakebr0.extendedcrafting.block.ModBlocks;
 import com.blakebr0.extendedcrafting.config.ModConfigs;
 import com.blakebr0.extendedcrafting.crafting.recipe.CompressorRecipe;
 import com.blakebr0.extendedcrafting.tileentity.CompressorTileEntity;
-
 import com.mojang.blaze3d.matrix.MatrixStack;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
-import net.minecraft.client.renderer.RenderHelper;
+import net.minecraft.client.renderer.Vector3f;
 import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
-import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
-import net.minecraft.item.ItemBlock;
+import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class CompressorRenderer extends TileEntityRenderer<CompressorTileEntity> {
 	public CompressorRenderer(TileEntityRendererDispatcher dispatcher) {
@@ -26,35 +17,24 @@ public class CompressorRenderer extends TileEntityRenderer<CompressorTileEntity>
 	}
 
 	@Override
-	public void render(CompressorTileEntity tile, double x, double y, double z, float partialTick, int destroyStage, float alpha) {
-		if (!ModConfigs.confCompressorRenderer) return;
-		
-		IBlockState state = tile.getWorld().getBlockState(tile.getPos());
-
-		if (state == null || state.getBlock() != ModBlocks.blockCompressor || !tile.getWorld().isAirBlock(tile.getPos().up()))
+	public void render(CompressorTileEntity tile, float v, MatrixStack matrix, IRenderTypeBuffer buffer, int i, int i1) {
+		if (!ModConfigs.ENABLE_COMPRESSOR_RENDERER.get())
 			return;
 
-		CompressorRecipe recipe = tile.getRecipe();
+		CompressorRecipe recipe = null; // tile.getRecipe();
 		if (recipe != null) {
-			ItemStack stack = recipe.getOutput();
-			GlStateManager.pushMatrix();
-			GlStateManager.translate(x + 0.5D, y + 1.4D, z + 0.5D);
-			float scale = (float) (stack.getItem() instanceof ItemBlock ? 0.8F : 0.6F);
-			GlStateManager.scale(scale, scale, scale);
-			double tick = Minecraft.getSystemTime() / 800.0D;
-			GlStateManager.translate(0.0D, Math.sin(tick % (2 * Math.PI)) * 0.065D, 0.0D);
-			GlStateManager.rotate((float) (((tick * 40.0D) % 360)), 0, 1, 0);
-			GlStateManager.disableLighting();
-			RenderHelper.enableStandardItemLighting();
-			GhostItemRenderer.renderItemModel(Minecraft.getMinecraft(), stack, 0.7F);
-			RenderHelper.disableStandardItemLighting();
-			GlStateManager.enableLighting();
-			GlStateManager.popMatrix();
+			ItemStack stack = recipe.getRecipeOutput();
+			if (!stack.isEmpty()) {
+				matrix.push();
+				matrix.translate(0.5D, 1.4D, 0.5D);
+				float scale = stack.getItem() instanceof BlockItem ? 0.8F : 0.6F;
+				matrix.scale(scale, scale, scale);
+				double tick = System.currentTimeMillis() / 800.0D;
+				matrix.translate(0.0D, Math.sin(tick % (2 * Math.PI)) * 0.065D, 0.0D);
+				matrix.multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion((float) ((tick * 40.0D) % 360)));
+//				GhostItemRenderer.renderItemModel(Minecraft.getMinecraft(), stack, 0.7F); // TODO: ghost model item renderer
+				matrix.pop();
+			}
 		}
-	}
-
-	@Override
-	public void render(CompressorTileEntity compressorTileEntity, float v, MatrixStack matrixStack, IRenderTypeBuffer iRenderTypeBuffer, int i, int i1) {
-
 	}
 }

@@ -6,6 +6,6 @@ import net.minecraft.client.renderer.RenderTypeLookup;
 
 public class ModelHandler {
     public static void onClientSetup() {
-        RenderTypeLookup.setRenderLayer(ModBlocks.COMPRESSOR.get(), RenderType.getCutoutMipped());
+        RenderTypeLookup.setRenderLayer(ModBlocks.COMPRESSOR.get(), RenderType.cutoutMipped());
     }
 }

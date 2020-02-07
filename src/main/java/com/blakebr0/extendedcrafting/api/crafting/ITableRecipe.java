@@ -8,4 +8,5 @@ import net.minecraft.item.crafting.IRecipe;
  */
 public interface ITableRecipe extends IRecipe<IInventory> {
     int getTier();
+    boolean requiresTier();
 }

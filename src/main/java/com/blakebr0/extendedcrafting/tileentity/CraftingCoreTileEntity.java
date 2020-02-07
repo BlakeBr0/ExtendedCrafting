@@ -16,6 +16,7 @@ import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.particles.ParticleTypes;
 import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumParticleTypes;
@@ -24,6 +25,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
+import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.oredict.OreDictionary;
 
@@ -101,14 +103,14 @@ public class CraftingCoreTileEntity extends BaseInventoryTileEntity implements I
 							IItemHandlerModifiable inventory = pedestal.getInventory();
 							inventory.setStackInSlot(0, StackHelper.decrease(inventory.getStackInSlot(0), 1, true));
 							pedestal.markDirty();
-							((WorldServer) world).spawnParticle(EnumParticleTypes.SMOKE_NORMAL, false, pedestal.getPos().getX() + 0.5D, pedestal.getPos().getY() + 1.1D, pedestal.getPos().getZ() + 0.5D, 20, 0, 0, 0, 0.1D);
+							((ServerWorld) world).spawnParticle(ParticleTypes.SMOKE_NORMAL, false, pedestal.getPos().getX() + 0.5D, pedestal.getPos().getY() + 1.1D, pedestal.getPos().getZ() + 0.5D, 20, 0, 0, 0, 0.1D);
 						}
-						((WorldServer) world).spawnParticle(EnumParticleTypes.END_ROD, false, this.getPos().getX() + 0.5D, this.getPos().getY() + 1.1D, this.getPos().getZ() + 0.5D, 50, 0, 0, 0, 0.1D);
-						this.getInventory().setStackInSlot(0, recipe.getOutput().copy());
+						((ServerWorld) world).spawnParticle(ParticleTypes.END_ROD, false, this.getPos().getX() + 0.5D, this.getPos().getY() + 1.1D, this.getPos().getZ() + 0.5D, 50, 0, 0, 0, 0.1D);
+						this.getInventory().setStackInSlot(0, recipe.getRecipeOutput().copy());
 						this.progress = 0;
 						mark = true;
 					} else {
-						((WorldServer) world).spawnParticle(EnumParticleTypes.SPELL, false, this.getPos().getX() + 0.5D, this.getPos().getY() + 1.1D, this.getPos().getZ() + 0.5D, 2, 0, 0, 0, 0.1D);
+						((ServerWorld) world).spawnParticle(EnumParticleTypes.SPELL, false, this.getPos().getX() + 0.5D, this.getPos().getY() + 1.1D, this.getPos().getZ() + 0.5D, 2, 0, 0, 0, 0.1D);
 					}
 				}
 			} else {
@@ -128,13 +130,13 @@ public class CraftingCoreTileEntity extends BaseInventoryTileEntity implements I
 
 	private List<BlockPos> locatePedestals() {
 		ArrayList<BlockPos> pedestals = new ArrayList<>();
-		Iterable<BlockPos> blocks = BlockPos.getAllInBox(this.getPos().add(-3, 0, -3), this.getPos().add(3, 0, 3));
-
-		for (BlockPos aoePos : blocks) {
-			Block block = this.getWorld().getBlockState(aoePos).getBlock();
-			if (block instanceof PedestalBlock) {
-				pedestals.add(aoePos);
-			}
+		World world = this.getWorld();
+		if (world != null) {
+			BlockPos.getAllInBox(this.getPos().add(-3, 0, -3), this.getPos().add(3, 0, 3)).forEach(aoePos -> {
+				Block block = world.getBlockState(aoePos).getBlock();
+				if (block instanceof PedestalBlock)
+					pedestals.add(aoePos);
+			});
 		}
 
 		this.pedestalCount = pedestals.size();
@@ -143,7 +145,7 @@ public class CraftingCoreTileEntity extends BaseInventoryTileEntity implements I
 	}
 
 	private List<PedestalTileEntity> getPedestalsWithStuff(CombinationRecipe recipe, List<BlockPos> locations) {
-		ArrayList<Object> remaining = new ArrayList<>(recipe.getPedestalItems());
+		ArrayList<Object> remaining = new ArrayList<>(recipe.getIngredients());
 		ArrayList<PedestalTileEntity> pedestals = new ArrayList<>();
 
 		if (locations.isEmpty()) return null;
@@ -177,7 +179,7 @@ public class CraftingCoreTileEntity extends BaseInventoryTileEntity implements I
 			}
 		}
 
-		if (pedestals.size() != recipe.getPedestalItems().size())
+		if (pedestals.size() != recipe.getIngredients().size())
 			return null;
 
 		if (!remaining.isEmpty()) return null;

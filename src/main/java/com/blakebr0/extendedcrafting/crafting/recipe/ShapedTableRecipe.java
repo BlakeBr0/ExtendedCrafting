@@ -7,7 +7,6 @@ import com.blakebr0.extendedcrafting.api.crafting.RecipeTypes;
 import com.blakebr0.extendedcrafting.crafting.ModRecipeSerializers;
 import com.google.gson.JsonObject;
 import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipeSerializer;
 import net.minecraft.item.crafting.IRecipeType;
@@ -56,72 +55,68 @@ public class ShapedTableRecipe implements ISpecialRecipe, ITableRecipe {
 		if (this.tier != 0 && this.tier != this.getTierFromGridSize(inv))
 			return false;
 
-		for (int x = 0; x <= inv.getWidth() - this.width; x++) {
-			for (int y = 0; y <= inv.getHeight() - this.height; y++) {
-				if (this.checkMatch(inv, x, y, false)) {
-					return true;
-				}
-
-				if (this.mirrored && this.checkMatch(inv, x, y, true)) {
-					return true;
-				}
-			}
-		}
+//		for (int x = 0; x <= inv.getWidth() - this.width; x++) {
+//			for (int y = 0; y <= inv.getHeight() - this.height; y++) {
+//				if (this.checkMatch(inv, x, y, false)) {
+//					return true;
+//				}
+//			}
+//		}
 
 		return false;
 	}
 
 	protected boolean checkMatch(IInventory inv, int startX, int startY, boolean mirror) {
-		for (int x = 0; x < inv.getWidth(); x++) {
-			for (int y = 0; y < inv.getHeight(); y++) {
-				int subX = x - startX;
-				int subY = y - startY;
-				Ingredient target = Ingredient.EMPTY;
-
-				if (subX >= 0 && subY >= 0 && subX < this.width && subY < this.height) {
-					if (mirror) {
-						target = this.inputs.get(this.width - subX - 1 + subY * this.width);
-					} else {
-						target = this.inputs.get(subX + subY * this.width);
-					}
-				}
-
-				if (!target.test(inv.getStackInRowAndColumn(x, y))) {
-					return false;
-				} else {
-					boolean valid = false;
-					if (target.getMatchingStacks().length == 0) valid = true;
-					
-					for (ItemStack stack : target.getMatchingStacks()) {
-						if (StackHelper.compareTags(stack, inv.getStackInRowAndColumn(x, y))) {
-							valid = true;
-						}
-					}
-					
-					if (!valid) return false;
-				}
-			}
-		}
+//		for (int x = 0; x < inv.getWidth(); x++) {
+//			for (int y = 0; y < inv.getHeight(); y++) {
+//				int subX = x - startX;
+//				int subY = y - startY;
+//				Ingredient target = Ingredient.EMPTY;
+//
+//				if (subX >= 0 && subY >= 0 && subX < this.width && subY < this.height) {
+//					if (mirror) {
+//						target = this.inputs.get(this.width - subX - 1 + subY * this.width);
+//					} else {
+//						target = this.inputs.get(subX + subY * this.width);
+//					}
+//				}
+//
+//				if (!target.test(inv.getStackInRowAndColumn(x, y))) {
+//					return false;
+//				} else {
+//					boolean valid = false;
+//					if (target.getMatchingStacks().length == 0) valid = true;
+//
+//					for (ItemStack stack : target.getMatchingStacks()) {
+//						if (StackHelper.compareTags(stack, inv.getStackInRowAndColumn(x, y))) {
+//							valid = true;
+//						}
+//					}
+//
+//					if (!valid) return false;
+//				}
+//			}
+//		}
 
 		return true;
 	}
 	
-	@Override
-	public boolean matches(IItemHandlerModifiable inv) {
-		if (this.tier != 0 && this.tier != this.getTierFromSize(inv.getSlots()))
-			return false;
-
-		int size = (int) Math.sqrt(inv.getSlots());
-		for (int x = 0; x <= size - this.width; x++) {
-			for (int y = 0; y <= size - this.height; y++) {
-				if (this.checkMatch(inv, x, y, false)) {
-					return true;
-				}
-			}
-		}
-
-		return false;
-	}
+//	@Override
+//	public boolean matches(IItemHandlerModifiable inv) {
+//		if (this.tier != 0 && this.tier != this.getTierFromSize(inv.getSlots()))
+//			return false;
+//
+//		int size = (int) Math.sqrt(inv.getSlots());
+//		for (int x = 0; x <= size - this.width; x++) {
+//			for (int y = 0; y <= size - this.height; y++) {
+//				if (this.checkMatch(inv, x, y, false)) {
+//					return true;
+//				}
+//			}
+//		}
+//
+//		return false;
+//	}
 	
 	protected boolean checkMatch(IItemHandlerModifiable inv, int startX, int startY) {
 		int size = (int) Math.sqrt(inv.getSlots());
@@ -178,22 +173,18 @@ public class ShapedTableRecipe implements ISpecialRecipe, ITableRecipe {
 	}
 	
 	private int getTierFromSize(int size) {
-		int tier = size < 10 ? 1
-				 : size < 26 && size > 9 ? 2
-				 : size < 50 && size > 25 ? 3
+		return size < 10 ? 1
+				 : size < 26 ? 2
+				 : size < 50 ? 3
 				 : 4;
-				 
-		return tier;
 	}
 
-	private int getTierFromGridSize(InventoryCrafting inv) {
+	private int getTierFromGridSize(IInventory inv) {
 		int size = inv.getSizeInventory();
-		int tier = size < 10 ? 1
-				 : size < 26 && size > 9 ? 2
-				 : size < 50 && size > 25 ? 3
+		return size < 10 ? 1
+				 : size < 26 ? 2
+				 : size < 50 ? 3
 				 : 4;
-				 
-		return tier;
 	}
 
 	@Override

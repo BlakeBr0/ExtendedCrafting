@@ -1,6 +1,6 @@
 package com.blakebr0.extendedcrafting.compat;
 
-import com.blakebr0.cucumber.util.Utils;
+import com.blakebr0.extendedcrafting.api.crafting.IEnderCrafterRecipe;
 import com.blakebr0.extendedcrafting.block.AdvancedTableBlock;
 import com.blakebr0.extendedcrafting.block.BasicTableBlock;
 import com.blakebr0.extendedcrafting.block.CompressorBlock;
@@ -46,10 +46,10 @@ public class HwylaCompat implements IWailaPlugin {
 			@Override
 			public void appendBody(List<ITextComponent> tooltip, IDataAccessor accessor, IPluginConfig config) {
 				CraftingCoreTileEntity core = (CraftingCoreTileEntity) accessor.getTileEntity();
-				CombinationRecipe recipe = core.getRecipe();
+				CombinationRecipe recipe = core.getActiveRecipe();
 				if (recipe != null) {
 					ItemStack output = recipe.getRecipeOutput();
-					tooltip.add(Utils.localize("tooltip.ec.crafting", output.getCount(), output.getDisplayName()));
+					tooltip.add(ModTooltips.CRAFTING.args(output.getCount(), output.getDisplayName()).build());
 				}
 			}
 		}, TooltipPosition.BODY, CraftingCoreBlock.class);
@@ -86,9 +86,10 @@ public class HwylaCompat implements IWailaPlugin {
 			@Override
 			public void appendBody(List<ITextComponent> tooltip, IDataAccessor accessor, IPluginConfig config) {
 				EnderCrafterTileEntity crafter = (EnderCrafterTileEntity) accessor.getTileEntity();
-				ItemStack result = crafter.getResult();
-				if (!result.isEmpty()) {
-					tooltip.add(Utils.localize("tooltip.ec.output", result.getCount(), result.getDisplayName()));
+				IEnderCrafterRecipe recipe = crafter.getActiveRecipe();
+				if (recipe != null) {
+					ItemStack output = recipe.getRecipeOutput();
+					tooltip.add(ModTooltips.OUTPUT.args(output.getCount(), output.getDisplayName()).build());
 				}
 			}
 		}, TooltipPosition.BODY, EnderCrafterBlock.class);
@@ -97,10 +98,10 @@ public class HwylaCompat implements IWailaPlugin {
 			@Override
 			public void appendBody(List<ITextComponent> tooltip, IDataAccessor accessor, IPluginConfig config) {
 				CompressorTileEntity compressor = (CompressorTileEntity) accessor.getTileEntity();
-				CompressorRecipe recipe = compressor.getRecipe();
+				CompressorRecipe recipe = compressor.getActiveRecipe();
 				if (recipe != null) {
-					ItemStack output = recipe.getOutput();
-					tooltip.add(Utils.localize("tooltip.ec.crafting", output.getCount(), output.getDisplayName()));
+					ItemStack output = recipe.getRecipeOutput();
+					tooltip.add(ModTooltips.CRAFTING.args(output.getCount(), output.getDisplayName()).build());
 				}
 			}
 		}, TooltipPosition.BODY, CompressorBlock.class);

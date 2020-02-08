@@ -231,4 +231,8 @@ public class CompressorTileEntity extends BaseInventoryTileEntity implements ITi
 	public int getProgress() {
 		return this.progress;
 	}
+
+	public CompressorRecipe getActiveRecipe() {
+		return this.recipe;
+	}
 }

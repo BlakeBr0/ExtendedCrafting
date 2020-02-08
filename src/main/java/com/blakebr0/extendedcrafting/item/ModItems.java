@@ -62,13 +62,12 @@ public class ModItems {
 	public static ItemStack itemEmeraldNugget;
 	public static ItemStack itemNetherStarNugget;
 
-	public static HandheldTableItem itemHandheldTable = new HandheldTableItem(p -> p.group(ITEM_GROUP));
+	public static final RegistryObject<HandheldTableItem> HANDHELD_TABLE = register("handheld_table", () -> new HandheldTableItem(p -> p.group(ITEM_GROUP)));
 	
-	public static ItemRecipeMaker itemRecipeMaker = new ItemRecipeMaker();
+	public static final RegistryObject<RecipeMakerItem> RECIPE_MAKER = register("recipe_maker", () -> new RecipeMakerItem(p -> p.group(ITEM_GROUP)));
 
-	public static ItemSingularity itemSingularity = new ItemSingularity();
-	public static ItemSingularityCustom itemSingularityCustom = new ItemSingularityCustom();
-	public static ItemSingularityUltimate itemSingularityUltimate = new ItemSingularityUltimate();
+	public static final RegistryObject<SingularityItem> SINGULARITY = register("singularity", () -> new SingularityItem(p -> p.group(ITEM_GROUP)));
+	public static final RegistryObject<UltimateSingularityItem> ULTIMATE_SINGULARITY = register("ultimate_singularity", () -> new UltimateSingularityItem(p -> p.group(ITEM_GROUP)));
 
 	@SubscribeEvent
 	public void onRegisterItems(RegistryEvent.Register<Item> event) {

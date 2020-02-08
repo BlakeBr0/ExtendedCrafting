@@ -99,7 +99,7 @@ public class JeiCompat implements IModPlugin {
 	@Override
 	public void registerRecipeCatalysts(IRecipeCatalystRegistration registration) {
 		if (ModConfigs.ENABLE_HANDHELD_WORKBENCH.get()) {
-			registration.addRecipeCatalyst(new ItemStack(ModItems.itemHandheldTable), VanillaRecipeCategoryUid.CRAFTING);
+			registration.addRecipeCatalyst(new ItemStack(ModItems.HANDHELD_TABLE.get()), VanillaRecipeCategoryUid.CRAFTING);
 		}
 
 		if (ModConfigs.ENABLE_CRAFTING_CORE.get()) {

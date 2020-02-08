@@ -77,6 +77,11 @@ public class CombinationRecipe implements ISpecialRecipe, ICombinationRecipe {
 	}
 
 	@Override
+	public Ingredient getInput() {
+		return this.input;
+	}
+
+	@Override
 	public int getPowerCost() {
 		return this.powerCost;
 	}

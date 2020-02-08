@@ -14,23 +14,15 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.INamedContainerProvider;
-import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.particles.ParticleTypes;
 import net.minecraft.tileentity.ITickableTileEntity;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.IIntArray;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.World;
-import net.minecraft.world.WorldServer;
-import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.items.IItemHandlerModifiable;
-import net.minecraftforge.oredict.OreDictionary;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 public class CraftingCoreTileEntity extends BaseInventoryTileEntity implements ITickableTileEntity, INamedContainerProvider {
@@ -93,7 +85,7 @@ public class CraftingCoreTileEntity extends BaseInventoryTileEntity implements I
 		List<BlockPos> pedestalLocations = this.locatePedestals();
 		World world = this.getWorld();
 		if (world != null && !world.isRemote()) {
-			CombinationRecipe recipe = this.getRecipe();
+			CombinationRecipe recipe = this.getActiveRecipe();
 			if (recipe != null) {
 				if (this.getEnergy().getEnergyStored() > 0) {
 					List<PedestalTileEntity> pedestals = this.getPedestalsWithStuff(recipe, pedestalLocations);
@@ -103,14 +95,14 @@ public class CraftingCoreTileEntity extends BaseInventoryTileEntity implements I
 							IItemHandlerModifiable inventory = pedestal.getInventory();
 							inventory.setStackInSlot(0, StackHelper.decrease(inventory.getStackInSlot(0), 1, true));
 							pedestal.markDirty();
-							((ServerWorld) world).spawnParticle(ParticleTypes.SMOKE_NORMAL, false, pedestal.getPos().getX() + 0.5D, pedestal.getPos().getY() + 1.1D, pedestal.getPos().getZ() + 0.5D, 20, 0, 0, 0, 0.1D);
+//							((ServerWorld) world).spawnParticle(ParticleTypes.SMOKE_NORMAL, false, pedestal.getPos().getX() + 0.5D, pedestal.getPos().getY() + 1.1D, pedestal.getPos().getZ() + 0.5D, 20, 0, 0, 0, 0.1D);
 						}
-						((ServerWorld) world).spawnParticle(ParticleTypes.END_ROD, false, this.getPos().getX() + 0.5D, this.getPos().getY() + 1.1D, this.getPos().getZ() + 0.5D, 50, 0, 0, 0, 0.1D);
+//						((ServerWorld) world).spawnParticle(ParticleTypes.END_ROD, false, this.getPos().getX() + 0.5D, this.getPos().getY() + 1.1D, this.getPos().getZ() + 0.5D, 50, 0, 0, 0, 0.1D);
 						this.getInventory().setStackInSlot(0, recipe.getRecipeOutput().copy());
 						this.progress = 0;
 						mark = true;
 					} else {
-						((ServerWorld) world).spawnParticle(EnumParticleTypes.SPELL, false, this.getPos().getX() + 0.5D, this.getPos().getY() + 1.1D, this.getPos().getZ() + 0.5D, 2, 0, 0, 0, 0.1D);
+//						((ServerWorld) world).spawnParticle(EnumParticleTypes.SPELL, false, this.getPos().getX() + 0.5D, this.getPos().getY() + 1.1D, this.getPos().getZ() + 0.5D, 2, 0, 0, 0, 0.1D);
 					}
 				}
 			} else {
@@ -149,40 +141,40 @@ public class CraftingCoreTileEntity extends BaseInventoryTileEntity implements I
 		ArrayList<PedestalTileEntity> pedestals = new ArrayList<>();
 
 		if (locations.isEmpty()) return null;
-
-		for (BlockPos pos : locations) {
-			TileEntity tile = this.getWorld().getTileEntity(pos);
-			if (tile instanceof PedestalTileEntity) {
-				PedestalTileEntity pedestal = (PedestalTileEntity) tile;
-				Iterator<Object> rem = remaining.iterator();
-				while (rem.hasNext()) {
-					boolean match = false;
-					Object next = rem.next();
-					ItemStack stack = pedestal.getInventory().getStackInSlot(0);
-					if (next instanceof ItemStack) {
-						ItemStack nextStack = (ItemStack) next;
-						match = OreDictionary.itemMatches(nextStack, stack, false) && (!nextStack.hasTagCompound() || StackHelper.compareTags(nextStack, stack));
-					} else if (next instanceof List) {
-						Iterator<ItemStack> itr = ((List<ItemStack>) next).iterator();
-						while (itr.hasNext()) {
-							match = OreDictionary.itemMatches(itr.next(), stack, false);
-							if (match) break;
-						}
-					}
-
-					if (match) {
-						pedestals.add(pedestal);
-						remaining.remove(next);
-						break;
-					}
-				}
-			}
-		}
-
-		if (pedestals.size() != recipe.getIngredients().size())
-			return null;
-
-		if (!remaining.isEmpty()) return null;
+//
+//		for (BlockPos pos : locations) {
+//			TileEntity tile = this.getWorld().getTileEntity(pos);
+//			if (tile instanceof PedestalTileEntity) {
+//				PedestalTileEntity pedestal = (PedestalTileEntity) tile;
+//				Iterator<Object> rem = remaining.iterator();
+//				while (rem.hasNext()) {
+//					boolean match = false;
+//					Object next = rem.next();
+//					ItemStack stack = pedestal.getInventory().getStackInSlot(0);
+//					if (next instanceof ItemStack) {
+//						ItemStack nextStack = (ItemStack) next;
+//						match = OreDictionary.itemMatches(nextStack, stack, false) && (!nextStack.hasTagCompound() || StackHelper.compareTags(nextStack, stack));
+//					} else if (next instanceof List) {
+//						Iterator<ItemStack> itr = ((List<ItemStack>) next).iterator();
+//						while (itr.hasNext()) {
+//							match = OreDictionary.itemMatches(itr.next(), stack, false);
+//							if (match) break;
+//						}
+//					}
+//
+//					if (match) {
+//						pedestals.add(pedestal);
+//						remaining.remove(next);
+//						break;
+//					}
+//				}
+//			}
+//		}
+//
+//		if (pedestals.size() != recipe.getIngredients().size())
+//			return null;
+//
+//		if (!remaining.isEmpty()) return null;
 
 		return pedestals;
 	}
@@ -204,21 +196,21 @@ public class CraftingCoreTileEntity extends BaseInventoryTileEntity implements I
 		return this.energy;
 	}
 
-	public CombinationRecipe getRecipe() {
-		return getRecipe(locatePedestals());
+	public CombinationRecipe getActiveRecipe() {
+		return getActiveRecipe(locatePedestals());
 	}
 
-	public CombinationRecipe getRecipe(List<BlockPos> locations) {
-		List<CombinationRecipe> recipes = getValidRecipes(this.getInventory().getStackInSlot(0));
+	public CombinationRecipe getActiveRecipe(List<BlockPos> locations) {
+//		List<CombinationRecipe> recipes = getValidRecipes(this.getInventory().getStackInSlot(0));
 
-		if (!recipes.isEmpty()) {
-			for (CombinationRecipe recipe : recipes) {
-				List<PedestalTileEntity> pedestals = this.getPedestalsWithStuff(recipe, locations);
-				if (pedestals != null) {
-					return recipe;
-				}
-			}
-		}
+//		if (!recipes.isEmpty()) {
+//			for (CombinationRecipe recipe : recipes) {
+//				List<PedestalTileEntity> pedestals = this.getPedestalsWithStuff(recipe, locations);
+//				if (pedestals != null) {
+//					return recipe;
+//				}
+//			}
+//		}
 
 		return null;
 	}

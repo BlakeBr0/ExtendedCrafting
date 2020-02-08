@@ -8,7 +8,6 @@ import com.blakebr0.extendedcrafting.tileentity.CraftingCoreTileEntity;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
@@ -34,7 +33,7 @@ public class CraftingCoreScreen extends ContainerScreen<CraftingCoreContainer> {
 
 	private int getProgressBarScaled(int pixels) {
 		int i = this.tile.getProgress();
-		long j = this.tile.getRecipe().getPowerCost();
+		long j = this.tile.getActiveRecipe().getPowerCost();
 		return (int) (j != 0 && i != 0 ? (long) i * pixels / j : 0);
 	}
 
@@ -46,18 +45,18 @@ public class CraftingCoreScreen extends ContainerScreen<CraftingCoreContainer> {
 		this.font.drawString(inventory, 20.0F, this.ySize - 94.0F, 4210752);
 		RenderSystem.pushMatrix();
 		RenderSystem.scalef(0.75F, 0.75F, 0.75F);
-		this.font.drawString(Utils.localize("ec.ccore.pedestals", this.tile.getPedestalCount()), 36, 36, -1);
+//		this.font.drawString(Utils.localize("ec.ccore.pedestals", this.tile.getPedestalCount()), 36, 36, -1);
 		
-		CombinationRecipe recipe = this.tile.getRecipe();
-		if (recipe == null) {
-			this.font.drawString(Utils.localize("ec.ccore.no_recipe"), 36, 56, -1);
-		} else {
-			this.font.drawString(Utils.localize("ec.ccore.rf_cost", Utils.format(recipe.getPowerCost())) + " FE", 36, 56, -1);
-			this.font.drawString(Utils.localize("ec.ccore.rf_rate", Utils.format(recipe.getPowerRate())) + " FE/t", 36, 66, -1);
-			if (this.tile.getEnergy().getEnergyStored() < recipe.getPowerRate()) {
-				this.font.drawString(Utils.localize("ec.ccore.no_power"), 36, 86, -1);
-			}
-		}
+//		CombinationRecipe recipe = this.tile.getActiveRecipe();
+//		if (recipe == null) {
+//			this.font.drawString(Utils.localize("ec.ccore.no_recipe"), 36, 56, -1);
+//		} else {
+//			this.font.drawString(Utils.localize("ec.ccore.rf_cost", Utils.format(recipe.getPowerCost())) + " FE", 36, 56, -1);
+//			this.font.drawString(Utils.localize("ec.ccore.rf_rate", Utils.format(recipe.getPowerRate())) + " FE/t", 36, 66, -1);
+//			if (this.tile.getEnergy().getEnergyStored() < recipe.getPowerRate()) {
+//				this.font.drawString(Utils.localize("ec.ccore.no_power"), 36, 86, -1);
+//			}
+//		}
 		
 		RenderSystem.popMatrix();
 	}
@@ -71,15 +70,15 @@ public class CraftingCoreScreen extends ContainerScreen<CraftingCoreContainer> {
 		super.render(mouseX, mouseY, partialTicks);
 		this.renderHoveredToolTip(mouseX, mouseY);
 		
-		if (this.tile.getRecipe() != null) {
-			ItemStack output = this.tile.getRecipe().getOutput();
-			this.drawFakeItemStack(output, 148, 47, mouseX, mouseY);
-			this.drawFakeItemStackTooltip(output, 148, 47, mouseX, mouseY);
-		}
-
-		if (mouseX > left + 7 && mouseX < this.guiLeft + 20 && mouseY > this.guiTop + 17 && mouseY < this.guiTop + 94) {
-			this.drawHoveringText(Utils.format(this.tile.getEnergy().getEnergyStored()) + " FE", mouseX, mouseY);
-		}
+//		if (this.tile.getActiveRecipe() != null) {
+//			ItemStack output = this.tile.getActiveRecipe().getOutput();
+//			this.drawFakeItemStack(output, 148, 47, mouseX, mouseY);
+//			this.drawFakeItemStackTooltip(output, 148, 47, mouseX, mouseY);
+//		}
+//
+//		if (mouseX > left + 7 && mouseX < this.guiLeft + 20 && mouseY > this.guiTop + 17 && mouseY < this.guiTop + 94) {
+//			this.drawHoveringText(Utils.format(this.tile.getEnergy().getEnergyStored()) + " FE", mouseX, mouseY);
+//		}
 	}
 
 	@Override
@@ -92,7 +91,7 @@ public class CraftingCoreScreen extends ContainerScreen<CraftingCoreContainer> {
 		int i1 = this.getEnergyBarScaled(78);
 		this.blit(x + 7, y + 95 - i1, 178, 78 - i1, 15, i1 + 1);
 
-		CombinationRecipe recipe = this.tile.getRecipe();
+		CombinationRecipe recipe = this.tile.getActiveRecipe();
 		if (this.tile != null && recipe != null) {
 			if (this.tile.getProgress() > 0 && recipe.getPowerCost() > 0) {
 				int i2 = getProgressBarScaled(24);
@@ -102,20 +101,20 @@ public class CraftingCoreScreen extends ContainerScreen<CraftingCoreContainer> {
 	}
 	
 	private void drawItemStack(ItemStack stack, int x, int y, String altText) {
-    	GlStateManager.pushMatrix();
-    	net.minecraft.client.renderer.RenderHelper.enableGUIStandardItemLighting();
-        GlStateManager.translate(0.0F, 0.0F, -32.0F);
-        this.zLevel = 200.0F;
-        this.itemRender.zLevel = 200.0F;
-        FontRenderer font = stack.getItem().getFontRenderer(stack);
-        if (font == null) font = this.fontRenderer;
-        GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
-        this.itemRender.renderItemAndEffectIntoGUI(stack, x, y);
-        this.itemRender.renderItemOverlayIntoGUI(font, stack, x, y, altText);
-        this.zLevel = 0.0F;
-        this.itemRender.zLevel = 0.0F;
-        net.minecraft.client.renderer.RenderHelper.disableStandardItemLighting();
-        GlStateManager.popMatrix();
+//    	GlStateManager.pushMatrix();
+//    	net.minecraft.client.renderer.RenderHelper.enableGUIStandardItemLighting();
+//        GlStateManager.translate(0.0F, 0.0F, -32.0F);
+//        this.zLevel = 200.0F;
+//        this.itemRender.zLevel = 200.0F;
+//        FontRenderer font = stack.getItem().getFontRenderer(stack);
+//        if (font == null) font = this.fontRenderer;
+//        GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+//        this.itemRender.renderItemAndEffectIntoGUI(stack, x, y);
+//        this.itemRender.renderItemOverlayIntoGUI(font, stack, x, y, altText);
+//        this.zLevel = 0.0F;
+//        this.itemRender.zLevel = 0.0F;
+//        net.minecraft.client.renderer.RenderHelper.disableStandardItemLighting();
+//        GlStateManager.popMatrix();
 	}
 
 	private void drawFakeItemStack(ItemStack stack, int xOffset, int yOffset, int mouseX, int mouseY) {
@@ -123,17 +122,17 @@ public class CraftingCoreScreen extends ContainerScreen<CraftingCoreContainer> {
 	}
 
 	private void drawFakeItemStackTooltip(ItemStack stack, int xOffset, int yOffset, int mouseX, int mouseY) {
-		if (mouseX > this.guiLeft + xOffset - 1 && mouseX < guiLeft + xOffset + 16 && mouseY > this.guiTop + yOffset - 1 && mouseY < this.guiTop + yOffset + 16) {
-			if (!stack.isEmpty()) {
-                GlStateManager.disableLighting();
-                GlStateManager.disableDepth();
-                GlStateManager.colorMask(true, true, true, false);
-                this.drawGradientRect(this.guiLeft + xOffset, this.guiTop + yOffset, this.guiLeft + xOffset + 16, this.guiTop + yOffset + 16, -2130706433, -2130706433);
-                GlStateManager.colorMask(true, true, true, true);
-                GlStateManager.enableLighting();
-                GlStateManager.enableDepth();
-				this.renderToolTip(stack, mouseX, mouseY);
-			}
-		}
+//		if (mouseX > this.guiLeft + xOffset - 1 && mouseX < guiLeft + xOffset + 16 && mouseY > this.guiTop + yOffset - 1 && mouseY < this.guiTop + yOffset + 16) {
+//			if (!stack.isEmpty()) {
+//                GlStateManager.disableLighting();
+//                GlStateManager.disableDepth();
+//                GlStateManager.colorMask(true, true, true, false);
+//                this.drawGradientRect(this.guiLeft + xOffset, this.guiTop + yOffset, this.guiLeft + xOffset + 16, this.guiTop + yOffset + 16, -2130706433, -2130706433);
+//                GlStateManager.colorMask(true, true, true, true);
+//                GlStateManager.enableLighting();
+//                GlStateManager.enableDepth();
+//				this.renderToolTip(stack, mouseX, mouseY);
+//			}
+//		}
 	}
 }

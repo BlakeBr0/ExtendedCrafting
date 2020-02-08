@@ -5,6 +5,7 @@ import com.blakebr0.extendedcrafting.ExtendedCrafting;
 import com.blakebr0.extendedcrafting.api.crafting.ITableRecipe;
 import com.blakebr0.extendedcrafting.block.ModBlocks;
 import com.blakebr0.extendedcrafting.crafting.recipe.ShapedTableRecipe;
+import com.blakebr0.extendedcrafting.crafting.recipe.ShapelessTableRecipe;
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.IRecipeLayout;
 import mezz.jei.api.gui.drawable.IDrawable;
@@ -89,7 +90,7 @@ public class EliteTableCategory implements IRecipeCategory<ITableRecipe> {
 					stackIndex++;
 				}
 			}
-		} else if (recipe instanceof TableShapelessWrapper) {
+		} else if (recipe instanceof ShapelessTableRecipe) {
 			for (int i = 0; i < inputs.size(); i++) {
 				stacks.set(i + 1, inputs.get(i));
 			}

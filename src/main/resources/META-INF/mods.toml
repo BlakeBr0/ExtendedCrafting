@@ -18,7 +18,7 @@ loaderVersion="[31,)"
   [[dependencies.extendedcrafting]]
       modId="forge"
       mandatory=true
-      versionRange="[31.0,)"
+      versionRange="[31.1,)"
       ordering="NONE"
       side="BOTH"
   [[dependencies.extendedcrafting]]

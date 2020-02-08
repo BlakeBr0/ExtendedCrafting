@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "": {
+      "model": "extendedcrafting:block/redstone_ingot_block"
+    }
+  }
+}

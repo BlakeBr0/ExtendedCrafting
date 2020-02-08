@@ -1,7 +1,7 @@
 {
-    "variants": {
-        "normal": {
-            "model": "extendedcrafting:ender_alternator"
-        }
+  "variants": {
+    "": {
+      "model": "extendedcrafting:block/ender_alternator"
     }
+  }
 }

@@ -1,5 +1,7 @@
 {
 	"variants": {
-		"normal": { "model": "extendedcrafting:crafting_core" }
+		"": {
+			"model": "extendedcrafting:block/crafting_core"
+		}
 	}
 }

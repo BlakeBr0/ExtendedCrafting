@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "": {
+      "model": "extendedcrafting:block/luminessence_block"
+    }
+  }
+}

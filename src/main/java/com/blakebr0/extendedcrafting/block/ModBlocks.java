@@ -29,8 +29,11 @@ public class ModBlocks {
 	public static final RegistryObject<BaseBlock> BLACK_IRON_BLOCK = register("black_iron_block", () -> new BaseBlock(Material.IRON, SoundType.METAL, 5.0F, 10.0F));
 	public static final RegistryObject<BaseBlock> REDSTONE_INGOT_BLOCK = register("redstone_ingot_block", () -> new BaseBlock(Material.IRON, SoundType.METAL, 5.0F, 10.0F));
 	public static final RegistryObject<BaseBlock> ENDER_INGOT_BLOCK = register("ender_ingot_block", () -> new BaseBlock(Material.IRON, SoundType.METAL, 5.0F, 10.0F));
+	public static final RegistryObject<BaseBlock> ENHANCED_ENDER_INGOT_BLOCK = register("enhanced_ender_ingot_block", () -> new BaseBlock(Material.IRON, SoundType.METAL, 5.0F, 10.0F));
 	public static final RegistryObject<BaseBlock> CRYSTALTINE_BLOCK = register("crystaltine_block", () -> new BaseBlock(Material.IRON, SoundType.METAL, 5.0F, 10.0F));
 	public static final RegistryObject<BaseBlock> THE_ULTIMATE_BLOCK = register("the_ultimate_block", () -> new BaseBlock(Material.IRON, SoundType.METAL, 5.0F, 10.0F));
+	public static final RegistryObject<BaseBlock> NETHER_STAR_BLOCK = register("nether_star_block", () -> new BaseBlock(Material.IRON, SoundType.METAL, 5.0F, 10.0F));
+	public static final RegistryObject<BaseBlock> ENDER_STAR_BLOCK = register("ender_star_block", () -> new BaseBlock(Material.IRON, SoundType.METAL, 5.0F, 10.0F));
 
 	public static final RegistryObject<PedestalBlock> PEDESTAL = register("pedestal", PedestalBlock::new);
 	public static final RegistryObject<CraftingCoreBlock> CRAFTING_CORE = register("crafting_core", CraftingCoreBlock::new);

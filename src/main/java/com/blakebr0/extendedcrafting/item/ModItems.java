@@ -22,50 +22,33 @@ public class ModItems {
 	public static final List<Supplier<? extends Item>> ENTRIES = new ArrayList<>();
 
 	public static final RegistryObject<BaseItem> LUMINESSENCE = register("luminessence");
-	public static final RegistryObject<BaseItem> BLACK_IRON_INGOT = register("black_iron");
+	public static final RegistryObject<BaseItem> BLACK_IRON_INGOT = register("black_iron_ingot");
 	public static final RegistryObject<BaseItem> REDSTONE_INGOT = register("redstone_ingot");
 	public static final RegistryObject<BaseItem> ENDER_INGOT = register("ender_ingot");
+	public static final RegistryObject<BaseItem> ENHANCED_ENDER_INGOT = register("enhanced_ender_ingot");
 	public static final RegistryObject<BaseItem> CRYSTALTINE_INGOT = register("crystaltine_ingot");
 	public static final RegistryObject<BaseItem> THE_ULTIMATE_INGOT = register("the_ultimate_ingot");
 	public static final RegistryObject<BaseItem> BLACK_IRON_NUGGET = register("black_iron_nugget");
 	public static final RegistryObject<BaseItem> REDSTONE_NUGGET = register("redstone_nugget");
 	public static final RegistryObject<BaseItem> ENDER_NUGGET = register("ender_nugget");
+	public static final RegistryObject<BaseItem> ENHANCED_ENDER_NUGGET = register("enhanced_ender_nugget");
 	public static final RegistryObject<BaseItem> CRYSTALTINE_NUGGET = register("crystaltine_nugget");
 	public static final RegistryObject<BaseItem> THE_ULTIMATE_NUGGET = register("the_ultimate_nugget");
-
-
-
-	public static ItemStack itemBlackIronSlate;
-	public static ItemStack itemBlackIronRod;
-
-	public static ItemStack itemBasicCatalyst;
-	public static ItemStack itemAdvancedCatalyst;
-	public static ItemStack itemEliteCatalyst;
-	public static ItemStack itemUltimateCatalyst;
-	public static ItemStack itemCrystaltineCatalyst;
-	public static ItemStack itemTheUltimateCatalyst;
-
-	public static ItemStack itemBasicComponent;
-	public static ItemStack itemAdvancedComponent;
-	public static ItemStack itemEliteComponent;
-	public static ItemStack itemUltimateComponent;
-	public static ItemStack itemCrystaltineComponent;
-	public static ItemStack itemTheUltimateComponent;
-
-	public static ItemStack itemEnderStar;
-	public static ItemStack itemEnderStarNugget;
-
-	public static ItemStack itemEnhancedEnderIngot;
-	public static ItemStack itemEnhancedEnderNugget;
-
-	public static ItemStack itemDiamondNugget;
-	public static ItemStack itemEmeraldNugget;
-	public static ItemStack itemNetherStarNugget;
-
+	public static final RegistryObject<BaseItem> BASIC_CATALYST = register("basic_catalyst");
+	public static final RegistryObject<BaseItem> ADVANCED_CATALYST = register("advanced_catalyst");
+	public static final RegistryObject<BaseItem> ELITE_CATALYST = register("elite_catalyst");
+	public static final RegistryObject<BaseItem> ULTIMATE_CATALYST = register("ultimate_catalyst");
+	public static final RegistryObject<BaseItem> CRYSTALTINE_CATALYST = register("crystaltine_catalyst");
+	public static final RegistryObject<BaseItem> THE_ULTIMATE_CATALYST = register("the_ultimate_catalyst");
+	public static final RegistryObject<BaseItem> BASIC_COMPONENT = register("basic_component");
+	public static final RegistryObject<BaseItem> ADVANCED_COMPONENT = register("advanced_component");
+	public static final RegistryObject<BaseItem> ELITE_COMPONENT = register("elite_component");
+	public static final RegistryObject<BaseItem> ULTIMATE_COMPONENT = register("ultimate_component");
+	public static final RegistryObject<BaseItem> CRYSTALTINE_COMPONENT = register("crystaltine_component");
+	public static final RegistryObject<BaseItem> THE_ULTIMATE_COMPONENT = register("the_ultimate_component");
+	public static final RegistryObject<BaseItem> ENDER_STAR = register("ender_star");
 	public static final RegistryObject<HandheldTableItem> HANDHELD_TABLE = register("handheld_table", () -> new HandheldTableItem(p -> p.group(ITEM_GROUP)));
-	
 	public static final RegistryObject<RecipeMakerItem> RECIPE_MAKER = register("recipe_maker", () -> new RecipeMakerItem(p -> p.group(ITEM_GROUP)));
-
 	public static final RegistryObject<SingularityItem> SINGULARITY = register("singularity", () -> new SingularityItem(p -> p.group(ITEM_GROUP)));
 	public static final RegistryObject<UltimateSingularityItem> ULTIMATE_SINGULARITY = register("ultimate_singularity", () -> new UltimateSingularityItem(p -> p.group(ITEM_GROUP)));
 

@@ -1,0 +1,6 @@
+{
+  "parent": "block/cube_all",
+  "textures": {
+    "all": "extendedcrafting:block/black_iron_block"
+  }
+}

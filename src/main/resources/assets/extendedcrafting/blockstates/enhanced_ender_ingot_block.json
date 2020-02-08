@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "": {
+      "model": "extendedcrafting:block/enhanced_ender_ingot_block"
+    }
+  }
+}

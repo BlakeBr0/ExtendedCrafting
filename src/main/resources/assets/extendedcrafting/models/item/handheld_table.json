@@ -1,6 +1,6 @@
 {
   "parent":"item/handheld",
   "textures": {
-    "layer0":"extendedcrafting:items/handheld_table"
+    "layer0":"extendedcrafting:item/handheld_table"
   }
 }

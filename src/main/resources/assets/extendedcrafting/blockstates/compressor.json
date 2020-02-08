@@ -1,8 +1,8 @@
 {
-    "variants": {
-        "facing=north": { "model": "extendedcrafting:compressor", "y": 180 },
-        "facing=south": { "model": "extendedcrafting:compressor" },
-        "facing=west":  { "model": "extendedcrafting:compressor", "y": 90 },
-        "facing=east":  { "model": "extendedcrafting:compressor", "y": 270 }
-    }
+  "variants": {
+    "facing=north": { "model": "extendedcrafting:block/compressor", "y": 180 },
+    "facing=south": { "model": "extendedcrafting:block/compressor" },
+    "facing=west":  { "model": "extendedcrafting:block/compressor", "y": 90 },
+    "facing=east":  { "model": "extendedcrafting:block/compressor", "y": 270 }
+  }
 }

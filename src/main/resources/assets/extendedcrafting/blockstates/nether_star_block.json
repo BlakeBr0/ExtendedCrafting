@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "": {
+      "model": "extendedcrafting:block/nether_star_block"
+    }
+  }
+}

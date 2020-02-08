@@ -1,5 +1,7 @@
 {
-	"variants": {
-		"normal": { "model": "extendedcrafting:pedestal" }
-	}
+  "variants": {
+    "": {
+      "model": "extendedcrafting:block/pedestal"
+    }
+  }
 }

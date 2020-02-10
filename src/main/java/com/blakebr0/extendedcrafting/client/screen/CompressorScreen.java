@@ -1,29 +1,22 @@
 package com.blakebr0.extendedcrafting.client.screen;
 
-import com.blakebr0.cucumber.helper.ResourceHelper;
-import com.blakebr0.cucumber.util.Utils;
 import com.blakebr0.extendedcrafting.ExtendedCrafting;
 import com.blakebr0.extendedcrafting.container.CompressorContainer;
 import com.blakebr0.extendedcrafting.network.NetworkHandler;
 import com.blakebr0.extendedcrafting.network.message.EjectModeSwitchMessage;
 import com.blakebr0.extendedcrafting.network.message.InputLimitSwitchMessage;
 import com.blakebr0.extendedcrafting.tileentity.CompressorTileEntity;
-import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.client.gui.widget.button.Button;
-import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.ITextComponent;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public class CompressorScreen extends ContainerScreen<CompressorContainer> {
-	private static final ResourceLocation BACKGROUND = ResourceHelper.getResource(ExtendedCrafting.MOD_ID, "textures/gui/compressor.png");
+	private static final ResourceLocation BACKGROUND = new ResourceLocation(ExtendedCrafting.MOD_ID, "textures/gui/compressor.png");
 
 	private CompressorTileEntity tile;
 

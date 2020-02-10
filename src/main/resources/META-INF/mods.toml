@@ -8,7 +8,7 @@ loaderVersion="[31,)"
   displayName="Extended Crafting"
   # updateJSONURL="http://myurl.me/"
   displayURL="https://www.curseforge.com/minecraft/mc-mods/extended-crafting"
-  #logoFile="examplemod.png"
+  # logoFile="examplemod.png"
   authors="BlakeBr0"
   credits="SpitefulFox"
   description='''
@@ -30,6 +30,6 @@ loaderVersion="[31,)"
   [[dependencies.extendedcrafting]]
       modId="cucumber"
       mandatory=true
-      versionRange="[3.0.0,)"
+      versionRange="[3.0.2,)"
       ordering="NONE"
       side="BOTH"

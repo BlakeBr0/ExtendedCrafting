@@ -1,7 +1,7 @@
 {
   "parent": "item/generated",
   "textures": {
-    "layer0": "extendedcrafting:items/singularity_ultimate",
-    "layer1": "extendedcrafting:items/singularity_ultimate_overlay"
+    "layer0": "extendedcrafting:item/ultimate_singularity",
+    "layer1": "extendedcrafting:item/ultimate_singularity_overlay"
   }
 }

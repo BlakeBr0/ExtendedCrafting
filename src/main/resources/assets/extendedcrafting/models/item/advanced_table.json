@@ -1,5 +1,5 @@
 {
-  "parent": "extendedcrafting:block/table_advanced",
+  "parent": "extendedcrafting:block/advanced_table",
   "display": {
     "gui": {
       "rotation": [ 30, 225, 0 ],

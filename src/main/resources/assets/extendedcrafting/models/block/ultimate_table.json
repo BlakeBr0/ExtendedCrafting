@@ -1,9 +1,9 @@
 {
   "textures": {
-    "particle": "extendedcrafting:block/storage_black_iron",
-    "0": "extendedcrafting:block/storage_black_iron",
-    "1": "extendedcrafting:block/table_ultimate_top",
-    "2": "extendedcrafting:block/table_ultimate_side"
+    "particle": "extendedcrafting:block/black_iron_block",
+    "0": "extendedcrafting:block/black_iron_block",
+    "1": "extendedcrafting:block/ultimate_table_top",
+    "2": "extendedcrafting:block/ultimate_table_side"
   },
   "elements": [
     {

@@ -106,7 +106,7 @@ public class ModConfigs {
 				.translation("configGui.extendedcrafting.enable_ender_crafter")
 				.define("enabled", true);
 		ENDER_CRAFTER_TIME_REQUIRED = common
-				.comment("How long a single Ender Crafter crafting operation should take by default.")
+				.comment("How long a single Ender Crafter crafting operation should take (in seconds) by default.")
 				.translation("configGui.extendedcrafting.ender_crafter_time_required")
 				.defineInRange("defaultTimeRequired", 60, 1, Integer.MAX_VALUE);
 		ENDER_CRAFTER_ALTERNATOR_EFFECTIVENESS = common

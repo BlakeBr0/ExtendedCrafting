@@ -1,7 +1,7 @@
 {
-	"variants": {
-		"": {
-			"model": "extendedcrafting:block/crafting_core"
-		}
-	}
+  "variants": {
+    "": {
+      "model": "extendedcrafting:block/crafting_core"
+    }
+  }
 }

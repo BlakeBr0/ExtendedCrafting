@@ -1,6 +1,5 @@
 package com.blakebr0.extendedcrafting.compat.jei;
 
-import com.blakebr0.cucumber.helper.ResourceHelper;
 import com.blakebr0.cucumber.lib.Localizable;
 import com.blakebr0.extendedcrafting.ExtendedCrafting;
 import com.blakebr0.extendedcrafting.api.crafting.ICompressorRecipe;
@@ -19,7 +18,7 @@ import java.util.List;
 
 public class CompressorCraftingCategory implements IRecipeCategory<ICompressorRecipe> {
 	public static final ResourceLocation UID = new ResourceLocation(ExtendedCrafting.MOD_ID, "compressor");
-	private static final ResourceLocation TEXTURE = ResourceHelper.getResource(ExtendedCrafting.MOD_ID, "textures/jei/compressor.png");
+	private static final ResourceLocation TEXTURE = new ResourceLocation(ExtendedCrafting.MOD_ID, "textures/jei/compressor.png");
 
 	private final IDrawable background;
 	private final IDrawable icon;

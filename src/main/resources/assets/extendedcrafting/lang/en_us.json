@@ -55,5 +55,34 @@
   "item.extendedcrafting.handheld_table": "Handheld Crafting Table",
   "item.extendedcrafting.recipe_maker": "Recipe Maker",
   "item.extendedcrafting.singularity": "%s Singularity",
-  "item.extendedcrafting.ultimate_singularity": "Ultimate Singularity"
+  "item.extendedcrafting.ultimate_singularity": "Ultimate Singularity",
+
+  "container.extendedcrafting.crafting_core": "Crafting Core",
+  "container.extendedcrafting.basic_table": "Basic Crafting",
+  "container.extendedcrafting.advanced_table": "Advanced Crafting",
+  "container.extendedcrafting.elite_table": "Elite Crafting",
+  "container.extendedcrafting.ultimate_table": "Ultimate Crafting",
+  "container.extendedcrafting.compressor": "Quantum Compressor",
+  "container.extendedcrafting.ender_crafter": "Ender Crafting",
+
+  "tooltip.extendedcrafting.empty": "Empty",
+  "tooltip.extendedcrafting.eject": "Eject",
+  "tooltip.extendedcrafting.ejecting": "Ejecting...",
+  "tooltip.extendedcrafting.limited_input": "Limited Input",
+  "tooltip.extendedcrafting.unlimited_input": "Unlimited Input",
+  "tooltip.extendedcrafting.tier": "Tier: %s",
+  "tooltip.extendedcrafting.output": "Output: %sx %s",
+  "tooltip.extendedcrafting.crafting": "Crafting: %sx %s",
+  "tooltip.extendedcrafting.mode": "Mode: %s",
+  "tooltip.extendedcrafting.num_items": "%s Items",
+  "tooltip.extendedcrafting.requires_table": "Requires Tier %s Crafting Table",
+  "tooltip.extendedcrafting.items_required": "Items Required:",
+
+  "jei.category.extendedcrafting.combination": "Combination Crafting",
+  "jei.category.extendedcrafting.basic_crafting": "Basic Crafting",
+  "jei.category.extendedcrafting.advanced_crafting": "Advanced Crafting",
+  "jei.category.extendedcrafting.elite_crafting": "Elite Crafting",
+  "jei.category.extendedcrafting.ultimate_crafting": "Ultimate Crafting",
+  "jei.category.extendedcrafting.compression": "Quantum Compression",
+  "jei.category.extendedcrafting.ender_crafting": "Ender Crafting"
 }

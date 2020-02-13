@@ -1,5 +1,8 @@
 package com.blakebr0.extendedcrafting.container;
 
+import com.blakebr0.extendedcrafting.api.crafting.ITableRecipe;
+import com.blakebr0.extendedcrafting.api.crafting.RecipeTypes;
+import com.blakebr0.extendedcrafting.container.inventory.ExtendedCraftingInventory;
 import com.blakebr0.extendedcrafting.container.slot.TableOutputSlot;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
@@ -8,15 +11,17 @@ import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
+import net.minecraft.world.World;
 import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.items.ItemStackHandler;
-import net.minecraftforge.items.SlotItemHandler;
 
+import java.util.Optional;
 import java.util.function.Function;
 
 public class BasicTableContainer extends Container {
 	private final Function<PlayerEntity, Boolean> isUsableByPlayer;
-	private final IItemHandlerModifiable inventory;
+	private final World world;
+	private final IItemHandlerModifiable result;
 
 	private BasicTableContainer(ContainerType<?> type, int id, PlayerInventory playerInventory) {
 		this(type, id, playerInventory, p -> false, new ItemStackHandler(9));
@@ -25,31 +30,41 @@ public class BasicTableContainer extends Container {
 	private BasicTableContainer(ContainerType<?> type, int id, PlayerInventory playerInventory, Function<PlayerEntity, Boolean> isUsableByPlayer, IItemHandlerModifiable inventory) {
 		super(type, id);
 		this.isUsableByPlayer = isUsableByPlayer;
-		this.inventory = inventory;
+		this.world = playerInventory.player.world;
+		this.result = new ItemStackHandler();
+		IInventory matrix = new ExtendedCraftingInventory(this, inventory);
 
-		this.addSlot(new TableOutputSlot(this, inventory, 0, 124, 36));
+		this.addSlot(new TableOutputSlot(this, matrix, this.result, 0, 124, 36));
 		
-		int wy, ex;
-		for (wy = 0; wy < 3; wy++) {
-			for (ex = 0; ex < 3; ex++) {
-				this.addSlot(new SlotItemHandler(this.inventory, ex + wy * 3, 32 + ex * 18, 18 + wy * 18));
+		int i, j;
+		for (i = 0; i < 3; i++) {
+			for (j = 0; j < 3; j++) {
+				this.addSlot(new Slot(matrix, j + i * 3, 32 + j * 18, 18 + i * 18));
 			}
 		}
 
-		for (wy = 0; wy < 3; wy++) {
-			for (ex = 0; ex < 9; ex++) {
-				this.addSlot(new Slot(playerInventory, ex + wy * 9 + 9, 8 + ex * 18, 88 + wy * 18));
+		for (i = 0; i < 3; i++) {
+			for (j = 0; j < 9; j++) {
+				this.addSlot(new Slot(playerInventory, j + i * 9 + 9, 8 + j * 18, 88 + i * 18));
 			}
 		}
 
-		for (ex = 0; ex < 9; ex++) {
-			this.addSlot(new Slot(playerInventory, ex, 8 + ex * 18, 146));
+		for (j = 0; j < 9; j++) {
+			this.addSlot(new Slot(playerInventory, j, 8 + j * 18, 146));
 		}
 	}
 
 	@Override
 	public void onCraftMatrixChanged(IInventory matrix) {
+		Optional<ITableRecipe> recipe = this.world.getRecipeManager().getRecipe(RecipeTypes.TABLE, matrix, this.world);
+		if (recipe.isPresent()) {
+			ItemStack result = recipe.get().getCraftingResult(matrix);
+			this.result.setStackInSlot(0, result);
+		} else {
+			this.result.setStackInSlot(0, ItemStack.EMPTY);
+		}
 
+		super.onCraftMatrixChanged(matrix);
 	}
 
 	@Override

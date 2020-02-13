@@ -1,6 +1,6 @@
 package com.blakebr0.extendedcrafting.block;
 
-import com.blakebr0.cucumber.block.BaseBlock;
+import com.blakebr0.cucumber.block.BaseTileEntityBlock;
 import com.blakebr0.cucumber.iface.IEnableable;
 import com.blakebr0.cucumber.util.VoxelShapeBuilder;
 import com.blakebr0.extendedcrafting.config.ModConfigs;
@@ -18,6 +18,7 @@ import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
+import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.IBlockReader;
@@ -27,7 +28,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 
 import java.util.List;
 
-public class EliteTableBlock extends BaseBlock implements IEnableable {
+public class EliteTableBlock extends BaseTileEntityBlock implements IEnableable {
 	public static final VoxelShape ELITE_TABLE_SHAPE = new VoxelShapeBuilder()
 			.cuboid(14.0, 2.0, 14.0, 2.0, 0.0, 2.0)
 			.cuboid(9.0, 10.0, 4.0, 7.0, 2.0, 2.0)
@@ -67,6 +68,11 @@ public class EliteTableBlock extends BaseBlock implements IEnableable {
 		}
 
 		super.onReplaced(state, world, pos, newState, isMoving);
+	}
+
+	@Override
+	public VoxelShape getShape(BlockState state, IBlockReader world, BlockPos pos, ISelectionContext context) {
+		return ELITE_TABLE_SHAPE;
 	}
 
 	@OnlyIn(Dist.CLIENT)

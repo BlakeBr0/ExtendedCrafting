@@ -5,7 +5,7 @@ import com.blakebr0.cucumber.iface.IEnableable;
 import com.blakebr0.cucumber.util.VoxelShapeBuilder;
 import com.blakebr0.extendedcrafting.config.ModConfigs;
 import com.blakebr0.extendedcrafting.lib.ModTooltips;
-import com.blakebr0.extendedcrafting.tileentity.AdvancedTableTileEntity;
+import com.blakebr0.extendedcrafting.tileentity.BasicTableTileEntity;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
@@ -44,7 +44,7 @@ public class BasicTableBlock extends BaseTileEntityBlock implements IEnableable 
 
 	@Override
 	public TileEntity createTileEntity(BlockState state, IBlockReader world) {
-		return new AdvancedTableTileEntity();
+		return new BasicTableTileEntity();
 	}
 
 	@Override
@@ -52,9 +52,8 @@ public class BasicTableBlock extends BaseTileEntityBlock implements IEnableable 
 		if (!world.isRemote()) {
 			TileEntity tile = world.getTileEntity(pos);
 
-			if (tile instanceof AdvancedTableTileEntity)
-				player.openContainer((AdvancedTableTileEntity) tile);
-
+			if (tile instanceof BasicTableTileEntity)
+				player.openContainer((BasicTableTileEntity) tile);
 		}
 
 		return ActionResultType.SUCCESS;
@@ -64,8 +63,8 @@ public class BasicTableBlock extends BaseTileEntityBlock implements IEnableable 
 	public void onReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean isMoving) {
 		if (state.getBlock() != newState.getBlock()) {
 			TileEntity tile = world.getTileEntity(pos);
-			if (tile instanceof AdvancedTableTileEntity) {
-				AdvancedTableTileEntity table = (AdvancedTableTileEntity) tile;
+			if (tile instanceof BasicTableTileEntity) {
+				BasicTableTileEntity table = (BasicTableTileEntity) tile;
 				InventoryHelper.dropItems(world, pos, table.getInventory().getStacks());
 			}
 		}

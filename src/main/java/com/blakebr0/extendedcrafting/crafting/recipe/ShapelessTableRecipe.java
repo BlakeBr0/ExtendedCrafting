@@ -4,33 +4,33 @@ import com.blakebr0.cucumber.crafting.ISpecialRecipe;
 import com.blakebr0.cucumber.helper.StackHelper;
 import com.blakebr0.extendedcrafting.api.crafting.ITableRecipe;
 import com.blakebr0.extendedcrafting.api.crafting.RecipeTypes;
+import com.blakebr0.extendedcrafting.crafting.ModRecipeSerializers;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipeSerializer;
 import net.minecraft.item.crafting.IRecipeType;
 import net.minecraft.item.crafting.Ingredient;
+import net.minecraft.item.crafting.ShapedRecipe;
 import net.minecraft.network.PacketBuffer;
+import net.minecraft.util.JSONUtils;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.World;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.registries.ForgeRegistryEntry;
 
-import java.util.Iterator;
-
 public class ShapelessTableRecipe implements ISpecialRecipe, ITableRecipe {
-	private final ResourceLocation id;
+	private final ResourceLocation recipeId;
 	private final NonNullList<Ingredient> inputs;
 	private final ItemStack output;
 	private final int tier;
 
-	public ShapelessTableRecipe(ResourceLocation id, NonNullList<Ingredient> inputs, ItemStack output) {
-		this(id, inputs, output, 0);
+	public ShapelessTableRecipe(ResourceLocation recipeId, NonNullList<Ingredient> inputs, ItemStack output) {
+		this(recipeId, inputs, output, 0);
 	}
 
-	public ShapelessTableRecipe(ResourceLocation id, NonNullList<Ingredient> inputs, ItemStack output, int tier) {
-		this.id = id;
+	public ShapelessTableRecipe(ResourceLocation recipeId, NonNullList<Ingredient> inputs, ItemStack output, int tier) {
+		this.recipeId = recipeId;
 		this.inputs = inputs;
 		this.output = output;
 		this.tier = tier;
@@ -42,66 +42,18 @@ public class ShapelessTableRecipe implements ISpecialRecipe, ITableRecipe {
 	}
 
 	@Override
-	public ItemStack getCraftingResult(IInventory inventory) {
-		return this.output.copy();
-	}
-
-	@Override
-	public boolean matches(IInventory inventory, World world) {
-		NonNullList<Ingredient> required = NonNullList.create();
-		required.addAll(this.inputs);
-
-		if (this.tier != 0 && this.tier != this.getTierFromSize(inventory.getSizeInventory()))
-			return false;
-
-		for (int x = 0; x < inventory.getSizeInventory(); x++) {
-			ItemStack slot = inventory.getStackInSlot(x);
-
-			if (!slot.isEmpty()) {
-				boolean inRecipe = false;
-				Iterator<Ingredient> req = required.iterator();
-
-				while (req.hasNext()) {
-					Ingredient target = req.next();
-					if (target.test(slot)) {
-						if (target.getMatchingStacks().length == 0) {
-							inRecipe = true;
-							req.remove();
-							break;
-						}
-						
-						for (ItemStack stack : target.getMatchingStacks()) {
-							if (StackHelper.compareTags(stack, slot)) {
-								inRecipe = true;
-								req.remove();
-								break;
-							}
-						}
-						
-						if (inRecipe) break;
-					}
-				}
-
-				if (!inRecipe) return false;
-			}
-		}
-
-		return required.isEmpty();
-	}
-
-	@Override
 	public NonNullList<Ingredient> getIngredients() {
 		return this.inputs;
 	}
 
 	@Override
 	public ResourceLocation getId() {
-		return this.id;
+		return this.recipeId;
 	}
 
 	@Override
 	public IRecipeSerializer<?> getSerializer() {
-		return null;
+		return ModRecipeSerializers.SHAPELESS_TABLE;
 	}
 
 	@Override
@@ -114,43 +66,40 @@ public class ShapelessTableRecipe implements ISpecialRecipe, ITableRecipe {
 		return width * height >= this.inputs.size();
 	}
 
-	private int getTierFromSize(int size) {
-		return size < 10 ? 1
-				 : size < 26 ? 2
-				 : size < 50 ? 3
-				 : 4;
+	@Override
+	public ItemStack getCraftingResult(IItemHandler inventory) {
+		return this.output.copy();
 	}
 
 	@Override
-	public int getTier() {
-		if (this.tier > 0) return this.tier;
-
-		return this.inputs.size() < 10 ? 1
-				 : this.inputs.size() < 26 ? 2
-				 : this.inputs.size() < 50 ? 3
-				 : 4;
-	}
-
-	@Override
-	public boolean matches(IItemHandler grid) {
-		NonNullList<Ingredient> required = NonNullList.create();
-		required.addAll(this.inputs);
-
-		if (this.tier != 0 && this.tier != this.getTierFromSize(grid.getSlots()))
+	public boolean matches(IItemHandler inventory) {
+		if (this.tier != 0 && this.tier != this.getTierFromSize(inventory.getSlots()))
 			return false;
 
-		for (int x = 0; x < grid.getSlots(); x++) {
-			ItemStack slot = grid.getStackInSlot(x);
+		int matches = 0;
+		for (int x = 0; x < inventory.getSlots(); x++) {
+			ItemStack slot = inventory.getStackInSlot(x);
 
 			if (!slot.isEmpty()) {
 				boolean inRecipe = false;
-				Iterator<Ingredient> req = required.iterator();
 
-				while (req.hasNext()) {
-					if (req.next().test(slot)) {
-						inRecipe = true;
-						req.remove();
-						break;
+				for (Ingredient target : this.inputs) {
+					if (target.test(slot)) {
+						if (target.getMatchingStacks().length == 0) {
+							inRecipe = true;
+							matches++;
+							break;
+						}
+
+						for (ItemStack stack : target.getMatchingStacks()) {
+							if (StackHelper.compareTags(stack, slot)) {
+								inRecipe = true;
+								matches++;
+								break;
+							}
+						}
+
+						if (inRecipe) break;
 					}
 				}
 
@@ -158,32 +107,67 @@ public class ShapelessTableRecipe implements ISpecialRecipe, ITableRecipe {
 			}
 		}
 
-		return required.isEmpty();
-	}
-	
-	public boolean requiresTier() {
-		return this.tier > 0;
+		return matches == this.inputs.size();
 	}
 
 	@Override
-	public ItemStack getCraftingResult(IItemHandler iItemHandler) {
-		return null;
+	public int getTier() {
+		if (this.tier > 0) return this.tier;
+		return this.getTierFromSize(this.inputs.size());
+	}
+
+	@Override
+	public boolean hasRequiredTier() {
+		return this.tier > 0;
+	}
+
+	private int getTierFromSize(int size) {
+		return size < 10 ? 1
+				: size < 26 ? 2
+				: size < 50 ? 3
+				: 4;
 	}
 
 	public static class Serializer extends ForgeRegistryEntry<IRecipeSerializer<?>> implements IRecipeSerializer<ShapelessTableRecipe> {
 		@Override
 		public ShapelessTableRecipe read(ResourceLocation recipeId, JsonObject json) {
-			return null;
+			NonNullList<Ingredient> inputs = NonNullList.create();
+			JsonArray ingredients = JSONUtils.getJsonArray(json, "ingredients");
+			for (int i = 0; i < ingredients.size(); i++) {
+				inputs.add(Ingredient.deserialize(ingredients.get(i)));
+			}
+
+			ItemStack output = ShapedRecipe.deserializeItem(json.getAsJsonObject("result"));
+			int tier = JSONUtils.getInt(json, "tier", 0);
+
+			return new ShapelessTableRecipe(recipeId, inputs, output, tier);
 		}
 
 		@Override
 		public ShapelessTableRecipe read(ResourceLocation recipeId, PacketBuffer buffer) {
-			return null;
+			int size = buffer.readVarInt();
+			NonNullList<Ingredient> inputs = NonNullList.withSize(size, Ingredient.EMPTY);
+
+			for (int i = 0; i < size; ++i) {
+				inputs.set(i, Ingredient.read(buffer));
+			}
+
+			ItemStack output = buffer.readItemStack();
+			int tier = buffer.readVarInt();
+
+			return new ShapelessTableRecipe(recipeId, inputs, output, tier);
 		}
 
 		@Override
 		public void write(PacketBuffer buffer, ShapelessTableRecipe recipe) {
+			buffer.writeVarInt(recipe.inputs.size());
 
+			for (Ingredient ingredient : recipe.inputs) {
+				ingredient.write(buffer);
+			}
+
+			buffer.writeItemStack(recipe.output);
+			buffer.writeVarInt(recipe.tier);
 		}
 	}
 }

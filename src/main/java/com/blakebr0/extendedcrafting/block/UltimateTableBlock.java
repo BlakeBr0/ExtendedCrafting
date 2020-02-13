@@ -5,7 +5,6 @@ import com.blakebr0.cucumber.iface.IEnableable;
 import com.blakebr0.cucumber.util.VoxelShapeBuilder;
 import com.blakebr0.extendedcrafting.config.ModConfigs;
 import com.blakebr0.extendedcrafting.lib.ModTooltips;
-import com.blakebr0.extendedcrafting.tileentity.EliteTableTileEntity;
 import com.blakebr0.extendedcrafting.tileentity.UltimateTableTileEntity;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.SoundType;
@@ -63,8 +62,8 @@ public class UltimateTableBlock extends BaseTileEntityBlock implements IEnableab
 	@Override
 	public void onReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean isMoving) {
 		TileEntity tile = world.getTileEntity(pos);
-		if (tile instanceof EliteTableTileEntity) {
-			EliteTableTileEntity table = (EliteTableTileEntity) tile;
+		if (tile instanceof UltimateTableTileEntity) {
+			UltimateTableTileEntity table = (UltimateTableTileEntity) tile;
 			InventoryHelper.dropItems(world, pos, table.getInventory().getStacks());
 		}
 

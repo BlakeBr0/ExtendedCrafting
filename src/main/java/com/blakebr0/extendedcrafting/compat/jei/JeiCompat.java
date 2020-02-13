@@ -24,6 +24,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.RecipeManager;
 import net.minecraft.util.ResourceLocation;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -80,10 +81,10 @@ public class JeiCompat implements IModPlugin {
 						.map(recipe -> (ITableRecipe) recipe)
 						.collect(Collectors.groupingBy(ITableRecipe::getTier));
 
-				registration.addRecipes(recipes.get(0), BasicTableCategory.UID);
-				registration.addRecipes(recipes.get(1), AdvancedTableCategory.UID);
-				registration.addRecipes(recipes.get(2), EliteTableCategory.UID);
-				registration.addRecipes(recipes.get(3), UltimateTableCategory.UID);
+				registration.addRecipes(recipes.getOrDefault(1, new ArrayList<>()), BasicTableCategory.UID);
+				registration.addRecipes(recipes.getOrDefault(2, new ArrayList<>()), AdvancedTableCategory.UID);
+				registration.addRecipes(recipes.getOrDefault(3, new ArrayList<>()), EliteTableCategory.UID);
+				registration.addRecipes(recipes.getOrDefault(4, new ArrayList<>()), UltimateTableCategory.UID);
 			}
 
 			if (ModConfigs.ENABLE_COMPRESSOR.get()) {

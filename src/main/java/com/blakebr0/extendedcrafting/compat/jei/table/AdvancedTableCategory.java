@@ -1,11 +1,15 @@
 package com.blakebr0.extendedcrafting.compat.jei.table;
 
 import com.blakebr0.cucumber.lib.Localizable;
+import com.blakebr0.cucumber.util.Utils;
 import com.blakebr0.extendedcrafting.ExtendedCrafting;
 import com.blakebr0.extendedcrafting.api.crafting.ITableRecipe;
 import com.blakebr0.extendedcrafting.block.ModBlocks;
+import com.blakebr0.extendedcrafting.compat.jei.JeiCompat;
 import com.blakebr0.extendedcrafting.crafting.recipe.ShapedTableRecipe;
 import com.blakebr0.extendedcrafting.crafting.recipe.ShapelessTableRecipe;
+import com.blakebr0.extendedcrafting.lib.ModTooltips;
+import com.mojang.blaze3d.systems.RenderSystem;
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.IRecipeLayout;
 import mezz.jei.api.gui.drawable.IDrawable;
@@ -15,7 +19,9 @@ import mezz.jei.api.ingredients.IIngredients;
 import mezz.jei.api.recipe.category.IRecipeCategory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.TextFormatting;
 
+import java.util.Collections;
 import java.util.List;
 
 public class AdvancedTableCategory implements IRecipeCategory<ITableRecipe> {
@@ -24,10 +30,14 @@ public class AdvancedTableCategory implements IRecipeCategory<ITableRecipe> {
 
 	private final IDrawable background;
 	private final IDrawable icon;
+	private final IDrawable required;
+	private final IDrawable shapeless;
 
 	public AdvancedTableCategory(IGuiHelper helper) {
 		this.background = helper.createDrawable(TEXTURE, 0, 0, 150, 90);
 		this.icon = helper.createDrawableIngredient(new ItemStack(ModBlocks.ADVANCED_TABLE.get()));
+		this.required = helper.createDrawable(JeiCompat.ICONS, 0, 0, 15, 15);
+		this.shapeless = helper.createDrawable(JeiCompat.ICONS, 17, 0, 19, 15);
 	}
 
 	@Override
@@ -53,6 +63,34 @@ public class AdvancedTableCategory implements IRecipeCategory<ITableRecipe> {
 	@Override
 	public IDrawable getIcon() {
 		return this.icon;
+	}
+
+	@Override
+	public void draw(ITableRecipe recipe, double mouseX, double mouseY) {
+		RenderSystem.pushMatrix();
+		RenderSystem.scalef(0.5F, 0.5F, 0.5F);
+		boolean shapeless = recipe instanceof ShapelessTableRecipe;
+		if (recipe.hasRequiredTier())
+			this.required.draw(shapeless ? 265 : 285, 0);
+		if (shapeless)
+			this.shapeless.draw(285, 0);
+		RenderSystem.popMatrix();
+	}
+
+	@Override
+	public List<String> getTooltipStrings(ITableRecipe recipe, double mouseX, double mouseY) {
+		boolean shapeless = recipe instanceof ShapelessTableRecipe;
+		int sX = (shapeless ? 265 : 285) / 2, sY = 0;
+
+		if (recipe.hasRequiredTier() && mouseX > sX - 1 && mouseX < sX + 8 && mouseY > sY - 1 && mouseY < sY + 8) {
+			return Utils.asList(ModTooltips.REQUIRES_TABLE.args(recipe.getTier()).color(TextFormatting.WHITE).buildString());
+		}
+
+		if (shapeless && mouseX > sX + 10 && mouseX < sX + 20 && mouseY > sY - 1 && mouseY < sY + 8) {
+			return Utils.asList(Localizable.of("jei.tooltip.shapeless.recipe").buildString());
+		}
+
+		return Collections.emptyList();
 	}
 
 	@Override

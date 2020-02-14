@@ -30,12 +30,12 @@ import java.util.List;
 
 public class EliteTableBlock extends BaseTileEntityBlock implements IEnableable {
 	public static final VoxelShape ELITE_TABLE_SHAPE = new VoxelShapeBuilder()
-			.cuboid(14.0, 2.0, 14.0, 2.0, 0.0, 2.0)
-			.cuboid(9.0, 10.0, 4.0, 7.0, 2.0, 2.0)
-			.cuboid(9.0, 10.0, 14.0, 7.0, 2.0, 12.0)
-			.cuboid(14.0, 10.0, 9.0, 12.0, 2.0, 7.0)
-			.cuboid(4.0, 10.0, 9.0, 2.0, 2.0, 7.0)
-			.cuboid(16.0, 16.0, 16.0, 0.0, 10.0, 0.0)
+			.cuboid(14, 2, 14, 2, 0, 2)
+			.cuboid(5, 10, 5, 3, 2, 3)
+			.cuboid(13, 10, 13, 11, 2, 11)
+			.cuboid(13, 10, 5, 11, 2, 3)
+			.cuboid(5, 10, 13, 3, 2, 11)
+			.cuboid(16, 16, 16, 0, 10, 0)
 			.build();
 
 	public EliteTableBlock() {

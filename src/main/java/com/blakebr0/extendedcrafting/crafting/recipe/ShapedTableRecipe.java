@@ -285,7 +285,7 @@ public class ShapedTableRecipe implements ISpecialRecipe, ITableRecipe {
 			ItemStack output = ShapedRecipe.deserializeItem(JSONUtils.getJsonObject(json, "result"));
 			int tier = JSONUtils.getInt(json, "tier", 0);
 			int size = tier * 2 + 1;
-			if (width > size || height > size)
+			if (tier != 0 && (width > size || height > size))
 				throw new JsonSyntaxException("The pattern size is larger than the specified tier can support");
 
 			return new ShapedTableRecipe(recipeId, width, height, inputs, output, tier);

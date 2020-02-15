@@ -1,9 +1,10 @@
 package com.blakebr0.extendedcrafting.item;
 
 import com.blakebr0.cucumber.item.BaseItem;
+import com.blakebr0.cucumber.item.BaseShinyItem;
 import com.blakebr0.extendedcrafting.ExtendedCrafting;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
+import net.minecraft.item.Rarity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -34,6 +35,7 @@ public class ModItems {
 	public static final RegistryObject<BaseItem> ENHANCED_ENDER_NUGGET = register("enhanced_ender_nugget");
 	public static final RegistryObject<BaseItem> CRYSTALTINE_NUGGET = register("crystaltine_nugget");
 	public static final RegistryObject<BaseItem> THE_ULTIMATE_NUGGET = register("the_ultimate_nugget");
+	public static final RegistryObject<BaseItem> BLACK_IRON_SLATE = register("black_iron_slate");
 	public static final RegistryObject<BaseItem> BASIC_CATALYST = register("basic_catalyst");
 	public static final RegistryObject<BaseItem> ADVANCED_CATALYST = register("advanced_catalyst");
 	public static final RegistryObject<BaseItem> ELITE_CATALYST = register("elite_catalyst");
@@ -52,7 +54,7 @@ public class ModItems {
 	public static final RegistryObject<BaseItem> ENHANCED_ENDER_COMPONENT = register("enhanced_ender_component");
 	public static final RegistryObject<BaseItem> CRYSTALTINE_COMPONENT = register("crystaltine_component");
 	public static final RegistryObject<BaseItem> THE_ULTIMATE_COMPONENT = register("the_ultimate_component");
-	public static final RegistryObject<BaseItem> ENDER_STAR = register("ender_star");
+	public static final RegistryObject<BaseItem> ENDER_STAR = register("ender_star", () -> new BaseShinyItem(p -> p.group(ITEM_GROUP).rarity(Rarity.UNCOMMON)));
 	public static final RegistryObject<HandheldTableItem> HANDHELD_TABLE = register("handheld_table", () -> new HandheldTableItem(p -> p.group(ITEM_GROUP)));
 	public static final RegistryObject<RecipeMakerItem> RECIPE_MAKER = register("recipe_maker", () -> new RecipeMakerItem(p -> p.group(ITEM_GROUP)));
 	public static final RegistryObject<SingularityItem> SINGULARITY = register("singularity", () -> new SingularityItem(p -> p.group(ITEM_GROUP)));

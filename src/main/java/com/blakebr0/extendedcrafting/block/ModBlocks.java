@@ -35,6 +35,7 @@ public class ModBlocks {
 	public static final RegistryObject<BaseBlock> NETHER_STAR_BLOCK = register("nether_star_block", () -> new BaseBlock(Material.IRON, SoundType.METAL, 5.0F, 10.0F));
 	public static final RegistryObject<BaseBlock> ENDER_STAR_BLOCK = register("ender_star_block", () -> new BaseBlock(Material.IRON, SoundType.METAL, 5.0F, 10.0F));
 
+	public static final RegistryObject<FrameBlock> FRAME = register("frame", FrameBlock::new);
 	public static final RegistryObject<PedestalBlock> PEDESTAL = register("pedestal", PedestalBlock::new);
 	public static final RegistryObject<CraftingCoreBlock> CRAFTING_CORE = register("crafting_core", CraftingCoreBlock::new);
 	public static final RegistryObject<BasicTableBlock> BASIC_TABLE = register("basic_table", BasicTableBlock::new);

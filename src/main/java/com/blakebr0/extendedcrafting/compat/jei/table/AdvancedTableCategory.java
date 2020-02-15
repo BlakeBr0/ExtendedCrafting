@@ -26,7 +26,7 @@ import java.util.List;
 
 public class AdvancedTableCategory implements IRecipeCategory<ITableRecipe> {
 	public static final ResourceLocation UID = new ResourceLocation(ExtendedCrafting.MOD_ID, "advanced_crafting");
-	private static final ResourceLocation TEXTURE = new ResourceLocation(ExtendedCrafting.MOD_ID, "textures/jei/advanced_crafting.png");
+	private static final ResourceLocation TEXTURE = new ResourceLocation(ExtendedCrafting.MOD_ID, "textures/gui/jei/advanced_crafting.png");
 
 	private final IDrawable background;
 	private final IDrawable icon;

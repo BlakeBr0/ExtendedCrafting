@@ -20,7 +20,7 @@ import java.util.List;
 
 public class EnderCrafterCategory implements IRecipeCategory<IEnderCrafterRecipe> {
 	public static final ResourceLocation UID = new ResourceLocation(ExtendedCrafting.MOD_ID, "ender_crafting");
-	private static final ResourceLocation TEXTURE = new ResourceLocation(ExtendedCrafting.MOD_ID, "textures/jei/ender_crafting.png");
+	private static final ResourceLocation TEXTURE = new ResourceLocation(ExtendedCrafting.MOD_ID, "textures/gui/jei/ender_crafting.png");
 
 	private final IDrawable background;
 	private final IDrawableAnimated arrow;

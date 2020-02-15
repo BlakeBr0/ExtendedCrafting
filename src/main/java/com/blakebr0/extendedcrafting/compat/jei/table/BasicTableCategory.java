@@ -26,7 +26,7 @@ import java.util.List;
 
 public class BasicTableCategory implements IRecipeCategory<ITableRecipe> {
 	public static final ResourceLocation UID = new ResourceLocation(ExtendedCrafting.MOD_ID, "basic_crafting");
-	private static final ResourceLocation TEXTURE = new ResourceLocation(ExtendedCrafting.MOD_ID, "textures/jei/basic_crafting.png");
+	private static final ResourceLocation TEXTURE = new ResourceLocation(ExtendedCrafting.MOD_ID, "textures/gui/jei/basic_crafting.png");
 	
 	private final IDrawable background;
 	private final IDrawable icon;

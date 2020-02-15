@@ -26,7 +26,7 @@ import java.util.List;
 
 public class EliteTableCategory implements IRecipeCategory<ITableRecipe> {
 	public static final ResourceLocation UID = new ResourceLocation(ExtendedCrafting.MOD_ID, "elite_crafting");
-	private static final ResourceLocation TEXTURE = new ResourceLocation(ExtendedCrafting.MOD_ID, "textures/jei/elite_crafting.png");
+	private static final ResourceLocation TEXTURE = new ResourceLocation(ExtendedCrafting.MOD_ID, "textures/gui/jei/elite_crafting.png");
 
 	private final IDrawable background;
 	private final IDrawable icon;

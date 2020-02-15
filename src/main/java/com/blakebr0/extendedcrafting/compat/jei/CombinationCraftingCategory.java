@@ -21,7 +21,7 @@ import java.util.List;
 
 public class CombinationCraftingCategory implements IRecipeCategory<ICombinationRecipe> {
 	public static final ResourceLocation UID = new ResourceLocation(ExtendedCrafting.MOD_ID, "combination");
-	private static final ResourceLocation TEXTURE = new ResourceLocation(ExtendedCrafting.MOD_ID, "textures/jei/combination_crafting.png");
+	private static final ResourceLocation TEXTURE = new ResourceLocation(ExtendedCrafting.MOD_ID, "textures/gui/jei/combination_crafting.png");
 
 	private final IDrawable background;
 	private final IDrawable icon;

@@ -1,9 +1,12 @@
 package com.blakebr0.extendedcrafting.compat.jei;
 
 import com.blakebr0.cucumber.lib.Localizable;
+import com.blakebr0.cucumber.util.Utils;
 import com.blakebr0.extendedcrafting.ExtendedCrafting;
 import com.blakebr0.extendedcrafting.api.crafting.ICompressorRecipe;
 import com.blakebr0.extendedcrafting.block.ModBlocks;
+import com.blakebr0.extendedcrafting.lib.ModTooltips;
+import com.google.common.collect.Lists;
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.IRecipeLayout;
 import mezz.jei.api.gui.drawable.IDrawable;
@@ -12,13 +15,19 @@ import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.ingredients.IIngredients;
 import mezz.jei.api.recipe.category.IRecipeCategory;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.Ingredient;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.TextFormatting;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public class CompressorCraftingCategory implements IRecipeCategory<ICompressorRecipe> {
 	public static final ResourceLocation UID = new ResourceLocation(ExtendedCrafting.MOD_ID, "compressor");
-	private static final ResourceLocation TEXTURE = new ResourceLocation(ExtendedCrafting.MOD_ID, "textures/jei/compressor.png");
+	private static final ResourceLocation TEXTURE = new ResourceLocation(ExtendedCrafting.MOD_ID, "textures/gui/jei/compressor.png");
 
 	private final IDrawable background;
 	private final IDrawable icon;
@@ -54,10 +63,27 @@ public class CompressorCraftingCategory implements IRecipeCategory<ICompressorRe
 	}
 
 	@Override
+	public List<String> getTooltipStrings(ICompressorRecipe recipe, double mouseX, double mouseY) {
+		if (mouseX > 1 && mouseX < 14 && mouseY > 1 && mouseY < 78) {
+			return Arrays.asList(recipe.getPowerCost() + " FE", recipe.getPowerRate() + " FE/t");
+		}
+
+		if (mouseX > 54 && mouseX < 78 && mouseY > 58 && mouseY < 68) {
+			return Utils.asList(ModTooltips.NUM_ITEMS.args(recipe.getInputCount()).color(TextFormatting.WHITE).buildString());
+		}
+
+		return Collections.emptyList();
+	}
+
+	@Override
 	public void setIngredients(ICompressorRecipe recipe, IIngredients ingredients) {
 		ingredients.setOutput(VanillaTypes.ITEM, recipe.getRecipeOutput());
 
+		NonNullList<Ingredient> inputs = NonNullList.create();
+		inputs.addAll(recipe.getIngredients());
+		inputs.add(recipe.getCatalyst());
 
+		ingredients.setInputIngredients(inputs);
 	}
 
 	@Override

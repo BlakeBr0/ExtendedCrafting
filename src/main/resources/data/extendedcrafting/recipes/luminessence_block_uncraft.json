@@ -1,0 +1,12 @@
+{
+  "type": "crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "extendedcrafting:luminessence_block"
+    }
+  ],
+  "result": {
+    "item": "extendedcrafting:luminessence",
+    "count": 9
+  }
+}

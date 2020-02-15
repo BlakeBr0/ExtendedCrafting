@@ -1,0 +1,34 @@
+{
+  "type": "crafting_shaped",
+  "conditions": [
+    {
+      "type": "cucumber:enabled",
+      "item": "extendedcrafting:compressor"
+    }
+  ],
+  "pattern": [
+    "CBC",
+    "AIA",
+    "CSC"
+  ],
+  "key": {
+    "I": {
+      "item": "extendedcrafting:frame"
+    },
+    "B": {
+      "item": "extendedcrafting:elite_component"
+    },
+    "S": {
+      "item": "extendedcrafting:black_iron_slate"
+    },
+    "C": {
+      "item": "extendedcrafting:black_iron_ingot"
+    },
+    "A": {
+      "item": "extendedcrafting:elite_catalyst"
+    }
+  },
+  "result": {
+    "item": "extendedcrafting:compressor"
+  }
+}

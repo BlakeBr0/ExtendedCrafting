@@ -1,0 +1,16 @@
+{
+  "type": "crafting_shaped",
+  "pattern": [
+    "III",
+    "III",
+    "III"
+  ],
+  "key": {
+    "I": {
+      "item": "extendedcrafting:enhanced_ender_nugget"
+    }
+  },
+  "result": {
+    "item": "extendedcrafting:enhanced_ender_ingot"
+  }
+}

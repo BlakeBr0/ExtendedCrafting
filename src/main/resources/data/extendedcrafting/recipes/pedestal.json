@@ -1,0 +1,26 @@
+{
+  "type": "crafting_shaped",
+  "conditions": [
+    {
+      "type": "cucumber:enabled",
+      "item": "extendedcrafting:pedestal"
+    }
+  ],
+  "pattern": [
+    " I ",
+    " I ",
+    "IBI"
+  ],
+  "key": {
+    "I": {
+      "item": "extendedcrafting:black_iron_ingot"
+    },
+    "B": {
+      "item": "extendedcrafting:black_iron_block"
+    }
+  },
+  "result": {
+    "item": "extendedcrafting:pedestal",
+    "count": 2
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "type": "crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "extendedcrafting:redstone_ingot_block"
+    }
+  ],
+  "result": {
+    "item": "extendedcrafting:redstone_ingot",
+    "count": 9
+  }
+}

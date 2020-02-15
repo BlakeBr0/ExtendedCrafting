@@ -1,0 +1,28 @@
+{
+  "type": "crafting_shaped",
+  "conditions": [
+    {
+      "type": "cucumber:enabled",
+      "item": "extendedcrafting:ender_crafter"
+    }
+  ],
+  "pattern": [
+    "EEE",
+    "ICI",
+    "III"
+  ],
+  "key": {
+    "E": {
+      "item": "minecraft:ender_eye"
+    },
+    "I": {
+      "item": "extendedcrafting:ender_ingot"
+    },
+    "C": {
+      "item": "minecraft:crafting_table"
+    }
+  },
+  "result": {
+    "item": "extendedcrafting:ender_crafter"
+  }
+}

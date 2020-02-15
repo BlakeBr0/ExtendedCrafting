@@ -1,0 +1,19 @@
+{
+  "type": "crafting_shaped",
+  "pattern": [
+    " C ",
+    "CIC",
+    " C "
+  ],
+  "key": {
+    "I": {
+      "item": "extendedcrafting:black_iron_ingot"
+    },
+    "C": {
+      "item": "extendedcrafting:advanced_component"
+    }
+  },
+  "result": {
+    "item": "extendedcrafting:advanced_catalyst"
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "type": "crafting_shaped",
+  "pattern": [
+    "II"
+  ],
+  "key": {
+    "I": {
+      "item": "extendedcrafting:black_iron_ingot"
+    }
+  },
+  "result": {
+    "item": "extendedcrafting:black_iron_slate"
+  }
+}

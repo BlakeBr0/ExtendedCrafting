@@ -1,0 +1,16 @@
+{
+  "type": "crafting_shaped",
+  "pattern": [
+    "III",
+    "III",
+    "III"
+  ],
+  "key": {
+    "I": {
+      "item": "extendedcrafting:the_ultimate_nugget"
+    }
+  },
+  "result": {
+    "item": "extendedcrafting:the_ultimate_ingot"
+  }
+}

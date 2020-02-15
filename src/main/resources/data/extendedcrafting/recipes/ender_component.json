@@ -1,0 +1,20 @@
+{
+  "type": "crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "extendedcrafting:black_iron_slate"
+    },
+    {
+      "item": "extendedcrafting:luminessence"
+    },
+    {
+      "item": "extendedcrafting:ender_ingot"
+    },
+    {
+      "item": "extendedcrafting:ender_ingot"
+    }
+  ],
+  "result": {
+    "item": "extendedcrafting:ender_component"
+  }
+}

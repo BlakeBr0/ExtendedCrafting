@@ -1,0 +1,12 @@
+{
+  "type": "crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "extendedcrafting:nether_star_block"
+    }
+  ],
+  "result": {
+    "item": "minecraft:nether_star",
+    "count": 9
+  }
+}

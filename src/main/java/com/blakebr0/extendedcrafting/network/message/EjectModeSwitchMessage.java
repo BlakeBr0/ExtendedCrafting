@@ -11,18 +11,18 @@ import net.minecraftforge.fml.network.NetworkEvent;
 import java.util.function.Supplier;
 
 public class EjectModeSwitchMessage {
-    private long pos;
+    private BlockPos pos;
 
-    public EjectModeSwitchMessage(long pos) {
+    public EjectModeSwitchMessage(BlockPos pos) {
         this.pos = pos;
     }
 
     public static EjectModeSwitchMessage read(PacketBuffer buffer) {
-        return new EjectModeSwitchMessage(buffer.readLong());
+        return new EjectModeSwitchMessage(buffer.readBlockPos());
     }
 
     public static void write(EjectModeSwitchMessage message, PacketBuffer buffer) {
-        buffer.writeLong(message.pos);
+        buffer.writeBlockPos(message.pos);
     }
 
     public static void onMessage(EjectModeSwitchMessage message, Supplier<NetworkEvent.Context> context) {
@@ -30,7 +30,7 @@ public class EjectModeSwitchMessage {
             ServerPlayerEntity player = context.get().getSender();
             if (player != null) {
                 World world = player.getEntityWorld();
-                TileEntity tile = world.getTileEntity(BlockPos.fromLong(message.pos));
+                TileEntity tile = world.getTileEntity(message.pos);
                 if (tile instanceof CompressorTileEntity) {
                     CompressorTileEntity compressor = (CompressorTileEntity) tile;
                     compressor.toggleEjecting();

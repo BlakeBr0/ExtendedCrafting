@@ -11,18 +11,18 @@ import net.minecraftforge.fml.network.NetworkEvent;
 import java.util.function.Supplier;
 
 public class InputLimitSwitchMessage {
-    private long pos;
+    private BlockPos pos;
 
-    public InputLimitSwitchMessage(long pos) {
+    public InputLimitSwitchMessage(BlockPos pos) {
         this.pos = pos;
     }
 
     public static InputLimitSwitchMessage read(PacketBuffer buffer) {
-        return new InputLimitSwitchMessage(buffer.readLong());
+        return new InputLimitSwitchMessage(buffer.readBlockPos());
     }
 
     public static void write(InputLimitSwitchMessage message, PacketBuffer buffer) {
-        buffer.writeLong(message.pos);
+        buffer.writeBlockPos(message.pos);
     }
 
     public static void onMessage(InputLimitSwitchMessage message, Supplier<NetworkEvent.Context> context) {
@@ -30,7 +30,7 @@ public class InputLimitSwitchMessage {
             ServerPlayerEntity player = context.get().getSender();
             if (player != null) {
                 World world = player.getEntityWorld();
-                TileEntity tile = world.getTileEntity(BlockPos.fromLong(message.pos));
+                TileEntity tile = world.getTileEntity(message.pos);
                 if (tile instanceof CompressorTileEntity) {
                     CompressorTileEntity compressor = (CompressorTileEntity) tile;
                     compressor.toggleInputLimit();

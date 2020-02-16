@@ -16,9 +16,13 @@ import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.ITickableTileEntity;
+import net.minecraft.util.Direction;
 import net.minecraft.util.IIntArray;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.World;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.energy.CapabilityEnergy;
 
 public class CompressorTileEntity extends BaseInventoryTileEntity implements ITickableTileEntity, INamedContainerProvider {
 	private final BaseItemStackHandler inventory = new BaseItemStackHandler(3);
@@ -36,7 +40,25 @@ public class CompressorTileEntity extends BaseInventoryTileEntity implements ITi
 		public int get(int i) {
 			switch (i) {
 				case 0:
-					return 0;
+					return CompressorTileEntity.this.getProgress();
+				case 1:
+					return CompressorTileEntity.this.getMaterialCount();
+				case 2:
+					return CompressorTileEntity.this.isEjecting() ? 1 : 0;
+				case 3:
+					return CompressorTileEntity.this.isLimitingInput() ? 1 : 0;
+				case 4:
+					return CompressorTileEntity.this.getEnergy().getEnergyStored();
+				case 5:
+					return CompressorTileEntity.this.getEnergy().getMaxEnergyStored();
+				case 6:
+					return CompressorTileEntity.this.getEnergyRequired();
+				case 7:
+					return CompressorTileEntity.this.getMaterialsRequired();
+				case 8:
+					return CompressorTileEntity.this.hasRecipe() ? 1 : 0;
+				case 9:
+					return CompressorTileEntity.this.hasMaterialStack() ? 1 : 0;
 				default:
 					return 0;
 			}
@@ -49,7 +71,7 @@ public class CompressorTileEntity extends BaseInventoryTileEntity implements ITi
 
 		@Override
 		public int size() {
-			return 0;
+			return 10;
 		}
 	};
 
@@ -177,13 +199,22 @@ public class CompressorTileEntity extends BaseInventoryTileEntity implements ITi
 	}
 
 	@Override
+	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
+		if (!this.isRemoved() && cap == CapabilityEnergy.ENERGY) {
+			return CapabilityEnergy.ENERGY.orEmpty(cap, LazyOptional.of(this::getEnergy));
+		}
+
+		return super.getCapability(cap, side);
+	}
+
+	@Override
 	public ITextComponent getDisplayName() {
 		return Localizable.of("container.extendedcrafting.compressor").build();
 	}
 
 	@Override
 	public Container createMenu(int windowId, PlayerInventory playerInventory, PlayerEntity playerEntity) {
-		return CompressorContainer.create(windowId, playerInventory, this::isUsableByPlayer, this.inventory, this.data);
+		return CompressorContainer.create(windowId, playerInventory, this::isUsableByPlayer, this.inventory, this.data, this.getPos());
 	}
 
 	private void process(CompressorRecipe recipe) {
@@ -202,6 +233,10 @@ public class CompressorTileEntity extends BaseInventoryTileEntity implements ITi
 
 	public ItemStack getMaterialStack() {
 		return this.materialStack;
+	}
+
+	public boolean hasMaterialStack() {
+		return !this.materialStack.isEmpty();
 	}
 
 	public int getMaterialCount() {
@@ -232,7 +267,25 @@ public class CompressorTileEntity extends BaseInventoryTileEntity implements ITi
 		return this.progress;
 	}
 
+	public boolean hasRecipe() {
+		return this.recipe != null;
+	}
+
 	public CompressorRecipe getActiveRecipe() {
 		return this.recipe;
+	}
+
+	public int getEnergyRequired() {
+		if (this.recipe != null)
+			return this.recipe.getPowerCost();
+
+		return 0;
+	}
+
+	public int getMaterialsRequired() {
+		if (this.recipe != null)
+			return this.recipe.getInputCount();
+
+		return 0;
 	}
 }

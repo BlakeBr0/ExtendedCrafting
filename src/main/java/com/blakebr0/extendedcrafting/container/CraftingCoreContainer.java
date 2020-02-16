@@ -44,11 +44,11 @@ public class CraftingCoreContainer extends Container {
 			ItemStack itemstack1 = slot.getStack();
 			itemstack = itemstack1.copy();
 
-			if (slotNumber >= 0 && slotNumber < 27) {
+			if (slotNumber < 27) {
 				if (!this.mergeItemStack(itemstack1, 27, 36, false)) {
 					return ItemStack.EMPTY;
 				}
-			} else if (slotNumber >= 27 && slotNumber < 36) {
+			} else if (slotNumber < 36) {
 				if (!this.mergeItemStack(itemstack1, 0, 27, false)) {
 					return ItemStack.EMPTY;
 				}

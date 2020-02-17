@@ -5,29 +5,39 @@ import com.blakebr0.cucumber.helper.StackHelper;
 import com.blakebr0.cucumber.inventory.BaseItemStackHandler;
 import com.blakebr0.cucumber.lib.Localizable;
 import com.blakebr0.cucumber.tileentity.BaseInventoryTileEntity;
-import com.blakebr0.extendedcrafting.block.PedestalBlock;
+import com.blakebr0.extendedcrafting.api.crafting.RecipeTypes;
 import com.blakebr0.extendedcrafting.config.ModConfigs;
 import com.blakebr0.extendedcrafting.container.CraftingCoreContainer;
 import com.blakebr0.extendedcrafting.crafting.recipe.CombinationRecipe;
-import net.minecraft.block.Block;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.INamedContainerProvider;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.particles.IParticleData;
+import net.minecraft.particles.ParticleTypes;
 import net.minecraft.tileentity.ITickableTileEntity;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.Direction;
 import net.minecraft.util.IIntArray;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.World;
+import net.minecraft.world.server.ServerWorld;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.items.IItemHandlerModifiable;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 public class CraftingCoreTileEntity extends BaseInventoryTileEntity implements ITickableTileEntity, INamedContainerProvider {
-	private final BaseItemStackHandler inventory = new BaseItemStackHandler(1);
+	private final BaseItemStackHandler inventory = new BaseItemStackHandler(1, this::markDirtyAndDispatch);
 	private final CustomEnergyStorage energy = new CustomEnergyStorage(ModConfigs.CRAFTING_CORE_POWER_CAPACITY.get());
+	private final BaseItemStackHandler recipeInventory = new BaseItemStackHandler(49);
+	private CombinationRecipe recipe;
 	private int progress;
 	private int oldEnergy;
 	private int pedestalCount;
@@ -36,7 +46,19 @@ public class CraftingCoreTileEntity extends BaseInventoryTileEntity implements I
 		public int get(int i) {
 			switch (i) {
 				case 0:
-					return 0;
+					return CraftingCoreTileEntity.this.getProgress();
+				case 1:
+					return CraftingCoreTileEntity.this.getPedestalCount();
+				case 2:
+					return CraftingCoreTileEntity.this.getEnergy().getEnergyStored();
+				case 3:
+					return CraftingCoreTileEntity.this.getEnergy().getMaxEnergyStored();
+				case 4:
+					return CraftingCoreTileEntity.this.getEnergyRequired();
+				case 5:
+					return CraftingCoreTileEntity.this.getEnergyRate();
+				case 6:
+					return CraftingCoreTileEntity.this.hasRecipe() ? 1 : 0;
 				default:
 					return 0;
 			}
@@ -49,7 +71,7 @@ public class CraftingCoreTileEntity extends BaseInventoryTileEntity implements I
 
 		@Override
 		public int size() {
-			return 0;
+			return 7;
 		}
 	};
 
@@ -82,27 +104,35 @@ public class CraftingCoreTileEntity extends BaseInventoryTileEntity implements I
 	public void tick() {
 		boolean mark = false;
 
-		List<BlockPos> pedestalLocations = this.locatePedestals();
+		Map<BlockPos, ItemStack> pedestalsWithItems = this.getPedestalsWithItems();
 		World world = this.getWorld();
 		if (world != null && !world.isRemote()) {
-			CombinationRecipe recipe = this.getActiveRecipe();
-			if (recipe != null) {
-				if (this.getEnergy().getEnergyStored() > 0) {
-					List<PedestalTileEntity> pedestals = this.getPedestalsWithStuff(recipe, pedestalLocations);
-					boolean done = this.process(recipe);
+			ItemStack[] stacks = pedestalsWithItems.values().toArray(new ItemStack[0]);
+			this.updateRecipeInventory(stacks);
+			if (this.recipe == null || !this.recipe.matches(this.recipeInventory)) {
+				 this.recipe = (CombinationRecipe) world.getRecipeManager().getRecipe(RecipeTypes.COMBINATION, this.recipeInventory.toIInventory(), world).orElse(null);
+			}
+
+			if (this.recipe != null) {
+				if (this.energy.getEnergyStored() > 0) {
+					boolean done = this.process(this.recipe);
 					if (done) {
-						for (PedestalTileEntity pedestal : pedestals) {
-							IItemHandlerModifiable inventory = pedestal.getInventory();
-							inventory.setStackInSlot(0, StackHelper.decrease(inventory.getStackInSlot(0), 1, true));
-							pedestal.markDirty();
-//							((ServerWorld) world).spawnParticle(ParticleTypes.SMOKE_NORMAL, false, pedestal.getPos().getX() + 0.5D, pedestal.getPos().getY() + 1.1D, pedestal.getPos().getZ() + 0.5D, 20, 0, 0, 0, 0.1D);
+						for (BlockPos pedestalPos : pedestalsWithItems.keySet()) {
+							TileEntity tile = world.getTileEntity(pedestalPos);
+							if (tile instanceof PedestalTileEntity) {
+								PedestalTileEntity pedestal = (PedestalTileEntity) tile;
+								IItemHandlerModifiable inventory = pedestal.getInventory();
+								inventory.setStackInSlot(0, StackHelper.decrease(inventory.getStackInSlot(0), 1, true));
+								pedestal.markDirtyAndDispatch();
+								this.spawnParticles(ParticleTypes.SMOKE, pedestalPos, 1.1, 20);
+							}
 						}
-//						((ServerWorld) world).spawnParticle(ParticleTypes.END_ROD, false, this.getPos().getX() + 0.5D, this.getPos().getY() + 1.1D, this.getPos().getZ() + 0.5D, 50, 0, 0, 0, 0.1D);
-						this.getInventory().setStackInSlot(0, recipe.getRecipeOutput().copy());
+						this.spawnParticles(ParticleTypes.END_ROD, this.getPos(), 1.1, 50);
+						this.inventory.setStackInSlot(0, this.recipe.getCraftingResult(this.recipeInventory));
 						this.progress = 0;
 						mark = true;
 					} else {
-//						((ServerWorld) world).spawnParticle(EnumParticleTypes.SPELL, false, this.getPos().getX() + 0.5D, this.getPos().getY() + 1.1D, this.getPos().getZ() + 0.5D, 2, 0, 0, 0, 0.1D);
+						this.spawnParticles(ParticleTypes.ENTITY_EFFECT, this.getPos(), 1.15, 2);
 					}
 				}
 			} else {
@@ -120,107 +150,13 @@ public class CraftingCoreTileEntity extends BaseInventoryTileEntity implements I
 			this.markDirty();
 	}
 
-	private List<BlockPos> locatePedestals() {
-		ArrayList<BlockPos> pedestals = new ArrayList<>();
-		World world = this.getWorld();
-		if (world != null) {
-			BlockPos.getAllInBox(this.getPos().add(-3, 0, -3), this.getPos().add(3, 0, 3)).forEach(aoePos -> {
-				Block block = world.getBlockState(aoePos).getBlock();
-				if (block instanceof PedestalBlock)
-					pedestals.add(aoePos);
-			});
+	@Override
+	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
+		if (!this.isRemoved() && cap == CapabilityEnergy.ENERGY) {
+			return CapabilityEnergy.ENERGY.orEmpty(cap, LazyOptional.of(this::getEnergy));
 		}
 
-		this.pedestalCount = pedestals.size();
-
-		return pedestals;
-	}
-
-	private List<PedestalTileEntity> getPedestalsWithStuff(CombinationRecipe recipe, List<BlockPos> locations) {
-		ArrayList<Object> remaining = new ArrayList<>(recipe.getIngredients());
-		ArrayList<PedestalTileEntity> pedestals = new ArrayList<>();
-
-		if (locations.isEmpty()) return null;
-//
-//		for (BlockPos pos : locations) {
-//			TileEntity tile = this.getWorld().getTileEntity(pos);
-//			if (tile instanceof PedestalTileEntity) {
-//				PedestalTileEntity pedestal = (PedestalTileEntity) tile;
-//				Iterator<Object> rem = remaining.iterator();
-//				while (rem.hasNext()) {
-//					boolean match = false;
-//					Object next = rem.next();
-//					ItemStack stack = pedestal.getInventory().getStackInSlot(0);
-//					if (next instanceof ItemStack) {
-//						ItemStack nextStack = (ItemStack) next;
-//						match = OreDictionary.itemMatches(nextStack, stack, false) && (!nextStack.hasTagCompound() || StackHelper.compareTags(nextStack, stack));
-//					} else if (next instanceof List) {
-//						Iterator<ItemStack> itr = ((List<ItemStack>) next).iterator();
-//						while (itr.hasNext()) {
-//							match = OreDictionary.itemMatches(itr.next(), stack, false);
-//							if (match) break;
-//						}
-//					}
-//
-//					if (match) {
-//						pedestals.add(pedestal);
-//						remaining.remove(next);
-//						break;
-//					}
-//				}
-//			}
-//		}
-//
-//		if (pedestals.size() != recipe.getIngredients().size())
-//			return null;
-//
-//		if (!remaining.isEmpty()) return null;
-
-		return pedestals;
-	}
-
-	private boolean process(CombinationRecipe recipe) {
-		int extract = recipe.getPowerRate();
-		long difference = recipe.getPowerCost() - this.progress;
-		if (difference < recipe.getPowerRate()) {
-			extract = (int) difference;
-		}
-
-		int extracted = this.energy.extractEnergy(extract, false);
-		this.progress += extracted;
-
-		return this.progress >= recipe.getPowerCost();
-	}
-
-	public CustomEnergyStorage getEnergy() {
-		return this.energy;
-	}
-
-	public CombinationRecipe getActiveRecipe() {
-		return getActiveRecipe(locatePedestals());
-	}
-
-	public CombinationRecipe getActiveRecipe(List<BlockPos> locations) {
-//		List<CombinationRecipe> recipes = getValidRecipes(this.getInventory().getStackInSlot(0));
-
-//		if (!recipes.isEmpty()) {
-//			for (CombinationRecipe recipe : recipes) {
-//				List<PedestalTileEntity> pedestals = this.getPedestalsWithStuff(recipe, locations);
-//				if (pedestals != null) {
-//					return recipe;
-//				}
-//			}
-//		}
-
-		return null;
-	}
-
-	public int getProgress() {
-		return this.progress;
-	}
-
-	public int getPedestalCount() {
-		return this.pedestalCount;
+		return super.getCapability(cap, side);
 	}
 
 	@Override
@@ -231,5 +167,90 @@ public class CraftingCoreTileEntity extends BaseInventoryTileEntity implements I
 	@Override
 	public Container createMenu(int windowId, PlayerInventory playerInventory, PlayerEntity player) {
 		return CraftingCoreContainer.create(windowId, playerInventory, this::isUsableByPlayer, this.data);
+	}
+
+	private Map<BlockPos, ItemStack> getPedestalsWithItems() {
+		Map<BlockPos, ItemStack> pedestals = new HashMap<>();
+		World world = this.getWorld();
+		if (world != null) {
+			BlockPos pos = this.getPos();
+			BlockPos.getAllInBox(pos.add(-3, 0, -3), pos.add(3, 0, 3)).forEach(aoePos -> {
+				TileEntity tile = world.getTileEntity(aoePos);
+				if (tile instanceof PedestalTileEntity) {
+					PedestalTileEntity pedestal = (PedestalTileEntity) tile;
+					ItemStack stack = pedestal.getInventory().getStackInSlot(0);
+					pedestals.put(aoePos.toImmutable(), stack);
+				}
+			});
+		}
+
+		this.pedestalCount = pedestals.size();
+
+		return pedestals;
+	}
+
+	private void updateRecipeInventory(ItemStack[] items) {
+		this.recipeInventory.setSize(items.length + 1);
+		this.recipeInventory.setStackInSlot(0, this.inventory.getStackInSlot(0));
+		for (int i = 0; i < items.length; i++) {
+			this.recipeInventory.setStackInSlot(i + 1, items[i]);
+		}
+	}
+
+	private boolean process(CombinationRecipe recipe) {
+		int extract = recipe.getPowerRate();
+		int difference = recipe.getPowerCost() - this.progress;
+		if (difference < recipe.getPowerRate())
+			extract = difference;
+
+		int extracted = this.energy.extractEnergy(extract, false);
+		this.progress += extracted;
+
+		return this.progress >= recipe.getPowerCost();
+	}
+
+	private <T extends IParticleData> void spawnParticles(T particle, BlockPos pos, double yOffset, int count) {
+		if (this.getWorld() == null || this.getWorld().isRemote()) return;
+		ServerWorld world = (ServerWorld) this.getWorld();
+
+		double x = pos.getX() + 0.5D;
+		double y = pos.getY() + yOffset;
+		double z = pos.getZ() + 0.5D;
+
+		world.spawnParticle(particle, x, y, z, count, 0, 0, 0, 0.1D);
+	}
+
+	public CustomEnergyStorage getEnergy() {
+		return this.energy;
+	}
+
+	public CombinationRecipe getActiveRecipe() {
+		return this.recipe;
+	}
+
+	public boolean hasRecipe() {
+		return this.recipe != null;
+	}
+
+	public int getEnergyRequired() {
+		if (this.hasRecipe())
+			return this.recipe.getPowerCost();
+
+		return 0;
+	}
+
+	public int getEnergyRate() {
+		if (this.hasRecipe())
+			return this.recipe.getPowerRate();
+
+		return 0;
+	}
+
+	public int getProgress() {
+		return this.progress;
+	}
+
+	public int getPedestalCount() {
+		return this.pedestalCount;
 	}
 }

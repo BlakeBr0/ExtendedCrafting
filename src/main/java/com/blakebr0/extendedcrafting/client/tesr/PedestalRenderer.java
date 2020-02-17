@@ -21,8 +21,8 @@ public class PedestalRenderer extends TileEntityRenderer<PedestalTileEntity> {
 		ItemStack stack = tile.getInventory().getStackInSlot(0);
 		if (!stack.isEmpty()) {
 			matrix.push();
-			matrix.translate(0.5D, 1.4D, 0.5D);
-			float scale = stack.getItem() instanceof BlockItem ? 0.85F : 0.65F;
+			matrix.translate(0.5D, 1.2D, 0.5D);
+			float scale = stack.getItem() instanceof BlockItem ? 0.9F : 0.65F;
 			matrix.scale(scale, scale, scale);
 			double tick = System.currentTimeMillis() / 800.0D;
 			matrix.translate(0.0D, Math.sin(tick % (2 * Math.PI)) * 0.065D, 0.0D);

@@ -276,14 +276,14 @@ public class CompressorTileEntity extends BaseInventoryTileEntity implements ITi
 	}
 
 	public int getEnergyRequired() {
-		if (this.recipe != null)
+		if (this.hasRecipe())
 			return this.recipe.getPowerCost();
 
 		return 0;
 	}
 
 	public int getMaterialsRequired() {
-		if (this.recipe != null)
+		if (this.hasRecipe())
 			return this.recipe.getInputCount();
 
 		return 0;

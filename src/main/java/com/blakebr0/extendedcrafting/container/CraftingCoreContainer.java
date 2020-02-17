@@ -16,7 +16,7 @@ public class CraftingCoreContainer extends Container {
 	private final IIntArray data;
 
 	private CraftingCoreContainer(ContainerType<?> type, int id, PlayerInventory playerInventory) {
-		this(type, id, playerInventory, p -> false, new IntArray(5));
+		this(type, id, playerInventory, p -> false, new IntArray(7));
 	}
 
 	private CraftingCoreContainer(ContainerType<?> type, int id, PlayerInventory playerInventory, Function<PlayerEntity, Boolean> isUsableByPlayer, IIntArray data) {
@@ -24,15 +24,17 @@ public class CraftingCoreContainer extends Container {
 		this.isUsableByPlayer = isUsableByPlayer;
 		this.data = data;
 
-		for (int i = 0; i < 3; ++i) {
-			for (int j = 0; j < 9; ++j) {
+		for (int i = 0; i < 3; i++) {
+			for (int j = 0; j < 9; j++) {
 				this.addSlot(new Slot(playerInventory, j + i * 9 + 9, 8 + j * 18, 112 + i * 18));
 			}
 		}
 
-		for (int i = 0; i < 9; ++i) {
+		for (int i = 0; i < 9; i++) {
 			this.addSlot(new Slot(playerInventory, i, 8 + i * 18, 170));
 		}
+
+		this.trackIntArray(data);
 	}
 
 	@Override
@@ -83,5 +85,45 @@ public class CraftingCoreContainer extends Container {
 
 	public static CraftingCoreContainer create(int windowId, PlayerInventory playerInventory, Function<PlayerEntity, Boolean> isUsableByPlayer, IIntArray data) {
 		return new CraftingCoreContainer(ModContainerTypes.CRAFTING_CORE.get(), windowId, playerInventory, isUsableByPlayer, data);
+	}
+
+	public int getEnergyBarScaled(int pixels) {
+		int i = this.getEnergyStored();
+		int j = this.getMaxEnergyStored();
+		return (int) (j != 0 && i != 0 ? i * (long) pixels / j : 0);
+	}
+
+	public int getProgressBarScaled(int pixels) {
+		int i = this.getProgress();
+		long j = this.getEnergyRequired();
+		return (int) (j != 0 && i != 0 ? (long) i * pixels / j : 0);
+	}
+
+	public boolean hasRecipe() {
+		return this.data.get(6) > 0;
+	}
+
+	public int getProgress() {
+		return this.data.get(0);
+	}
+
+	public int getPedestalCount() {
+		return this.data.get(1);
+	}
+
+	public int getEnergyStored() {
+		return this.data.get(2);
+	}
+
+	public int getMaxEnergyStored() {
+		return this.data.get(3);
+	}
+
+	public int getEnergyRequired() {
+		return this.data.get(4);
+	}
+
+	public int getEnergyRate() {
+		return this.data.get(5);
 	}
 }

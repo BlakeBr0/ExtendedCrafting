@@ -67,6 +67,12 @@
   "container.extendedcrafting.compressor": "Quantum Compressor",
   "container.extendedcrafting.ender_crafter": "Ender Crafting",
 
+  "screen.extendedcrafting.crafting_core.pedestals": "Pedestals: %s",
+  "screen.extendedcrafting.crafting_core.power_cost": "FE Cost: %s",
+  "screen.extendedcrafting.crafting_core.power_rate": "FE Rate: %s",
+  "screen.extendedcrafting.crafting_core.no_recipe": "No recipe found.",
+  "screen.extendedcrafting.crafting_core.no_power": "Not enough power.",
+
   "tooltip.extendedcrafting.empty": "Empty",
   "tooltip.extendedcrafting.eject": "Eject",
   "tooltip.extendedcrafting.ejecting": "Ejecting...",

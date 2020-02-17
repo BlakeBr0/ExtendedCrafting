@@ -15,19 +15,6 @@ public class EnderCrafterScreen extends ContainerScreen<EnderCrafterContainer> {
 		this.xSize = 176;
 		this.ySize = 170;
 	}
-	
-//	private int getProgressBarScaled(int pixels) {
-//		int i = this.tile.getProgress();
-//		int j = Math.max(this.tile.getProgressRequired(), i);
-//		return j != 0 && i != 0 ? i * pixels / j : 0;
-//	}
-
-	@Override
-	public void render(int mouseX, int mouseY, float partialTicks) {
-		this.renderBackground();
-		super.render(mouseX, mouseY, partialTicks);
-		this.renderHoveredToolTip(mouseX, mouseY);
-	}
 
 	@Override
 	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
@@ -38,16 +25,24 @@ public class EnderCrafterScreen extends ContainerScreen<EnderCrafterContainer> {
 	}
 
 	@Override
+	public void render(int mouseX, int mouseY, float partialTicks) {
+		this.renderBackground();
+		super.render(mouseX, mouseY, partialTicks);
+		this.renderHoveredToolTip(mouseX, mouseY);
+	}
+
+	@Override
 	protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
 		this.getMinecraft().getTextureManager().bindTexture(BACKGROUND);
 		int x = (this.width - this.xSize) / 2;
 		int y = (this.height - this.ySize) / 2;
+		EnderCrafterContainer container = this.getContainer();
+
 		this.blit(x, y, 0, 0, this.xSize, this.ySize);
-//		if (this.tile != null) {
-//			if (this.tile.getProgress() > 0) {
-//				int i2 = getProgressBarScaled(24);
-//				this.drawTexturedModalRect(x + 89, y + 36, 194, 0, i2 + 1, 16);
-//			}
-//		} // TODO: progress bar
+
+		if (container.getProgress() > 0) {
+			int i2 = container.getProgressBarScaled(24);
+			this.blit(x + 89, y + 36, 194, 0, i2 + 1, 16);
+		}
 	}
 }

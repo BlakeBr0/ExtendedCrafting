@@ -4,6 +4,7 @@ import com.blakebr0.cucumber.lib.Localizable;
 import com.blakebr0.extendedcrafting.ExtendedCrafting;
 import com.blakebr0.extendedcrafting.api.crafting.IEnderCrafterRecipe;
 import com.blakebr0.extendedcrafting.block.ModBlocks;
+import com.blakebr0.extendedcrafting.crafting.recipe.ShapelessEnderCrafterRecipe;
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.IRecipeLayout;
 import mezz.jei.api.gui.drawable.IDrawable;
@@ -60,6 +61,11 @@ public class EnderCrafterCategory implements IRecipeCategory<IEnderCrafterRecipe
 	}
 
 	@Override
+	public void draw(IEnderCrafterRecipe recipe, double mouseX, double mouseY) {
+		this.arrow.draw(61, 19);
+	}
+
+	@Override
 	public void setIngredients(IEnderCrafterRecipe recipe, IIngredients ingredients) {
 		ingredients.setOutput(VanillaTypes.ITEM, recipe.getRecipeOutput());
 		ingredients.setInputIngredients(recipe.getIngredients());
@@ -88,15 +94,9 @@ public class EnderCrafterCategory implements IRecipeCategory<IEnderCrafterRecipe
 			xd++;
 		}
 
-//		if (recipe instanceof TableShapelessWrapper) {
-//			layout.setShapeless();
-//		}
+		if (recipe instanceof ShapelessEnderCrafterRecipe)
+			layout.setShapeless();
 
 		layout.moveRecipeTransferButton(122, 41);
-	}
-
-	@Override
-	public void draw(IEnderCrafterRecipe recipe, double mouseX, double mouseY) {
-		this.arrow.draw(61, 19);
 	}
 }

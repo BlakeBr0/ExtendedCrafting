@@ -1,0 +1,11 @@
+{
+  "name": "Iron",
+  "colors": [
+    "123456",
+    "123456"
+  ],
+  "ingredient": {
+    "item": "minecraft:iron_ingot"
+  },
+  "ingredientCount": 500
+}

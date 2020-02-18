@@ -3,7 +3,11 @@ package com.blakebr0.extendedcrafting.item;
 import com.blakebr0.cucumber.iface.IEnableable;
 import com.blakebr0.cucumber.item.BaseItem;
 import com.blakebr0.extendedcrafting.config.ModConfigs;
+import com.blakebr0.extendedcrafting.singularity.SingularityRegistry;
+import net.minecraft.item.ItemGroup;
+import net.minecraft.item.ItemStack;
 import net.minecraft.item.Rarity;
+import net.minecraft.util.NonNullList;
 
 import java.util.function.Function;
 
@@ -12,7 +16,16 @@ public class SingularityItem extends BaseItem implements IEnableable {
 		super(properties.compose(p -> p.rarity(Rarity.UNCOMMON)));
 	}
 
-//	@Override
+	@Override
+	public void fillItemGroup(ItemGroup group, NonNullList<ItemStack> items) {
+		if (this.isEnabled()) {
+			SingularityRegistry.getInstance().getSingularities().forEach(s -> {
+				items.add(new ItemStack(this));
+			});
+		}
+	}
+
+	//	@Override
 //	public ITextComponent getDisplayName(ItemStack stack) {
 //		String name = items.containsKey(stack.getMetadata()) ? items.get(stack.getMetadata()).getName().replace("_", " ") : "Dummy";
 //		return WordUtils.capitalize(name) + " " + Utils.localize("item.ec.singularity.name");

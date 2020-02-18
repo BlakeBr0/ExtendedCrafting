@@ -8,6 +8,7 @@ import com.blakebr0.extendedcrafting.container.ModContainerTypes;
 import com.blakebr0.extendedcrafting.crafting.ModRecipeSerializers;
 import com.blakebr0.extendedcrafting.item.ModItems;
 import com.blakebr0.extendedcrafting.network.NetworkHandler;
+import com.blakebr0.extendedcrafting.singularity.SingularityRegistry;
 import com.blakebr0.extendedcrafting.tileentity.ModTileEntities;
 import net.minecraft.item.ItemGroup;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -42,6 +43,7 @@ public class ExtendedCrafting {
 	public void onCommonSetup(FMLCommonSetupEvent event) {
 		DeferredWorkQueue.runLater(() -> {
 			NetworkHandler.onCommonSetup();
+			SingularityRegistry.getInstance().loadSingularities();
 		});
 	}
 

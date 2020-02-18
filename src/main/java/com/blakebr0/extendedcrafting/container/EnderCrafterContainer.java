@@ -30,21 +30,21 @@ public class EnderCrafterContainer extends Container {
 
 		this.addSlot(new OutputSlot(inventory, 9, 124, 36));
 		
-		int wy, ex;
-		for (wy = 0; wy < 3; wy++) {
-			for (ex = 0; ex < 3; ex++) {
-				this.addSlot(new SlotItemHandler(inventory, ex + wy * 3, 30 + ex * 18, 18 + wy * 18));
+		int i, j;
+		for (i = 0; i < 3; i++) {
+			for (j = 0; j < 3; j++) {
+				this.addSlot(new SlotItemHandler(inventory, j + i * 3, 30 + j * 18, 18 + i * 18));
 			}
 		}
 
-		for (wy = 0; wy < 3; wy++) {
-			for (ex = 0; ex < 9; ex++) {
-				this.addSlot(new Slot(playerInventory, ex + wy * 9 + 9, 8 + ex * 18, 88 + wy * 18));
+		for (i = 0; i < 3; i++) {
+			for (j = 0; j < 9; j++) {
+				this.addSlot(new Slot(playerInventory, j + i * 9 + 9, 8 + j * 18, 88 + i * 18));
 			}
 		}
 
-		for (ex = 0; ex < 9; ex++) {
-			this.addSlot(new Slot(playerInventory, ex, 8 + ex * 18, 146));
+		for (j = 0; j < 9; j++) {
+			this.addSlot(new Slot(playerInventory, j, 8 + j * 18, 146));
 		}
 
 		this.trackIntArray(data);

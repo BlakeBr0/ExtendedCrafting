@@ -8,14 +8,14 @@ import net.minecraft.util.text.ITextComponent;
 public class Singularity {
     private final ResourceLocation id;
     private final String name;
-    private final int color;
+    private final int[] colors;
     private final Ingredient ingredient;
     private final int ingredientCount;
 
-    public Singularity(ResourceLocation id, String name, int color, Ingredient ingredient, int ingredientCount) {
+    public Singularity(ResourceLocation id, String name, int[] colors, Ingredient ingredient, int ingredientCount) {
         this.id = id;
         this.name = name;
-        this.color = color;
+        this.colors = colors;
         this.ingredient = ingredient;
         this.ingredientCount = ingredientCount;
     }
@@ -28,8 +28,12 @@ public class Singularity {
         return this.name;
     }
 
-    public int getColor() {
-        return this.color;
+    public int getOverlayColor() {
+        return this.colors[0];
+    }
+
+    public int getUnderlayColor() {
+        return this.colors[1];
     }
 
     public Ingredient getIngredient() {

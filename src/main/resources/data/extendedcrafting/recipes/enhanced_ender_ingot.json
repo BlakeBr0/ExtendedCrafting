@@ -1,0 +1,20 @@
+{
+  "type": "extendedcrafting:shaped_ender_crafter",
+  "pattern": [
+    " E ",
+    "ESE",
+    " E "
+  ],
+  "key": {
+    "S": {
+      "item": "extendedcrafting:ender_star"
+    },
+    "E": {
+      "item": "extendedcrafting:ender_ingot"
+    }
+  },
+  "result": {
+    "item": "extendedcrafting:enhanced_ender_ingot",
+    "count": 4
+  }
+}

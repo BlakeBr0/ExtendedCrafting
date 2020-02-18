@@ -19,7 +19,7 @@ public class EnderCrafterScreen extends ContainerScreen<EnderCrafterContainer> {
 	@Override
 	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
 		String title = this.getTitle().getFormattedText();
-		this.font.drawString(title, 32.0F, 6.0F, 4210752);
+		this.font.drawString(title, 30.0F, 6.0F, 4210752);
 		String inventory = this.playerInventory.getDisplayName().getFormattedText();
 		this.font.drawString(inventory, 8.0F, this.ySize - 94.0F, 4210752);
 	}

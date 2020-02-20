@@ -1,35 +1,44 @@
 package com.blakebr0.extendedcrafting.item;
 
+import com.blakebr0.cucumber.iface.IColored;
 import com.blakebr0.cucumber.iface.IEnableable;
 import com.blakebr0.cucumber.item.BaseItem;
+import com.blakebr0.cucumber.lib.Localizable;
 import com.blakebr0.extendedcrafting.config.ModConfigs;
+import com.blakebr0.extendedcrafting.singularity.Singularity;
 import com.blakebr0.extendedcrafting.singularity.SingularityRegistry;
+import com.blakebr0.extendedcrafting.singularity.SingularityUtils;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Rarity;
 import net.minecraft.util.NonNullList;
+import net.minecraft.util.text.ITextComponent;
 
 import java.util.function.Function;
 
-public class SingularityItem extends BaseItem implements IEnableable {
+public class SingularityItem extends BaseItem implements IEnableable, IColored {
 	public SingularityItem(Function<Properties, Properties> properties) {
 		super(properties.compose(p -> p.rarity(Rarity.UNCOMMON)));
 	}
 
 	@Override
 	public void fillItemGroup(ItemGroup group, NonNullList<ItemStack> items) {
-		if (this.isEnabled()) {
-			SingularityRegistry.getInstance().getSingularities().forEach(s -> {
-				items.add(new ItemStack(this));
+		if (this.isEnabled() && this.isInGroup(group)) {
+			SingularityRegistry.getInstance().getSingularities().forEach(singularity -> {
+				items.add(SingularityUtils.getItemForSingularity(singularity));
 			});
 		}
 	}
 
-	//	@Override
-//	public ITextComponent getDisplayName(ItemStack stack) {
-//		String name = items.containsKey(stack.getMetadata()) ? items.get(stack.getMetadata()).getName().replace("_", " ") : "Dummy";
-//		return WordUtils.capitalize(name) + " " + Utils.localize("item.ec.singularity.name");
-//	}
+	@Override
+	public ITextComponent getDisplayName(ItemStack stack) {
+		Singularity singularity = SingularityUtils.getSingularity(stack);
+		if (singularity == null) {
+			return Localizable.of(this.getTranslationKey(stack)).args("NULL").build();
+		}
+
+		return Localizable.of(this.getTranslationKey(stack)).args(singularity.getDisplayName()).build();
+	}
 	
 //	@Override
 //	public void init() {
@@ -81,5 +90,14 @@ public class SingularityItem extends BaseItem implements IEnableable {
 	@Override
 	public boolean isEnabled() {
 		return ModConfigs.ENABLE_SINGULARITIES.get();
+	}
+
+	@Override
+	public int getColor(int i, ItemStack stack) {
+		Singularity singularity = SingularityUtils.getSingularity(stack);
+		if (singularity == null)
+			return -1;
+
+		return i == 0 ? singularity.getUnderlayColor() : i == 1 ? singularity.getOverlayColor() : -1;
 	}
 }

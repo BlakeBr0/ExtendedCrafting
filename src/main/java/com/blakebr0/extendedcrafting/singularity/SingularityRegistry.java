@@ -1,8 +1,6 @@
 package com.blakebr0.extendedcrafting.singularity;
 
 import com.google.common.base.Stopwatch;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import net.minecraft.util.ResourceLocation;
@@ -21,7 +19,6 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 public class SingularityRegistry {
-    private static final Gson GSON = (new GsonBuilder()).setPrettyPrinting().disableHtmlEscaping().create();
     private static final Logger LOGGER = LogManager.getLogger();
     private static final SingularityRegistry INSTANCE = new SingularityRegistry();
 
@@ -32,7 +29,8 @@ public class SingularityRegistry {
         List<ModInfo> mods = ModList.get().getMods();
 
         mods.forEach(mod -> {
-            String folder = String.format("data/%s/singularities", mod.getModId());
+            String id = mod.getModId();
+            String folder = String.format("data/%s/singularities", id);
             File dir = mod.getOwningFile().getFile().getFilePath().resolve(folder).toFile();
 
             if (dir.exists() && dir.isDirectory()) {
@@ -48,7 +46,8 @@ public class SingularityRegistry {
                         JsonParser parser = new JsonParser();
                         reader = new FileReader(file);
                         json = parser.parse(reader).getAsJsonObject();
-                        singularity = SingularityUtils.loadFromJson(new ResourceLocation(mod.getModId(), file.getName()), json);
+                        String name = file.getName().replace(".json", "");
+                        singularity = SingularityUtils.loadFromJson(new ResourceLocation(id, name), json);
 
                         reader.close();
                     } catch (Exception e) {
@@ -65,7 +64,7 @@ public class SingularityRegistry {
         });
 
         stopwatch.stop();
-        LOGGER.info("Loaded {} singularity types in {} ms", this.singularities.size(), stopwatch.elapsed(TimeUnit.MILLISECONDS));
+        LOGGER.info("Loaded {} singularity type(s) in {} ms", this.singularities.size(), stopwatch.elapsed(TimeUnit.MILLISECONDS));
     }
 
     public List<Singularity> getSingularities() {

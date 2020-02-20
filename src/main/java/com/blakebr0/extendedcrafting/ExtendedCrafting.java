@@ -6,6 +6,7 @@ import com.blakebr0.extendedcrafting.client.ModelHandler;
 import com.blakebr0.extendedcrafting.config.ModConfigs;
 import com.blakebr0.extendedcrafting.container.ModContainerTypes;
 import com.blakebr0.extendedcrafting.crafting.ModRecipeSerializers;
+import com.blakebr0.extendedcrafting.handler.ColorHandler;
 import com.blakebr0.extendedcrafting.item.ModItems;
 import com.blakebr0.extendedcrafting.network.NetworkHandler;
 import com.blakebr0.extendedcrafting.singularity.SingularityRegistry;
@@ -49,6 +50,7 @@ public class ExtendedCrafting {
 
 	@SubscribeEvent
 	public void onClientSetup(FMLClientSetupEvent event) {
+		ColorHandler.onClientSetup();
 		ModelHandler.onClientSetup();
 
 		ModTileEntities.onClientSetup();

@@ -1,9 +1,13 @@
 package com.blakebr0.extendedcrafting.singularity;
 
+import com.blakebr0.cucumber.helper.NBTHelper;
 import com.blakebr0.extendedcrafting.config.ModConfigs;
+import com.blakebr0.extendedcrafting.item.ModItems;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.JSONUtils;
 import net.minecraft.util.ResourceLocation;
 
@@ -15,5 +19,28 @@ public class SingularityUtils {
         int materialCount = JSONUtils.getInt(json, "materialCount", ModConfigs.SINGULARITY_MATERIALS_REQUIRED.get());
 
         return new Singularity(id, name, new int[] { colors.get(0).getAsInt(), colors.get(1).getAsInt() }, ingredient, materialCount);
+    }
+
+    public static CompoundNBT makeTag(Singularity singularity) {
+        CompoundNBT nbt = new CompoundNBT();
+        nbt.putString("Id", singularity.getId().toString());
+
+        return nbt;
+    }
+
+    public static ItemStack getItemForSingularity(Singularity singularity) {
+        CompoundNBT nbt = makeTag(singularity);
+        ItemStack stack = new ItemStack(ModItems.SINGULARITY.get());
+        stack.setTag(nbt);
+        return stack;
+    }
+
+    public static Singularity getSingularity(ItemStack stack) {
+        String id = NBTHelper.getString(stack, "Id");
+        if (!id.isEmpty()) {
+            return SingularityRegistry.getInstance().getSingularityById(new ResourceLocation(id));
+        }
+
+        return null;
     }
 }

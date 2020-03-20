@@ -92,5 +92,14 @@
   "jei.category.extendedcrafting.elite_crafting": "Elite Crafting",
   "jei.category.extendedcrafting.ultimate_crafting": "Ultimate Crafting",
   "jei.category.extendedcrafting.compressor": "Quantum Compression",
-  "jei.category.extendedcrafting.ender_crafting": "Ender Crafting"
+  "jei.category.extendedcrafting.ender_crafting": "Ender Crafting",
+
+  "singularity.extendedcrafting.coal": "Coal",
+  "singularity.extendedcrafting.iron": "Iron",
+  "singularity.extendedcrafting.lapis_lazuli": "Lapis Lazuli",
+  "singularity.extendedcrafting.redstone": "Redstone",
+  "singularity.extendedcrafting.glowstone": "Glowstone",
+  "singularity.extendedcrafting.gold": "Gold",
+  "singularity.extendedcrafting.diamond": "Diamond",
+  "singularity.extendedcrafting.emerald": "Emerald"
 }

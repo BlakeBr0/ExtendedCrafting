@@ -15,16 +15,19 @@ public class SingularityUtils {
     public static Singularity loadFromJson(ResourceLocation id, JsonObject json) {
         String name = JSONUtils.getString(json, "name");
         JsonArray colors = JSONUtils.getJsonArray(json, "colors");
-        Ingredient ingredient = Ingredient.deserialize(json.get("ingredient"));
+        Ingredient ingredient = Ingredient.EMPTY;
+        if (json.has("ingredient"))
+            ingredient = Ingredient.deserialize(json.get("ingredient"));
         int materialCount = JSONUtils.getInt(json, "materialCount", ModConfigs.SINGULARITY_MATERIALS_REQUIRED.get());
+        int overlayColor = Integer.parseInt(colors.get(0).getAsString(), 16);
+        int underlayColor = Integer.parseInt(colors.get(1).getAsString(), 16);
 
-        return new Singularity(id, name, new int[] { colors.get(0).getAsInt(), colors.get(1).getAsInt() }, ingredient, materialCount);
+        return new Singularity(id, name, new int[] { overlayColor, underlayColor }, ingredient, materialCount);
     }
 
     public static CompoundNBT makeTag(Singularity singularity) {
         CompoundNBT nbt = new CompoundNBT();
         nbt.putString("Id", singularity.getId().toString());
-
         return nbt;
     }
 

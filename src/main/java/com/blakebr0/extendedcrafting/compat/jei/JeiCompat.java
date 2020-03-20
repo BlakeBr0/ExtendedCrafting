@@ -12,6 +12,8 @@ import com.blakebr0.extendedcrafting.compat.jei.table.UltimateTableCategory;
 import com.blakebr0.extendedcrafting.config.ModConfigs;
 import com.blakebr0.extendedcrafting.container.*;
 import com.blakebr0.extendedcrafting.item.ModItems;
+import com.blakebr0.extendedcrafting.singularity.Singularity;
+import com.blakebr0.extendedcrafting.singularity.SingularityUtils;
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
 import mezz.jei.api.constants.VanillaRecipeCategoryUid;
@@ -161,5 +163,15 @@ public class JeiCompat implements IModPlugin {
 		if (ModConfigs.ENABLE_ENDER_CRAFTER.get()) {
 			registration.addRecipeClickArea(EnderCrafterScreen.class, 90, 36, 21, 14, EnderCrafterCategory.UID);
 		}
+	}
+
+	@Override
+	public void registerItemSubtypes(ISubtypeRegistration registration) {
+		ModItems.SINGULARITY.ifPresent(item -> {
+			registration.registerSubtypeInterpreter(item, stack -> {
+				Singularity singularity = SingularityUtils.getSingularity(stack);
+				return singularity != null ? singularity.getId().toString() : "";
+			});
+		});
 	}
 }

@@ -21,7 +21,7 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 public class SingularityRegistry {
-    private static final Logger LOGGER = LogManager.getLogger();
+    private static final Logger LOGGER = LogManager.getLogger(ExtendedCrafting.NAME);
     private static final SingularityRegistry INSTANCE = new SingularityRegistry();
 
     private final List<Singularity> singularities = new ArrayList<>();

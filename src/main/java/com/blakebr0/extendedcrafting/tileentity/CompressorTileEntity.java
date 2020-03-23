@@ -113,7 +113,7 @@ public class CompressorTileEntity extends BaseInventoryTileEntity implements ITi
 		boolean mark = false;
 
 		World world = this.getWorld();
-		if (world != null && !world.isRemote()) {
+		if (world != null) {
 			ItemStack output = this.inventory.getStackInSlot(0);
 			ItemStack input = this.inventory.getStackInSlot(1);
 			ItemStack catalyst = this.inventory.getStackInSlot(2);
@@ -125,77 +125,80 @@ public class CompressorTileEntity extends BaseInventoryTileEntity implements ITi
 				this.recipe = (CompressorRecipe) world.getRecipeManager().getRecipe(RecipeTypes.COMPRESSOR, this.recipeInventory.toIInventory(), world).orElse(null);
 			}
 
-			if (!input.isEmpty()) {
-				if (this.materialStack.isEmpty()) {
-					this.materialStack = input.copy();
-					mark = true;
-				}
+			if (!world.isRemote()) {
+				if (!input.isEmpty()) {
+					if (this.materialStack.isEmpty()) {
+						this.materialStack = input.copy();
+						mark = true;
+					}
 
-				if (!this.inputLimit || (this.recipe != null && this.materialCount < this.recipe.getInputCount())) {
-					if (StackHelper.areStacksEqual(input, this.materialStack)) {
-						int consumeAmount = input.getCount();
-						if (this.inputLimit) {
-							consumeAmount = Math.min(consumeAmount, this.recipe.getInputCount() - this.materialCount);
+					if (!this.inputLimit || (this.recipe != null && this.materialCount < this.recipe.getInputCount())) {
+						if (StackHelper.areStacksEqual(input, this.materialStack)) {
+							int consumeAmount = input.getCount();
+							if (this.inputLimit) {
+								consumeAmount = Math.min(consumeAmount, this.recipe.getInputCount() - this.materialCount);
+							}
+
+							StackHelper.decrease(input, consumeAmount, false);
+							this.materialCount += consumeAmount;
+							if (!mark)
+								mark = true;
 						}
-
-						StackHelper.decrease(input, consumeAmount, false);
-						this.materialCount += consumeAmount;
-						if (!mark)
-							mark = true;
 					}
 				}
-			}
 
-			if (this.recipe != null && this.getEnergy().getEnergyStored() > 0) {
-				if (this.materialCount >= this.recipe.getInputCount()) {
-					this.process(this.recipe);
-					if (this.progress == this.recipe.getPowerCost()) {
-						ItemStack recipeOutput = this.recipe.getRecipeOutput();
-						if ((output.isEmpty() || StackHelper.areStacksEqual(output, recipeOutput)) && output.getCount() < recipeOutput.getMaxStackSize()) {
-							this.inventory.insertItem(0, this.recipe.getCraftingResult(this.inventory), false);
-							this.progress = 0;
-							this.materialCount -= this.recipe.getInputCount();
+				if (this.recipe != null && this.getEnergy().getEnergyStored() > 0) {
+					if (this.materialCount >= this.recipe.getInputCount()) {
+						this.process(this.recipe);
+						if (this.progress == this.recipe.getPowerCost()) {
+							ItemStack recipeOutput = this.recipe.getRecipeOutput();
+							if ((output.isEmpty() || StackHelper.areStacksEqual(output, recipeOutput)) && output.getCount() < recipeOutput.getMaxStackSize()) {
+								this.inventory.insertItem(0, this.recipe.getCraftingResult(this.inventory), false);
+								this.progress = 0;
+								this.materialCount -= this.recipe.getInputCount();
 
-							if (this.materialCount <= 0) {
-								this.materialStack = ItemStack.EMPTY;
+								if (this.materialCount <= 0) {
+									this.materialStack = ItemStack.EMPTY;
+								}
 							}
 						}
 					}
 				}
-			}
 
-			if (this.ejecting) {
-				if (this.materialCount > 0 && !this.materialStack.isEmpty()) {
-					ItemStack toAdd = this.materialStack.copy();
-					int addCount = Math.min(this.materialCount, toAdd.getMaxStackSize());
-					toAdd.setCount(addCount);
+				if (this.ejecting) {
+					if (this.materialCount > 0 && !this.materialStack.isEmpty()) {
+						ItemStack toAdd = this.materialStack.copy();
+						int addCount = Math.min(this.materialCount, toAdd.getMaxStackSize());
+						toAdd.setCount(addCount);
 
-					int added = toAdd.getCount() - this.inventory.insertItem(0, toAdd, false).getCount();
-					if (added > 0) {
-						this.materialCount -= added;
-						if (this.materialCount < 1) {
-							this.materialStack = ItemStack.EMPTY;
-							this.ejecting = false;
+						int added = toAdd.getCount() - this.inventory.insertItem(0, toAdd, false).getCount();
+						if (added > 0) {
+							this.materialCount -= added;
+							if (this.materialCount < 1) {
+								this.materialStack = ItemStack.EMPTY;
+								this.ejecting = false;
+							}
+
+							if (this.progress > 0)
+								this.progress = 0;
+
+							if (!mark)
+								mark = true;
 						}
-
-						if (this.progress > 0)
-							this.progress = 0;
-
-						if (!mark)
-							mark = true;
 					}
 				}
 			}
-		}
 
-		if (this.oldEnergy != this.energy.getEnergyStored()) {
-			this.oldEnergy = this.energy.getEnergyStored();
-			if (!mark)
-				mark = true;
-		}
+			if (this.oldEnergy != this.energy.getEnergyStored()) {
+				this.oldEnergy = this.energy.getEnergyStored();
+				if (!mark)
+					mark = true;
+			}
 
-		if (mark)
-			this.markDirty();
+			// TODO: Is dispatching every time necessary?
+			if (mark)
+				this.markDirtyAndDispatch();
+		}
 	}
 
 	@Override

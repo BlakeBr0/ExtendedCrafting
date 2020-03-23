@@ -7,9 +7,13 @@ import com.blakebr0.extendedcrafting.lib.ModTooltips;
 import com.blakebr0.extendedcrafting.network.NetworkHandler;
 import com.blakebr0.extendedcrafting.network.message.EjectModeSwitchMessage;
 import com.blakebr0.extendedcrafting.network.message.InputLimitSwitchMessage;
+import com.blakebr0.extendedcrafting.tileentity.CompressorTileEntity;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.client.gui.widget.button.Button;
+import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextFormatting;
@@ -78,10 +82,10 @@ public class CompressorScreen extends ContainerScreen<CompressorContainer> {
 			if (container.getMaterialCount() < 1) {
 				tooltip.add(ModTooltips.EMPTY.color(TextFormatting.WHITE).buildString());
 			} else {
-				// TODO: find a solution for this
-//				if (container.hasMaterialStack()) {
-//					tooltip.add(this.tile.getMaterialStack().getDisplayName());
-//				}
+				if (container.hasMaterialStack()) {
+					tooltip.add(this.getMaterialStackDisplayName());
+				}
+
 				tooltip.add(container.getMaterialCount() + " / " + container.getMaterialsRequired());
 			}
 
@@ -147,5 +151,22 @@ public class CompressorScreen extends ContainerScreen<CompressorContainer> {
 				this.blit(x + 90, y + 74, 203, 56, 9, 10);
 			}
 		}
+	}
+
+	// TODO: Figure out how to sync this properly, this works for now though
+	private String getMaterialStackDisplayName() {
+		ClientWorld world = this.getMinecraft().world;
+		if (world != null) {
+			CompressorContainer container = this.getContainer();
+			TileEntity tile = world.getTileEntity(container.getPos());
+			if (tile instanceof CompressorTileEntity) {
+				CompressorTileEntity compressor = (CompressorTileEntity) tile;
+				ItemStack materialStack = compressor.getMaterialStack();
+
+				return materialStack.getDisplayName().getFormattedText();
+			}
+		}
+
+		return "";
 	}
 }

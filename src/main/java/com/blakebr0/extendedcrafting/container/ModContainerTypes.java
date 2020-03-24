@@ -27,7 +27,7 @@ import java.util.function.Supplier;
 public class ModContainerTypes {
     public static final List<Supplier<? extends ContainerType<?>>> ENTRIES = new ArrayList<>();
 
-    public static final RegistryObject<ContainerType<CraftingCoreContainer>> CRAFTING_CORE = register("crafting_core", () -> new ContainerType<>(CraftingCoreContainer::create));
+    public static final RegistryObject<ContainerType<CraftingCoreContainer>> CRAFTING_CORE = register("crafting_core", () -> new ContainerType<>((IContainerFactory<CraftingCoreContainer>) CraftingCoreContainer::create));
     public static final RegistryObject<ContainerType<BasicTableContainer>> BASIC_TABLE = register("basic_table", () -> new ContainerType<>(BasicTableContainer::create));
     public static final RegistryObject<ContainerType<AdvancedTableContainer>> ADVANCED_TABLE = register("advanced_table", () -> new ContainerType<>(AdvancedTableContainer::create));
     public static final RegistryObject<ContainerType<EliteTableContainer>> ELITE_TABLE = register("elite_table", () -> new ContainerType<>(EliteTableContainer::create));

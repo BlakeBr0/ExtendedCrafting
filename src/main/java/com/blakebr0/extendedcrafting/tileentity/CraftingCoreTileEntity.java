@@ -106,37 +106,39 @@ public class CraftingCoreTileEntity extends BaseInventoryTileEntity implements I
 
 		Map<BlockPos, ItemStack> pedestalsWithItems = this.getPedestalsWithItems();
 		World world = this.getWorld();
-		if (world != null && !world.isRemote()) {
+		if (world != null) {
 			ItemStack[] stacks = pedestalsWithItems.values().toArray(new ItemStack[0]);
 			this.updateRecipeInventory(stacks);
 			if (this.recipe == null || !this.recipe.matches(this.recipeInventory)) {
-				 this.recipe = (CombinationRecipe) world.getRecipeManager().getRecipe(RecipeTypes.COMBINATION, this.recipeInventory.toIInventory(), world).orElse(null);
+				this.recipe = (CombinationRecipe) world.getRecipeManager().getRecipe(RecipeTypes.COMBINATION, this.recipeInventory.toIInventory(), world).orElse(null);
 			}
 
-			if (this.recipe != null) {
-				if (this.energy.getEnergyStored() > 0) {
-					boolean done = this.process(this.recipe);
-					if (done) {
-						for (BlockPos pedestalPos : pedestalsWithItems.keySet()) {
-							TileEntity tile = world.getTileEntity(pedestalPos);
-							if (tile instanceof PedestalTileEntity) {
-								PedestalTileEntity pedestal = (PedestalTileEntity) tile;
-								IItemHandlerModifiable inventory = pedestal.getInventory();
-								inventory.setStackInSlot(0, StackHelper.decrease(inventory.getStackInSlot(0), 1, true));
-								pedestal.markDirtyAndDispatch();
-								this.spawnParticles(ParticleTypes.SMOKE, pedestalPos, 1.1, 20);
+			if (!world.isRemote()) {
+				if (this.recipe != null) {
+					if (this.energy.getEnergyStored() > 0) {
+						boolean done = this.process(this.recipe);
+						if (done) {
+							for (BlockPos pedestalPos : pedestalsWithItems.keySet()) {
+								TileEntity tile = world.getTileEntity(pedestalPos);
+								if (tile instanceof PedestalTileEntity) {
+									PedestalTileEntity pedestal = (PedestalTileEntity) tile;
+									IItemHandlerModifiable inventory = pedestal.getInventory();
+									inventory.setStackInSlot(0, StackHelper.decrease(inventory.getStackInSlot(0), 1, true));
+									pedestal.markDirtyAndDispatch();
+									this.spawnParticles(ParticleTypes.SMOKE, pedestalPos, 1.1, 20);
+								}
 							}
+							this.spawnParticles(ParticleTypes.END_ROD, this.getPos(), 1.1, 50);
+							this.inventory.setStackInSlot(0, this.recipe.getCraftingResult(this.recipeInventory));
+							this.progress = 0;
+							mark = true;
+						} else {
+							this.spawnParticles(ParticleTypes.ENTITY_EFFECT, this.getPos(), 1.15, 2);
 						}
-						this.spawnParticles(ParticleTypes.END_ROD, this.getPos(), 1.1, 50);
-						this.inventory.setStackInSlot(0, this.recipe.getCraftingResult(this.recipeInventory));
-						this.progress = 0;
-						mark = true;
-					} else {
-						this.spawnParticles(ParticleTypes.ENTITY_EFFECT, this.getPos(), 1.15, 2);
 					}
+				} else {
+					this.progress = 0;
 				}
-			} else {
-				this.progress = 0;
 			}
 		}
 
@@ -166,7 +168,7 @@ public class CraftingCoreTileEntity extends BaseInventoryTileEntity implements I
 
 	@Override
 	public Container createMenu(int windowId, PlayerInventory playerInventory, PlayerEntity player) {
-		return CraftingCoreContainer.create(windowId, playerInventory, this::isUsableByPlayer, this.data);
+		return CraftingCoreContainer.create(windowId, playerInventory, this::isUsableByPlayer, this.data, this.getPos());
 	}
 
 	private Map<BlockPos, ItemStack> getPedestalsWithItems() {

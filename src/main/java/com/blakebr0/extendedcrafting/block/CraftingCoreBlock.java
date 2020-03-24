@@ -12,6 +12,7 @@ import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -26,6 +27,7 @@ import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.network.NetworkHooks;
 
 public class CraftingCoreBlock extends BaseTileEntityBlock implements IEnableable {
 	public static final VoxelShape CRAFTING_CORE_SHAPE = new VoxelShapeBuilder()
@@ -70,7 +72,7 @@ public class CraftingCoreBlock extends BaseTileEntityBlock implements IEnableabl
 						inventory.setStackInSlot(0, ItemStack.EMPTY);
 					}
 				} else {
-					player.openContainer(core);
+					NetworkHooks.openGui((ServerPlayerEntity) player, core, pos);
 				}
 			}
 		}

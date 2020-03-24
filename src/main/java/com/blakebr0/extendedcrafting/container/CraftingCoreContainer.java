@@ -6,23 +6,27 @@ import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
+import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.IIntArray;
 import net.minecraft.util.IntArray;
+import net.minecraft.util.math.BlockPos;
 
 import java.util.function.Function;
 
 public class CraftingCoreContainer extends Container {
 	private final Function<PlayerEntity, Boolean> isUsableByPlayer;
 	private final IIntArray data;
+	private final BlockPos pos;
 
-	private CraftingCoreContainer(ContainerType<?> type, int id, PlayerInventory playerInventory) {
-		this(type, id, playerInventory, p -> false, new IntArray(7));
+	private CraftingCoreContainer(ContainerType<?> type, int id, PlayerInventory playerInventory, PacketBuffer buffer) {
+		this(type, id, playerInventory, p -> false, new IntArray(7), buffer.readBlockPos());
 	}
 
-	private CraftingCoreContainer(ContainerType<?> type, int id, PlayerInventory playerInventory, Function<PlayerEntity, Boolean> isUsableByPlayer, IIntArray data) {
+	private CraftingCoreContainer(ContainerType<?> type, int id, PlayerInventory playerInventory, Function<PlayerEntity, Boolean> isUsableByPlayer, IIntArray data, BlockPos pos) {
 		super(type, id);
 		this.isUsableByPlayer = isUsableByPlayer;
 		this.data = data;
+		this.pos = pos;
 
 		for (int i = 0; i < 3; i++) {
 			for (int j = 0; j < 9; j++) {
@@ -79,12 +83,16 @@ public class CraftingCoreContainer extends Container {
 		return this.isUsableByPlayer.apply(player);
 	}
 
-	public static CraftingCoreContainer create(int windowId, PlayerInventory playerInventory) {
-		return new CraftingCoreContainer(ModContainerTypes.CRAFTING_CORE.get(), windowId, playerInventory);
+	public static CraftingCoreContainer create(int windowId, PlayerInventory playerInventory, PacketBuffer buffer) {
+		return new CraftingCoreContainer(ModContainerTypes.CRAFTING_CORE.get(), windowId, playerInventory, buffer);
 	}
 
-	public static CraftingCoreContainer create(int windowId, PlayerInventory playerInventory, Function<PlayerEntity, Boolean> isUsableByPlayer, IIntArray data) {
-		return new CraftingCoreContainer(ModContainerTypes.CRAFTING_CORE.get(), windowId, playerInventory, isUsableByPlayer, data);
+	public static CraftingCoreContainer create(int windowId, PlayerInventory playerInventory, Function<PlayerEntity, Boolean> isUsableByPlayer, IIntArray data, BlockPos pos) {
+		return new CraftingCoreContainer(ModContainerTypes.CRAFTING_CORE.get(), windowId, playerInventory, isUsableByPlayer, data, pos);
+	}
+
+	public BlockPos getPos() {
+		return this.pos;
 	}
 
 	public int getEnergyBarScaled(int pixels) {

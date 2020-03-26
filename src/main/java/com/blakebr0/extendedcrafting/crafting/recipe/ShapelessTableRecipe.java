@@ -137,7 +137,7 @@ public class ShapelessTableRecipe implements ISpecialRecipe, ITableRecipe {
 				inputs.add(Ingredient.deserialize(ingredients.get(i)));
 			}
 
-			ItemStack output = ShapedRecipe.deserializeItem(json.getAsJsonObject("result"));
+			ItemStack output = ShapedRecipe.deserializeItem(JSONUtils.getJsonObject(json, "result"));
 			int tier = JSONUtils.getInt(json, "tier", 0);
 
 			return new ShapelessTableRecipe(recipeId, inputs, output, tier);

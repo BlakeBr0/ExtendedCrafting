@@ -34,7 +34,7 @@ import java.util.stream.Collectors;
 @JeiPlugin
 public class JeiCompat implements IModPlugin {
 	public static final ResourceLocation UID = new ResourceLocation(ExtendedCrafting.MOD_ID, "jei_plugin");
-	public static final ResourceLocation ICONS = new ResourceLocation(ExtendedCrafting.MOD_ID, "textures/jei/icons.png");
+	public static final ResourceLocation ICONS = new ResourceLocation(ExtendedCrafting.MOD_ID, "textures/gui/jei/icons.png");
 
 	@Override
 	public ResourceLocation getPluginUid() {

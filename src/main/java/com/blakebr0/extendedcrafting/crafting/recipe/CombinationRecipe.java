@@ -104,7 +104,7 @@ public class CombinationRecipe implements ISpecialRecipe, ICombinationRecipe {
 		@Override
 		public CombinationRecipe read(ResourceLocation recipeId, JsonObject json) {
 			NonNullList<Ingredient> inputs = NonNullList.create();
-			Ingredient input = Ingredient.deserialize(json.get("input"));
+			Ingredient input = Ingredient.deserialize(JSONUtils.getJsonObject(json, "input"));
 			inputs.add(input);
 
 			JsonArray ingredients = JSONUtils.getJsonArray(json, "ingredients");
@@ -113,7 +113,7 @@ public class CombinationRecipe implements ISpecialRecipe, ICombinationRecipe {
 				inputs.add(ingredient);
 			}
 
-			ItemStack output = ShapedRecipe.deserializeItem(json.getAsJsonObject("result"));
+			ItemStack output = ShapedRecipe.deserializeItem(JSONUtils.getJsonObject(json, "result"));
 			if (!json.has("powerCost"))
 				throw new JsonSyntaxException("Missing powerCost for combination crafting recipe");
 			int powerCost = JSONUtils.getInt(json, "powerCost");

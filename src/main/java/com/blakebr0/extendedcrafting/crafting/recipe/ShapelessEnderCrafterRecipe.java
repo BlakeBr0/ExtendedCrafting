@@ -132,7 +132,7 @@ public class ShapelessEnderCrafterRecipe implements ISpecialRecipe, IEnderCrafte
 				inputs.add(Ingredient.deserialize(ingredients.get(i)));
 			}
 
-			ItemStack output = ShapedRecipe.deserializeItem(json.getAsJsonObject("result"));
+			ItemStack output = ShapedRecipe.deserializeItem(JSONUtils.getJsonObject(json, "result"));
 			int craftingTime = JSONUtils.getInt(json, "craftingTime", 0);
 
 			return new ShapelessEnderCrafterRecipe(recipeId, inputs, output, craftingTime);

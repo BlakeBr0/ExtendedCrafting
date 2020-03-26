@@ -108,11 +108,9 @@ public class CompressorRecipe implements ISpecialRecipe, ICompressorRecipe {
 		@Override
 		public CompressorRecipe read(ResourceLocation recipeId, JsonObject json) {
 			Ingredient input = Ingredient.deserialize(json.getAsJsonObject("ingredient"));
-			ItemStack output = ShapedRecipe.deserializeItem(json.getAsJsonObject("result"));
+			ItemStack output = ShapedRecipe.deserializeItem(JSONUtils.getJsonObject(json, "result"));
 			int inputCount = JSONUtils.getInt(json, "inputCount", 10000);
-			Ingredient catalyst = Ingredient.deserialize(json.getAsJsonObject("catalyst"));
-			if (!json.has("powerCost"))
-				throw new JsonSyntaxException("Missing powerCost for compressor recipe");
+			Ingredient catalyst = Ingredient.deserialize(JSONUtils.getJsonObject(json, "catalyst"));
 			int powerCost = JSONUtils.getInt(json, "powerCost");
 			int powerRate = JSONUtils.getInt(json, "powerRate", ModConfigs.COMPRESSOR_POWER_RATE.get());
 

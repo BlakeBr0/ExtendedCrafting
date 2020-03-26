@@ -18,6 +18,7 @@ public class PedestalRenderer extends TileEntityRenderer<PedestalTileEntity> {
 
 	@Override
 	public void render(PedestalTileEntity tile, float v, MatrixStack matrix, IRenderTypeBuffer buffer, int i, int i1) {
+		Minecraft minecraft = Minecraft.getInstance();
 		ItemStack stack = tile.getInventory().getStackInSlot(0);
 		if (!stack.isEmpty()) {
 			matrix.push();
@@ -27,7 +28,7 @@ public class PedestalRenderer extends TileEntityRenderer<PedestalTileEntity> {
 			double tick = System.currentTimeMillis() / 800.0D;
 			matrix.translate(0.0D, Math.sin(tick % (2 * Math.PI)) * 0.065D, 0.0D);
 			matrix.rotate(Vector3f.YP.rotationDegrees((float) ((tick * 40.0D) % 360)));
-			Minecraft.getInstance().getItemRenderer().renderItem(stack, ItemCameraTransforms.TransformType.GROUND, i, i1, matrix, buffer);
+			minecraft.getItemRenderer().renderItem(stack, ItemCameraTransforms.TransformType.GROUND, i, i1, matrix, buffer);
 			matrix.pop();
 		}
 	}

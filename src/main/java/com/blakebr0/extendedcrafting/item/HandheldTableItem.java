@@ -38,7 +38,12 @@ public class HandheldTableItem extends BaseItem implements IEnableable {
 
 	private INamedContainerProvider getContainer(World world, BlockPos pos) {
 		return new SimpleNamedContainerProvider((windowId, playerInventory, playerEntity) -> {
-			return new WorkbenchContainer(windowId, playerInventory, IWorldPosCallable.of(world, pos));
+			return new WorkbenchContainer(windowId, playerInventory, IWorldPosCallable.of(world, pos)) {
+				@Override
+				public boolean canInteractWith(PlayerEntity player) {
+					return true;
+				}
+			};
 		}, Localizable.of("container.crafting").build());
 	}
 }

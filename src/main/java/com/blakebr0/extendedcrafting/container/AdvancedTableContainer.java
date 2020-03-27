@@ -52,6 +52,8 @@ public class AdvancedTableContainer extends Container {
 		for (j = 0; j < 9; j++) {
 			this.addSlot(new Slot(playerInventory, j, 8 + j * 18, 182));
 		}
+
+		this.onCraftMatrixChanged(matrix);
 	}
 
 	@Override

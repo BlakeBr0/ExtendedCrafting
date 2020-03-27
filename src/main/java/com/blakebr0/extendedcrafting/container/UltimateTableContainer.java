@@ -52,6 +52,8 @@ public class UltimateTableContainer extends Container {
 		for (j = 0; j < 9; j++) {
 			this.addSlot(new Slot(playerInventory, j, 39 + j * 18, 254));
 		}
+
+		this.onCraftMatrixChanged(matrix);
 	}
 
 	@Override

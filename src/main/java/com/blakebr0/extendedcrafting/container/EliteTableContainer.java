@@ -52,6 +52,8 @@ public class EliteTableContainer extends Container {
 		for (j = 0; j < 9; j++) {
 			this.addSlot(new Slot(playerInventory, j, 20 + j * 18, 218));
 		}
+
+		this.onCraftMatrixChanged(matrix);
 	}
 
 	@Override

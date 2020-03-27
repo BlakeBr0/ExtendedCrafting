@@ -81,6 +81,11 @@ public class SingularityRegistry {
             }
 
             if (singularity != null) {
+                ResourceLocation id = singularity.getId();
+                if (id.getNamespace().equals(ExtendedCrafting.MOD_ID)) {
+                    this.singularities.removeIf(s -> id.equals(s.getId()));
+                }
+
                 this.singularities.add(singularity);
             }
         }

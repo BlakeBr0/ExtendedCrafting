@@ -4,16 +4,24 @@ import com.blakebr0.cucumber.iface.IColored;
 import com.blakebr0.cucumber.iface.IEnableable;
 import com.blakebr0.cucumber.item.BaseItem;
 import com.blakebr0.cucumber.lib.Localizable;
+import com.blakebr0.extendedcrafting.ExtendedCrafting;
 import com.blakebr0.extendedcrafting.config.ModConfigs;
+import com.blakebr0.extendedcrafting.lib.ModTooltips;
 import com.blakebr0.extendedcrafting.singularity.Singularity;
 import com.blakebr0.extendedcrafting.singularity.SingularityRegistry;
 import com.blakebr0.extendedcrafting.singularity.SingularityUtils;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Rarity;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextFormatting;
+import net.minecraft.world.World;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
+import java.util.List;
 import java.util.function.Function;
 
 public class SingularityItem extends BaseItem implements IEnableable, IColored {
@@ -39,8 +47,22 @@ public class SingularityItem extends BaseItem implements IEnableable, IColored {
 
 		return Localizable.of(this.getTranslationKey(stack)).args(singularity.getDisplayName()).build();
 	}
-	
-//	@Override
+
+	@OnlyIn(Dist.CLIENT)
+	@Override
+	public void addInformation(ItemStack stack, World world, List<ITextComponent> tooltip, ITooltipFlag flag) {
+		Singularity singularity = SingularityUtils.getSingularity(stack);
+		if (singularity != null) {
+			String modid = singularity.getId().getNamespace();
+			if (!modid.equals(ExtendedCrafting.MOD_ID))
+				tooltip.add(ModTooltips.getAddedByTooltip(modid));
+
+			if (flag.isAdvanced())
+				tooltip.add(ModTooltips.SINGULARITY_ID.args(singularity.getId()).color(TextFormatting.DARK_GRAY).build());
+		}
+	}
+
+	//	@Override
 //	public void init() {
 //		addSingularity(0, "coal", new ItemStack(Items.COAL), 0x1B1B1B);
 //		addSingularity(1, "iron", "ingotIron", 0x969696);

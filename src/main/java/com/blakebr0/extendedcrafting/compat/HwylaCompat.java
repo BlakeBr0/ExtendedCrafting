@@ -89,7 +89,7 @@ public class HwylaCompat implements IWailaPlugin {
 				IEnderCrafterRecipe recipe = crafter.getActiveRecipe();
 				if (recipe != null) {
 					ItemStack output = recipe.getRecipeOutput();
-					tooltip.add(ModTooltips.OUTPUT.args(output.getCount(), output.getDisplayName()).build());
+					tooltip.add(ModTooltips.CRAFTING.args(output.getCount(), output.getDisplayName()).build());
 				}
 			}
 		}, TooltipPosition.BODY, EnderCrafterBlock.class);

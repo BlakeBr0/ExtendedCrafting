@@ -3,6 +3,7 @@ package com.blakebr0.extendedcrafting.item;
 import com.blakebr0.cucumber.helper.NBTHelper;
 import com.blakebr0.cucumber.iface.IEnableable;
 import com.blakebr0.cucumber.item.BaseItem;
+import com.blakebr0.cucumber.lib.Tooltips;
 import com.blakebr0.extendedcrafting.config.ModConfigs;
 import com.blakebr0.extendedcrafting.lib.ModTooltips;
 import net.minecraft.client.util.ITooltipFlag;
@@ -87,6 +88,7 @@ public class RecipeMakerItem extends BaseItem implements IEnableable {
 	@OnlyIn(Dist.CLIENT)
 	@Override
 	public void addInformation(ItemStack stack, World world, List<ITextComponent> tooltip, ITooltipFlag flag) {
+		tooltip.add(Tooltips.NOT_YET_IMPLEMENTED.build());
 		tooltip.add(ModTooltips.MODE.args(this.getModeString(stack)).build());
 	}
 

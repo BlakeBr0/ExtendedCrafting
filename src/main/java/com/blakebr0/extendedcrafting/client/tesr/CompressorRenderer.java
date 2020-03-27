@@ -30,7 +30,7 @@ public class CompressorRenderer extends TileEntityRenderer<CompressorTileEntity>
 			if (!stack.isEmpty()) {
 				matrix.push();
 				matrix.translate(0.5D, 1.3D, 0.5D);
-				float scale = stack.getItem() instanceof BlockItem ? 0.9F : 0.65F;
+				float scale = stack.getItem() instanceof BlockItem ? 0.9F : 0.75F;
 				matrix.scale(scale, scale, scale);
 				double tick = System.currentTimeMillis() / 800.0D;
 				matrix.translate(0.0D, Math.sin(tick % (2 * Math.PI)) * 0.065D, 0.0D);

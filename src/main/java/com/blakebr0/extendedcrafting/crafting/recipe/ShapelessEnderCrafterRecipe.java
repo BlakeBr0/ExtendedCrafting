@@ -74,9 +74,6 @@ public class ShapelessEnderCrafterRecipe implements ISpecialRecipe, IEnderCrafte
 
 	@Override
 	public boolean matches(IItemHandler inventory) {
-		if (this.craftingTime != 0 && this.craftingTime != this.getTierFromSize(inventory.getSlots()))
-			return false;
-
 		int matches = 0;
 		for (int x = 0; x < inventory.getSlots(); x++) {
 			ItemStack slot = inventory.getStackInSlot(x);
@@ -114,13 +111,6 @@ public class ShapelessEnderCrafterRecipe implements ISpecialRecipe, IEnderCrafte
 	@Override
 	public int getCraftingTime() {
 		return this.craftingTime;
-	}
-
-	private int getTierFromSize(int size) {
-		return size < 10 ? 1
-				: size < 26 ? 2
-				: size < 50 ? 3
-				: 4;
 	}
 
 	public static class Serializer extends ForgeRegistryEntry<IRecipeSerializer<?>> implements IRecipeSerializer<ShapelessEnderCrafterRecipe> {

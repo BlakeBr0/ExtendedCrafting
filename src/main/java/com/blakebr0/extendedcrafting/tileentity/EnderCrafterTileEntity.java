@@ -87,39 +87,47 @@ public class EnderCrafterTileEntity extends BaseInventoryTileEntity implements I
 	@Override
 	public void tick() {
 		World world = this.getWorld();
-		if (world != null && !world.isRemote()) {
+		if (world != null) {
 			this.updateRecipeInventory();
 			IInventory recipeInventory = this.recipeInventory.toIInventory();
 			if (this.recipe == null || !this.recipe.matches(recipeInventory, world)) {
 				this.recipe = world.getRecipeManager().getRecipe(RecipeTypes.ENDER_CRAFTER, recipeInventory, world).orElse(null);
 			}
 
-			if (this.recipe != null) {
-				ItemStack result = this.recipe.getCraftingResult(recipeInventory);
-				ItemStack output = this.inventory.getStackInSlot(9);
-				if (StackHelper.canCombineStacks(result, output)) {
-					List<BlockPos> alternators = this.getAlternatorPositions();
-					int alternatorCount = alternators.size();
+			if (!world.isRemote()) {
+				if (this.recipe != null) {
+					ItemStack result = this.recipe.getCraftingResult(recipeInventory);
+					ItemStack output = this.inventory.getStackInSlot(9);
+					if (StackHelper.canCombineStacks(result, output)) {
+						List<BlockPos> alternators = this.getAlternatorPositions();
+						int alternatorCount = alternators.size();
 
-					if (alternatorCount > 0) {
-						this.progress(alternatorCount, this.recipe.getCraftingTime());
+						if (alternatorCount > 0) {
+							this.progress(alternatorCount, this.recipe.getCraftingTime());
 
-						for (BlockPos pos : alternators) {
-							if (world.isAirBlock(pos.up())) {
-								this.spawnParticles(ParticleTypes.PORTAL, pos, 1, 1);
+							for (BlockPos pos : alternators) {
+								if (world.isAirBlock(pos.up())) {
+									this.spawnParticles(ParticleTypes.PORTAL, pos, 1, 1);
+								}
 							}
+
+							if (this.progress >= this.progressReq) {
+								for (int i = 0; i < this.inventory.getSlots() - 1; i++) {
+									this.inventory.extractItem(i, 1, false);
+								}
+
+								this.updateResult(result);
+								this.progress = 0;
+							}
+
+							this.markDirty();
 						}
-
-						if (this.progress >= this.progressReq) {
-							for (int i = 0; i < this.inventory.getSlots() - 1; i++) {
-								this.inventory.extractItem(i, 1, false);
-							}
-
-							this.updateResult(result);
+					} else {
+						if (this.progress > 0 || this.progressReq > 0) {
 							this.progress = 0;
+							this.progressReq = 0;
+							this.markDirty();
 						}
-
-						this.markDirty();
 					}
 				} else {
 					if (this.progress > 0 || this.progressReq > 0) {

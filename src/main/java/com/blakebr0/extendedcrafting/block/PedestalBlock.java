@@ -19,7 +19,6 @@ import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvents;
-import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.shapes.ISelectionContext;
@@ -29,9 +28,9 @@ import net.minecraft.world.World;
 
 public class PedestalBlock extends BaseTileEntityBlock implements IEnableable {
 	public static final VoxelShape PEDESTAL_SHAPE = new VoxelShapeBuilder()
-			.cuboid(15.0, 2.0, 15.0, 1.0, 0.0, 1.0)
-			.cuboid(13.0, 14.0, 13.0, 3.0, 2.0, 3.0)
-			.cuboid(14.0, 16.0, 14.0, 2.0, 14.0, 2.0)
+			.cuboid(13, 14, 13, 3, 2, 3)
+			.cuboid(15, 2, 15, 1, 0, 1)
+			.cuboid(14, 16, 14, 2, 14, 2)
 			.build();
 
 	public PedestalBlock() {

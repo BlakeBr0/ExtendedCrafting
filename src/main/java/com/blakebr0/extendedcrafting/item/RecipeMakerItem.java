@@ -3,6 +3,7 @@ package com.blakebr0.extendedcrafting.item;
 import com.blakebr0.cucumber.helper.NBTHelper;
 import com.blakebr0.cucumber.iface.IEnableable;
 import com.blakebr0.cucumber.item.BaseItem;
+import com.blakebr0.cucumber.lib.Localizable;
 import com.blakebr0.cucumber.lib.Tooltips;
 import com.blakebr0.extendedcrafting.config.ModConfigs;
 import com.blakebr0.extendedcrafting.lib.ModTooltips;
@@ -78,7 +79,7 @@ public class RecipeMakerItem extends BaseItem implements IEnableable {
 			NBTHelper.flipBoolean(stack, "Shapeless");
 
 			if (world.isRemote()) {
-				player.sendMessage(ModTooltips.CHANGED_MODE.args(this.getModeString(stack)).build());
+				player.sendMessage(Localizable.of("message.extendedcrafting.changed_mode").args(this.getModeString(stack)).build());
 			}
 		}
 

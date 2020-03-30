@@ -81,12 +81,13 @@
   "tooltip.extendedcrafting.tier": "Tier: %s",
   "tooltip.extendedcrafting.crafting": "Crafting: %sx %s",
   "tooltip.extendedcrafting.mode": "Mode: %s",
-  "tooltip.extendedcrafting.changed_mode": "Changed mode to %s.",
   "tooltip.extendedcrafting.num_items": "%s Items",
   "tooltip.extendedcrafting.requires_table": "Requires Tier %s Crafting Table",
   "tooltip.extendedcrafting.items_required": "Items Required:",
   "tooltip.extendedcrafting.singularity_id": "Singularity ID: %s",
   "tooltip.extendedcrafting.added_by": "Added By: %s",
+
+  "message.extendedcrafting.changed_mode": "Changed mode to %s.",
 
   "jei.category.extendedcrafting.combination": "Combination Crafting",
   "jei.category.extendedcrafting.basic_crafting": "Basic Crafting",

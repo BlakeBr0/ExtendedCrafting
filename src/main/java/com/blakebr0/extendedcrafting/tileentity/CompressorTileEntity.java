@@ -127,7 +127,7 @@ public class CompressorTileEntity extends BaseInventoryTileEntity implements ITi
 
 			if (!world.isRemote()) {
 				if (!input.isEmpty()) {
-					if (this.materialStack.isEmpty()) {
+					if (this.materialStack.isEmpty() || this.materialCount <= 0) {
 						this.materialStack = input.copy();
 						mark = true;
 					}

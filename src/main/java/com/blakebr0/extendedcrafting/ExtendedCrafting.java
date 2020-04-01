@@ -57,6 +57,7 @@ public class ExtendedCrafting {
 		DeferredWorkQueue.runLater(() -> {
 			NetworkHandler.onCommonSetup();
 			SingularityRegistry.getInstance().loadSingularities();
+			ModRecipeSerializers.initUltimateSingularityRecipe();
 		});
 	}
 

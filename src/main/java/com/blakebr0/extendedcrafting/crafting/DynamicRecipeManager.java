@@ -31,7 +31,7 @@ public class DynamicRecipeManager implements IResourceManagerReloadListener {
         recipeManager.recipes = new HashMap<>(recipeManager.recipes);
         recipeManager.recipes.replaceAll((t, v) -> new HashMap<>(recipeManager.recipes.get(t)));
 
-        Map<ResourceLocation, IRecipe<?>> recipes = recipeManager.recipes.get(RecipeTypes.COMPRESSOR);
+        Map<ResourceLocation, IRecipe<?>> recipes = recipeManager.recipes.computeIfAbsent(RecipeTypes.COMPRESSOR, t -> new HashMap<>());
         SingularityRegistry.getInstance().getSingularities().forEach(singularity -> {
             CompressorRecipe compressorRecipe = this.makeSingularityRecipe(singularity);
             if (compressorRecipe != null)

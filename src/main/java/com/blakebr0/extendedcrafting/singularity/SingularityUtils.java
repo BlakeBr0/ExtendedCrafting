@@ -4,6 +4,7 @@ import com.blakebr0.cucumber.helper.NBTHelper;
 import com.blakebr0.extendedcrafting.config.ModConfigs;
 import com.blakebr0.extendedcrafting.item.ModItems;
 import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
@@ -28,6 +29,19 @@ public class SingularityUtils {
             Ingredient ingredient = Ingredient.deserialize(json.get("ingredient"));
             return new Singularity(id, name, new int[] { overlayColor, underlayColor }, ingredient, materialCount);
         }
+    }
+
+    public static JsonObject writeToJson(Singularity singularity) {
+        JsonObject json = new JsonObject();
+        json.addProperty("name", singularity.getName());
+        JsonArray colors = new JsonArray();
+        colors.add(Integer.toString(singularity.getOverlayColor(), 16));
+        colors.add(Integer.toString(singularity.getUnderlayColor(), 16));
+        json.add("colors", colors);
+        JsonElement ingredient = singularity.getIngredient().serialize();
+        json.add("ingredient", ingredient);
+
+        return json;
     }
 
     public static CompoundNBT makeTag(Singularity singularity) {

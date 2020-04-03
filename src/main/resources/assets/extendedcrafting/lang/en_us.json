@@ -104,5 +104,17 @@
   "singularity.extendedcrafting.glowstone": "Glowstone",
   "singularity.extendedcrafting.gold": "Gold",
   "singularity.extendedcrafting.diamond": "Diamond",
-  "singularity.extendedcrafting.emerald": "Emerald"
+  "singularity.extendedcrafting.emerald": "Emerald",
+  "singularity.extendedcrafting.aluminum": "Aluminum",
+  "singularity.extendedcrafting.copper": "Copper",
+  "singularity.extendedcrafting.tin": "Tin",
+  "singularity.extendedcrafting.bronze": "Bronze",
+  "singularity.extendedcrafting.silver": "Silver",
+  "singularity.extendedcrafting.lead": "Lead",
+  "singularity.extendedcrafting.steel": "Steel",
+  "singularity.extendedcrafting.nickel": "Nickel",
+  "singularity.extendedcrafting.electrum": "Electrum",
+  "singularity.extendedcrafting.invar": "Invar",
+  "singularity.extendedcrafting.uranium": "Uranium",
+  "singularity.extendedcrafting.platinum": "Platinum"
 }

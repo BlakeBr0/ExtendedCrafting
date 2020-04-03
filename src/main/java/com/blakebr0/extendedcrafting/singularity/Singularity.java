@@ -58,6 +58,10 @@ public class Singularity {
         return this.ingredient;
     }
 
+    public String getTag() {
+        return this.tag;
+    }
+
     public int getIngredientCount() {
         return this.ingredientCount;
     }

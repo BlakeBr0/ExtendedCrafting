@@ -114,7 +114,20 @@ public class SingularityRegistry {
                 new Singularity(new ResourceLocation(ExtendedCrafting.MOD_ID, "redstone"), "singularity.extendedcrafting.redstone", new int[] { 11144961, 7471104 }, Ingredient.fromTag(Tags.Items.DUSTS_REDSTONE), count),
                 new Singularity(new ResourceLocation(ExtendedCrafting.MOD_ID, "glowstone"), "singularity.extendedcrafting.glowstone", new int[] { 16759902, 11825472 }, Ingredient.fromTag(Tags.Items.DUSTS_GLOWSTONE), count),
                 new Singularity(new ResourceLocation(ExtendedCrafting.MOD_ID, "diamond"), "singularity.extendedcrafting.diamond", new int[] { 4910553, 2147765 }, Ingredient.fromTag(Tags.Items.GEMS_DIAMOND), count),
-                new Singularity(new ResourceLocation(ExtendedCrafting.MOD_ID, "emerald"), "singularity.extendedcrafting.emerald", new int[] { 4322180, 43564 }, Ingredient.fromTag(Tags.Items.GEMS_EMERALD), count)
+                new Singularity(new ResourceLocation(ExtendedCrafting.MOD_ID, "emerald"), "singularity.extendedcrafting.emerald", new int[] { 4322180, 43564 }, Ingredient.fromTag(Tags.Items.GEMS_EMERALD), count),
+
+                new Singularity(new ResourceLocation(ExtendedCrafting.MOD_ID, "aluminum"), "singularity.extendedcrafting.aluminum", new int[] { 13290714, 13290714 }, "forge:ingots/aluminum", count),
+                new Singularity(new ResourceLocation(ExtendedCrafting.MOD_ID, "copper"), "singularity.extendedcrafting.copper", new int[] { 13529601, 13529601 }, "forge:ingots/copper", count),
+                new Singularity(new ResourceLocation(ExtendedCrafting.MOD_ID, "tin"), "singularity.extendedcrafting.tin", new int[] { 7770277, 7770277 }, "forge:ingots/tin", count),
+                new Singularity(new ResourceLocation(ExtendedCrafting.MOD_ID, "bronze"), "singularity.extendedcrafting.bronze", new int[] { 11040068, 11040068 }, "forge:ingots/bronze", count),
+                new Singularity(new ResourceLocation(ExtendedCrafting.MOD_ID, "silver"), "singularity.extendedcrafting.silver", new int[] { 8628914, 8628914 }, "forge:ingots/silver", count),
+                new Singularity(new ResourceLocation(ExtendedCrafting.MOD_ID, "lead"), "singularity.extendedcrafting.lead", new int[] { 4738919, 4738919 }, "forge:ingots/lead", count),
+                new Singularity(new ResourceLocation(ExtendedCrafting.MOD_ID, "steel"), "singularity.extendedcrafting.steel", new int[] { 5658198, 5658198 }, "forge:ingots/steel", count),
+                new Singularity(new ResourceLocation(ExtendedCrafting.MOD_ID, "nickel"), "singularity.extendedcrafting.nickel", new int[] { 12498050, 12498050 }, "forge:ingots/nickel", count),
+                new Singularity(new ResourceLocation(ExtendedCrafting.MOD_ID, "electrum"), "singularity.extendedcrafting.electrum", new int[] { 10981685, 10981685 }, "forge:ingots/electrum", count),
+                new Singularity(new ResourceLocation(ExtendedCrafting.MOD_ID, "invar"), "singularity.extendedcrafting.invar", new int[] { 9608599, 9608599 }, "forge:ingots/invar", count),
+                new Singularity(new ResourceLocation(ExtendedCrafting.MOD_ID, "uranium"), "singularity.extendedcrafting.uranium", new int[] { 4620301, 4620301 }, "forge:ingots/uranium", count),
+                new Singularity(new ResourceLocation(ExtendedCrafting.MOD_ID, "platinum"), "singularity.extendedcrafting.platinum", new int[] { 7334639, 7334639 }, "forge:ingots/platinum", count)
         );
     }
 }

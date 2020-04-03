@@ -38,7 +38,15 @@ public class SingularityUtils {
         colors.add(Integer.toString(singularity.getOverlayColor(), 16));
         colors.add(Integer.toString(singularity.getUnderlayColor(), 16));
         json.add("colors", colors);
-        JsonElement ingredient = singularity.getIngredient().serialize();
+
+        JsonElement ingredient;
+        if (singularity.getTag() != null) {
+            JsonObject obj = new JsonObject();
+            obj.addProperty("tag", singularity.getTag());
+            ingredient = obj;
+        } else {
+            ingredient = singularity.getIngredient().serialize();
+        }
         json.add("ingredient", ingredient);
 
         return json;

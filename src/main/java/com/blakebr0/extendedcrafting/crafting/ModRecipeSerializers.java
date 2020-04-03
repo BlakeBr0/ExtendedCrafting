@@ -45,9 +45,15 @@ public class ModRecipeSerializers {
 
     public static void initUltimateSingularityRecipe() {
         List<Singularity> singularities = SingularityRegistry.getInstance().getSingularities();
-        for (int i = 0; i < singularities.size() && i < 81; i++) {
-            ItemStack stack = SingularityUtils.getItemForSingularity(singularities.get(i));
-            UltimateSingularityRecipe.SINGULARITIES.set(i, Ingredient.fromStacks(stack));
+        int added = 0;
+        for (int i = 0; i < singularities.size() && added < 81; i++) {
+            Singularity singularity = singularities.get(i);
+            if (singularity.getIngredient() != Ingredient.EMPTY) {
+                ItemStack stack = SingularityUtils.getItemForSingularity(singularity);
+                UltimateSingularityRecipe.SINGULARITIES.add(Ingredient.fromStacks(stack));
+
+                added++;
+            }
         }
     }
 }

@@ -11,11 +11,11 @@ import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.registries.ForgeRegistryEntry;
 
-public class UltimateSingularityRecipe extends ShapedTableRecipe {
-    public static final NonNullList<Ingredient> SINGULARITIES = NonNullList.withSize(81, Ingredient.EMPTY);
+public class UltimateSingularityRecipe extends ShapelessTableRecipe {
+    public static final NonNullList<Ingredient> SINGULARITIES = NonNullList.create();
 
     public UltimateSingularityRecipe(ResourceLocation recipeId, ItemStack output) {
-        super(recipeId, 9, 9, SINGULARITIES, output, 4);
+        super(recipeId, SINGULARITIES, output, 4);
     }
 
     @Override

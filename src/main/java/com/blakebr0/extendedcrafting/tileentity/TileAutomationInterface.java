@@ -252,7 +252,6 @@
 //		this.autoEject = tag.getBoolean("AutoEject");
 //		this.smartInsert = tag.getBoolean("SmartInsert");
 //
-//		// TODO: Remove in 1.13
 //		if (this.recipeSize == 0) {
 //			this.recipeSize = (int) Math.sqrt(this.recipe.getSlots());
 //		}

@@ -11,7 +11,6 @@ import com.google.gson.JsonParser;
 import net.minecraft.item.Items;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.common.Tags;
 import net.minecraftforge.fml.loading.FMLPaths;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.filefilter.FileFilterUtils;
@@ -109,12 +108,12 @@ public class SingularityRegistry {
         int count = ModConfigs.SINGULARITY_MATERIALS_REQUIRED.get();
         return Lists.newArrayList(
                 new Singularity(new ResourceLocation(ExtendedCrafting.MOD_ID, "coal"), "singularity.extendedcrafting.coal", new int[] { 3289650, 1052693 }, Ingredient.fromItems(Items.COAL), count),
-                new Singularity(new ResourceLocation(ExtendedCrafting.MOD_ID, "iron"), "singularity.extendedcrafting.iron", new int[] { 14211288, 11053224 }, Ingredient.fromTag(Tags.Items.INGOTS_IRON), count),
-                new Singularity(new ResourceLocation(ExtendedCrafting.MOD_ID, "lapis_lazuli"), "singularity.extendedcrafting.lapis_lazuli", new int[] { 5931746, 3432131 }, Ingredient.fromTag(Tags.Items.GEMS_LAPIS), count),
-                new Singularity(new ResourceLocation(ExtendedCrafting.MOD_ID, "redstone"), "singularity.extendedcrafting.redstone", new int[] { 11144961, 7471104 }, Ingredient.fromTag(Tags.Items.DUSTS_REDSTONE), count),
-                new Singularity(new ResourceLocation(ExtendedCrafting.MOD_ID, "glowstone"), "singularity.extendedcrafting.glowstone", new int[] { 16759902, 11825472 }, Ingredient.fromTag(Tags.Items.DUSTS_GLOWSTONE), count),
-                new Singularity(new ResourceLocation(ExtendedCrafting.MOD_ID, "diamond"), "singularity.extendedcrafting.diamond", new int[] { 4910553, 2147765 }, Ingredient.fromTag(Tags.Items.GEMS_DIAMOND), count),
-                new Singularity(new ResourceLocation(ExtendedCrafting.MOD_ID, "emerald"), "singularity.extendedcrafting.emerald", new int[] { 4322180, 43564 }, Ingredient.fromTag(Tags.Items.GEMS_EMERALD), count),
+                new Singularity(new ResourceLocation(ExtendedCrafting.MOD_ID, "iron"), "singularity.extendedcrafting.iron", new int[] { 14211288, 11053224 }, Ingredient.fromItems(Items.IRON_INGOT), count),
+                new Singularity(new ResourceLocation(ExtendedCrafting.MOD_ID, "lapis_lazuli"), "singularity.extendedcrafting.lapis_lazuli", new int[] { 5931746, 3432131 }, Ingredient.fromItems(Items.LAPIS_LAZULI), count),
+                new Singularity(new ResourceLocation(ExtendedCrafting.MOD_ID, "redstone"), "singularity.extendedcrafting.redstone", new int[] { 11144961, 7471104 }, Ingredient.fromItems(Items.REDSTONE), count),
+                new Singularity(new ResourceLocation(ExtendedCrafting.MOD_ID, "glowstone"), "singularity.extendedcrafting.glowstone", new int[] { 16759902, 11825472 }, Ingredient.fromItems(Items.GLOWSTONE_DUST), count),
+                new Singularity(new ResourceLocation(ExtendedCrafting.MOD_ID, "diamond"), "singularity.extendedcrafting.diamond", new int[] { 4910553, 2147765 }, Ingredient.fromItems(Items.DIAMOND), count),
+                new Singularity(new ResourceLocation(ExtendedCrafting.MOD_ID, "emerald"), "singularity.extendedcrafting.emerald", new int[] { 4322180, 43564 }, Ingredient.fromItems(Items.EMERALD), count),
 
                 new Singularity(new ResourceLocation(ExtendedCrafting.MOD_ID, "aluminum"), "singularity.extendedcrafting.aluminum", new int[] { 13290714, 13290714 }, "forge:ingots/aluminum", count),
                 new Singularity(new ResourceLocation(ExtendedCrafting.MOD_ID, "copper"), "singularity.extendedcrafting.copper", new int[] { 13529601, 13529601 }, "forge:ingots/copper", count),

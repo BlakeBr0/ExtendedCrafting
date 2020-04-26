@@ -1,8 +1,11 @@
 package com.blakebr0.extendedcrafting.api.crafting;
 
+import com.blakebr0.extendedcrafting.ExtendedCrafting;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.IRecipeType;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.registry.Registry;
 import net.minecraft.world.World;
 
 import java.util.Optional;
@@ -35,4 +38,11 @@ public class RecipeTypes {
             return recipe.matches(inv, world) ? Optional.of((IEnderCrafterRecipe) recipe) : Optional.empty();
         }
     };
+
+    static {
+        Registry.register(Registry.RECIPE_TYPE, new ResourceLocation(ExtendedCrafting.MOD_ID, "combination"), COMBINATION);
+        Registry.register(Registry.RECIPE_TYPE, new ResourceLocation(ExtendedCrafting.MOD_ID, "table"), TABLE);
+        Registry.register(Registry.RECIPE_TYPE, new ResourceLocation(ExtendedCrafting.MOD_ID, "compressor"), COMPRESSOR);
+        Registry.register(Registry.RECIPE_TYPE, new ResourceLocation(ExtendedCrafting.MOD_ID, "ender_crafter"), ENDER_CRAFTER);
+    }
 }

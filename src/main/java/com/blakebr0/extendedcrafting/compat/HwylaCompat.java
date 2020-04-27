@@ -1,13 +1,17 @@
 package com.blakebr0.extendedcrafting.compat;
 
 import com.blakebr0.extendedcrafting.api.crafting.IEnderCrafterRecipe;
+import com.blakebr0.extendedcrafting.block.AdvancedAutoTableBlock;
 import com.blakebr0.extendedcrafting.block.AdvancedTableBlock;
+import com.blakebr0.extendedcrafting.block.BasicAutoTableBlock;
 import com.blakebr0.extendedcrafting.block.BasicTableBlock;
 import com.blakebr0.extendedcrafting.block.CompressorBlock;
 import com.blakebr0.extendedcrafting.block.CraftingCoreBlock;
+import com.blakebr0.extendedcrafting.block.EliteAutoTableBlock;
 import com.blakebr0.extendedcrafting.block.EliteTableBlock;
 import com.blakebr0.extendedcrafting.block.EnderCrafterBlock;
 import com.blakebr0.extendedcrafting.block.PedestalBlock;
+import com.blakebr0.extendedcrafting.block.UltimateAutoTableBlock;
 import com.blakebr0.extendedcrafting.block.UltimateTableBlock;
 import com.blakebr0.extendedcrafting.crafting.recipe.CombinationRecipe;
 import com.blakebr0.extendedcrafting.crafting.recipe.CompressorRecipe;
@@ -81,6 +85,34 @@ public class HwylaCompat implements IWailaPlugin {
 				tooltip.add(ModTooltips.TIER.args(4).build());
 			}
 		}, TooltipPosition.BODY, UltimateTableBlock.class);
+
+		registrar.registerComponentProvider(new IComponentProvider() {
+			@Override
+			public void appendBody(List<ITextComponent> tooltip, IDataAccessor accessor, IPluginConfig config) {
+				tooltip.add(ModTooltips.TIER.args(1).build());
+			}
+		}, TooltipPosition.BODY, BasicAutoTableBlock.class);
+
+		registrar.registerComponentProvider(new IComponentProvider() {
+			@Override
+			public void appendBody(List<ITextComponent> tooltip, IDataAccessor accessor, IPluginConfig config) {
+				tooltip.add(ModTooltips.TIER.args(2).build());
+			}
+		}, TooltipPosition.BODY, AdvancedAutoTableBlock.class);
+
+		registrar.registerComponentProvider(new IComponentProvider() {
+			@Override
+			public void appendBody(List<ITextComponent> tooltip, IDataAccessor accessor, IPluginConfig config) {
+				tooltip.add(ModTooltips.TIER.args(3).build());
+			}
+		}, TooltipPosition.BODY, EliteAutoTableBlock.class);
+
+		registrar.registerComponentProvider(new IComponentProvider() {
+			@Override
+			public void appendBody(List<ITextComponent> tooltip, IDataAccessor accessor, IPluginConfig config) {
+				tooltip.add(ModTooltips.TIER.args(4).build());
+			}
+		}, TooltipPosition.BODY, UltimateAutoTableBlock.class);
 
 		registrar.registerComponentProvider(new IComponentProvider() {
 			@Override

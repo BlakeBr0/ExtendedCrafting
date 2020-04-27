@@ -42,6 +42,10 @@ public class ModBlocks {
 	public static final RegistryObject<AdvancedTableBlock> ADVANCED_TABLE = register("advanced_table", AdvancedTableBlock::new);
 	public static final RegistryObject<EliteTableBlock> ELITE_TABLE = register("elite_table", EliteTableBlock::new);
 	public static final RegistryObject<UltimateTableBlock> ULTIMATE_TABLE = register("ultimate_table", UltimateTableBlock::new);
+	public static final RegistryObject<BasicAutoTableBlock> BASIC_AUTO_TABLE = register("basic_auto_table", BasicAutoTableBlock::new);
+	public static final RegistryObject<AdvancedAutoTableBlock> ADVANCED_AUTO_TABLE = register("advanced_auto_table", AdvancedAutoTableBlock::new);
+	public static final RegistryObject<EliteAutoTableBlock> ELITE_AUTO_TABLE = register("elite_auto_table", EliteAutoTableBlock::new);
+	public static final RegistryObject<UltimateAutoTableBlock> ULTIMATE_AUTO_TABLE = register("ultimate_auto_table", UltimateAutoTableBlock::new);
 	public static final RegistryObject<CompressorBlock> COMPRESSOR = register("compressor", CompressorBlock::new);
 	public static final RegistryObject<EnderAlternatorBlock> ENDER_ALTERNATOR = register("ender_alternator", EnderAlternatorBlock::new);
 	public static final RegistryObject<EnderCrafterBlock> ENDER_CRAFTER = register("ender_crafter", EnderCrafterBlock::new);

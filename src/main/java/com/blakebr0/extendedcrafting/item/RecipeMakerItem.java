@@ -70,7 +70,8 @@ public class RecipeMakerItem extends BaseItem implements IEnableable {
 //			return ActionResultType.SUCCESS;
 //		}
 
-		return ActionResultType.PASS;	}
+		return ActionResultType.PASS;
+	}
 
 	@Override
 	public ActionResult<ItemStack> onItemRightClick(World world, PlayerEntity player, Hand hand) {

@@ -1,12 +1,16 @@
 package com.blakebr0.extendedcrafting.container;
 
 import com.blakebr0.extendedcrafting.ExtendedCrafting;
+import com.blakebr0.extendedcrafting.client.screen.AdvancedAutoTableScreen;
 import com.blakebr0.extendedcrafting.client.screen.AdvancedTableScreen;
+import com.blakebr0.extendedcrafting.client.screen.BasicAutoTableScreen;
 import com.blakebr0.extendedcrafting.client.screen.BasicTableScreen;
 import com.blakebr0.extendedcrafting.client.screen.CompressorScreen;
 import com.blakebr0.extendedcrafting.client.screen.CraftingCoreScreen;
+import com.blakebr0.extendedcrafting.client.screen.EliteAutoTableScreen;
 import com.blakebr0.extendedcrafting.client.screen.EliteTableScreen;
 import com.blakebr0.extendedcrafting.client.screen.EnderCrafterScreen;
+import com.blakebr0.extendedcrafting.client.screen.UltimateAutoTableScreen;
 import com.blakebr0.extendedcrafting.client.screen.UltimateTableScreen;
 import net.minecraft.client.gui.ScreenManager;
 import net.minecraft.inventory.container.ContainerType;
@@ -32,6 +36,10 @@ public class ModContainerTypes {
     public static final RegistryObject<ContainerType<AdvancedTableContainer>> ADVANCED_TABLE = register("advanced_table", () -> new ContainerType<>(AdvancedTableContainer::create));
     public static final RegistryObject<ContainerType<EliteTableContainer>> ELITE_TABLE = register("elite_table", () -> new ContainerType<>(EliteTableContainer::create));
     public static final RegistryObject<ContainerType<UltimateTableContainer>> ULTIMATE_TABLE = register("ultimate_table", () -> new ContainerType<>(UltimateTableContainer::create));
+    public static final RegistryObject<ContainerType<BasicAutoTableContainer>> BASIC_AUTO_TABLE = register("basic_auto_table", () -> new ContainerType<>(BasicAutoTableContainer::create));
+    public static final RegistryObject<ContainerType<AdvancedAutoTableContainer>> ADVANCED_AUTO_TABLE = register("advanced_auto_table", () -> new ContainerType<>(AdvancedAutoTableContainer::create));
+    public static final RegistryObject<ContainerType<EliteAutoTableContainer>> ELITE_AUTO_TABLE = register("elite_auto_table", () -> new ContainerType<>(EliteAutoTableContainer::create));
+    public static final RegistryObject<ContainerType<UltimateAutoTableContainer>> ULTIMATE_AUTO_TABLE = register("ultimate_auto_table", () -> new ContainerType<>(UltimateAutoTableContainer::create));
     public static final RegistryObject<ContainerType<CompressorContainer>> COMPRESSOR = register("compressor", () -> new ContainerType<>((IContainerFactory<CompressorContainer>) CompressorContainer::create));
     public static final RegistryObject<ContainerType<EnderCrafterContainer>> ENDER_CRAFTER = register("ender_crafter", () -> new ContainerType<>(EnderCrafterContainer::create));
 
@@ -49,6 +57,10 @@ public class ModContainerTypes {
         ADVANCED_TABLE.ifPresent(container -> ScreenManager.registerFactory(container, AdvancedTableScreen::new));
         ELITE_TABLE.ifPresent(container -> ScreenManager.registerFactory(container, EliteTableScreen::new));
         ULTIMATE_TABLE.ifPresent(container -> ScreenManager.registerFactory(container, UltimateTableScreen::new));
+        BASIC_AUTO_TABLE.ifPresent(container -> ScreenManager.registerFactory(container, BasicAutoTableScreen::new));
+        ADVANCED_AUTO_TABLE.ifPresent(container -> ScreenManager.registerFactory(container, AdvancedAutoTableScreen::new));
+        ELITE_AUTO_TABLE.ifPresent(container -> ScreenManager.registerFactory(container, EliteAutoTableScreen::new));
+        ULTIMATE_AUTO_TABLE.ifPresent(container -> ScreenManager.registerFactory(container, UltimateAutoTableScreen::new));
         COMPRESSOR.ifPresent(container -> ScreenManager.registerFactory(container, CompressorScreen::new));
         ENDER_CRAFTER.ifPresent(container -> ScreenManager.registerFactory(container, EnderCrafterScreen::new));
     }

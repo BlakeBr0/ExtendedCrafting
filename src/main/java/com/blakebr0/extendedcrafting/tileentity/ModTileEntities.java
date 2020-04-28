@@ -31,10 +31,10 @@ public class ModTileEntities {
 	public static final RegistryObject<TileEntityType<AdvancedTableTileEntity>> ADVANCED_TABLE = register("advanced_table", AdvancedTableTileEntity::new, () -> new Block[] { ModBlocks.ADVANCED_TABLE.get() });
 	public static final RegistryObject<TileEntityType<EliteTableTileEntity>> ELITE_TABLE = register("elite_table", EliteTableTileEntity::new, () -> new Block[] { ModBlocks.ELITE_TABLE.get() });
 	public static final RegistryObject<TileEntityType<UltimateTableTileEntity>> ULTIMATE_TABLE = register("ultimate_table", UltimateTableTileEntity::new, () -> new Block[] { ModBlocks.ULTIMATE_TABLE.get() });
-	public static final RegistryObject<TileEntityType<BasicAutoTableTileEntity>> BASIC_AUTO_TABLE = register("basic_auto_table", BasicTableTileEntity::new, () -> new Block[] { ModBlocks.BASIC_AUTO_TABLE.get() });
-	public static final RegistryObject<TileEntityType<AdvancedAutoTableTileEntity>> ADVANCED_AUTO_TABLE = register("advanced_auto_table", AdvancedTableTileEntity::new, () -> new Block[] { ModBlocks.ADVANCED_AUTO_TABLE.get() });
-	public static final RegistryObject<TileEntityType<EliteAutoTableTileEntity>> ELITE_AUTO_TABLE = register("elite_auto_table", EliteTableTileEntity::new, () -> new Block[] { ModBlocks.ELITE_AUTO_TABLE.get() });
-	public static final RegistryObject<TileEntityType<UltimateAutoTableTileEntity>> ULTIMATE_AUTO_TABLE = register("ultimate_auto_table", UltimateTableTileEntity::new, () -> new Block[] { ModBlocks.ULTIMATE_AUTO_TABLE.get() });
+	public static final RegistryObject<TileEntityType<AutoTableTileEntity.Basic>> BASIC_AUTO_TABLE = register("basic_auto_table", AutoTableTileEntity.Basic::new, () -> new Block[] { ModBlocks.BASIC_AUTO_TABLE.get() });
+	public static final RegistryObject<TileEntityType<AutoTableTileEntity.Advanced>> ADVANCED_AUTO_TABLE = register("advanced_auto_table", AutoTableTileEntity.Advanced::new, () -> new Block[] { ModBlocks.ADVANCED_AUTO_TABLE.get() });
+	public static final RegistryObject<TileEntityType<AutoTableTileEntity.Elite>> ELITE_AUTO_TABLE = register("elite_auto_table", AutoTableTileEntity.Elite::new, () -> new Block[] { ModBlocks.ELITE_AUTO_TABLE.get() });
+	public static final RegistryObject<TileEntityType<AutoTableTileEntity.Ultimate>> ULTIMATE_AUTO_TABLE = register("ultimate_auto_table", AutoTableTileEntity.Ultimate::new, () -> new Block[] { ModBlocks.ULTIMATE_AUTO_TABLE.get() });
 	public static final RegistryObject<TileEntityType<CompressorTileEntity>> COMPRESSOR = register("compressor", CompressorTileEntity::new, () -> new Block[] { ModBlocks.COMPRESSOR.get() });
 	public static final RegistryObject<TileEntityType<EnderCrafterTileEntity>> ENDER_CRAFTER = register("ender_crafter", EnderCrafterTileEntity::new, () -> new Block[] { ModBlocks.ENDER_CRAFTER.get() });
 

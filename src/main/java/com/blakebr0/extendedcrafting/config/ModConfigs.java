@@ -28,6 +28,7 @@ public class ModConfigs {
 	public static final ForgeConfigSpec.IntValue CRAFTING_CORE_POWER_RATE;
 	
 	public static final ForgeConfigSpec.BooleanValue ENABLE_TABLES;
+	public static final ForgeConfigSpec.BooleanValue ENABLE_AUTO_TABLES;
 	public static final ForgeConfigSpec.BooleanValue TABLE_USE_VANILLA_RECIPES;
 	
 	public static final ForgeConfigSpec.BooleanValue ENABLE_COMPRESSOR;
@@ -79,6 +80,10 @@ public class ModConfigs {
 				.comment("Should the Extended Crafting Tables be enabled?")
 				.translation("configGui.extendedcrafting.enable_tables")
 				.define("enabled", true);
+		ENABLE_AUTO_TABLES = common
+				.comment("Should the Auto Crafting Tables be enabled?")
+				.translation("configGui.extendedcrafting.enable_auto_tables")
+				.define("autoTablesEnabled", true);
 		TABLE_USE_VANILLA_RECIPES = common
 				.comment("Should the Basic Crafting Table inherit vanilla crafting recipes?")
 				.translation("configGui.extendedcrafting.table_use_vanilla_recipes")

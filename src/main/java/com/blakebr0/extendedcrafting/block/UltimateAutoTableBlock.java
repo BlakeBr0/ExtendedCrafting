@@ -1,9 +1,11 @@
 package com.blakebr0.extendedcrafting.block;
 
 import com.blakebr0.cucumber.block.BaseTileEntityBlock;
+import com.blakebr0.cucumber.iface.IEnableable;
 import com.blakebr0.cucumber.util.VoxelShapeBuilder;
+import com.blakebr0.extendedcrafting.config.ModConfigs;
 import com.blakebr0.extendedcrafting.lib.ModTooltips;
-import com.blakebr0.extendedcrafting.tileentity.UltimateAutoTableTileEntity;
+import com.blakebr0.extendedcrafting.tileentity.AutoTableTileEntity;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
@@ -26,7 +28,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 
 import java.util.List;
 
-public class UltimateAutoTableBlock extends BaseTileEntityBlock {
+public class UltimateAutoTableBlock extends BaseTileEntityBlock implements IEnableable {
     public static final VoxelShape ULTIMATE_AUTO_TABLE_SHAPE = new VoxelShapeBuilder()
             .cuboid(14, 2, 14, 2, 0, 2)
             .cuboid(5, 10, 5, 3, 2, 3)
@@ -43,7 +45,7 @@ public class UltimateAutoTableBlock extends BaseTileEntityBlock {
 
     @Override
     public TileEntity createTileEntity(BlockState state, IBlockReader world) {
-        return new UltimateAutoTableTileEntity();
+        return new AutoTableTileEntity.Ultimate();
     }
 
     @Override
@@ -51,8 +53,8 @@ public class UltimateAutoTableBlock extends BaseTileEntityBlock {
         if (!world.isRemote()) {
             TileEntity tile = world.getTileEntity(pos);
 
-            if (tile instanceof UltimateAutoTableTileEntity)
-                player.openContainer((UltimateAutoTableTileEntity) tile);
+            if (tile instanceof AutoTableTileEntity.Ultimate)
+                player.openContainer((AutoTableTileEntity.Ultimate) tile);
         }
 
         return ActionResultType.SUCCESS;
@@ -62,8 +64,8 @@ public class UltimateAutoTableBlock extends BaseTileEntityBlock {
     public void onReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean isMoving) {
         if (state.getBlock() != newState.getBlock()) {
             TileEntity tile = world.getTileEntity(pos);
-            if (tile instanceof UltimateAutoTableTileEntity) {
-                UltimateAutoTableTileEntity table = (UltimateAutoTableTileEntity) tile;
+            if (tile instanceof AutoTableTileEntity.Ultimate) {
+                AutoTableTileEntity.Ultimate table = (AutoTableTileEntity.Ultimate) tile;
                 InventoryHelper.dropItems(world, pos, table.getInventory().getStacks());
             }
         }
@@ -80,5 +82,10 @@ public class UltimateAutoTableBlock extends BaseTileEntityBlock {
     @Override
     public void addInformation(ItemStack stack, IBlockReader world, List<ITextComponent> tooltip, ITooltipFlag flag) {
         tooltip.add(ModTooltips.TIER.args(4).build());
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return ModConfigs.ENABLE_TABLES.get() && ModConfigs.ENABLE_AUTO_TABLES.get();
     }
 }

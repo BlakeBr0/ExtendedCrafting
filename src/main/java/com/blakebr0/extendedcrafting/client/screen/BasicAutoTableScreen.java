@@ -8,19 +8,27 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 
 public class BasicAutoTableScreen extends ContainerScreen<BasicAutoTableContainer> {
-	public static final ResourceLocation BACKGROUND = new ResourceLocation(ExtendedCrafting.MOD_ID, "textures/gui/basic_table.png");
+	public static final ResourceLocation BACKGROUND = new ResourceLocation(ExtendedCrafting.MOD_ID, "textures/gui/basic_auto_table.png");
 
 	public BasicAutoTableScreen(BasicAutoTableContainer container, PlayerInventory inventory, ITextComponent title) {
 		super(container, inventory, title);
 		this.xSize = 176;
-		this.ySize = 170;
+		this.ySize = 194;
 	}
 
 	@Override
 	public void render(int mouseX, int mouseY, float partialTicks) {
+		int left = this.guiLeft;
+		int top = this.guiTop;
+		BasicAutoTableContainer container = this.getContainer();
+
 		this.renderBackground();
 		super.render(mouseX, mouseY, partialTicks);
 		this.renderHoveredToolTip(mouseX, mouseY);
+
+		if (mouseX > left + 7 && mouseX < left + 20 && mouseY > top + 17 && mouseY < top + 94) {
+			this.renderTooltip(container.getEnergyStored() + " FE" + container.getMaxEnergyStored(), mouseX, mouseY);
+		}
 	}
 
 	@Override
@@ -35,6 +43,11 @@ public class BasicAutoTableScreen extends ContainerScreen<BasicAutoTableContaine
 		this.getMinecraft().getTextureManager().bindTexture(BACKGROUND);
 		int x = (this.width - this.xSize) / 2;
 		int y = (this.height - this.ySize) / 2;
+		BasicAutoTableContainer container = this.getContainer();
+
 		this.blit(x, y, 0, 0, this.xSize, this.ySize);
+
+		int i1 = container.getEnergyBarScaled(78);
+		this.blit(x + 7, y + 95 - i1, 178, 78 - i1, 15, i1 + 1);
 	}
 }

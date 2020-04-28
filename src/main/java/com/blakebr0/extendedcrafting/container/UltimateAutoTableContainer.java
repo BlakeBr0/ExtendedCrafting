@@ -1,5 +1,6 @@
 package com.blakebr0.extendedcrafting.container;
 
+import com.blakebr0.cucumber.inventory.slot.OutputSlot;
 import com.blakebr0.extendedcrafting.api.crafting.ITableRecipe;
 import com.blakebr0.extendedcrafting.api.crafting.RecipeTypes;
 import com.blakebr0.extendedcrafting.container.inventory.ExtendedCraftingInventory;
@@ -11,6 +12,8 @@ import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.IIntArray;
+import net.minecraft.util.IntArray;
 import net.minecraft.world.World;
 import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.items.ItemStackHandler;
@@ -20,40 +23,45 @@ import java.util.function.Function;
 
 public class UltimateAutoTableContainer extends Container {
 	private final Function<PlayerEntity, Boolean> isUsableByPlayer;
+	private final IIntArray data;
 	private final World world;
 	private final IItemHandlerModifiable result;
 
 	private UltimateAutoTableContainer(ContainerType<?> type, int id, PlayerInventory playerInventory) {
-		this(type, id, playerInventory, p -> false, new ItemStackHandler(82));
+		this(type, id, playerInventory, p -> false, new ItemStackHandler(82), new IntArray(2));
 	}
 
-	private UltimateAutoTableContainer(ContainerType<?> type, int id, PlayerInventory playerInventory, Function<PlayerEntity, Boolean> isUsableByPlayer, IItemHandlerModifiable inventory) {
+	private UltimateAutoTableContainer(ContainerType<?> type, int id, PlayerInventory playerInventory, Function<PlayerEntity, Boolean> isUsableByPlayer, IItemHandlerModifiable inventory, IIntArray data) {
 		super(type, id);
 		this.isUsableByPlayer = isUsableByPlayer;
+		this.data = data;
 		this.world = playerInventory.player.world;
 		this.result = new ItemStackHandler();
 		IInventory matrix = new ExtendedCraftingInventory(this, inventory);
 
-		this.addSlot(new TableOutputSlot(this, matrix, this.result, 0, 206, 89));
+		this.addSlot(new TableOutputSlot(this, matrix, this.result, 0, 225, 89));
 		
 		int i, j;
 		for (i = 0; i < 9; i++) {
 			for (j = 0; j < 9; j++) {
-				this.addSlot(new Slot(matrix, j + i * 9, 8 + j * 18, 18 + i * 18));
+				this.addSlot(new Slot(matrix, j + i * 9, 27 + j * 18, 18 + i * 18));
 			}
 		}
 
+		this.addSlot(new OutputSlot(inventory, 81, 225, 133));
+
 		for (i = 0; i < 3; i++) {
 			for (j = 0; j < 9; j++) {
-				this.addSlot(new Slot(playerInventory, j + i * 9 + 9, 39 + j * 18, 196 + i * 18));
+				this.addSlot(new Slot(playerInventory, j + i * 9 + 9, 47 + j * 18, 196 + i * 18));
 			}
 		}
 
 		for (j = 0; j < 9; j++) {
-			this.addSlot(new Slot(playerInventory, j, 39 + j * 18, 254));
+			this.addSlot(new Slot(playerInventory, j, 47 + j * 18, 254));
 		}
 
 		this.onCraftMatrixChanged(matrix);
+		this.trackIntArray(data);
 	}
 
 	@Override
@@ -117,7 +125,21 @@ public class UltimateAutoTableContainer extends Container {
 		return new UltimateAutoTableContainer(ModContainerTypes.ULTIMATE_AUTO_TABLE.get(), windowId, playerInventory);
 	}
 
-	public static UltimateAutoTableContainer create(int windowId, PlayerInventory playerInventory, Function<PlayerEntity, Boolean> isUsableByPlayer, IItemHandlerModifiable inventory) {
-		return new UltimateAutoTableContainer(ModContainerTypes.ULTIMATE_AUTO_TABLE.get(), windowId, playerInventory, isUsableByPlayer, inventory);
+	public static UltimateAutoTableContainer create(int windowId, PlayerInventory playerInventory, Function<PlayerEntity, Boolean> isUsableByPlayer, IItemHandlerModifiable inventory, IIntArray data) {
+		return new UltimateAutoTableContainer(ModContainerTypes.ULTIMATE_AUTO_TABLE.get(), windowId, playerInventory, isUsableByPlayer, inventory, data);
+	}
+
+	public int getEnergyBarScaled(int pixels) {
+		int i = this.getEnergyStored();
+		int j = this.getMaxEnergyStored();
+		return (int) (j != 0 && i != 0 ? (long) i * pixels / j : 0);
+	}
+
+	public int getEnergyStored() {
+		return this.data.get(0);
+	}
+
+	public int getMaxEnergyStored() {
+		return this.data.get(1);
 	}
 }

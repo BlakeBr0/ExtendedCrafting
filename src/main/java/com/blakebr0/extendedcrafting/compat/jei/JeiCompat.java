@@ -115,6 +115,13 @@ public class JeiCompat implements IModPlugin {
 			registration.addRecipeCatalyst(new ItemStack(ModBlocks.ADVANCED_TABLE.get()), AdvancedTableCategory.UID);
 			registration.addRecipeCatalyst(new ItemStack(ModBlocks.ELITE_TABLE.get()), EliteTableCategory.UID);
 			registration.addRecipeCatalyst(new ItemStack(ModBlocks.ULTIMATE_TABLE.get()), UltimateTableCategory.UID);
+
+			if (ModConfigs.ENABLE_AUTO_TABLES.get()) {
+				registration.addRecipeCatalyst(new ItemStack(ModBlocks.BASIC_AUTO_TABLE.get()), BasicTableCategory.UID);
+				registration.addRecipeCatalyst(new ItemStack(ModBlocks.ADVANCED_AUTO_TABLE.get()), AdvancedTableCategory.UID);
+				registration.addRecipeCatalyst(new ItemStack(ModBlocks.ELITE_AUTO_TABLE.get()), EliteTableCategory.UID);
+				registration.addRecipeCatalyst(new ItemStack(ModBlocks.ULTIMATE_AUTO_TABLE.get()), UltimateTableCategory.UID);
+			}
 		}
 
 		if (ModConfigs.ENABLE_COMPRESSOR.get()) {
@@ -134,6 +141,13 @@ public class JeiCompat implements IModPlugin {
 			registration.addRecipeTransferHandler(AdvancedTableContainer.class, AdvancedTableCategory.UID, 1, 25, 26, 36);
 			registration.addRecipeTransferHandler(EliteTableContainer.class, EliteTableCategory.UID, 1, 49, 50, 36);
 			registration.addRecipeTransferHandler(UltimateTableContainer.class, UltimateTableCategory.UID, 1, 81, 82, 36);
+
+			if (ModConfigs.ENABLE_AUTO_TABLES.get()) {
+				registration.addRecipeTransferHandler(BasicAutoTableContainer.class, BasicTableCategory.UID, 1, 9, 10, 36);
+				registration.addRecipeTransferHandler(AdvancedAutoTableContainer.class, AdvancedTableCategory.UID, 1, 25, 26, 36);
+				registration.addRecipeTransferHandler(EliteAutoTableContainer.class, EliteTableCategory.UID, 1, 49, 50, 36);
+				registration.addRecipeTransferHandler(UltimateAutoTableContainer.class, UltimateTableCategory.UID, 1, 81, 82, 36);
+			}
 		}
 
 		if (ModConfigs.ENABLE_ENDER_CRAFTER.get()) {
@@ -154,6 +168,13 @@ public class JeiCompat implements IModPlugin {
 			registration.addRecipeClickArea(AdvancedTableScreen.class, 109, 54, 21, 14, AdvancedTableCategory.UID);
 			registration.addRecipeClickArea(EliteTableScreen.class, 139, 72, 21, 14, EliteTableCategory.UID);
 			registration.addRecipeClickArea(UltimateTableScreen.class, 174, 90, 21, 14, UltimateTableCategory.UID);
+
+			if (ModConfigs.ENABLE_AUTO_TABLES.get()) {
+				registration.addRecipeClickArea(BasicAutoTableScreen.class, 97, 36, 21, 14, BasicTableCategory.UID);
+				registration.addRecipeClickArea(AdvancedAutoTableScreen.class, 109, 39, 21, 14, AdvancedTableCategory.UID);
+				registration.addRecipeClickArea(EliteAutoTableScreen.class, 139, 72, 21, 14, EliteTableCategory.UID);
+				registration.addRecipeClickArea(UltimateAutoTableScreen.class, 174, 90, 21, 14, UltimateTableCategory.UID);
+			}
 		}
 
 		if (ModConfigs.ENABLE_COMPRESSOR.get()) {

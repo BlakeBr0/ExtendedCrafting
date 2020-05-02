@@ -20,6 +20,7 @@ sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = co
 repositories {
     maven { url "http://dvs1.progwml6.com/files/maven/" }
     maven { url "http://tehnut.info/maven/" }
+    maven { url "https://maven.blamejared.com" }
 
     mavenLocal()
     jcenter()
@@ -59,6 +60,7 @@ dependencies {
     compile fg.deobf('mcp.mobius.waila:Hwyla:1.10.7-B71_1.15.1')
     compileOnly fg.deobf("mezz.jei:jei-1.15.2:6.0.0.2:api")
     runtimeOnly fg.deobf("mezz.jei:jei-1.15.2:6.0.0.2")
+    compile fg.deobf("com.blamejared.crafttweaker:CraftTweaker-1.15.2:6.0.0.9")
 }
 
 jar {

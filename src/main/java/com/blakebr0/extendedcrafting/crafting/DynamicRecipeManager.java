@@ -23,11 +23,13 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class DynamicRecipeManager implements IResourceManagerReloadListener {
+    private static RecipeManager recipeManager;
+
     @Override
     public void onResourceManagerReload(IResourceManager resourceManager) {
         MinecraftServer server = ServerLifecycleHooks.getCurrentServer();
 
-        RecipeManager recipeManager = server.getRecipeManager();
+        RecipeManager recipeManager = DynamicRecipeManager.recipeManager = server.getRecipeManager();
         recipeManager.recipes = new HashMap<>(recipeManager.recipes);
         recipeManager.recipes.replaceAll((t, v) -> new HashMap<>(recipeManager.recipes.get(t)));
 
@@ -37,6 +39,10 @@ public class DynamicRecipeManager implements IResourceManagerReloadListener {
             if (compressorRecipe != null)
                 recipes.put(compressorRecipe.getId(), compressorRecipe);
         });
+    }
+
+    public static RecipeManager getRecipeManager() {
+        return recipeManager;
     }
 
     private CompressorRecipe makeSingularityRecipe(Singularity singularity) {

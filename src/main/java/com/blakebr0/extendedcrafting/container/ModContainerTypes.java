@@ -36,10 +36,10 @@ public class ModContainerTypes {
     public static final RegistryObject<ContainerType<AdvancedTableContainer>> ADVANCED_TABLE = register("advanced_table", () -> new ContainerType<>(AdvancedTableContainer::create));
     public static final RegistryObject<ContainerType<EliteTableContainer>> ELITE_TABLE = register("elite_table", () -> new ContainerType<>(EliteTableContainer::create));
     public static final RegistryObject<ContainerType<UltimateTableContainer>> ULTIMATE_TABLE = register("ultimate_table", () -> new ContainerType<>(UltimateTableContainer::create));
-    public static final RegistryObject<ContainerType<BasicAutoTableContainer>> BASIC_AUTO_TABLE = register("basic_auto_table", () -> new ContainerType<>(BasicAutoTableContainer::create));
-    public static final RegistryObject<ContainerType<AdvancedAutoTableContainer>> ADVANCED_AUTO_TABLE = register("advanced_auto_table", () -> new ContainerType<>(AdvancedAutoTableContainer::create));
-    public static final RegistryObject<ContainerType<EliteAutoTableContainer>> ELITE_AUTO_TABLE = register("elite_auto_table", () -> new ContainerType<>(EliteAutoTableContainer::create));
-    public static final RegistryObject<ContainerType<UltimateAutoTableContainer>> ULTIMATE_AUTO_TABLE = register("ultimate_auto_table", () -> new ContainerType<>(UltimateAutoTableContainer::create));
+    public static final RegistryObject<ContainerType<BasicAutoTableContainer>> BASIC_AUTO_TABLE = register("basic_auto_table", () -> new ContainerType<>((IContainerFactory<BasicAutoTableContainer>) BasicAutoTableContainer::create));
+    public static final RegistryObject<ContainerType<AdvancedAutoTableContainer>> ADVANCED_AUTO_TABLE = register("advanced_auto_table", () -> new ContainerType<>((IContainerFactory<AdvancedAutoTableContainer>) AdvancedAutoTableContainer::create));
+    public static final RegistryObject<ContainerType<EliteAutoTableContainer>> ELITE_AUTO_TABLE = register("elite_auto_table", () -> new ContainerType<>((IContainerFactory<EliteAutoTableContainer>) EliteAutoTableContainer::create));
+    public static final RegistryObject<ContainerType<UltimateAutoTableContainer>> ULTIMATE_AUTO_TABLE = register("ultimate_auto_table", () -> new ContainerType<>((IContainerFactory<UltimateAutoTableContainer>) UltimateAutoTableContainer::create));
     public static final RegistryObject<ContainerType<CompressorContainer>> COMPRESSOR = register("compressor", () -> new ContainerType<>((IContainerFactory<CompressorContainer>) CompressorContainer::create));
     public static final RegistryObject<ContainerType<EnderCrafterContainer>> ENDER_CRAFTER = register("ender_crafter", () -> new ContainerType<>(EnderCrafterContainer::create));
 

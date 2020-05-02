@@ -12,8 +12,10 @@ import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
+import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.IIntArray;
 import net.minecraft.util.IntArray;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.items.ItemStackHandler;
@@ -24,17 +26,19 @@ import java.util.function.Function;
 public class EliteAutoTableContainer extends Container {
 	private final Function<PlayerEntity, Boolean> isUsableByPlayer;
 	private final IIntArray data;
+	private final BlockPos pos;
 	private final World world;
 	private final IItemHandlerModifiable result;
 
-	private EliteAutoTableContainer(ContainerType<?> type, int id, PlayerInventory playerInventory) {
-		this(type, id, playerInventory, p -> false, new ItemStackHandler(50), new IntArray(2));
+	private EliteAutoTableContainer(ContainerType<?> type, int id, PlayerInventory playerInventory, PacketBuffer buffer) {
+		this(type, id, playerInventory, p -> false, new ItemStackHandler(50), new IntArray(2), buffer.readBlockPos());
 	}
 
-	private EliteAutoTableContainer(ContainerType<?> type, int id, PlayerInventory playerInventory, Function<PlayerEntity, Boolean> isUsableByPlayer, IItemHandlerModifiable inventory, IIntArray data) {
+	private EliteAutoTableContainer(ContainerType<?> type, int id, PlayerInventory playerInventory, Function<PlayerEntity, Boolean> isUsableByPlayer, IItemHandlerModifiable inventory, IIntArray data, BlockPos pos) {
 		super(type, id);
 		this.isUsableByPlayer = isUsableByPlayer;
 		this.data = data;
+		this.pos = pos;
 		this.world = playerInventory.player.world;
 		this.result = new ItemStackHandler();
 		IInventory matrix = new ExtendedCraftingInventory(this, inventory);
@@ -121,12 +125,16 @@ public class EliteAutoTableContainer extends Container {
 		return itemstack;
 	}
 
-	public static EliteAutoTableContainer create(int windowId, PlayerInventory playerInventory) {
-		return new EliteAutoTableContainer(ModContainerTypes.ELITE_AUTO_TABLE.get(), windowId, playerInventory);
+	public static EliteAutoTableContainer create(int windowId, PlayerInventory playerInventory, PacketBuffer buffer) {
+		return new EliteAutoTableContainer(ModContainerTypes.ELITE_AUTO_TABLE.get(), windowId, playerInventory, buffer);
 	}
 
-	public static EliteAutoTableContainer create(int windowId, PlayerInventory playerInventory, Function<PlayerEntity, Boolean> isUsableByPlayer, IItemHandlerModifiable inventory, IIntArray data) {
-		return new EliteAutoTableContainer(ModContainerTypes.ELITE_AUTO_TABLE.get(), windowId, playerInventory, isUsableByPlayer, inventory, data);
+	public static EliteAutoTableContainer create(int windowId, PlayerInventory playerInventory, Function<PlayerEntity, Boolean> isUsableByPlayer, IItemHandlerModifiable inventory, IIntArray data, BlockPos pos) {
+		return new EliteAutoTableContainer(ModContainerTypes.ELITE_AUTO_TABLE.get(), windowId, playerInventory, isUsableByPlayer, inventory, data, pos);
+	}
+
+	public BlockPos getPos() {
+		return this.pos;
 	}
 
 	public int getEnergyBarScaled(int pixels) {

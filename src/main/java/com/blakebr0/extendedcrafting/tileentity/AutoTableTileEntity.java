@@ -117,7 +117,7 @@ public abstract class AutoTableTileEntity extends BaseInventoryTileEntity implem
 
         @Override
         public Container createMenu(int windowId, PlayerInventory playerInventory, PlayerEntity player) {
-            return BasicAutoTableContainer.create(windowId, playerInventory, this::isUsableByPlayer, this.inventory, this.data);
+            return BasicAutoTableContainer.create(windowId, playerInventory, this::isUsableByPlayer, this.inventory, this.data, this.getPos());
         }
 
         @Override
@@ -146,7 +146,7 @@ public abstract class AutoTableTileEntity extends BaseInventoryTileEntity implem
 
         @Override
         public Container createMenu(int windowId, PlayerInventory playerInventory, PlayerEntity player) {
-            return AdvancedAutoTableContainer.create(windowId, playerInventory, this::isUsableByPlayer, this.inventory, this.data);
+            return AdvancedAutoTableContainer.create(windowId, playerInventory, this::isUsableByPlayer, this.inventory, this.data, this.getPos());
         }
 
         @Override
@@ -175,7 +175,7 @@ public abstract class AutoTableTileEntity extends BaseInventoryTileEntity implem
 
         @Override
         public Container createMenu(int windowId, PlayerInventory playerInventory, PlayerEntity player) {
-            return EliteAutoTableContainer.create(windowId, playerInventory, this::isUsableByPlayer, this.inventory, this.data);
+            return EliteAutoTableContainer.create(windowId, playerInventory, this::isUsableByPlayer, this.inventory, this.data, this.getPos());
         }
 
         @Override
@@ -204,7 +204,7 @@ public abstract class AutoTableTileEntity extends BaseInventoryTileEntity implem
 
         @Override
         public Container createMenu(int windowId, PlayerInventory playerInventory, PlayerEntity player) {
-            return UltimateAutoTableContainer.create(windowId, playerInventory, this::isUsableByPlayer, this.inventory, this.data);
+            return UltimateAutoTableContainer.create(windowId, playerInventory, this::isUsableByPlayer, this.inventory, this.data, this.getPos());
         }
 
         @Override

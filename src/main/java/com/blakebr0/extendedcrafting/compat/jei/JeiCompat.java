@@ -157,8 +157,6 @@ public class JeiCompat implements IModPlugin {
 
 	@Override
 	public void registerGuiHandlers(IGuiHandlerRegistration registration) {
-		registration.addRecipeClickArea(CraftingScreen.class, 88, 32, 28, 23, VanillaRecipeCategoryUid.CRAFTING);
-
 		if (ModConfigs.ENABLE_CRAFTING_CORE.get()) {
 			registration.addRecipeClickArea(CraftingCoreScreen.class, 117, 47, 21, 14, CombinationCraftingCategory.UID);
 		}
@@ -171,9 +169,9 @@ public class JeiCompat implements IModPlugin {
 
 			if (ModConfigs.ENABLE_AUTO_TABLES.get()) {
 				registration.addRecipeClickArea(BasicAutoTableScreen.class, 97, 36, 21, 14, BasicTableCategory.UID);
-				registration.addRecipeClickArea(AdvancedAutoTableScreen.class, 109, 39, 21, 14, AdvancedTableCategory.UID);
-				registration.addRecipeClickArea(EliteAutoTableScreen.class, 139, 72, 21, 14, EliteTableCategory.UID);
-				registration.addRecipeClickArea(UltimateAutoTableScreen.class, 174, 90, 21, 14, UltimateTableCategory.UID);
+				registration.addRecipeClickArea(AdvancedAutoTableScreen.class, 121, 39, 21, 14, AdvancedTableCategory.UID);
+				registration.addRecipeClickArea(EliteAutoTableScreen.class, 158, 72, 21, 14, EliteTableCategory.UID);
+				registration.addRecipeClickArea(UltimateAutoTableScreen.class, 193, 90, 21, 14, UltimateTableCategory.UID);
 			}
 		}
 

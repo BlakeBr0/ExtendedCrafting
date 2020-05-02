@@ -27,7 +27,7 @@ public class BasicAutoTableScreen extends ContainerScreen<BasicAutoTableContaine
 		this.renderHoveredToolTip(mouseX, mouseY);
 
 		if (mouseX > left + 7 && mouseX < left + 20 && mouseY > top + 17 && mouseY < top + 94) {
-			this.renderTooltip(container.getEnergyStored() + " FE" + container.getMaxEnergyStored(), mouseX, mouseY);
+			this.renderTooltip(container.getEnergyStored() + " FE", mouseX, mouseY);
 		}
 	}
 

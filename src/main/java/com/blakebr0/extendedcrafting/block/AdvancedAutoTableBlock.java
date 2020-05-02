@@ -11,6 +11,7 @@ import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -25,6 +26,7 @@ import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.fml.network.NetworkHooks;
 
 import java.util.List;
 
@@ -53,8 +55,9 @@ public class AdvancedAutoTableBlock extends BaseTileEntityBlock implements IEnab
         if (!world.isRemote()) {
             TileEntity tile = world.getTileEntity(pos);
 
-            if (tile instanceof AutoTableTileEntity.Advanced)
-                player.openContainer((AutoTableTileEntity.Advanced) tile);
+            if (tile instanceof AutoTableTileEntity.Advanced) {
+                NetworkHooks.openGui((ServerPlayerEntity) player, (AutoTableTileEntity.Advanced) tile, pos);
+            }
         }
 
         return ActionResultType.SUCCESS;

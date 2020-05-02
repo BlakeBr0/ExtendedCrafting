@@ -50,6 +50,6 @@ public class UltimateAutoTableScreen extends ContainerScreen<UltimateAutoTableCo
 		RenderHelper.drawTexturedModalRect(x, y, 0, 0, this.xSize, this.ySize, 512, 512);
 
 		int i1 = container.getEnergyBarScaled(78);
-		this.blit(x + 7, y + 95 - i1, 178, 78 - i1, 15, i1 + 1);
+		RenderHelper.drawTexturedModalRect(x + 7, y + 137 - i1, 256, 78 - i1, 15, i1 + 1, 512, 512);
 	}
 }

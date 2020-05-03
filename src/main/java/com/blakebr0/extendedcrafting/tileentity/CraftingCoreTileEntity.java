@@ -77,6 +77,7 @@ public class CraftingCoreTileEntity extends BaseInventoryTileEntity implements I
 
 	public CraftingCoreTileEntity() {
 		super(ModTileEntities.CRAFTING_CORE.get());
+		this.inventory.setDefaultSlotLimit(1);
 	}
 
 	@Override

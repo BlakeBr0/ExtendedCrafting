@@ -1,21 +1,21 @@
 package com.blakebr0.extendedcrafting.container.inventory;
 
+import com.blakebr0.cucumber.inventory.BaseItemStackHandler;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.items.IItemHandlerModifiable;
 
 public class ExtendedCraftingInventory implements IInventory {
     private final Container container;
-    private final IItemHandlerModifiable inventory;
+    private final BaseItemStackHandler inventory;
     private final boolean autoTable;
 
-    public ExtendedCraftingInventory(Container container, IItemHandlerModifiable inventory) {
+    public ExtendedCraftingInventory(Container container, BaseItemStackHandler inventory) {
         this(container, inventory, false);
     }
 
-    public ExtendedCraftingInventory(Container container, IItemHandlerModifiable inventory, boolean autoTable) {
+    public ExtendedCraftingInventory(Container container, BaseItemStackHandler inventory, boolean autoTable) {
         this.container = container;
         this.inventory = inventory;
         this.autoTable = autoTable;
@@ -43,7 +43,7 @@ public class ExtendedCraftingInventory implements IInventory {
 
     @Override
     public ItemStack decrStackSize(int slot, int amount) {
-        ItemStack stack = this.inventory.extractItem(slot, amount, false);
+        ItemStack stack = this.inventory.extractItemSuper(slot, amount, false);
         this.container.onCraftMatrixChanged(this);
 
         return stack;

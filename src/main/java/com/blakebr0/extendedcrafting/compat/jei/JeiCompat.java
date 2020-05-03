@@ -143,10 +143,10 @@ public class JeiCompat implements IModPlugin {
 			registration.addRecipeTransferHandler(UltimateTableContainer.class, UltimateTableCategory.UID, 1, 81, 82, 36);
 
 			if (ModConfigs.ENABLE_AUTO_TABLES.get()) {
-				registration.addRecipeTransferHandler(BasicAutoTableContainer.class, BasicTableCategory.UID, 1, 9, 10, 36);
-				registration.addRecipeTransferHandler(AdvancedAutoTableContainer.class, AdvancedTableCategory.UID, 1, 25, 26, 36);
-				registration.addRecipeTransferHandler(EliteAutoTableContainer.class, EliteTableCategory.UID, 1, 49, 50, 36);
-				registration.addRecipeTransferHandler(UltimateAutoTableContainer.class, UltimateTableCategory.UID, 1, 81, 82, 36);
+				registration.addRecipeTransferHandler(BasicAutoTableContainer.class, BasicTableCategory.UID, 1, 9, 11, 36);
+				registration.addRecipeTransferHandler(AdvancedAutoTableContainer.class, AdvancedTableCategory.UID, 1, 25, 27, 36);
+				registration.addRecipeTransferHandler(EliteAutoTableContainer.class, EliteTableCategory.UID, 1, 49, 51, 36);
+				registration.addRecipeTransferHandler(UltimateAutoTableContainer.class, UltimateTableCategory.UID, 1, 81, 83, 36);
 			}
 		}
 

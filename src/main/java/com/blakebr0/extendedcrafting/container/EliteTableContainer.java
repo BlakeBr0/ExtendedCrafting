@@ -1,5 +1,6 @@
 package com.blakebr0.extendedcrafting.container;
 
+import com.blakebr0.cucumber.inventory.BaseItemStackHandler;
 import com.blakebr0.extendedcrafting.api.crafting.ITableRecipe;
 import com.blakebr0.extendedcrafting.api.crafting.RecipeTypes;
 import com.blakebr0.extendedcrafting.container.inventory.ExtendedCraftingInventory;
@@ -24,10 +25,10 @@ public class EliteTableContainer extends Container {
 	private final IItemHandlerModifiable result;
 
 	private EliteTableContainer(ContainerType<?> type, int id, PlayerInventory playerInventory) {
-		this(type, id, playerInventory, p -> false, new ItemStackHandler(49));
+		this(type, id, playerInventory, p -> false, new BaseItemStackHandler(49));
 	}
 
-	private EliteTableContainer(ContainerType<?> type, int id, PlayerInventory playerInventory, Function<PlayerEntity, Boolean> isUsableByPlayer, IItemHandlerModifiable inventory) {
+	private EliteTableContainer(ContainerType<?> type, int id, PlayerInventory playerInventory, Function<PlayerEntity, Boolean> isUsableByPlayer, BaseItemStackHandler inventory) {
 		super(type, id);
 		this.isUsableByPlayer = isUsableByPlayer;
 		this.world = playerInventory.player.world;
@@ -117,7 +118,7 @@ public class EliteTableContainer extends Container {
 		return new EliteTableContainer(ModContainerTypes.ELITE_TABLE.get(), windowId, playerInventory);
 	}
 
-	public static EliteTableContainer create(int windowId, PlayerInventory playerInventory, Function<PlayerEntity, Boolean> isUsableByPlayer, IItemHandlerModifiable inventory) {
+	public static EliteTableContainer create(int windowId, PlayerInventory playerInventory, Function<PlayerEntity, Boolean> isUsableByPlayer, BaseItemStackHandler inventory) {
 		return new EliteTableContainer(ModContainerTypes.ELITE_TABLE.get(), windowId, playerInventory, isUsableByPlayer, inventory);
 	}
 }

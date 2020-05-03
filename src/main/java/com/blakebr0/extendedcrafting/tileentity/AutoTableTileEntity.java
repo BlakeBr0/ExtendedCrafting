@@ -114,7 +114,7 @@ public abstract class AutoTableTileEntity extends BaseInventoryTileEntity implem
 
                             if (this.progress >= this.getProgressRequired()) {
                                 for (int i = 0; i < recipeInventory.getSizeInventory(); i++) {
-                                    inventory.extractItem(i, 1, false);
+                                    inventory.extractItemSuper(i, 1, false);
                                 }
 
                                 this.updateResult(result, outputSlot);
@@ -157,24 +157,6 @@ public abstract class AutoTableTileEntity extends BaseInventoryTileEntity implem
         return super.getCapability(cap, side);
     }
 
-    private void updateRecipeInventory() {
-        BaseItemStackHandler inventory = this.getInventory();
-        this.getRecipeInventory().setSize(inventory.getSlots() - 1);
-        for (int i = 0; i < inventory.getSlots() - 1; i++) {
-            this.getRecipeInventory().setStackInSlot(i, inventory.getStackInSlot(i));
-        }
-    }
-
-    private void updateResult(ItemStack stack, int slot) {
-        BaseItemStackHandler inventory = this.getInventory();
-        ItemStack result = inventory.getStackInSlot(9);
-        if (result.isEmpty()) {
-            inventory.setStackInSlot(slot, stack);
-        } else {
-            inventory.setStackInSlot(slot, StackHelper.increase(result.copy(), 1));
-        }
-    }
-
     public int getProgress() {
         return this.progress;
     }
@@ -194,6 +176,28 @@ public abstract class AutoTableTileEntity extends BaseInventoryTileEntity implem
 
     public abstract CustomEnergyStorage getEnergy();
 
+    protected boolean canInsertStack(int slot, ItemStack stack) {
+        return false;
+    }
+
+    private void updateRecipeInventory() {
+        BaseItemStackHandler inventory = this.getInventory();
+        this.getRecipeInventory().setSize(inventory.getSlots() - 1);
+        for (int i = 0; i < inventory.getSlots() - 1; i++) {
+            this.getRecipeInventory().setStackInSlot(i, inventory.getStackInSlot(i));
+        }
+    }
+
+    private void updateResult(ItemStack stack, int slot) {
+        BaseItemStackHandler inventory = this.getInventory();
+        ItemStack result = inventory.getStackInSlot(9);
+        if (result.isEmpty()) {
+            inventory.setStackInSlot(slot, stack);
+        } else {
+            inventory.setStackInSlot(slot, StackHelper.increase(result.copy(), 1));
+        }
+    }
+
     public static class Basic extends AutoTableTileEntity {
         private final BaseItemStackHandler inventory = new BaseItemStackHandler(10);
         private final BaseItemStackHandler recipeInventory = new BaseItemStackHandler(9);
@@ -201,6 +205,8 @@ public abstract class AutoTableTileEntity extends BaseInventoryTileEntity implem
 
         public Basic() {
             super(ModTileEntities.BASIC_AUTO_TABLE.get());
+            this.inventory.setOutputSlots(9);
+            this.inventory.setSlotValidator(super::canInsertStack);
         }
 
         @Override
@@ -241,6 +247,8 @@ public abstract class AutoTableTileEntity extends BaseInventoryTileEntity implem
 
         public Advanced() {
             super(ModTileEntities.ADVANCED_AUTO_TABLE.get());
+            this.inventory.setOutputSlots(25);
+            this.inventory.setSlotValidator(super::canInsertStack);
         }
 
         @Override
@@ -281,6 +289,8 @@ public abstract class AutoTableTileEntity extends BaseInventoryTileEntity implem
 
         public Elite() {
             super(ModTileEntities.ELITE_AUTO_TABLE.get());
+            this.inventory.setOutputSlots(49);
+            this.inventory.setSlotValidator(super::canInsertStack);
         }
 
         @Override
@@ -321,6 +331,8 @@ public abstract class AutoTableTileEntity extends BaseInventoryTileEntity implem
 
         public Ultimate() {
             super(ModTileEntities.ULTIMATE_AUTO_TABLE.get());
+            this.inventory.setOutputSlots(81);
+            this.inventory.setSlotValidator(super::canInsertStack);
         }
 
         @Override

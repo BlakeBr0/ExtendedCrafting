@@ -77,6 +77,8 @@ public class CompressorTileEntity extends BaseInventoryTileEntity implements ITi
 
 	public CompressorTileEntity() {
 		super(ModTileEntities.COMPRESSOR.get());
+		this.inventory.setSlotValidator(this::canInsertStack);
+		this.inventory.setOutputSlots(0);
 	}
 
 	@Override
@@ -149,11 +151,10 @@ public class CompressorTileEntity extends BaseInventoryTileEntity implements ITi
 
 				if (this.recipe != null && this.getEnergy().getEnergyStored() > 0) {
 					if (this.materialCount >= this.recipe.getInputCount()) {
-						this.process(this.recipe);
-						if (this.progress == this.recipe.getPowerCost()) {
-							ItemStack recipeOutput = this.recipe.getRecipeOutput();
-							if ((output.isEmpty() || StackHelper.areStacksEqual(output, recipeOutput)) && output.getCount() < recipeOutput.getMaxStackSize()) {
-								this.inventory.insertItem(0, this.recipe.getCraftingResult(this.inventory), false);
+						if (this.progress >= this.recipe.getPowerCost()) {
+							ItemStack result = this.recipe.getCraftingResult(this.inventory);
+							if (StackHelper.canCombineStacks(result, output)) {
+								this.updateResult(result);
 								this.progress = 0;
 								this.materialCount -= this.recipe.getInputCount();
 
@@ -161,6 +162,8 @@ public class CompressorTileEntity extends BaseInventoryTileEntity implements ITi
 									this.materialStack = ItemStack.EMPTY;
 								}
 							}
+						} else {
+							this.process(this.recipe);
 						}
 					}
 				}
@@ -218,16 +221,6 @@ public class CompressorTileEntity extends BaseInventoryTileEntity implements ITi
 	@Override
 	public Container createMenu(int windowId, PlayerInventory playerInventory, PlayerEntity playerEntity) {
 		return CompressorContainer.create(windowId, playerInventory, this::isUsableByPlayer, this.inventory, this.data, this.getPos());
-	}
-
-	private void process(CompressorRecipe recipe) {
-		int extract = recipe.getPowerRate();
-		int difference = recipe.getPowerCost() - this.progress;
-		if (difference < extract)
-			extract = difference;
-
-		int extracted = this.energy.extractEnergy(extract, false);
-		this.progress += extracted;
 	}
 
 	public CustomEnergyStorage getEnergy() {
@@ -290,5 +283,28 @@ public class CompressorTileEntity extends BaseInventoryTileEntity implements ITi
 			return this.recipe.getInputCount();
 
 		return 0;
+	}
+
+	private void process(CompressorRecipe recipe) {
+		int extract = recipe.getPowerRate();
+		int difference = recipe.getPowerCost() - this.progress;
+		if (difference < extract)
+			extract = difference;
+
+		int extracted = this.energy.extractEnergy(extract, false);
+		this.progress += extracted;
+	}
+
+	private void updateResult(ItemStack stack) {
+		ItemStack result = this.inventory.getStackInSlot(0);
+		if (result.isEmpty()) {
+			this.inventory.setStackInSlot(0, stack);
+		} else {
+			this.inventory.setStackInSlot(0, StackHelper.increase(result.copy(), 1));
+		}
+	}
+
+	private boolean canInsertStack(int slot, ItemStack stack) {
+		return slot == 1;
 	}
 }

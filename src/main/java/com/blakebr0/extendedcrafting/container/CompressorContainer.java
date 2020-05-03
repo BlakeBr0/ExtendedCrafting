@@ -1,7 +1,9 @@
 package com.blakebr0.extendedcrafting.container;
 
+import com.blakebr0.cucumber.inventory.BaseItemStackHandler;
+import com.blakebr0.cucumber.inventory.slot.BaseItemStackHandlerSlot;
 import com.blakebr0.cucumber.inventory.slot.OutputSlot;
-import com.blakebr0.cucumber.inventory.slot.SingleSlot;
+import com.blakebr0.extendedcrafting.container.slot.CatalystSlot;
 import com.blakebr0.extendedcrafting.tileentity.CompressorTileEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
@@ -14,8 +16,6 @@ import net.minecraft.util.IIntArray;
 import net.minecraft.util.IntArray;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
-import net.minecraftforge.items.IItemHandler;
-import net.minecraftforge.items.SlotItemHandler;
 
 import java.util.function.Function;
 
@@ -28,15 +28,15 @@ public class CompressorContainer extends Container {
 		this(type, id, playerInventory, p -> false, (new CompressorTileEntity()).getInventory(), new IntArray(10), buffer.readBlockPos());
 	}
 
-	private CompressorContainer(ContainerType<?> type, int id, PlayerInventory playerInventory, Function<PlayerEntity, Boolean> isUsableByPlayer, IItemHandler inventory, IIntArray data, BlockPos pos) {
+	private CompressorContainer(ContainerType<?> type, int id, PlayerInventory playerInventory, Function<PlayerEntity, Boolean> isUsableByPlayer, BaseItemStackHandler inventory, IIntArray data, BlockPos pos) {
 		super(type, id);
 		this.isUsableByPlayer = isUsableByPlayer;
 		this.data = data;
 		this.pos = pos;
 
 		this.addSlot(new OutputSlot(inventory, 0, 135, 48));
-		this.addSlot(new SlotItemHandler(inventory, 1, 65, 48));
-		this.addSlot(new SingleSlot(inventory, 2, 38, 48));
+		this.addSlot(new BaseItemStackHandlerSlot(inventory, 1, 65, 48));
+		this.addSlot(new CatalystSlot(inventory, 2, 38, 48));
 
 		for (int i = 0; i < 3; i++) {
 			for (int j = 0; j < 9; j++) {
@@ -108,7 +108,7 @@ public class CompressorContainer extends Container {
 		return new CompressorContainer(ModContainerTypes.COMPRESSOR.get(), windowId, playerInventory, buffer);
 	}
 
-	public static CompressorContainer create(int windowId, PlayerInventory playerInventory, Function<PlayerEntity, Boolean> isUsableByPlayer, IItemHandler inventory, IIntArray data, BlockPos pos) {
+	public static CompressorContainer create(int windowId, PlayerInventory playerInventory, Function<PlayerEntity, Boolean> isUsableByPlayer, BaseItemStackHandler inventory, IIntArray data, BlockPos pos) {
 		return new CompressorContainer(ModContainerTypes.COMPRESSOR.get(), windowId, playerInventory, isUsableByPlayer, inventory, data, pos);
 	}
 

@@ -2,10 +2,15 @@ package com.blakebr0.extendedcrafting.client.screen;
 
 import com.blakebr0.extendedcrafting.ExtendedCrafting;
 import com.blakebr0.extendedcrafting.container.BasicAutoTableContainer;
+import com.blakebr0.extendedcrafting.lib.ModTooltips;
+import com.blakebr0.extendedcrafting.network.NetworkHandler;
+import com.blakebr0.extendedcrafting.network.message.RunningSwitchMessage;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
+import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextFormatting;
 
 public class BasicAutoTableScreen extends ContainerScreen<BasicAutoTableContainer> {
 	public static final ResourceLocation BACKGROUND = new ResourceLocation(ExtendedCrafting.MOD_ID, "textures/gui/basic_auto_table.png");
@@ -14,6 +19,23 @@ public class BasicAutoTableScreen extends ContainerScreen<BasicAutoTableContaine
 		super(container, inventory, title);
 		this.xSize = 176;
 		this.ySize = 194;
+	}
+
+	@Override
+	public void init() {
+		int x = (this.width - this.xSize) / 2;
+		int y = (this.height - this.ySize) / 2;
+		BasicAutoTableContainer container = this.getContainer();
+
+		super.init();
+		this.addButton(new Button(x + 129, y + 58, 13, 16, "", button -> {
+			NetworkHandler.INSTANCE.sendToServer(new RunningSwitchMessage(container.getPos()));
+		}) {
+			@Override
+			public void render(int mouseX, int mouseY, float partialTicks) {
+
+			}
+		});
 	}
 
 	@Override
@@ -28,6 +50,10 @@ public class BasicAutoTableScreen extends ContainerScreen<BasicAutoTableContaine
 
 		if (mouseX > left + 7 && mouseX < left + 20 && mouseY > top + 17 && mouseY < top + 94) {
 			this.renderTooltip(container.getEnergyStored() + " FE", mouseX, mouseY);
+		}
+
+		if (mouseX > left + 129 && mouseX < left + 142 && mouseY > top + 58 && mouseY < top + 73) {
+			this.renderTooltip(ModTooltips.TOGGLE_AUTO_CRAFTING.color(TextFormatting.WHITE).buildString(), mouseX, mouseY);
 		}
 	}
 
@@ -49,5 +75,12 @@ public class BasicAutoTableScreen extends ContainerScreen<BasicAutoTableContaine
 
 		int i1 = container.getEnergyBarScaled(78);
 		this.blit(x + 7, y + 95 - i1, 178, 78 - i1, 15, i1 + 1);
+
+		if (container.isRunning()) {
+			int i2 = container.getProgressBarScaled(16);
+			this.blit(x + 129, y + 58, 194, 0, 13, i2);
+		} else {
+			this.blit(x + 130, y + 60, 194, 18, 13, 13);
+		}
 	}
 }

@@ -10,6 +10,7 @@ public class ModTooltips {
     public static final Tooltip EJECTING = new Tooltip("tooltip.extendedcrafting.ejecting");
     public static final Tooltip LIMITED_INPUT = new Tooltip("tooltip.extendedcrafting.limited_input");
     public static final Tooltip UNLIMITED_INPUT = new Tooltip("tooltip.extendedcrafting.unlimited_input");
+    public static final Tooltip TOGGLE_AUTO_CRAFTING = new Tooltip("tooltip.extendedcrafting.toggle_auto_crafting");
     public static final Tooltip TIER = new Tooltip("tooltip.extendedcrafting.tier");
     public static final Tooltip CRAFTING = new Tooltip("tooltip.extendedcrafting.crafting");
     public static final Tooltip MODE = new Tooltip("tooltip.extendedcrafting.mode");

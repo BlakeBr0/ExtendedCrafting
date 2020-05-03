@@ -9,20 +9,26 @@ import net.minecraftforge.items.IItemHandlerModifiable;
 public class ExtendedCraftingInventory implements IInventory {
     private final Container container;
     private final IItemHandlerModifiable inventory;
+    private final boolean autoTable;
 
     public ExtendedCraftingInventory(Container container, IItemHandlerModifiable inventory) {
+        this(container, inventory, false);
+    }
+
+    public ExtendedCraftingInventory(Container container, IItemHandlerModifiable inventory, boolean autoTable) {
         this.container = container;
         this.inventory = inventory;
+        this.autoTable = autoTable;
     }
 
     @Override
     public int getSizeInventory() {
-        return this.inventory.getSlots();
+        return this.autoTable ? this.inventory.getSlots() - 1 : this.inventory.getSlots();
     }
 
     @Override
     public boolean isEmpty() {
-        for (int i = 0; i < this.inventory.getSlots(); i++) {
+        for (int i = 0; i < this.getSizeInventory(); i++) {
             if (!this.inventory.getStackInSlot(i).isEmpty())
                 return false;
         }
@@ -69,7 +75,7 @@ public class ExtendedCraftingInventory implements IInventory {
 
     @Override
     public void clear() {
-        for (int i = 0; i < this.inventory.getSlots(); i++) {
+        for (int i = 0; i < this.getSizeInventory(); i++) {
             this.inventory.setStackInSlot(i, ItemStack.EMPTY);
         }
     }

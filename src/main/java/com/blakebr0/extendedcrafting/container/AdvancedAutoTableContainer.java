@@ -31,7 +31,7 @@ public class AdvancedAutoTableContainer extends Container {
 	private final IItemHandlerModifiable result;
 
 	private AdvancedAutoTableContainer(ContainerType<?> type, int id, PlayerInventory playerInventory, PacketBuffer buffer) {
-		this(type, id, playerInventory, p -> false, new ItemStackHandler(26), new IntArray(2), buffer.readBlockPos());
+		this(type, id, playerInventory, p -> false, new ItemStackHandler(26), new IntArray(5), buffer.readBlockPos());
 	}
 
 	private AdvancedAutoTableContainer(ContainerType<?> type, int id, PlayerInventory playerInventory, Function<PlayerEntity, Boolean> isUsableByPlayer, IItemHandlerModifiable inventory, IIntArray data, BlockPos pos) {
@@ -41,7 +41,7 @@ public class AdvancedAutoTableContainer extends Container {
 		this.pos = pos;
 		this.world = playerInventory.player.world;
 		this.result = new ItemStackHandler();
-		IInventory matrix = new ExtendedCraftingInventory(this, inventory);
+		IInventory matrix = new ExtendedCraftingInventory(this, inventory, true);
 
 		this.addSlot(new TableOutputSlot(this, matrix, this.result, 0, 154, 37));
 		
@@ -95,17 +95,17 @@ public class AdvancedAutoTableContainer extends Container {
 			ItemStack itemstack1 = slot.getStack();
 			itemstack = itemstack1.copy();
 
-			if (slotNumber == 0) {
-				if (!this.mergeItemStack(itemstack1, 26, 62, true)) {
+			if (slotNumber == 0 || slotNumber == 26) {
+				if (!this.mergeItemStack(itemstack1, 27, 63, true)) {
 					return ItemStack.EMPTY;
 				}
 
 				slot.onSlotChange(itemstack1, itemstack);
-			} else if (slotNumber >= 26 && slotNumber < 62) {
+			} else if (slotNumber >= 27 && slotNumber < 63) {
 				if (!this.mergeItemStack(itemstack1, 1, 26, false)) {
 					return ItemStack.EMPTY;
 				}
-			} else if (!this.mergeItemStack(itemstack1, 26, 62, false)) {
+			} else if (!this.mergeItemStack(itemstack1, 27, 63, false)) {
 				return ItemStack.EMPTY;
 			}
 
@@ -143,11 +143,29 @@ public class AdvancedAutoTableContainer extends Container {
 		return (int) (j != 0 && i != 0 ? (long) i * pixels / j : 0);
 	}
 
+	public int getProgressBarScaled(int pixels) {
+		int i = this.getProgress();
+		int j = this.getProgressRequired();
+		return j != 0 && i != 0 ? i * pixels / j : 0;
+	}
+
+	public boolean isRunning() {
+		return this.data.get(4) > 0;
+	}
+
 	public int getEnergyStored() {
 		return this.data.get(0);
 	}
 
 	public int getMaxEnergyStored() {
 		return this.data.get(1);
+	}
+
+	public int getProgress() {
+		return this.data.get(2);
+	}
+
+	public int getProgressRequired() {
+		return this.data.get(3);
 	}
 }

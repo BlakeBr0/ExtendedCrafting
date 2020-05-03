@@ -11,7 +11,7 @@ import net.minecraftforge.fml.network.NetworkEvent;
 import java.util.function.Supplier;
 
 public class InputLimitSwitchMessage {
-    private BlockPos pos;
+    private final BlockPos pos;
 
     public InputLimitSwitchMessage(BlockPos pos) {
         this.pos = pos;
@@ -32,8 +32,7 @@ public class InputLimitSwitchMessage {
                 World world = player.getEntityWorld();
                 TileEntity tile = world.getTileEntity(message.pos);
                 if (tile instanceof CompressorTileEntity) {
-                    CompressorTileEntity compressor = (CompressorTileEntity) tile;
-                    compressor.toggleInputLimit();
+                    ((CompressorTileEntity) tile).toggleInputLimit();
                 }
             }
         });

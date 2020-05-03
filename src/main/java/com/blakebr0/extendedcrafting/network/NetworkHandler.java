@@ -3,6 +3,7 @@ package com.blakebr0.extendedcrafting.network;
 import com.blakebr0.extendedcrafting.ExtendedCrafting;
 import com.blakebr0.extendedcrafting.network.message.EjectModeSwitchMessage;
 import com.blakebr0.extendedcrafting.network.message.InputLimitSwitchMessage;
+import com.blakebr0.extendedcrafting.network.message.RunningSwitchMessage;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.network.NetworkRegistry;
 import net.minecraftforge.fml.network.simple.SimpleChannel;
@@ -14,6 +15,7 @@ public class NetworkHandler {
 	public static void onCommonSetup() {
 		INSTANCE.registerMessage(id(), EjectModeSwitchMessage.class, EjectModeSwitchMessage::write, EjectModeSwitchMessage::read, EjectModeSwitchMessage::onMessage);
 		INSTANCE.registerMessage(id(), InputLimitSwitchMessage.class, InputLimitSwitchMessage::write, InputLimitSwitchMessage::read, InputLimitSwitchMessage::onMessage);
+		INSTANCE.registerMessage(id(), RunningSwitchMessage.class, RunningSwitchMessage::write, RunningSwitchMessage::read, RunningSwitchMessage::onMessage);
 	}
 
 	private static int id() {

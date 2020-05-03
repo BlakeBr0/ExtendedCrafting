@@ -30,6 +30,8 @@ public class ModConfigs {
 	public static final ForgeConfigSpec.BooleanValue ENABLE_TABLES;
 	public static final ForgeConfigSpec.BooleanValue ENABLE_AUTO_TABLES;
 	public static final ForgeConfigSpec.BooleanValue TABLE_USE_VANILLA_RECIPES;
+	public static final ForgeConfigSpec.IntValue AUTO_TABLE_POWER_CAPACITY;
+	public static final ForgeConfigSpec.IntValue AUTO_TABLE_POWER_RATE;
 	
 	public static final ForgeConfigSpec.BooleanValue ENABLE_COMPRESSOR;
 	public static final ForgeConfigSpec.IntValue COMPRESSOR_POWER_CAPACITY;
@@ -88,6 +90,14 @@ public class ModConfigs {
 				.comment("Should the Basic Crafting Table inherit vanilla crafting recipes?")
 				.translation("configGui.extendedcrafting.table_use_vanilla_recipes")
 				.define("useVanillaRecipes", true);
+		AUTO_TABLE_POWER_CAPACITY = common
+				.comment("How much FE the Auto Crafting Tables should hold. Higher tiers use double the previous tier.")
+				.translation("configGui.extendedcrafting.auto_table_power_capacity")
+				.defineInRange("autoTablePowerCapacity", 500000, 0, Integer.MAX_VALUE);
+		AUTO_TABLE_POWER_RATE = common
+				.comment("How much FE the Auto Crafting Tables should use when crafting.")
+				.translation("configGui.extendedcrafting.auto_table_power_rate")
+				.defineInRange("autoTablePowerRate", 500, 0, Integer.MAX_VALUE);
 		common.pop();
 
 		common.comment("Settings for the Quantum Compressor.").push("Quantum Compression");

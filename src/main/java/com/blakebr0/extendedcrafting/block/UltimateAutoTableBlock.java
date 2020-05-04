@@ -22,6 +22,8 @@ import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
@@ -84,6 +86,7 @@ public class UltimateAutoTableBlock extends BaseTileEntityBlock implements IEnab
     @OnlyIn(Dist.CLIENT)
     @Override
     public void addInformation(ItemStack stack, IBlockReader world, List<ITextComponent> tooltip, ITooltipFlag flag) {
+        tooltip.add(new StringTextComponent("WORK IN PROGRESS").applyTextStyle(TextFormatting.GRAY));
         tooltip.add(ModTooltips.TIER.args(4).build());
     }
 

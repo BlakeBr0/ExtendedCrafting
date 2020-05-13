@@ -1,0 +1,16 @@
+{
+  "name": "book.extendedcrafting.entry.ender_crafting",
+  "category": "crafting",
+  "icon": "extendedcrafting:ender_crafter",
+  "sortnum": 3,
+  "pages": [
+    {
+      "type": "text",
+      "text": "book.extendedcrafting.entry.ender_crafting.page.1"
+    },
+    {
+      "type": "text",
+      "text": "book.extendedcrafting.entry.ender_crafting.page.2"
+    }
+  ]
+}

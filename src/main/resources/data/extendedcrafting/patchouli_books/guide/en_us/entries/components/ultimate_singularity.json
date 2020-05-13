@@ -1,0 +1,12 @@
+{
+  "name": "book.extendedcrafting.entry.ultimate_singularity",
+  "category": "components",
+  "icon": "extendedcrafting:ultimate_singularity",
+  "sortnum": 51,
+  "pages": [
+    {
+      "type": "text",
+      "text": "book.extendedcrafting.entry.ultimate_singularity.page.1"
+    }
+  ]
+}

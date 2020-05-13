@@ -1,0 +1,12 @@
+{
+  "name": "book.extendedcrafting.entry.tables",
+  "category": "crafting",
+  "icon": "extendedcrafting:ultimate_table",
+  "sortnum": 1,
+  "pages": [
+    {
+      "type": "text",
+      "text": "book.extendedcrafting.entry.tables.page.1"
+    }
+  ]
+}

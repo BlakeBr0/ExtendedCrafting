@@ -121,5 +121,36 @@
   "singularity.extendedcrafting.electrum": "Electrum",
   "singularity.extendedcrafting.invar": "Invar",
   "singularity.extendedcrafting.uranium": "Uranium",
-  "singularity.extendedcrafting.platinum": "Platinum"
+  "singularity.extendedcrafting.platinum": "Platinum",
+
+  "book.extendedcrafting.name": "Extended Crafting",
+  "book.extendedcrafting.landing_text": "Extended Crafting adds new ways to craft items, as well as extra crafting items and utilities. $(br2)This guide book is for explaining the functionality of the different crafting methods in this mod. How they are implemented is decided by the modpack creator.",
+
+  "book.extendedcrafting.category.crafting.name": "Crafting Methods",
+  "book.extendedcrafting.category.crafting.description": "This section goes over the different crafting mechanisms added by Extended Crafting.",
+  "book.extendedcrafting.category.components.name": "Crafting Components",
+  "book.extendedcrafting.category.components.description": "This section goes over the different crafting items added by Extended Crafting.",
+  "book.extendedcrafting.category.utilities.name": "Crafting Utilities",
+  "book.extendedcrafting.category.utilities.description": "This section goes over the different crafting utilities added by Extended Crafting.",
+
+  "book.extendedcrafting.entry.combination": "Combination Crafting",
+  "book.extendedcrafting.entry.combination.page.1": "Combination Crafting is an in-world multi-block crafting setup where items are combined together to create something $(italic)special.$() $(br2)This setup consists of a Crafting Core in the center and pedestals placed around it. Pedestals can be placed anywhere around the Crafting Core in a 3 block radius, and must be on the same Y level.",
+  "book.extendedcrafting.entry.combination.page.2": "Power must be provided to the Crafting Core for this structure to function. $(br2)Recipes have a center item which goes on the Crafting Core, and pedestal items which go on the pedestals around it. $(br)Right clicking on the side of the Crafting Core will show you information about the current crafting operation, such as progress or power cost, as well as how much power is stored in it.",
+  "book.extendedcrafting.entry.tables": "Table Crafting",
+  "book.extendedcrafting.entry.tables.page.1": "This mod adds tiered crafting tables that come in $(bold)3x3$(), $(bold)5x5$(), $(bold)7x7$(), and $(bold)9x9$() sizes. These tables hold their inventories when closed.",
+  "book.extendedcrafting.entry.compression": "Compression Crafting",
+  "book.extendedcrafting.entry.compression.page.1": "Quantum Compression is the process of compressing items a little too much. This is done using a Quantum Compressor. $(br2)The Quantum Compressor is a powered machine that can hold and compress extremely large amounts of materials. Items placed inside the Quantum Compressor go into an internal buffer for use in compression. The buffer is represented as a blue bar.",
+  "book.extendedcrafting.entry.compression.page.2": "Each recipe $(bold)usually$() requires a catalyst. The catalyst is placed in the left-most slot and does not get used up. $(br2)Once there are enough items in the buffer, the machine will begin to craft the item. The Quantum Compressor will only use power while crafting. $(br2)If you happen to put items into the compressor that you would rather not lose forever, you can press the eject button above the input slot to get them back.",
+  "book.extendedcrafting.entry.compression.page.3": "Items in the buffer are stored in the endless void and can only be re-obtained by ejecting. Breaking the block will cause those items to get lost forever, so be careful! $(br2)The item input buffer of the Quantum Compressor is capable of holding $(bold)billions$() of items, but by default will only hold as many as the recipe requires. You can disable this limit by clicking on the lock button next to the input buffer.",
+  "book.extendedcrafting.entry.ender_crafting": "Ender Crafting",
+  "book.extendedcrafting.entry.ender_crafting.page.1": "Ender Crafting is crafting using the power of waiting. An Ender Crafting setup consists of an Ender Crafter and Ender Alternators. The crafter will take energy from the void via the alternators. The more alternators you have, the faster it will craft.",
+  "book.extendedcrafting.entry.ender_crafting.page.2": "Ender Alternators can be placed anywhere around the Ender Crafter in a $(bold)3 block radius$(). Even above or below!",
+
+  "book.extendedcrafting.entry.singularities": "Singularities",
+  "book.extendedcrafting.entry.singularities.page.1": "Singularities are highly compressed materials. These are $(bold)usually$() made using a $(l:crafting/compression)Quantum Compressor$(). $(br2)Singularities can $(bold)probably$() be used for many things, such as $(l:components/ultimate_singularity)The Ultimate Singularity$().",
+  "book.extendedcrafting.entry.ultimate_singularity": "Ultimate Singularity",
+  "book.extendedcrafting.entry.ultimate_singularity.page.1": "The Ultimate Singularity is $(bold)usually$() made in the $(l:crafting/tables)Ultimate Crafting Table$(). $(br2)It is $(bold)usually$() made of all, if not most, of the available singularities.",
+
+  "book.extendedcrafting.entry.handheld_table": "Handheld Crafting Table",
+  "book.extendedcrafting.entry.handheld_table.page.1": "The Handheld Crafting Table is a Crafting Table."
 }

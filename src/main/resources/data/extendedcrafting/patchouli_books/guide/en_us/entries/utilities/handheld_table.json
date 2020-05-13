@@ -1,0 +1,12 @@
+{
+  "name": "book.extendedcrafting.entry.handheld_table",
+  "category": "utilities",
+  "icon": "extendedcrafting:handheld_table",
+  "sortnum": 100,
+  "pages": [
+    {
+      "type": "text",
+      "text": "book.extendedcrafting.entry.handheld_table.page.1"
+    }
+  ]
+}

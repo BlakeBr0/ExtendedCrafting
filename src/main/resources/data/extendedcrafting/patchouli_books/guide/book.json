@@ -1,0 +1,10 @@
+{
+  "name": "book.extendedcrafting.name",
+  "landing_text": "book.extendedcrafting.landing_text",
+  "show_progress": false,
+  "creative_tab": "extendedcrafting",
+  "i18n": true,
+  "model": "extendedcrafting:guide_book",
+  "book_texture": "patchouli:textures/gui/book_gray.png",
+  "version": 2
+}

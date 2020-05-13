@@ -1,0 +1,16 @@
+{
+  "name": "book.extendedcrafting.entry.combination",
+  "category": "crafting",
+  "icon": "extendedcrafting:crafting_core",
+  "sortnum": 0,
+  "pages": [
+    {
+      "type": "text",
+      "text": "book.extendedcrafting.entry.combination.page.1"
+    },
+    {
+      "type": "text",
+      "text": "book.extendedcrafting.entry.combination.page.2"
+    }
+  ]
+}

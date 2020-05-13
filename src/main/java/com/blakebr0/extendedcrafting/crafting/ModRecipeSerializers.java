@@ -1,6 +1,8 @@
 package com.blakebr0.extendedcrafting.crafting;
 
 import com.blakebr0.extendedcrafting.ExtendedCrafting;
+import com.blakebr0.extendedcrafting.config.ModConfigs;
+import com.blakebr0.extendedcrafting.crafting.condition.UltimateSingularityRecipeCondition;
 import com.blakebr0.extendedcrafting.crafting.recipe.CombinationRecipe;
 import com.blakebr0.extendedcrafting.crafting.recipe.CompressorRecipe;
 import com.blakebr0.extendedcrafting.crafting.recipe.ShapedEnderCrafterRecipe;
@@ -15,6 +17,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipeSerializer;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.common.crafting.CraftingHelper;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.registries.IForgeRegistry;
@@ -41,9 +44,14 @@ public class ModRecipeSerializers {
         registry.register(SHAPED_ENDER_CRAFTER.setRegistryName(new ResourceLocation(ExtendedCrafting.MOD_ID, "shaped_ender_crafter")));
         registry.register(SHAPELESS_ENDER_CRAFTER.setRegistryName(new ResourceLocation(ExtendedCrafting.MOD_ID, "shapeless_ender_crafter")));
         registry.register(ULTIMATE_SINGULARITY.setRegistryName(new ResourceLocation(ExtendedCrafting.MOD_ID, "ultimate_singularity")));
+
+        CraftingHelper.register(UltimateSingularityRecipeCondition.Serializer.INSTANCE);
     }
 
     public static void initUltimateSingularityRecipe() {
+        if (!ModConfigs.SINGULARITY_ULTIMATE_RECIPE.get())
+            return;
+
         List<Singularity> singularities = SingularityRegistry.getInstance().getSingularities();
         int added = 0;
         for (int i = 0; i < singularities.size() && added < 81; i++) {

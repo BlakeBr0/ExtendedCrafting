@@ -56,7 +56,7 @@ public class ModRecipeSerializers {
         int added = 0;
         for (int i = 0; i < singularities.size() && added < 81; i++) {
             Singularity singularity = singularities.get(i);
-            if (singularity.getIngredient() != Ingredient.EMPTY) {
+            if (singularity.getIngredient() != Ingredient.EMPTY && singularity.isInUltimateSingularity()) {
                 ItemStack stack = SingularityUtils.getItemForSingularity(singularity);
                 UltimateSingularityRecipe.SINGULARITIES.add(Ingredient.fromStacks(stack));
 

@@ -13,24 +13,27 @@ public class Singularity {
     private final int[] colors;
     private final String tag;
     private final int ingredientCount;
+    private final boolean inUltimateSingularity;
     private Ingredient ingredient;
 
-    public Singularity(ResourceLocation id, String name, int[] colors, Ingredient ingredient, int ingredientCount) {
+    public Singularity(ResourceLocation id, String name, int[] colors, Ingredient ingredient, int ingredientCount, boolean inUltimateSingularity) {
         this.id = id;
         this.name = name;
         this.colors = colors;
         this.ingredient = ingredient;
         this.tag = null;
         this.ingredientCount = ingredientCount;
+        this.inUltimateSingularity = inUltimateSingularity;
     }
 
-    public Singularity(ResourceLocation id, String name, int[] colors, String tag, int ingredientCount) {
+    public Singularity(ResourceLocation id, String name, int[] colors, String tag, int ingredientCount, boolean inUltimateSingularity) {
         this.id = id;
         this.name = name;
         this.colors = colors;
         this.ingredient = Ingredient.EMPTY;
         this.tag = tag;
         this.ingredientCount = ingredientCount;
+        this.inUltimateSingularity = inUltimateSingularity;
     }
 
     public ResourceLocation getId() {
@@ -68,5 +71,9 @@ public class Singularity {
 
     public ITextComponent getDisplayName() {
         return Localizable.of(this.name).build();
+    }
+
+    public boolean isInUltimateSingularity() {
+        return this.inUltimateSingularity;
     }
 }

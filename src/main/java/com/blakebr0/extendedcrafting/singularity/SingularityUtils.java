@@ -21,6 +21,8 @@ public class SingularityUtils {
         int overlayColor = Integer.parseInt(colors.get(0).getAsString(), 16);
         int underlayColor = Integer.parseInt(colors.get(1).getAsString(), 16);
 
+        boolean inUltimateSingularity = JSONUtils.getBoolean(json, "inUltimateSingularity", true);
+
         JsonObject ing = JSONUtils.getJsonObject(json, "ingredient");
         if (ing.has("tag")) {
             String tag = ing.get("tag").getAsString();

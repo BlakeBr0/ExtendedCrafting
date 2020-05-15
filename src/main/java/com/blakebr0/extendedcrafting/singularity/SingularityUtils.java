@@ -26,10 +26,10 @@ public class SingularityUtils {
         JsonObject ing = JSONUtils.getJsonObject(json, "ingredient");
         if (ing.has("tag")) {
             String tag = ing.get("tag").getAsString();
-            return new Singularity(id, name, new int[] { overlayColor, underlayColor }, tag, materialCount);
+            return new Singularity(id, name, new int[] { overlayColor, underlayColor }, tag, materialCount, inUltimateSingularity);
         } else {
             Ingredient ingredient = Ingredient.deserialize(json.get("ingredient"));
-            return new Singularity(id, name, new int[] { overlayColor, underlayColor }, ingredient, materialCount);
+            return new Singularity(id, name, new int[] { overlayColor, underlayColor }, ingredient, materialCount, inUltimateSingularity);
         }
     }
 

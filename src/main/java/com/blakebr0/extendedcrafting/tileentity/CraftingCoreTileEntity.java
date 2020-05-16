@@ -172,26 +172,6 @@ public class CraftingCoreTileEntity extends BaseInventoryTileEntity implements I
 		return CraftingCoreContainer.create(windowId, playerInventory, this::isUsableByPlayer, this.data, this.getPos());
 	}
 
-	private Map<BlockPos, ItemStack> getPedestalsWithItems() {
-		Map<BlockPos, ItemStack> pedestals = new HashMap<>();
-		World world = this.getWorld();
-		if (world != null) {
-			BlockPos pos = this.getPos();
-			BlockPos.getAllInBox(pos.add(-3, 0, -3), pos.add(3, 0, 3)).forEach(aoePos -> {
-				TileEntity tile = world.getTileEntity(aoePos);
-				if (tile instanceof PedestalTileEntity) {
-					PedestalTileEntity pedestal = (PedestalTileEntity) tile;
-					ItemStack stack = pedestal.getInventory().getStackInSlot(0);
-					pedestals.put(aoePos.toImmutable(), stack);
-				}
-			});
-		}
-
-		this.pedestalCount = pedestals.size();
-
-		return pedestals;
-	}
-
 	private void updateRecipeInventory(ItemStack[] items) {
 		this.recipeInventory.setSize(items.length + 1);
 		this.recipeInventory.setStackInSlot(0, this.inventory.getStackInSlot(0));
@@ -221,6 +201,26 @@ public class CraftingCoreTileEntity extends BaseInventoryTileEntity implements I
 		double z = pos.getZ() + 0.5D;
 
 		world.spawnParticle(particle, x, y, z, count, 0, 0, 0, 0.1D);
+	}
+
+	public Map<BlockPos, ItemStack> getPedestalsWithItems() {
+		Map<BlockPos, ItemStack> pedestals = new HashMap<>();
+		World world = this.getWorld();
+		if (world != null) {
+			BlockPos pos = this.getPos();
+			BlockPos.getAllInBox(pos.add(-3, 0, -3), pos.add(3, 0, 3)).forEach(aoePos -> {
+				TileEntity tile = world.getTileEntity(aoePos);
+				if (tile instanceof PedestalTileEntity) {
+					PedestalTileEntity pedestal = (PedestalTileEntity) tile;
+					ItemStack stack = pedestal.getInventory().getStackInSlot(0);
+					pedestals.put(aoePos.toImmutable(), stack);
+				}
+			});
+		}
+
+		this.pedestalCount = pedestals.size();
+
+		return pedestals;
 	}
 
 	public CustomEnergyStorage getEnergy() {

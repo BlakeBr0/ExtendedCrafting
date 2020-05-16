@@ -38,9 +38,6 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.items.IItemHandler;
 
-import java.awt.*;
-import java.awt.datatransfer.Clipboard;
-import java.awt.datatransfer.StringSelection;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -106,9 +103,9 @@ public class RecipeMakerItem extends BaseItem implements IEnableable {
 		} else if (tile instanceof CraftingCoreTileEntity) {
 			if (world.isRemote()) {
 				String type = NBTHelper.getString(stack, "Type");
-				BaseItemStackHandler inventory = ((BaseInventoryTileEntity) tile).getInventory();
+				CraftingCoreTileEntity core = (CraftingCoreTileEntity) tile;
 				if ("CraftTweaker".equals(type)) {
-					String string = "?";
+					String string = makeCraftTweakerCombinationRecipe(core);
 
 					setClipboard(string);
 				} else {
@@ -181,11 +178,7 @@ public class RecipeMakerItem extends BaseItem implements IEnableable {
 
 			if (item.isEmpty()) {
 				ResourceLocation id = stack.getItem().getRegistryName();
-				if (id == null) {
-					item = "item:minecraft:air";
-				} else {
-					item = stack.isEmpty() ? "item:minecraft:air" : "item:" + id.toString();
-				}
+				item = id == null ? "item:minecraft:air" : "item:" + id.toString();
 			}
 
 			string.append("<").append(item).append(">");
@@ -243,11 +236,7 @@ public class RecipeMakerItem extends BaseItem implements IEnableable {
 				item = "tag:" + tagId;
 			} else {
 				ResourceLocation id = stack.getItem().getRegistryName();
-				if (id == null) {
-					item = "item:minecraft:air";
-				} else {
-					item = "item:" + id.toString();
-				}
+				item = id == null ? "item:minecraft:air" : "item:" + id.toString();
 			}
 
 			string.append("<").append(item).append(">");
@@ -259,6 +248,35 @@ public class RecipeMakerItem extends BaseItem implements IEnableable {
 			}
 
 			if (i != lastSlot) {
+				string.append(", ");
+			}
+		}
+
+		string.append(System.lineSeparator()).append("]);");
+
+		return string.toString();
+	}
+
+	private static String makeCraftTweakerCombinationRecipe(CraftingCoreTileEntity tile) {
+		StringBuilder string = new StringBuilder();
+		UUID uuid = UUID.randomUUID();
+		string.append("mods.extendedcrafting.CombinationCrafting.addRecipe(\"").append(uuid).append("\", <>, 100000, [").append(NEW_LINE);
+
+		ResourceLocation inputId = tile.getInventory().getStackInSlot(0).getItem().getRegistryName();
+		String input = "item:minecraft:air";
+		if (inputId != null)
+			input = "item:" + inputId.toString();
+
+		string.append("<").append(input).append(">, ");
+
+		ItemStack[] stacks = tile.getPedestalsWithItems().values().stream().filter(s -> !s.isEmpty()).toArray(ItemStack[]::new);
+		for (int i = 0; i < stacks.length; i++) {
+			ResourceLocation id = stacks[i].getItem().getRegistryName();
+			String item = id == null ? "item:minecraft:air" : "item:" + id.toString();
+
+			string.append("<").append(item).append(">");
+
+			if (i != stacks.length - 1) {
 				string.append(", ");
 			}
 		}

@@ -157,7 +157,7 @@ public class ModConfigs {
 				.define("ultimateSingularityRecipe", true);
 		common.pop();
 
-		common.comment("Settings for the Recipe Maker").push("Recipe Maker");
+		common.comment("Settings for the Recipe Maker.").push("Recipe Maker");
 		ENABLE_RECIPE_MAKER = common
 				.comment("Should the Recipe Maker be enabled?")
 				.translation("configGui.extendedcrafting.enable_recipe_maker")

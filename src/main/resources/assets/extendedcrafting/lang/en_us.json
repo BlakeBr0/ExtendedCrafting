@@ -96,6 +96,7 @@
   "message.extendedcrafting.changed_mode": "Changed mode to %s.",
   "message.extendedcrafting.copied_recipe": "Copied recipe to clipboard.",
   "message.extendedcrafting.nbt_requires_crafttweaker": "CraftTweaker is required to copy NBT.",
+  "message.extendedcrafting.max_unique_items_exceeded": "You can only have a maximum of (%s) unique items in a shaped datapack recipe.",
 
   "jei.category.extendedcrafting.combination": "Combination Crafting",
   "jei.category.extendedcrafting.basic_crafting": "Basic Crafting",

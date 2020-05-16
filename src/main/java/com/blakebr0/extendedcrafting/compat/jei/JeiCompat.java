@@ -1,5 +1,6 @@
 package com.blakebr0.extendedcrafting.compat.jei;
 
+import com.blakebr0.cucumber.helper.NBTHelper;
 import com.blakebr0.extendedcrafting.ExtendedCrafting;
 import com.blakebr0.extendedcrafting.api.crafting.ITableRecipe;
 import com.blakebr0.extendedcrafting.api.crafting.RecipeTypes;
@@ -191,6 +192,10 @@ public class JeiCompat implements IModPlugin {
 				Singularity singularity = SingularityUtils.getSingularity(stack);
 				return singularity != null ? singularity.getId().toString() : "";
 			});
+		});
+
+		ModItems.RECIPE_MAKER.ifPresent(item -> {
+			registration.registerSubtypeInterpreter(item, stack -> NBTHelper.getString(stack, "Type"));
 		});
 	}
 }

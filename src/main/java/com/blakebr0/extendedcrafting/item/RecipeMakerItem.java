@@ -2,28 +2,48 @@ package com.blakebr0.extendedcrafting.item;
 
 import com.blakebr0.cucumber.helper.NBTHelper;
 import com.blakebr0.cucumber.iface.IEnableable;
+import com.blakebr0.cucumber.inventory.BaseItemStackHandler;
 import com.blakebr0.cucumber.item.BaseItem;
 import com.blakebr0.cucumber.lib.Localizable;
-import com.blakebr0.cucumber.lib.Tooltips;
+import com.blakebr0.cucumber.tileentity.BaseInventoryTileEntity;
+import com.blakebr0.extendedcrafting.compat.crafttweaker.CraftTweakerUtils;
 import com.blakebr0.extendedcrafting.config.ModConfigs;
 import com.blakebr0.extendedcrafting.lib.ModTooltips;
+import com.blakebr0.extendedcrafting.tileentity.AdvancedTableTileEntity;
+import com.blakebr0.extendedcrafting.tileentity.AutoTableTileEntity;
+import com.blakebr0.extendedcrafting.tileentity.BasicTableTileEntity;
+import com.blakebr0.extendedcrafting.tileentity.CraftingCoreTileEntity;
+import com.blakebr0.extendedcrafting.tileentity.EliteTableTileEntity;
+import com.blakebr0.extendedcrafting.tileentity.EnderCrafterTileEntity;
+import com.blakebr0.extendedcrafting.tileentity.UltimateTableTileEntity;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUseContext;
+import net.minecraft.nbt.INBT;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Hand;
 import net.minecraft.util.NonNullList;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.fml.ModList;
+import net.minecraftforge.items.IItemHandler;
 
+import java.awt.*;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.StringSelection;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 import java.util.function.Function;
 
 public class RecipeMakerItem extends BaseItem implements IEnableable {
@@ -34,16 +54,18 @@ public class RecipeMakerItem extends BaseItem implements IEnableable {
 	}
 	
 	@Override
-	public boolean isEnabled() {
-		return ModConfigs.ENABLE_RECIPE_MAKER.get();
-	}
-	
-	@Override
 	public void fillItemGroup(ItemGroup group, NonNullList<ItemStack> items) {
-		if (this.isInGroup(group)) {
-			ItemStack stack = new ItemStack(this);
-			NBTHelper.setBoolean(stack, "Shapeless", false);
-			items.add(stack);
+		if (this.isEnabled() && this.isInGroup(group)) {
+			ItemStack stack1 = new ItemStack(this);
+			NBTHelper.setBoolean(stack1, "Shapeless", false);
+			NBTHelper.setString(stack1, "Type", "Datapack");
+
+			ItemStack stack2 = new ItemStack(this);
+			NBTHelper.setBoolean(stack2, "Shapeless", false);
+			NBTHelper.setString(stack2, "Type", "CraftTweaker");
+
+			items.add(stack1);
+			items.add(stack2);
 		}
 	}
 
@@ -52,23 +74,52 @@ public class RecipeMakerItem extends BaseItem implements IEnableable {
 		PlayerEntity player = context.getPlayer();
 		BlockPos pos = context.getPos();
 		Direction facing = context.getFace();
-		if (player == null || !player.canPlayerEdit(pos.offset(facing), facing, stack))
+		World world = context.getWorld();
+		if (player == null || !player.canPlayerEdit(pos.offset(facing), facing, stack)) {
 			return ActionResultType.PASS;
+		}
 
-		// TODO: Implement recipe maker functionality
-//		TileEntity tile = world.getTileEntity(pos);
-//		if (tile != null && tile instanceof IExtendedTable) {
-//			if (world.isRemote) {
-//				setClipboard(tile, stack);
-//				player.sendMessage(new TextComponentTranslation("message.ec.copied_recipe"));
-//
-//				if (ModConfigs.confRMNBT && !Loader.isModLoaded("crafttweaker")) {
-//					player.sendMessage(new TextComponentTranslation("message.ec.nbt_requires_crafttweaker"));
-//				}
-//			}
-//
-//			return ActionResultType.SUCCESS;
-//		}
+		TileEntity tile = world.getTileEntity(pos);
+		if (isTable(tile)) {
+			if (world.isRemote()) {
+				String type = NBTHelper.getString(stack, "Type");
+				BaseItemStackHandler inventory = ((BaseInventoryTileEntity) tile).getInventory();
+				if ("CraftTweaker".equals(type)) {
+					type = tile instanceof EnderCrafterTileEntity ? "EnderCrafting" : "TableCrafting";
+					String string = isShapeless(stack)
+							? makeShapelessCraftTweakerTableRecipe(inventory, type)
+							: makeShapedCraftTweakerTableRecipe(inventory, type);
+
+					setClipboard(string);
+				} else {
+
+				}
+
+				player.sendMessage(Localizable.of("message.extendedcrafting.copied_recipe").build());
+
+				if (ModConfigs.RECIPE_MAKER_USE_NBT.get() && !ModList.get().isLoaded("crafttweaker")) {
+					player.sendMessage(Localizable.of("message.extendedcrafting.nbt_requires_crafttweaker").build());
+				}
+			}
+
+			return ActionResultType.SUCCESS;
+		} else if (tile instanceof CraftingCoreTileEntity) {
+			if (world.isRemote()) {
+				String type = NBTHelper.getString(stack, "Type");
+				BaseItemStackHandler inventory = ((BaseInventoryTileEntity) tile).getInventory();
+				if ("CraftTweaker".equals(type)) {
+					String string = "?";
+
+					setClipboard(string);
+				} else {
+
+				}
+
+				player.sendMessage(Localizable.of("message.extendedcrafting.copied_recipe").build());
+			}
+
+			return ActionResultType.SUCCESS;
+		}
 
 		return ActionResultType.PASS;
 	}
@@ -80,7 +131,7 @@ public class RecipeMakerItem extends BaseItem implements IEnableable {
 			NBTHelper.flipBoolean(stack, "Shapeless");
 
 			if (world.isRemote()) {
-				player.sendMessage(Localizable.of("message.extendedcrafting.changed_mode").args(this.getModeString(stack)).build());
+				player.sendMessage(Localizable.of("message.extendedcrafting.changed_mode").args(getModeString(stack)).build());
 			}
 		}
 
@@ -90,133 +141,151 @@ public class RecipeMakerItem extends BaseItem implements IEnableable {
 	@OnlyIn(Dist.CLIENT)
 	@Override
 	public void addInformation(ItemStack stack, World world, List<ITextComponent> tooltip, ITooltipFlag flag) {
-		tooltip.add(Tooltips.NOT_YET_IMPLEMENTED.build());
-		tooltip.add(ModTooltips.MODE.args(this.getModeString(stack)).build());
+		tooltip.add(ModTooltips.TYPE.args(NBTHelper.getString(stack, "Type")).build());
+		tooltip.add(ModTooltips.MODE.args(getModeString(stack)).build());
 	}
 
-//	private void setClipboard(TileEntity table, ItemStack stack) {
-//		if (Desktop.isDesktopSupported()) {
-//			String string = "mods.extendedcrafting." + (table instanceof EnderCrafterTileEntity ? "EnderCrafting" : "TableCrafting");
-//
-//			if (isShapeless(stack)) {
-//				string += ".addShapeless(0, <>, [" + makeItemArrayShapeless((IExtendedTable) table);
-//			} else {
-//				string += ".addShaped(0, <>, [" + NEW_LINE + makeItemArrayShaped((IExtendedTable) table);
-//			}
-//
-//			string += "]);";
-//
-//			StringSelection stringSelection = new StringSelection(string);
-//			Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
-//			clipboard.setContents(stringSelection, null);
-//		}
-//	}
-//
-//	private String makeItemArrayShaped(IExtendedTable table) {
-//		String string = "";
-//		NonNullList<ItemStack> matrix = table.getMatrix();
-//		for (int i = 0; i < matrix.size(); i++) {
-//			int sr = (int) Math.sqrt(matrix.size());
-//			if (i == 0 || i % sr == 0) {
-//				string += "[";
-//			}
-//
-//			ItemStack stack = matrix.get(i);
-//
-//			String item = "";
-//			if (ModConfigs.confRMOredict && !stack.isEmpty()) {
-//				int[] oreIds = OreDictionary.getOreIDs(stack);
-//				if (oreIds.length > 0) {
-//					item = "ore:" + OreDictionary.getOreName(oreIds[0]);
-//				}
-//			}
-//
-//			if (item.isEmpty()) {
-//				String reg = stack.getItem().getRegistryName().toString();
-//				item = stack.isEmpty() ? "null" : reg;
-//				if (!stack.isEmpty() && stack.getMetadata() > 0) {
-//					item += ":" + stack.getMetadata();
-//				}
-//			}
-//
-//			if (!item.equalsIgnoreCase("null")) {
-//				string += "<" + item + ">";
-//
-//				if (ModConfigs.confRMNBT && !stack.isEmpty() && stack.hasTagCompound() && Loader.isModLoaded("crafttweaker")) {
-//					NBTBase nbt = stack.serializeNBT().getTag("tag");
-//					String tag = CraftTweakerUtils.writeTag(nbt);
-//					string += ".withTag(" + tag + ")";
-//				}
-//			} else {
-//				string += item;
-//			}
-//
-//			if ((i + 1) % sr != 0) {
-//				string += ", ";
-//			}
-//
-//			if (i + 1 == sr || (i + 1) % sr == 0) {
-//				string += "]";
-//				if (i + 1 < matrix.size()) {
-//					string += ", ";
-//					string += NEW_LINE;
-//				} else {
-//					string += System.lineSeparator();
-//				}
-//			}
-//		}
-//
-//		return string;
-//	}
-//
-//	private String makeItemArrayShapeless(IExtendedTable table) {
-//		String string = "";
-//		NonNullList<ItemStack> matrix = table.getMatrix();
-//		ArrayList<Integer> slots = new ArrayList<>();
-//		int lastSlot = 0;
-//		for (int i = 0; i < matrix.size(); i++) {
-//			ItemStack stack = matrix.get(i);
-//			if (!stack.isEmpty()) {
-//				slots.add(i);
-//				lastSlot = i;
-//			}
-//		}
-//
-//		for (int i : slots) {
-//			ItemStack stack = matrix.get(i);
-//			int[] oreIds = OreDictionary.getOreIDs(stack);
-//			String item = "";
-//			if (ModConfigs.confRMOredict && oreIds.length > 0) {
-//				item = "ore:" + OreDictionary.getOreName(oreIds[0]);
-//			} else {
-//				String reg = stack.getItem().getRegistryName().toString();
-//				item = stack.isEmpty() ? "null" : reg;
-//				if (!stack.isEmpty() && stack.getMetadata() > 0) {
-//					item += ":" + stack.getMetadata();
-//				}
-//			}
-//
-//			string += "<" + item + ">";
-//
-//			if (ModConfigs.confRMNBT && !stack.isEmpty() && stack.hasTagCompound() && Loader.isModLoaded("crafttweaker")) {
-//				NBTBase nbt = stack.serializeNBT().getTag("tag");
-//				String tag = CraftTweakerUtils.writeTag(nbt);
-//				string += ".withTag(" + tag + ")";
-//			}
-//
-//			if (i != lastSlot) {
-//				string += ", ";
-//			}
-//		}
-//
-//		return string;
-//	}
-//
-	private String getModeString(ItemStack stack) {
-		return this.isShapeless(stack) ? "Shapeless" : "Shaped";
+	@Override
+	public boolean isEnabled() {
+		return ModConfigs.ENABLE_RECIPE_MAKER.get();
 	}
 
-	private boolean isShapeless(ItemStack stack) {
+	private static void setClipboard(String string) {
+		Minecraft.getInstance().keyboardListener.setClipboardString(string);
+	}
+
+	// Create a shaped CraftTweaker recipe for a Table or Ender Crafter
+	private static String makeShapedCraftTweakerTableRecipe(IItemHandler inventory, String type) {
+		StringBuilder string = new StringBuilder();
+		UUID uuid = UUID.randomUUID();
+		string.append("mods.extendedcrafting.").append(type).append(".addShaped(\"").append(uuid).append("\", ");
+		if ("TableCrafting".equals(type)) string.append("0, ");
+		string.append("<>, [").append(NEW_LINE);
+
+		int slots = clampTableSlots(inventory.getSlots());
+		for (int i = 0; i < slots; i++) {
+			int sr = (int) Math.sqrt(slots);
+			if (i == 0 || i % sr == 0) {
+				string.append("[");
+			}
+
+			ItemStack stack = inventory.getStackInSlot(i);
+
+			String item = "";
+			if (!stack.isEmpty() && ModConfigs.RECIPE_MAKER_USE_TAGS.get()) {
+				ResourceLocation tagId = stack.getItem().getTags().stream().findFirst().orElse(null);
+				if (tagId != null) {
+					item = "tag:" + tagId;
+				}
+			}
+
+			if (item.isEmpty()) {
+				ResourceLocation id = stack.getItem().getRegistryName();
+				if (id == null) {
+					item = "item:minecraft:air";
+				} else {
+					item = stack.isEmpty() ? "item:minecraft:air" : "item:" + id.toString();
+				}
+			}
+
+			string.append("<").append(item).append(">");
+
+			if (ModConfigs.RECIPE_MAKER_USE_NBT.get() && !stack.isEmpty() && stack.hasTag() && ModList.get().isLoaded("crafttweaker")) {
+				INBT nbt = stack.serializeNBT().get("tag");
+				String tag = CraftTweakerUtils.writeTag(nbt);
+				string.append(".withTag(").append(tag).append(")");
+			}
+
+			if ((i + 1) % sr != 0) {
+				string.append(", ");
+			}
+
+			if (i + 1 == sr || (i + 1) % sr == 0) {
+				string.append("]");
+				if (i + 1 < slots) {
+					string.append(", ");
+					string.append(NEW_LINE);
+				} else {
+					string.append(System.lineSeparator());
+				}
+			}
+		}
+
+		string.append("]);");
+
+		return string.toString();
+	}
+
+	// Create a shapeless CraftTweaker recipe for a Table or Ender Crafter
+	private static String makeShapelessCraftTweakerTableRecipe(IItemHandler inventory, String type) {
+		StringBuilder string = new StringBuilder();
+		UUID uuid = UUID.randomUUID();
+		string.append("mods.extendedcrafting.").append(type).append(".addShapeless(\"").append(uuid).append("\", ");
+		if ("TableCrafting".equals(type)) string.append("0, ");
+		string.append("<>, [").append(NEW_LINE);
+
+		List<Integer> slotsWithItems = new ArrayList<>();
+		int slots = clampTableSlots(inventory.getSlots());
+		int lastSlot = 0;
+		for (int i = 0; i < slots; i++) {
+			ItemStack stack = inventory.getStackInSlot(i);
+			if (!stack.isEmpty()) {
+				slotsWithItems.add(i);
+				lastSlot = i;
+			}
+		}
+
+		for (int i : slotsWithItems) {
+			ItemStack stack = inventory.getStackInSlot(i);
+			ResourceLocation tagId = stack.getItem().getTags().stream().findFirst().orElse(null);
+			String item;
+			if (ModConfigs.RECIPE_MAKER_USE_TAGS.get() && tagId != null) {
+				item = "tag:" + tagId;
+			} else {
+				ResourceLocation id = stack.getItem().getRegistryName();
+				if (id == null) {
+					item = "item:minecraft:air";
+				} else {
+					item = "item:" + id.toString();
+				}
+			}
+
+			string.append("<").append(item).append(">");
+
+			if (ModConfigs.RECIPE_MAKER_USE_NBT.get() && !stack.isEmpty() && stack.hasTag() && ModList.get().isLoaded("crafttweaker")) {
+				INBT nbt = stack.serializeNBT().get("tag");
+				String tag = CraftTweakerUtils.writeTag(nbt);
+				string.append(".withTag(").append(tag).append(")");
+			}
+
+			if (i != lastSlot) {
+				string.append(", ");
+			}
+		}
+
+		string.append(System.lineSeparator()).append("]);");
+
+		return string.toString();
+	}
+
+	private static boolean isTable(TileEntity tile) {
+		return tile instanceof BasicTableTileEntity ||
+				tile instanceof AdvancedTableTileEntity ||
+				tile instanceof EliteTableTileEntity ||
+				tile instanceof UltimateTableTileEntity ||
+				tile instanceof AutoTableTileEntity ||
+				tile instanceof EnderCrafterTileEntity;
+	}
+
+	private static int clampTableSlots(int slots) {
+		return slots % 9 != 0 ? slots - 1 : slots;
+	}
+
+	private static String getModeString(ItemStack stack) {
+		return isShapeless(stack) ? "Shapeless" : "Shaped";
+	}
+
+	private static boolean isShapeless(ItemStack stack) {
 		return NBTHelper.getBoolean(stack, "Shapeless");
 	}
 }

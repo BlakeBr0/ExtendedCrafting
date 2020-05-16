@@ -86,6 +86,7 @@
   "tooltip.extendedcrafting.tier": "Tier: %s",
   "tooltip.extendedcrafting.crafting": "Crafting: %sx %s",
   "tooltip.extendedcrafting.mode": "Mode: %s",
+  "tooltip.extendedcrafting.type": "Type: %s",
   "tooltip.extendedcrafting.num_items": "%s Items",
   "tooltip.extendedcrafting.requires_table": "Requires Tier %s Crafting Table",
   "tooltip.extendedcrafting.items_required": "Items Required:",
@@ -93,6 +94,8 @@
   "tooltip.extendedcrafting.added_by": "Added By: %s",
 
   "message.extendedcrafting.changed_mode": "Changed mode to %s.",
+  "message.extendedcrafting.copied_recipe": "Copied recipe to clipboard.",
+  "message.extendedcrafting.nbt_requires_crafttweaker": "CraftTweaker is required to copy NBT.",
 
   "jei.category.extendedcrafting.combination": "Combination Crafting",
   "jei.category.extendedcrafting.basic_crafting": "Basic Crafting",

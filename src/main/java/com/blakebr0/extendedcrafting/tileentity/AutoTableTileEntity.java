@@ -199,7 +199,7 @@ public abstract class AutoTableTileEntity extends BaseInventoryTileEntity implem
     }
 
     public static class Basic extends AutoTableTileEntity {
-        private final BaseItemStackHandler inventory = new BaseItemStackHandler(10);
+        private final BaseItemStackHandler inventory = new BaseItemStackHandler(10, this::markDirtyAndDispatch);
         private final BaseItemStackHandler recipeInventory = new BaseItemStackHandler(9);
         private final CustomEnergyStorage energy = new CustomEnergyStorage(ModConfigs.AUTO_TABLE_POWER_CAPACITY.get());
 
@@ -241,7 +241,7 @@ public abstract class AutoTableTileEntity extends BaseInventoryTileEntity implem
     }
 
     public static class Advanced extends AutoTableTileEntity {
-        private final BaseItemStackHandler inventory = new BaseItemStackHandler(26);
+        private final BaseItemStackHandler inventory = new BaseItemStackHandler(26, this::markDirtyAndDispatch);
         private final BaseItemStackHandler recipeInventory = new BaseItemStackHandler(25);
         private final CustomEnergyStorage energy = new CustomEnergyStorage(ModConfigs.AUTO_TABLE_POWER_CAPACITY.get() * 2);
 
@@ -283,7 +283,7 @@ public abstract class AutoTableTileEntity extends BaseInventoryTileEntity implem
     }
 
     public static class Elite extends AutoTableTileEntity {
-        private final BaseItemStackHandler inventory = new BaseItemStackHandler(50);
+        private final BaseItemStackHandler inventory = new BaseItemStackHandler(50, this::markDirtyAndDispatch);
         private final BaseItemStackHandler recipeInventory = new BaseItemStackHandler(49);
         private final CustomEnergyStorage energy = new CustomEnergyStorage(ModConfigs.AUTO_TABLE_POWER_CAPACITY.get() * 4);
 
@@ -325,7 +325,7 @@ public abstract class AutoTableTileEntity extends BaseInventoryTileEntity implem
     }
 
     public static class Ultimate extends AutoTableTileEntity {
-        private final BaseItemStackHandler inventory = new BaseItemStackHandler(82);
+        private final BaseItemStackHandler inventory = new BaseItemStackHandler(82, this::markDirtyAndDispatch);
         private final BaseItemStackHandler recipeInventory = new BaseItemStackHandler(81);
         private final CustomEnergyStorage energy = new CustomEnergyStorage(ModConfigs.AUTO_TABLE_POWER_CAPACITY.get() * 8);
 

@@ -165,7 +165,7 @@ public class ModConfigs {
 		RECIPE_MAKER_USE_TAGS = common
 				.comment("Should the recipe maker try to use tags when possible?")
 				.translation("configGui.extendedcrafting.recipe_maker_use_tags")
-				.define("useTags", true);
+				.define("useTags", false);
 		RECIPE_MAKER_USE_NBT = common
 				.comment("Should the recipe maker add NBT tags when possible?")
 				.translation("configGui.extendedcrafting.recipe_maker_use_nbt")

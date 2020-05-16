@@ -13,8 +13,8 @@ public class ModTooltips {
     public static final Tooltip TOGGLE_AUTO_CRAFTING = new Tooltip("tooltip.extendedcrafting.toggle_auto_crafting");
     public static final Tooltip TIER = new Tooltip("tooltip.extendedcrafting.tier");
     public static final Tooltip CRAFTING = new Tooltip("tooltip.extendedcrafting.crafting");
+    public static final Tooltip TYPE = new Tooltip("tooltip.extendedcrafting.type");
     public static final Tooltip MODE = new Tooltip("tooltip.extendedcrafting.mode");
-    public static final Tooltip CHANGED_MODE = new Tooltip("tooltip.extendedcrafting.changed_mode");
     public static final Tooltip NUM_ITEMS = new Tooltip("tooltip.extendedcrafting.num_items");
     public static final Tooltip REQUIRES_TABLE = new Tooltip("tooltip.extendedcrafting.requires_table");
     public static final Tooltip ITEMS_REQUIRED = new Tooltip("tooltip.extendedcrafting.items_required");

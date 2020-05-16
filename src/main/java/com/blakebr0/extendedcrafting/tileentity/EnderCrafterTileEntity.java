@@ -30,7 +30,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class EnderCrafterTileEntity extends BaseInventoryTileEntity implements ITickableTileEntity, INamedContainerProvider {
-	private final BaseItemStackHandler inventory = new BaseItemStackHandler(10);
+	private final BaseItemStackHandler inventory = new BaseItemStackHandler(10, this::markDirtyAndDispatch);
 	private final BaseItemStackHandler recipeInventory = new BaseItemStackHandler(9);
 	private IEnderCrafterRecipe recipe;
 	private int progress;
@@ -49,7 +49,7 @@ public class EnderCrafterTileEntity extends BaseInventoryTileEntity implements I
 		}
 
 		@Override
-		public void set(int i, int i1) {
+		public void set(int i, int value) {
 
 		}
 

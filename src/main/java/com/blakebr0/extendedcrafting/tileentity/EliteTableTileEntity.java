@@ -15,7 +15,7 @@ import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.CapabilityItemHandler;
 
 public class EliteTableTileEntity extends BaseInventoryTileEntity implements INamedContainerProvider {
-	private final BaseItemStackHandler inventory = new BaseItemStackHandler(49);
+	private final BaseItemStackHandler inventory = new BaseItemStackHandler(49, this::markDirtyAndDispatch);
 
 	public EliteTableTileEntity() {
 		super(ModTileEntities.ELITE_TABLE.get());

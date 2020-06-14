@@ -213,7 +213,10 @@ public class CraftingCoreTileEntity extends BaseInventoryTileEntity implements I
 				if (tile instanceof PedestalTileEntity) {
 					PedestalTileEntity pedestal = (PedestalTileEntity) tile;
 					ItemStack stack = pedestal.getInventory().getStackInSlot(0);
-					pedestals.put(aoePos.toImmutable(), stack);
+
+					if (!stack.isEmpty()) {
+						pedestals.put(aoePos.toImmutable(), stack);
+					}
 				}
 			});
 		}

@@ -16,6 +16,7 @@ import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.particles.IParticleData;
+import net.minecraft.particles.ItemParticleData;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;
@@ -129,12 +130,25 @@ public class CraftingCoreTileEntity extends BaseInventoryTileEntity implements I
 									this.spawnParticles(ParticleTypes.SMOKE, pedestalPos, 1.1, 20);
 								}
 							}
+
 							this.spawnParticles(ParticleTypes.END_ROD, this.getPos(), 1.1, 50);
 							this.inventory.setStackInSlot(0, this.recipe.getCraftingResult(this.recipeInventory));
 							this.progress = 0;
 							mark = true;
 						} else {
 							this.spawnParticles(ParticleTypes.ENTITY_EFFECT, this.getPos(), 1.15, 2);
+
+							if (this.shouldSpawnItemParticles()) {
+								for (BlockPos pedestalPos : pedestalsWithItems.keySet()) {
+									TileEntity tile = world.getTileEntity(pedestalPos);
+									if (tile instanceof PedestalTileEntity) {
+										PedestalTileEntity pedestal = (PedestalTileEntity) tile;
+										IItemHandlerModifiable inventory = pedestal.getInventory();
+										ItemStack stack = inventory.getStackInSlot(0);
+										this.spawnItemParticles(pedestalPos, stack);
+									}
+								}
+							}
 						}
 					}
 				} else {
@@ -192,17 +206,6 @@ public class CraftingCoreTileEntity extends BaseInventoryTileEntity implements I
 		return this.progress >= recipe.getPowerCost();
 	}
 
-	private <T extends IParticleData> void spawnParticles(T particle, BlockPos pos, double yOffset, int count) {
-		if (this.getWorld() == null || this.getWorld().isRemote()) return;
-		ServerWorld world = (ServerWorld) this.getWorld();
-
-		double x = pos.getX() + 0.5D;
-		double y = pos.getY() + yOffset;
-		double z = pos.getZ() + 0.5D;
-
-		world.spawnParticle(particle, x, y, z, count, 0, 0, 0, 0.1D);
-	}
-
 	public Map<BlockPos, ItemStack> getPedestalsWithItems() {
 		Map<BlockPos, ItemStack> pedestals = new HashMap<>();
 		World world = this.getWorld();
@@ -224,6 +227,41 @@ public class CraftingCoreTileEntity extends BaseInventoryTileEntity implements I
 		this.pedestalCount = pedestals.size();
 
 		return pedestals;
+	}
+
+	private <T extends IParticleData> void spawnParticles(T particle, BlockPos pos, double yOffset, int count) {
+		if (this.getWorld() == null || this.getWorld().isRemote()) return;
+		ServerWorld world = (ServerWorld) this.getWorld();
+
+		double x = pos.getX() + 0.5D;
+		double y = pos.getY() + yOffset;
+		double z = pos.getZ() + 0.5D;
+
+		world.spawnParticle(particle, x, y, z, count, 0, 0, 0, 0.1D);
+	}
+
+	private void spawnItemParticles(BlockPos pedestalPos, ItemStack stack) {
+		if (this.getWorld() == null || this.getWorld().isRemote()) return;
+		ServerWorld world = (ServerWorld) this.getWorld();
+		BlockPos pos = this.getPos();
+
+		double x = pedestalPos.getX() + (world.getRandom().nextDouble() * 0.2D) + 0.4D;
+		double y = pedestalPos.getY() + (world.getRandom().nextDouble() * 0.2D) + 1.4D;
+		double z = pedestalPos.getZ() + (world.getRandom().nextDouble() * 0.2D) + 0.4D;
+
+		double velX = pos.getX() - pedestalPos.getX();
+		double velY = 0.25D;
+		double velZ = pos.getZ() - pedestalPos.getZ();
+
+		world.spawnParticle(new ItemParticleData(ParticleTypes.ITEM, stack), x, y, z, 0, velX, velY, velZ, 0.18D);
+	}
+
+	private boolean shouldSpawnItemParticles() {
+		int powerCost = this.recipe.getPowerCost();
+		int powerRate = this.recipe.getPowerRate();
+		int endingPower = powerRate * 40;
+
+		return this.progress > (powerCost - endingPower);
 	}
 
 	public CustomEnergyStorage getEnergy() {

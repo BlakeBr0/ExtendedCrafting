@@ -32,7 +32,7 @@ public class UltimateAutoTableContainer extends Container {
 	private final IItemHandlerModifiable result;
 
 	private UltimateAutoTableContainer(ContainerType<?> type, int id, PlayerInventory playerInventory, PacketBuffer buffer) {
-		this(type, id, playerInventory, p -> false, new BaseItemStackHandler(82), new IntArray(5), buffer.readBlockPos());
+		this(type, id, playerInventory, p -> false, new BaseItemStackHandler(82), new IntArray(6), buffer.readBlockPos());
 	}
 
 	private UltimateAutoTableContainer(ContainerType<?> type, int id, PlayerInventory playerInventory, Function<PlayerEntity, Boolean> isUsableByPlayer, BaseItemStackHandler inventory, IIntArray data, BlockPos pos) {
@@ -168,5 +168,9 @@ public class UltimateAutoTableContainer extends Container {
 
 	public int getProgressRequired() {
 		return this.data.get(3);
+	}
+
+	public int getSelected() {
+		return this.data.get(5);
 	}
 }

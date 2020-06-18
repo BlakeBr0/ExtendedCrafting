@@ -32,6 +32,7 @@ public class ModConfigs {
 	public static final ForgeConfigSpec.BooleanValue TABLE_USE_VANILLA_RECIPES;
 	public static final ForgeConfigSpec.IntValue AUTO_TABLE_POWER_CAPACITY;
 	public static final ForgeConfigSpec.IntValue AUTO_TABLE_POWER_RATE;
+	public static final ForgeConfigSpec.IntValue AUTO_TABLE_INSERT_POWER_RATE;
 	
 	public static final ForgeConfigSpec.BooleanValue ENABLE_COMPRESSOR;
 	public static final ForgeConfigSpec.IntValue COMPRESSOR_POWER_CAPACITY;
@@ -98,6 +99,10 @@ public class ModConfigs {
 				.comment("How much FE the Auto Crafting Tables should use when crafting.")
 				.translation("configGui.extendedcrafting.auto_table_power_rate")
 				.defineInRange("autoTablePowerRate", 500, 0, Integer.MAX_VALUE);
+		AUTO_TABLE_INSERT_POWER_RATE = common
+				.comment("How much FE the Auto Crafting Tables should use when auto inserting items.")
+				.translation("configGui.extendedcrafting.auto_table_insert_power_rate")
+				.defineInRange("autoTableInsertPowerRate", 100, 0, Integer.MAX_VALUE);
 		common.pop();
 
 		common.comment("Settings for the Quantum Compressor.").push("Quantum Compression");

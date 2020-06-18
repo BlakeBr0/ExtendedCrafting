@@ -21,16 +21,18 @@ import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.ITickableTileEntity;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.IIntArray;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.energy.CapabilityEnergy;
-
-import java.util.Optional;
+import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.items.IItemHandler;
 
 public abstract class AutoTableTileEntity extends BaseInventoryTileEntity implements ITickableTileEntity, INamedContainerProvider {
     private ITableRecipe recipe;
@@ -113,7 +115,7 @@ public abstract class AutoTableTileEntity extends BaseInventoryTileEntity implem
                         ItemStack result = this.recipe.getCraftingResult(recipeInventory);
                         int outputSlot = inventory.getSlots() - 1;
                         ItemStack output = inventory.getStackInSlot(outputSlot);
-                        Integer powerRate = ModConfigs.AUTO_TABLE_POWER_RATE.get();
+                        int powerRate = ModConfigs.AUTO_TABLE_POWER_RATE.get();
 
                         if (StackHelper.canCombineStacks(result, output) && energy.getEnergyStored() >= powerRate) {
                             this.progress++;
@@ -141,6 +143,26 @@ public abstract class AutoTableTileEntity extends BaseInventoryTileEntity implem
                 if (this.progress > 0) {
                     this.progress = 0;
                     mark = true;
+                }
+            }
+
+            int insertPowerRate = ModConfigs.AUTO_TABLE_INSERT_POWER_RATE.get();
+            if (!world.isRemote() && this.getEnergy().getEnergyStored() >= insertPowerRate) {
+                int selected = this.getRecipeStorage().getSelected();
+                if (selected != -1) {
+                    this.getAboveInventory().ifPresent(handler -> {
+                        for (int i = 0; i < handler.getSlots(); i++) {
+                            ItemStack stack = handler.getStackInSlot(i);
+                            if (!stack.isEmpty() && !handler.extractItem(i, 1, true).isEmpty()) {
+                                boolean inserted = this.tryInsertItemIntoGrid(stack);
+
+                                if (inserted) {
+                                    handler.extractItem(i, 1, false);
+                                    break;
+                                }
+                            }
+                        }
+                    });
                 }
             }
         }
@@ -178,11 +200,19 @@ public abstract class AutoTableTileEntity extends BaseInventoryTileEntity implem
     }
 
     public void saveRecipe(int index) {
-        this.updateRecipeInventory();
-        Optional<ITableRecipe> recipe = this.getWorld().getRecipeManager().getRecipe(RecipeTypes.TABLE, this.getRecipeInventory().toIInventory(), this.getWorld());
+        World world = this.getWorld();
+        if (world == null)
+            return;
 
-        this.getRecipeStorage().setRecipe(index, this.getRecipeInventory(), recipe.get().getCraftingResult(null));
-        this.markDirty();
+        this.updateRecipeInventory();
+
+        BaseItemStackHandler recipeInventory = this.getRecipeInventory();
+        IInventory recipeIInventory = recipeInventory.toIInventory();
+        ITableRecipe recipe = world.getRecipeManager().getRecipe(RecipeTypes.TABLE, recipeIInventory, world).orElse(null);
+        if (recipe != null) {
+            this.getRecipeStorage().setRecipe(index, recipeInventory, recipe.getCraftingResult(recipeIInventory));
+            this.markDirty();
+        }
     }
 
     public abstract int getProgressRequired();
@@ -211,9 +241,67 @@ public abstract class AutoTableTileEntity extends BaseInventoryTileEntity implem
         if (result.isEmpty()) {
             inventory.setStackInSlot(slot, stack);
         } else {
-            inventory.setStackInSlot(slot, StackHelper.increase(result.copy(), 1));
+            inventory.setStackInSlot(slot, StackHelper.increase(result.copy(), stack.getCount()));
         }
     }
+
+    private void addStackToSlot(ItemStack stack, int slot) {
+        BaseItemStackHandler inventory = this.getInventory();
+        ItemStack stackInSlot = inventory.getStackInSlot(slot);
+        if (stackInSlot.isEmpty()) {
+            inventory.setStackInSlot(slot, stack);
+        } else {
+            inventory.setStackInSlot(slot, StackHelper.increase(stackInSlot.copy(), stack.getCount()));
+        }
+    }
+
+    private LazyOptional<IItemHandler> getAboveInventory() {
+        World world = this.getWorld();
+        BlockPos pos = this.getPos().up();
+
+        if (world != null) {
+            TileEntity tile = world.getTileEntity(pos);
+            if (tile != null) {
+                return tile.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, Direction.DOWN);
+            }
+        }
+
+        return LazyOptional.empty();
+    }
+
+    private boolean tryInsertItemIntoGrid(ItemStack input) {
+		ItemStack toInsert = StackHelper.withSize(input.copy(), 1, false);
+        BaseItemStackHandler inventory = this.getInventory();
+        ItemStack stackToPut = ItemStack.EMPTY;
+        int slotToPut = -1;
+
+        BaseItemStackHandler recipe = this.getRecipeStorage().getSelectedRecipe();
+        for (int i = 0; i < inventory.getSlots(); i++) {
+            ItemStack slot = inventory.getStackInSlot(i);
+            ItemStack recipeStack = recipe.getStackInSlot(i);
+            if (((slot.isEmpty() || StackHelper.areStacksEqual(input, slot)) && StackHelper.areStacksEqual(input, recipeStack))) {
+                if (slot.isEmpty() || slot.getCount() < slot.getMaxStackSize()) {
+                    if (slot.isEmpty()) {
+                        slotToPut = i;
+                        break;
+                    } else if (stackToPut.isEmpty() || slot.getCount() < stackToPut.getCount()) {
+                        slotToPut = i;
+                        stackToPut = slot.copy();
+                    }
+                }
+            }
+        }
+
+		if (slotToPut > -1) {
+		    int insertPowerRate = ModConfigs.AUTO_TABLE_INSERT_POWER_RATE.get();
+			this.addStackToSlot(toInsert, slotToPut);
+			this.getEnergy().extractEnergy(insertPowerRate, false);
+
+			return true;
+		}
+
+		return false;
+	}
 
     public static class Basic extends AutoTableTileEntity {
         private final BaseItemStackHandler inventory = new BaseItemStackHandler(10, this::markDirtyAndDispatch);

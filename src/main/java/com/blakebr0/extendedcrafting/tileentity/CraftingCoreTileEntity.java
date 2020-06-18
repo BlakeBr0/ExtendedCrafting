@@ -277,17 +277,11 @@ public class CraftingCoreTileEntity extends BaseInventoryTileEntity implements I
 	}
 
 	public int getEnergyRequired() {
-		if (this.hasRecipe())
-			return this.recipe.getPowerCost();
-
-		return 0;
+		return this.hasRecipe() ? this.recipe.getPowerCost() : 0;
 	}
 
 	public int getEnergyRate() {
-		if (this.hasRecipe())
-			return this.recipe.getPowerRate();
-
-		return 0;
+		return this.hasRecipe() ? this.recipe.getPowerRate() : 0;
 	}
 
 	public int getProgress() {

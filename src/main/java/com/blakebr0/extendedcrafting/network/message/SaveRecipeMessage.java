@@ -35,7 +35,12 @@ public class SaveRecipeMessage {
                 World world = player.getEntityWorld();
                 TileEntity tile = world.getTileEntity(message.pos);
                 if (tile instanceof AutoTableTileEntity) {
-                    ((AutoTableTileEntity) tile).saveRecipe(message.selected);
+                    AutoTableTileEntity table = (AutoTableTileEntity) tile;
+                    if (!table.getRecipeStorage().hasRecipe(message.selected)) {
+                        table.saveRecipe(message.selected);
+                    } else {
+                        table.deleteRecipe(message.selected);
+                    }
                 }
             }
         });

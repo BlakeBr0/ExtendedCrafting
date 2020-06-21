@@ -199,6 +199,11 @@ public abstract class AutoTableTileEntity extends BaseInventoryTileEntity implem
         this.markDirty();
     }
 
+    public void selectRecipe(int index) {
+        this.getRecipeStorage().setSelected(index);
+        this.markDirtyAndDispatch();
+    }
+
     public void saveRecipe(int index) {
         World world = this.getWorld();
         if (world == null)
@@ -210,9 +215,19 @@ public abstract class AutoTableTileEntity extends BaseInventoryTileEntity implem
         IInventory recipeIInventory = recipeInventory.toIInventory();
         ITableRecipe recipe = world.getRecipeManager().getRecipe(RecipeTypes.TABLE, recipeIInventory, world).orElse(null);
         if (recipe != null) {
-            this.getRecipeStorage().setRecipe(index, recipeInventory, recipe.getCraftingResult(recipeIInventory));
-            this.markDirty();
+            BaseItemStackHandler newRecipeInventory = new BaseItemStackHandler(recipeInventory.getSlots());
+            for (int i = 0; i < recipeInventory.getSlots(); i++) {
+                newRecipeInventory.setStackInSlot(i, recipeInventory.getStackInSlot(i).copy());
+            }
+
+            this.getRecipeStorage().setRecipe(index, newRecipeInventory, recipe.getCraftingResult(recipeIInventory));
+            this.markDirtyAndDispatch();
         }
+    }
+
+    public void deleteRecipe(int index) {
+        this.getRecipeStorage().unsetRecipe(index);
+        this.markDirtyAndDispatch();
     }
 
     public abstract int getProgressRequired();

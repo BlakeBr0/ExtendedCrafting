@@ -17,10 +17,10 @@ public class RecipeSelectButton extends Button {
 
     public RecipeSelectButton(int x, int y, BlockPos pos, int selected) {
         super(x, y, 11, 11, "", button -> {
-            NetworkHandler.INSTANCE.sendToServer(new SelectRecipeMessage(pos, selected));
-
             if (Screen.hasShiftDown()) {
                 NetworkHandler.INSTANCE.sendToServer(new SaveRecipeMessage(pos, selected));
+            } else {
+                NetworkHandler.INSTANCE.sendToServer(new SelectRecipeMessage(pos, selected));
             }
         });
 

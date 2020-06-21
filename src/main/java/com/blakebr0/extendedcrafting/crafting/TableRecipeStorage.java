@@ -41,6 +41,13 @@ public class TableRecipeStorage {
         return this.recipes[index];
     }
 
+    public boolean hasRecipe(int index) {
+        if (index < 0 || index >= this.recipes.length)
+            return false;
+
+        return !this.recipes[index].getStacks().stream().allMatch(ItemStack::isEmpty);
+    }
+
     public void setRecipe(int index, BaseItemStackHandler inventory, ItemStack output) {
         BaseItemStackHandler recipe = new BaseItemStackHandler(this.slots);
         for (int i = 0; i < this.slots - 1; i++) {

@@ -1,7 +1,6 @@
 package com.blakebr0.extendedcrafting.network;
 
 import com.blakebr0.extendedcrafting.ExtendedCrafting;
-import com.blakebr0.extendedcrafting.network.message.DeleteRecipeMessage;
 import com.blakebr0.extendedcrafting.network.message.EjectModeSwitchMessage;
 import com.blakebr0.extendedcrafting.network.message.InputLimitSwitchMessage;
 import com.blakebr0.extendedcrafting.network.message.RunningSwitchMessage;
@@ -21,7 +20,6 @@ public class NetworkHandler {
 		INSTANCE.registerMessage(id(), RunningSwitchMessage.class, RunningSwitchMessage::write, RunningSwitchMessage::read, RunningSwitchMessage::onMessage);
 		INSTANCE.registerMessage(id(), SelectRecipeMessage.class, SelectRecipeMessage::write, SelectRecipeMessage::read, SelectRecipeMessage::onMessage);
 		INSTANCE.registerMessage(id(), SaveRecipeMessage.class, SaveRecipeMessage::write, SaveRecipeMessage::read, SaveRecipeMessage::onMessage);
-		INSTANCE.registerMessage(id(), DeleteRecipeMessage.class, DeleteRecipeMessage::write, DeleteRecipeMessage::read, DeleteRecipeMessage::onMessage);
 	}
 
 	private static int id() {

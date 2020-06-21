@@ -1,17 +1,25 @@
 package com.blakebr0.extendedcrafting.client.screen;
 
 import com.blakebr0.cucumber.helper.RenderHelper;
+import com.blakebr0.cucumber.inventory.BaseItemStackHandler;
 import com.blakebr0.extendedcrafting.ExtendedCrafting;
 import com.blakebr0.extendedcrafting.client.screen.button.RecipeSelectButton;
 import com.blakebr0.extendedcrafting.client.screen.button.ToggleTableRunningButton;
 import com.blakebr0.extendedcrafting.container.UltimateAutoTableContainer;
 import com.blakebr0.extendedcrafting.lib.ModTooltips;
+import com.blakebr0.extendedcrafting.tileentity.AutoTableTileEntity;
+import com.google.common.collect.Lists;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
+import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextFormatting;
+
+import java.util.List;
 
 public class UltimateAutoTableScreen extends ContainerScreen<UltimateAutoTableContainer> {
 	public static final ResourceLocation BACKGROUND = new ResourceLocation(ExtendedCrafting.MOD_ID, "textures/gui/ultimate_auto_table.png");
@@ -62,6 +70,30 @@ public class UltimateAutoTableScreen extends ContainerScreen<UltimateAutoTableCo
 		if (mouseX > x + 226 && mouseX < x + 239 && mouseY > y + 113 && mouseY < y + 129) {
 			this.renderTooltip(ModTooltips.TOGGLE_AUTO_CRAFTING.color(TextFormatting.WHITE).buildString(), mouseX, mouseY);
 		}
+
+		for (RecipeSelectButton button : this.recipeSelectButtons) {
+			if (button.isHovered()) {
+				BaseItemStackHandler recipe = this.getRecipeInfo(button.selected);
+				if (recipe != null) {
+					List<String> tooltip;
+					boolean hasRecipe = !recipe.getStacks().stream().allMatch(ItemStack::isEmpty);
+					if (hasRecipe) {
+						ItemStack output = recipe.getStackInSlot(recipe.getSlots() - 1);
+						tooltip = Lists.newArrayList(
+								output.getCount() + "x " + output.getDisplayName().getFormattedText(),
+								"",
+								"Shift + Left Click to delete this recipe."
+						);
+					} else {
+						tooltip = Lists.newArrayList(
+								"Shift + Left Click to save this recipe."
+						);
+					}
+
+					this.renderTooltip(tooltip, mouseX, mouseY);
+				}
+			}
+		}
 	}
 
 	@Override
@@ -73,7 +105,7 @@ public class UltimateAutoTableScreen extends ContainerScreen<UltimateAutoTableCo
 	}
 
 	@Override
-	protected void drawGuiContainerBackgroundLayer(float par1, int par2, int par3) {
+	protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
 		this.getMinecraft().getTextureManager().bindTexture(BACKGROUND);
 		int x = this.getGuiLeft();
 		int y = this.getGuiTop();
@@ -90,11 +122,50 @@ public class UltimateAutoTableScreen extends ContainerScreen<UltimateAutoTableCo
 		} else {
 			RenderHelper.drawTexturedModalRect(x + 226, y + 115, 272, 18, 13, 13, 512, 512);
 		}
+
+		BaseItemStackHandler recipe = this.getSelectedRecipe();
+		if (recipe != null) {
+			for (int i = 0; i < 9; i++) {
+				for (int j = 0; j < 9; j++) {
+					int index = (i * 9) + j;
+					ItemStack stack = recipe.getStackInSlot(index);
+					this.itemRenderer.renderItemIntoGUI(stack, x + 27 + (j * 18), y + 18 + (i * 18));
+				}
+			}
+		}
 	}
 
 	private void updateSelectedRecipeButtons(int selected) {
 		for (RecipeSelectButton button : this.recipeSelectButtons) {
 			button.active = button.selected == selected;
 		}
+	}
+
+	private BaseItemStackHandler getRecipeInfo(int selected) {
+		ClientWorld world = this.getMinecraft().world;
+		if (world != null) {
+			UltimateAutoTableContainer container = this.getContainer();
+			TileEntity tile = world.getTileEntity(container.getPos());
+			if (tile instanceof AutoTableTileEntity) {
+				AutoTableTileEntity table = (AutoTableTileEntity) tile;
+				return table.getRecipeStorage().getRecipe(selected);
+			}
+		}
+
+		return null;
+	}
+
+	private BaseItemStackHandler getSelectedRecipe() {
+		ClientWorld world = this.getMinecraft().world;
+		if (world != null) {
+			UltimateAutoTableContainer container = this.getContainer();
+			TileEntity tile = world.getTileEntity(container.getPos());
+			if (tile instanceof AutoTableTileEntity) {
+				AutoTableTileEntity table = (AutoTableTileEntity) tile;
+				return table.getRecipeStorage().getSelectedRecipe();
+			}
+		}
+
+		return null;
 	}
 }

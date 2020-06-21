@@ -79,13 +79,13 @@ public class BasicAutoTableScreen extends ContainerScreen<BasicAutoTableContaine
 					if (hasRecipe) {
 						ItemStack output = recipe.getStackInSlot(recipe.getSlots() - 1);
 						tooltip = Lists.newArrayList(
-								output.getDisplayName().getFormattedText(),
+								output.getCount() + "x " + output.getDisplayName().getFormattedText(),
 								"",
 								"Shift + Left Click to delete this recipe."
 						);
 					} else {
 						tooltip = Lists.newArrayList(
-								"Shift + left Click to save this recipe."
+								"Shift + Left Click to save this recipe."
 						);
 					}
 
@@ -121,6 +121,17 @@ public class BasicAutoTableScreen extends ContainerScreen<BasicAutoTableContaine
 		} else {
 			this.blit(x + 130, y + 60, 194, 18, 13, 13);
 		}
+
+		BaseItemStackHandler recipe = this.getSelectedRecipe();
+		if (recipe != null) {
+			for (int i = 0; i < 3; i++) {
+				for (int j = 0; j < 3; j++) {
+					int index = (i * 3) + j;
+					ItemStack stack = recipe.getStackInSlot(index);
+					this.itemRenderer.renderItemIntoGUI(stack, x + 33 + (j * 18), y + 30 + (i * 18));
+				}
+			}
+		}
 	}
 
 	private void updateSelectedRecipeButtons(int selected) {
@@ -137,6 +148,20 @@ public class BasicAutoTableScreen extends ContainerScreen<BasicAutoTableContaine
 			if (tile instanceof AutoTableTileEntity) {
 				AutoTableTileEntity table = (AutoTableTileEntity) tile;
 				return table.getRecipeStorage().getRecipe(selected);
+			}
+		}
+
+		return null;
+	}
+
+	private BaseItemStackHandler getSelectedRecipe() {
+		ClientWorld world = this.getMinecraft().world;
+		if (world != null) {
+			BasicAutoTableContainer container = this.getContainer();
+			TileEntity tile = world.getTileEntity(container.getPos());
+			if (tile instanceof AutoTableTileEntity) {
+				AutoTableTileEntity table = (AutoTableTileEntity) tile;
+				return table.getRecipeStorage().getSelectedRecipe();
 			}
 		}
 

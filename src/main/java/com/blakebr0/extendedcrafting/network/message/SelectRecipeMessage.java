@@ -35,8 +35,8 @@ public class SelectRecipeMessage {
                 World world = player.getEntityWorld();
                 TileEntity tile = world.getTileEntity(message.pos);
                 if (tile instanceof AutoTableTileEntity) {
-                    ((AutoTableTileEntity) tile).getRecipeStorage().setSelected(message.selected);
-                    ((AutoTableTileEntity) tile).markDirtyAndDispatch();
+                    AutoTableTileEntity table = (AutoTableTileEntity) tile;
+                    table.selectRecipe(message.selected);
                 }
             }
         });

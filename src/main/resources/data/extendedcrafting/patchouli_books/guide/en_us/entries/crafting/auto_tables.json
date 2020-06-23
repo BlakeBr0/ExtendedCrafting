@@ -1,0 +1,20 @@
+{
+  "name": "book.extendedcrafting.entry.auto_tables",
+  "category": "crafting",
+  "icon": "extendedcrafting:ultimate_auto_table",
+  "sortnum": 4,
+  "pages": [
+    {
+      "type": "text",
+      "text": "book.extendedcrafting.entry.auto_tables.page.1"
+    },
+    {
+      "type": "text",
+      "text": "book.extendedcrafting.entry.auto_tables.page.2"
+    },
+    {
+      "type": "text",
+      "text": "book.extendedcrafting.entry.auto_tables.page.3"
+    }
+  ]
+}

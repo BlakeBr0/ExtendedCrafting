@@ -30,6 +30,6 @@ loaderVersion="[31,)"
   [[dependencies.extendedcrafting]]
       modId="cucumber"
       mandatory=true
-      versionRange="[3.0.2,)"
+      versionRange="[3.0.8,)"
       ordering="NONE"
       side="BOTH"

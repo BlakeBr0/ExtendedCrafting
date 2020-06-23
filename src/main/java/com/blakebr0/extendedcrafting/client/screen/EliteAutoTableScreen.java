@@ -1,6 +1,7 @@
 package com.blakebr0.extendedcrafting.client.screen;
 
 import com.blakebr0.cucumber.inventory.BaseItemStackHandler;
+import com.blakebr0.cucumber.render.GhostItemRenderer;
 import com.blakebr0.extendedcrafting.ExtendedCrafting;
 import com.blakebr0.extendedcrafting.client.screen.button.RecipeSelectButton;
 import com.blakebr0.extendedcrafting.client.screen.button.ToggleTableRunningButton;
@@ -128,7 +129,7 @@ public class EliteAutoTableScreen extends ContainerScreen<EliteAutoTableContaine
 				for (int j = 0; j < 7; j++) {
 					int index = (i * 7) + j;
 					ItemStack stack = recipe.getStackInSlot(index);
-					this.itemRenderer.renderItemIntoGUI(stack, x + 27 + (j * 18), y + 18 + (i * 18));
+					GhostItemRenderer.renderItemIntoGui(stack, x + 27 + (j * 18), y + 18 + (i * 18), this.itemRenderer);
 				}
 			}
 		}

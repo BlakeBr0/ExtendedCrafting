@@ -14,7 +14,6 @@ import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.item.crafting.RecipeManager;
 import net.minecraft.resources.IResourceManager;
 import net.minecraft.resources.IResourceManagerReloadListener;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.server.ServerLifecycleHooks;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -23,6 +22,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class DynamicRecipeManager implements IResourceManagerReloadListener {
+    private static RecipeManager recipeManager;
+
     @Override
     public void onResourceManagerReload(IResourceManager resourceManager) {
         Map<ResourceLocation, IRecipe<?>> recipes = getRecipeManager().recipes.computeIfAbsent(RecipeTypes.COMPRESSOR, t -> new HashMap<>());
@@ -34,9 +35,12 @@ public class DynamicRecipeManager implements IResourceManagerReloadListener {
     }
 
     public static RecipeManager getRecipeManager() {
-        RecipeManager recipeManager = ServerLifecycleHooks.getCurrentServer().getRecipeManager();
-        recipeManager.recipes = new HashMap<>(recipeManager.recipes);
-        recipeManager.recipes.replaceAll((t, v) -> new HashMap<>(recipeManager.recipes.get(t)));
+        if (recipeManager == null) {
+            RecipeManager recipeManager = ServerLifecycleHooks.getCurrentServer().getRecipeManager();
+            recipeManager.recipes = new HashMap<>(recipeManager.recipes);
+            recipeManager.recipes.replaceAll((t, v) -> new HashMap<>(recipeManager.recipes.get(t)));
+            DynamicRecipeManager.recipeManager = recipeManager;
+        }
 
         return recipeManager;
     }

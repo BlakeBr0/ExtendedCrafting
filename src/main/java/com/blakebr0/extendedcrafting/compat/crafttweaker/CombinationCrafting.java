@@ -28,7 +28,6 @@ public class CombinationCrafting {
 			@Override
 			public void apply() {
 				CombinationRecipe recipe = new CombinationRecipe(new ResourceLocation("crafttweaker", id), toIngredientsList(inputs), output.getInternal(), cost);
-				System.out.println(DynamicRecipeManager.getRecipeManager().recipes);
 				DynamicRecipeManager.getRecipeManager().recipes
 						.computeIfAbsent(RecipeTypes.COMBINATION, t -> new HashMap<>())
 						.put(recipe.getId(), recipe);
@@ -47,7 +46,6 @@ public class CombinationCrafting {
 			@Override
 			public void apply() {
 				CombinationRecipe recipe = new CombinationRecipe(new ResourceLocation("crafttweaker", id), toIngredientsList(inputs), output.getInternal(), cost, perTick);
-				System.out.println(DynamicRecipeManager.getRecipeManager().recipes);
 				DynamicRecipeManager.getRecipeManager().recipes
 						.computeIfAbsent(RecipeTypes.COMBINATION, t -> new HashMap<>())
 						.put(recipe.getId(), recipe);

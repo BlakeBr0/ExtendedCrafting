@@ -87,7 +87,7 @@ public class TableCrafting {
 		if (tier > 4 || tier < 0) {
 			CraftTweakerAPI.logError("Unable to assign a tier to the Table Recipe for stack " + output.getCommandString() + ". Tier cannot be greater than 4 or less than 0.");
 		}
-		
+
 //		Map<Integer, Function<ItemStack, ItemStack>> transformers = new HashMap<>();
 
 //		for (int i = 0; i < inputs.length; i++) {

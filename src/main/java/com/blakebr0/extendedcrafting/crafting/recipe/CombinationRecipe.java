@@ -128,7 +128,7 @@ public class CombinationRecipe implements ISpecialRecipe, ICombinationRecipe {
 
 			NonNullList<Ingredient> inputs = NonNullList.withSize(size, Ingredient.EMPTY);
 			for (int i = 0; i < size; i++) {
-				inputs.add(Ingredient.read(buffer));
+				inputs.set(i, Ingredient.read(buffer));
 			}
 
 			ItemStack output = buffer.readItemStack();

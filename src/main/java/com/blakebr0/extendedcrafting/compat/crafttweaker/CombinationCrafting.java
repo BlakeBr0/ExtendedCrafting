@@ -28,6 +28,7 @@ public class CombinationCrafting {
 			@Override
 			public void apply() {
 				CombinationRecipe recipe = new CombinationRecipe(new ResourceLocation("crafttweaker", id), toIngredientsList(inputs), output.getInternal(), cost);
+				System.out.println(DynamicRecipeManager.getRecipeManager().recipes);
 				DynamicRecipeManager.getRecipeManager().recipes
 						.computeIfAbsent(RecipeTypes.COMBINATION, t -> new HashMap<>())
 						.put(recipe.getId(), recipe);
@@ -41,11 +42,12 @@ public class CombinationCrafting {
 	}
 
 	@ZenCodeType.Method
-	public static void addRecipe(String id, IItemStack output, int cost, int perTick, IIngredient[] inputs) {
+	public static void addRecipe(String id, IItemStack output, int cost, IIngredient[] inputs, int perTick) {
 		CraftTweakerAPI.apply(new IRuntimeAction() {
 			@Override
 			public void apply() {
 				CombinationRecipe recipe = new CombinationRecipe(new ResourceLocation("crafttweaker", id), toIngredientsList(inputs), output.getInternal(), cost, perTick);
+				System.out.println(DynamicRecipeManager.getRecipeManager().recipes);
 				DynamicRecipeManager.getRecipeManager().recipes
 						.computeIfAbsent(RecipeTypes.COMBINATION, t -> new HashMap<>())
 						.put(recipe.getId(), recipe);

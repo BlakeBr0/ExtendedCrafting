@@ -23,17 +23,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class DynamicRecipeManager implements IResourceManagerReloadListener {
-    private static RecipeManager recipeManager;
-
     @Override
     public void onResourceManagerReload(IResourceManager resourceManager) {
-        MinecraftServer server = ServerLifecycleHooks.getCurrentServer();
-
-        RecipeManager recipeManager = DynamicRecipeManager.recipeManager = server.getRecipeManager();
-        recipeManager.recipes = new HashMap<>(recipeManager.recipes);
-        recipeManager.recipes.replaceAll((t, v) -> new HashMap<>(recipeManager.recipes.get(t)));
-
-        Map<ResourceLocation, IRecipe<?>> recipes = recipeManager.recipes.computeIfAbsent(RecipeTypes.COMPRESSOR, t -> new HashMap<>());
+        Map<ResourceLocation, IRecipe<?>> recipes = getRecipeManager().recipes.computeIfAbsent(RecipeTypes.COMPRESSOR, t -> new HashMap<>());
         SingularityRegistry.getInstance().getSingularities().forEach(singularity -> {
             CompressorRecipe compressorRecipe = this.makeSingularityRecipe(singularity);
             if (compressorRecipe != null)
@@ -42,6 +34,10 @@ public class DynamicRecipeManager implements IResourceManagerReloadListener {
     }
 
     public static RecipeManager getRecipeManager() {
+        RecipeManager recipeManager = ServerLifecycleHooks.getCurrentServer().getRecipeManager();
+        recipeManager.recipes = new HashMap<>(recipeManager.recipes);
+        recipeManager.recipes.replaceAll((t, v) -> new HashMap<>(recipeManager.recipes.get(t)));
+
         return recipeManager;
     }
 

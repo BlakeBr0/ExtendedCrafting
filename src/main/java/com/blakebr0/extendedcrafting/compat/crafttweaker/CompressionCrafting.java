@@ -36,7 +36,7 @@ public class CompressionCrafting {
 			}
 		});
 	}
-	
+
 	@ZenCodeType.Method
 	public static void addRecipe(String id, IIngredient input, IItemStack output, int inputCount, IIngredient catalyst, int powerCost, int powerRate) {
 		CraftTweakerAPI.apply(new IRuntimeAction() {

@@ -66,7 +66,7 @@ public class EnderCrafting implements IRecipeManager {
 			}
 		});
 	}
-	
+
 	@ZenCodeType.Method
 	public static void addShapeless(String id, IItemStack output, IIngredient[] ingredients) {
 		addShapeless(id, output, ingredients, ModConfigs.ENDER_CRAFTER_TIME_REQUIRED.get());

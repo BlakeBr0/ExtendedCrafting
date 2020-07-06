@@ -1,7 +1,6 @@
 package com.blakebr0.extendedcrafting.network.message;
 
 import com.blakebr0.extendedcrafting.tileentity.AutoTableTileEntity;
-import com.blakebr0.extendedcrafting.tileentity.CompressorTileEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.tileentity.TileEntity;

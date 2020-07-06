@@ -1,6 +1,7 @@
 package com.blakebr0.extendedcrafting.container;
 
 import com.blakebr0.cucumber.inventory.slot.OutputSlot;
+import com.blakebr0.extendedcrafting.init.ModContainerTypes;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;

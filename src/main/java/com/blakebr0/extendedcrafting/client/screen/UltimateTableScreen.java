@@ -1,6 +1,6 @@
 package com.blakebr0.extendedcrafting.client.screen;
 
-import com.blakebr0.cucumber.helper.RenderHelper;
+import com.blakebr0.cucumber.client.helper.RenderHelper;
 import com.blakebr0.extendedcrafting.ExtendedCrafting;
 import com.blakebr0.extendedcrafting.container.UltimateTableContainer;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;

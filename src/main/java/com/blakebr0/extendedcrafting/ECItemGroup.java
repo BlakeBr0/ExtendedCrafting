@@ -1,6 +1,6 @@
 package com.blakebr0.extendedcrafting;
 
-import com.blakebr0.extendedcrafting.item.ModItems;
+import com.blakebr0.extendedcrafting.init.ModItems;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 

@@ -2,6 +2,7 @@ package com.blakebr0.extendedcrafting.api.crafting;
 
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.crafting.IRecipe;
+import net.minecraft.util.text.ITextComponent;
 
 import java.util.List;
 
@@ -11,5 +12,5 @@ import java.util.List;
 public interface ICombinationRecipe extends IRecipe<IInventory> {
     int getPowerCost();
     int getPowerRate();
-    List<String> getInputsList();
+    List<ITextComponent> getInputsList();
 }

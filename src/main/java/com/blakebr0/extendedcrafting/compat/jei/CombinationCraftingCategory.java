@@ -1,9 +1,9 @@
 package com.blakebr0.extendedcrafting.compat.jei;
 
-import com.blakebr0.cucumber.lib.Localizable;
+import com.blakebr0.cucumber.util.Localizable;
 import com.blakebr0.extendedcrafting.ExtendedCrafting;
 import com.blakebr0.extendedcrafting.api.crafting.ICombinationRecipe;
-import com.blakebr0.extendedcrafting.block.ModBlocks;
+import com.blakebr0.extendedcrafting.init.ModBlocks;
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.IRecipeLayout;
 import mezz.jei.api.gui.drawable.IDrawable;
@@ -13,6 +13,8 @@ import mezz.jei.api.ingredients.IIngredients;
 import mezz.jei.api.recipe.category.IRecipeCategory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.StringTextComponent;
 
 import java.awt.*;
 import java.util.Arrays;
@@ -57,9 +59,12 @@ public class CombinationCraftingCategory implements IRecipeCategory<ICombination
 	}
 
 	@Override
-	public List<String> getTooltipStrings(ICombinationRecipe recipe, double mouseX, double mouseY) {
+	public List<ITextComponent> getTooltipStrings(ICombinationRecipe recipe, double mouseX, double mouseY) {
 		if (mouseX > 1 && mouseX < 14 && mouseY > 9 && mouseY < 86) {
-			return Arrays.asList(recipe.getPowerCost() + " FE", recipe.getPowerRate() + " FE/t");
+			return Arrays.asList(
+					new StringTextComponent(recipe.getPowerCost() + " FE"),
+					new StringTextComponent(recipe.getPowerRate() + " FE/t")
+			);
 		}
 
 		if (mouseX > 5 && mouseX < 23 && mouseY > 144 && mouseY < 165) {

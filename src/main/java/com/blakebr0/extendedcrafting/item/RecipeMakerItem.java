@@ -4,8 +4,8 @@ import com.blakebr0.cucumber.helper.NBTHelper;
 import com.blakebr0.cucumber.iface.IEnableable;
 import com.blakebr0.cucumber.inventory.BaseItemStackHandler;
 import com.blakebr0.cucumber.item.BaseItem;
-import com.blakebr0.cucumber.lib.Localizable;
 import com.blakebr0.cucumber.tileentity.BaseInventoryTileEntity;
+import com.blakebr0.cucumber.util.Localizable;
 import com.blakebr0.extendedcrafting.compat.crafttweaker.CraftTweakerUtils;
 import com.blakebr0.extendedcrafting.config.ModConfigs;
 import com.blakebr0.extendedcrafting.lib.ModTooltips;
@@ -29,8 +29,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUseContext;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.nbt.INBT;
+import net.minecraft.tags.ITag;
 import net.minecraft.tags.ItemTags;
-import net.minecraft.tags.Tag;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.ActionResultType;
@@ -38,6 +38,7 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.Hand;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.Util;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.World;
@@ -108,7 +109,7 @@ public class RecipeMakerItem extends BaseItem implements IEnableable {
 							: makeShapedDatapackTableRecipe(inventory, type);
 
 					if ("TOO MANY ITEMS".equals(string)) {
-						player.sendMessage(Localizable.of("message.extendedcrafting.max_unique_items_exceeded").args(KEYS.length).build());
+						player.sendMessage(Localizable.of("message.extendedcrafting.max_unique_items_exceeded").args(KEYS.length).build(), Util.field_240973_b_);
 
 						return ActionResultType.SUCCESS;
 					}
@@ -116,10 +117,10 @@ public class RecipeMakerItem extends BaseItem implements IEnableable {
 					setClipboard(string);
 				}
 
-				player.sendMessage(Localizable.of("message.extendedcrafting.copied_recipe").build());
+				player.sendMessage(Localizable.of("message.extendedcrafting.copied_recipe").build(), Util.field_240973_b_);
 
 				if (ModConfigs.RECIPE_MAKER_USE_NBT.get() && !ModList.get().isLoaded("crafttweaker")) {
-					player.sendMessage(Localizable.of("message.extendedcrafting.nbt_requires_crafttweaker").build());
+					player.sendMessage(Localizable.of("message.extendedcrafting.nbt_requires_crafttweaker").build(), Util.field_240973_b_);
 				}
 			}
 
@@ -134,7 +135,7 @@ public class RecipeMakerItem extends BaseItem implements IEnableable {
 
 				setClipboard(string);
 
-				player.sendMessage(Localizable.of("message.extendedcrafting.copied_recipe").build());
+				player.sendMessage(Localizable.of("message.extendedcrafting.copied_recipe").build(), Util.field_240973_b_);
 			}
 
 			return ActionResultType.SUCCESS;
@@ -150,7 +151,7 @@ public class RecipeMakerItem extends BaseItem implements IEnableable {
 			NBTHelper.flipBoolean(stack, "Shapeless");
 
 			if (world.isRemote()) {
-				player.sendMessage(Localizable.of("message.extendedcrafting.changed_mode").args(getModeString(stack)).build());
+				player.sendMessage(Localizable.of("message.extendedcrafting.changed_mode").args(getModeString(stack)).build(), Util.field_240973_b_);
 			}
 		}
 
@@ -340,7 +341,7 @@ public class RecipeMakerItem extends BaseItem implements IEnableable {
 				continue;
 
 			ResourceLocation tagId = stack.getItem().getTags().stream().findFirst().orElse(null);
-			Tag<Item> tag = tagId == null ? null : ItemTags.getCollection().get(tagId);
+			ITag<Item> tag = tagId == null ? null : ItemTags.getCollection().get(tagId);
 			char key = KEYS[keysMap.size()];
 			if (ModConfigs.RECIPE_MAKER_USE_TAGS.get() && tag != null) {
 				keysMap.put(Ingredient.fromTag(tag), key);

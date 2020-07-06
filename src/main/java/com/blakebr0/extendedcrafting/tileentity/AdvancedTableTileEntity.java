@@ -1,9 +1,10 @@
 package com.blakebr0.extendedcrafting.tileentity;
 
 import com.blakebr0.cucumber.inventory.BaseItemStackHandler;
-import com.blakebr0.cucumber.lib.Localizable;
 import com.blakebr0.cucumber.tileentity.BaseInventoryTileEntity;
+import com.blakebr0.cucumber.util.Localizable;
 import com.blakebr0.extendedcrafting.container.AdvancedTableContainer;
+import com.blakebr0.extendedcrafting.init.ModTileEntities;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;

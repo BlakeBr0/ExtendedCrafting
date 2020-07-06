@@ -1,4 +1,4 @@
-package com.blakebr0.extendedcrafting.crafting;
+package com.blakebr0.extendedcrafting.init;
 
 import com.blakebr0.extendedcrafting.ExtendedCrafting;
 import com.blakebr0.extendedcrafting.config.ModConfigs;
@@ -24,7 +24,7 @@ import net.minecraftforge.registries.IForgeRegistry;
 
 import java.util.List;
 
-public class ModRecipeSerializers {
+public final class ModRecipeSerializers {
     public static final IRecipeSerializer<CombinationRecipe> COMBINATION = new CombinationRecipe.Serializer();
     public static final IRecipeSerializer<ShapedTableRecipe> SHAPED_TABLE = new ShapedTableRecipe.Serializer();
     public static final IRecipeSerializer<ShapelessTableRecipe> SHAPELESS_TABLE = new ShapelessTableRecipe.Serializer();

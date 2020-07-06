@@ -1,4 +1,4 @@
-package com.blakebr0.extendedcrafting.container;
+package com.blakebr0.extendedcrafting.init;
 
 import com.blakebr0.extendedcrafting.ExtendedCrafting;
 import com.blakebr0.extendedcrafting.client.screen.AdvancedAutoTableScreen;
@@ -12,6 +12,17 @@ import com.blakebr0.extendedcrafting.client.screen.EliteTableScreen;
 import com.blakebr0.extendedcrafting.client.screen.EnderCrafterScreen;
 import com.blakebr0.extendedcrafting.client.screen.UltimateAutoTableScreen;
 import com.blakebr0.extendedcrafting.client.screen.UltimateTableScreen;
+import com.blakebr0.extendedcrafting.container.AdvancedAutoTableContainer;
+import com.blakebr0.extendedcrafting.container.AdvancedTableContainer;
+import com.blakebr0.extendedcrafting.container.BasicAutoTableContainer;
+import com.blakebr0.extendedcrafting.container.BasicTableContainer;
+import com.blakebr0.extendedcrafting.container.CompressorContainer;
+import com.blakebr0.extendedcrafting.container.CraftingCoreContainer;
+import com.blakebr0.extendedcrafting.container.EliteAutoTableContainer;
+import com.blakebr0.extendedcrafting.container.EliteTableContainer;
+import com.blakebr0.extendedcrafting.container.EnderCrafterContainer;
+import com.blakebr0.extendedcrafting.container.UltimateAutoTableContainer;
+import com.blakebr0.extendedcrafting.container.UltimateTableContainer;
 import net.minecraft.client.gui.ScreenManager;
 import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.util.ResourceLocation;
@@ -28,7 +39,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
 
-public class ModContainerTypes {
+public final class ModContainerTypes {
     public static final List<Supplier<? extends ContainerType<?>>> ENTRIES = new ArrayList<>();
 
     public static final RegistryObject<ContainerType<CraftingCoreContainer>> CRAFTING_CORE = register("crafting_core", () -> new ContainerType<>((IContainerFactory<CraftingCoreContainer>) CraftingCoreContainer::create));

@@ -1,12 +1,10 @@
 package com.blakebr0.extendedcrafting.compat.jei;
 
-import com.blakebr0.cucumber.lib.Localizable;
-import com.blakebr0.cucumber.util.Utils;
+import com.blakebr0.cucumber.util.Localizable;
 import com.blakebr0.extendedcrafting.ExtendedCrafting;
 import com.blakebr0.extendedcrafting.api.crafting.ICompressorRecipe;
-import com.blakebr0.extendedcrafting.block.ModBlocks;
+import com.blakebr0.extendedcrafting.init.ModBlocks;
 import com.blakebr0.extendedcrafting.lib.ModTooltips;
-import com.google.common.collect.Lists;
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.IRecipeLayout;
 import mezz.jei.api.gui.drawable.IDrawable;
@@ -18,9 +16,10 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -63,13 +62,16 @@ public class CompressorCraftingCategory implements IRecipeCategory<ICompressorRe
 	}
 
 	@Override
-	public List<String> getTooltipStrings(ICompressorRecipe recipe, double mouseX, double mouseY) {
+	public List<ITextComponent> getTooltipStrings(ICompressorRecipe recipe, double mouseX, double mouseY) {
 		if (mouseX > 1 && mouseX < 14 && mouseY > 1 && mouseY < 78) {
-			return Arrays.asList(recipe.getPowerCost() + " FE", recipe.getPowerRate() + " FE/t");
+			return Arrays.asList(
+					new StringTextComponent(recipe.getPowerCost() + " FE"),
+					new StringTextComponent(recipe.getPowerRate() + " FE/t")
+			);
 		}
 
 		if (mouseX > 54 && mouseX < 78 && mouseY > 58 && mouseY < 68) {
-			return Utils.asList(ModTooltips.NUM_ITEMS.args(recipe.getInputCount()).color(TextFormatting.WHITE).buildString());
+			return Collections.singletonList(ModTooltips.NUM_ITEMS.args(recipe.getInputCount()).color(TextFormatting.WHITE).build());
 		}
 
 		return Collections.emptyList();

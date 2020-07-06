@@ -21,7 +21,7 @@ import net.minecraftforge.registries.ForgeRegistries;
 import java.util.HashMap;
 import java.util.Map;
 
-public class DynamicRecipeManager implements IResourceManagerReloadListener {
+public final class DynamicRecipeManager implements IResourceManagerReloadListener {
     private static RecipeManager recipeManager;
 
     @Override

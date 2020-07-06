@@ -2,13 +2,14 @@ package com.blakebr0.extendedcrafting.tileentity;
 
 import com.blakebr0.cucumber.helper.StackHelper;
 import com.blakebr0.cucumber.inventory.BaseItemStackHandler;
-import com.blakebr0.cucumber.lib.Localizable;
 import com.blakebr0.cucumber.tileentity.BaseInventoryTileEntity;
+import com.blakebr0.cucumber.util.Localizable;
 import com.blakebr0.extendedcrafting.api.crafting.IEnderCrafterRecipe;
 import com.blakebr0.extendedcrafting.api.crafting.RecipeTypes;
 import com.blakebr0.extendedcrafting.block.EnderAlternatorBlock;
 import com.blakebr0.extendedcrafting.config.ModConfigs;
 import com.blakebr0.extendedcrafting.container.EnderCrafterContainer;
+import com.blakebr0.extendedcrafting.init.ModTileEntities;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
@@ -155,7 +156,7 @@ public class EnderCrafterTileEntity extends BaseInventoryTileEntity implements I
 		if (result.isEmpty()) {
 			this.inventory.setStackInSlot(9, stack);
 		} else {
-			this.inventory.setStackInSlot(9, StackHelper.increase(result.copy(), 1));
+			this.inventory.setStackInSlot(9, StackHelper.grow(result, 1));
 		}
 	}
 

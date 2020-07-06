@@ -1,7 +1,7 @@
 package com.blakebr0.extendedcrafting.singularity;
 
 import com.blakebr0.cucumber.crafting.TagMapper;
-import com.blakebr0.cucumber.lib.Localizable;
+import com.blakebr0.cucumber.util.Localizable;
 import net.minecraft.item.Item;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.ResourceLocation;

@@ -25,7 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-public class SingularityRegistry {
+public final class SingularityRegistry {
     private static final Logger LOGGER = LogManager.getLogger(ExtendedCrafting.NAME);
     private static final SingularityRegistry INSTANCE = new SingularityRegistry();
     private static final Gson GSON = (new GsonBuilder()).setPrettyPrinting().create();

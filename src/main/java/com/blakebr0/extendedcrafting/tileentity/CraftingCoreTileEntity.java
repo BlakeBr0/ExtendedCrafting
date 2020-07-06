@@ -1,14 +1,15 @@
 package com.blakebr0.extendedcrafting.tileentity;
 
-import com.blakebr0.cucumber.energy.CustomEnergyStorage;
+import com.blakebr0.cucumber.energy.BaseEnergyStorage;
 import com.blakebr0.cucumber.helper.StackHelper;
 import com.blakebr0.cucumber.inventory.BaseItemStackHandler;
-import com.blakebr0.cucumber.lib.Localizable;
 import com.blakebr0.cucumber.tileentity.BaseInventoryTileEntity;
+import com.blakebr0.cucumber.util.Localizable;
 import com.blakebr0.extendedcrafting.api.crafting.RecipeTypes;
 import com.blakebr0.extendedcrafting.config.ModConfigs;
 import com.blakebr0.extendedcrafting.container.CraftingCoreContainer;
 import com.blakebr0.extendedcrafting.crafting.recipe.CombinationRecipe;
+import com.blakebr0.extendedcrafting.init.ModTileEntities;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;
@@ -36,7 +37,7 @@ import java.util.Map;
 
 public class CraftingCoreTileEntity extends BaseInventoryTileEntity implements ITickableTileEntity, INamedContainerProvider {
 	private final BaseItemStackHandler inventory = new BaseItemStackHandler(1, this::markDirtyAndDispatch);
-	private final CustomEnergyStorage energy = new CustomEnergyStorage(ModConfigs.CRAFTING_CORE_POWER_CAPACITY.get());
+	private final BaseEnergyStorage energy = new BaseEnergyStorage(ModConfigs.CRAFTING_CORE_POWER_CAPACITY.get());
 	private final BaseItemStackHandler recipeInventory = new BaseItemStackHandler(49);
 	private CombinationRecipe recipe;
 	private int progress;
@@ -125,7 +126,7 @@ public class CraftingCoreTileEntity extends BaseInventoryTileEntity implements I
 								if (tile instanceof PedestalTileEntity) {
 									PedestalTileEntity pedestal = (PedestalTileEntity) tile;
 									IItemHandlerModifiable inventory = pedestal.getInventory();
-									inventory.setStackInSlot(0, StackHelper.decrease(inventory.getStackInSlot(0), 1, true));
+									inventory.setStackInSlot(0, StackHelper.shrink(inventory.getStackInSlot(0), 1, true));
 									pedestal.markDirtyAndDispatch();
 									this.spawnParticles(ParticleTypes.SMOKE, pedestalPos, 1.1, 20);
 								}
@@ -264,7 +265,7 @@ public class CraftingCoreTileEntity extends BaseInventoryTileEntity implements I
 		return this.progress > (powerCost - endingPower);
 	}
 
-	public CustomEnergyStorage getEnergy() {
+	public BaseEnergyStorage getEnergy() {
 		return this.energy;
 	}
 

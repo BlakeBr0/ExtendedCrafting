@@ -64,9 +64,7 @@ public class ExtendedCraftingInventory implements IInventory {
     }
 
     @Override
-    public void markDirty() {
-
-    }
+    public void markDirty() { }
 
     @Override
     public boolean isUsableByPlayer(PlayerEntity player) {

@@ -1,8 +1,12 @@
-package com.blakebr0.extendedcrafting.item;
+package com.blakebr0.extendedcrafting.init;
 
 import com.blakebr0.cucumber.item.BaseItem;
 import com.blakebr0.cucumber.item.BaseShinyItem;
 import com.blakebr0.extendedcrafting.ExtendedCrafting;
+import com.blakebr0.extendedcrafting.item.HandheldTableItem;
+import com.blakebr0.extendedcrafting.item.RecipeMakerItem;
+import com.blakebr0.extendedcrafting.item.SingularityItem;
+import com.blakebr0.extendedcrafting.item.UltimateSingularityItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.Rarity;
 import net.minecraft.util.ResourceLocation;
@@ -20,7 +24,7 @@ import java.util.function.Supplier;
 
 import static com.blakebr0.extendedcrafting.ExtendedCrafting.ITEM_GROUP;
 
-public class ModItems {
+public final class ModItems {
 	public static final List<Supplier<Item>> BLOCK_ENTRIES = new ArrayList<>();
 	public static final Map<RegistryObject<Item>, Supplier<Item>> ENTRIES = new LinkedHashMap<>();
 

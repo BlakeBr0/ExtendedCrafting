@@ -1,14 +1,15 @@
 package com.blakebr0.extendedcrafting.tileentity;
 
-import com.blakebr0.cucumber.energy.CustomEnergyStorage;
+import com.blakebr0.cucumber.energy.BaseEnergyStorage;
 import com.blakebr0.cucumber.helper.StackHelper;
 import com.blakebr0.cucumber.inventory.BaseItemStackHandler;
-import com.blakebr0.cucumber.lib.Localizable;
 import com.blakebr0.cucumber.tileentity.BaseInventoryTileEntity;
+import com.blakebr0.cucumber.util.Localizable;
 import com.blakebr0.extendedcrafting.api.crafting.RecipeTypes;
 import com.blakebr0.extendedcrafting.config.ModConfigs;
 import com.blakebr0.extendedcrafting.container.CompressorContainer;
 import com.blakebr0.extendedcrafting.crafting.recipe.CompressorRecipe;
+import com.blakebr0.extendedcrafting.init.ModTileEntities;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;
@@ -26,7 +27,7 @@ import net.minecraftforge.energy.CapabilityEnergy;
 
 public class CompressorTileEntity extends BaseInventoryTileEntity implements ITickableTileEntity, INamedContainerProvider {
 	private final BaseItemStackHandler inventory = new BaseItemStackHandler(3);
-	private final CustomEnergyStorage energy = new CustomEnergyStorage(ModConfigs.COMPRESSOR_POWER_CAPACITY.get());
+	private final BaseEnergyStorage energy = new BaseEnergyStorage(ModConfigs.COMPRESSOR_POWER_CAPACITY.get());
 	private final BaseItemStackHandler recipeInventory = new BaseItemStackHandler(2);
 	private CompressorRecipe recipe;
 	private ItemStack materialStack = ItemStack.EMPTY;
@@ -141,8 +142,9 @@ public class CompressorTileEntity extends BaseInventoryTileEntity implements ITi
 								consumeAmount = Math.min(consumeAmount, this.recipe.getInputCount() - this.materialCount);
 							}
 
-							StackHelper.decrease(input, consumeAmount, false);
+							input.shrink(consumeAmount);
 							this.materialCount += consumeAmount;
+
 							if (!mark)
 								mark = true;
 						}
@@ -223,7 +225,7 @@ public class CompressorTileEntity extends BaseInventoryTileEntity implements ITi
 		return CompressorContainer.create(windowId, playerInventory, this::isUsableByPlayer, this.inventory, this.data, this.getPos());
 	}
 
-	public CustomEnergyStorage getEnergy() {
+	public BaseEnergyStorage getEnergy() {
 		return this.energy;
 	}
 
@@ -300,7 +302,7 @@ public class CompressorTileEntity extends BaseInventoryTileEntity implements ITi
 		if (result.isEmpty()) {
 			this.inventory.setStackInSlot(0, stack);
 		} else {
-			this.inventory.setStackInSlot(0, StackHelper.increase(result.copy(), 1));
+			this.inventory.setStackInSlot(0, StackHelper.grow(result, 1));
 		}
 	}
 

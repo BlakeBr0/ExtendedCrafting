@@ -1,10 +1,18 @@
-package com.blakebr0.extendedcrafting.tileentity;
+package com.blakebr0.extendedcrafting.init;
 
 import com.blakebr0.extendedcrafting.ExtendedCrafting;
-import com.blakebr0.extendedcrafting.block.ModBlocks;
 import com.blakebr0.extendedcrafting.client.tesr.CompressorRenderer;
 import com.blakebr0.extendedcrafting.client.tesr.CraftingCoreRenderer;
 import com.blakebr0.extendedcrafting.client.tesr.PedestalRenderer;
+import com.blakebr0.extendedcrafting.tileentity.AdvancedTableTileEntity;
+import com.blakebr0.extendedcrafting.tileentity.AutoTableTileEntity;
+import com.blakebr0.extendedcrafting.tileentity.BasicTableTileEntity;
+import com.blakebr0.extendedcrafting.tileentity.CompressorTileEntity;
+import com.blakebr0.extendedcrafting.tileentity.CraftingCoreTileEntity;
+import com.blakebr0.extendedcrafting.tileentity.EliteTableTileEntity;
+import com.blakebr0.extendedcrafting.tileentity.EnderCrafterTileEntity;
+import com.blakebr0.extendedcrafting.tileentity.PedestalTileEntity;
+import com.blakebr0.extendedcrafting.tileentity.UltimateTableTileEntity;
 import net.minecraft.block.Block;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
@@ -22,7 +30,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
 
-public class ModTileEntities {
+public final class ModTileEntities {
 	public static final List<Supplier<? extends TileEntityType<?>>> ENTRIES = new ArrayList<>();
 
 	public static final RegistryObject<TileEntityType<PedestalTileEntity>> PEDESTAL = register("pedestal", PedestalTileEntity::new, () -> new Block[] { ModBlocks.PEDESTAL.get() });

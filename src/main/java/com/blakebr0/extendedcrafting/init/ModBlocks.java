@@ -1,9 +1,22 @@
-package com.blakebr0.extendedcrafting.block;
+package com.blakebr0.extendedcrafting.init;
 
 import com.blakebr0.cucumber.block.BaseBlock;
 import com.blakebr0.cucumber.item.BaseBlockItem;
 import com.blakebr0.extendedcrafting.ExtendedCrafting;
-import com.blakebr0.extendedcrafting.item.ModItems;
+import com.blakebr0.extendedcrafting.block.AdvancedAutoTableBlock;
+import com.blakebr0.extendedcrafting.block.AdvancedTableBlock;
+import com.blakebr0.extendedcrafting.block.BasicAutoTableBlock;
+import com.blakebr0.extendedcrafting.block.BasicTableBlock;
+import com.blakebr0.extendedcrafting.block.CompressorBlock;
+import com.blakebr0.extendedcrafting.block.CraftingCoreBlock;
+import com.blakebr0.extendedcrafting.block.EliteAutoTableBlock;
+import com.blakebr0.extendedcrafting.block.EliteTableBlock;
+import com.blakebr0.extendedcrafting.block.EnderAlternatorBlock;
+import com.blakebr0.extendedcrafting.block.EnderCrafterBlock;
+import com.blakebr0.extendedcrafting.block.FrameBlock;
+import com.blakebr0.extendedcrafting.block.PedestalBlock;
+import com.blakebr0.extendedcrafting.block.UltimateAutoTableBlock;
+import com.blakebr0.extendedcrafting.block.UltimateTableBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
@@ -22,7 +35,7 @@ import java.util.function.Supplier;
 
 import static com.blakebr0.extendedcrafting.ExtendedCrafting.ITEM_GROUP;
 
-public class ModBlocks {
+public final class ModBlocks {
 	public static final Map<RegistryObject<Block>, Supplier<Block>> ENTRIES = new LinkedHashMap<>();
 
 	public static final RegistryObject<Block> LUMINESSENCE_BLOCK = register("luminessence_block", () -> new BaseBlock(Material.ROCK, SoundType.STONE, 5.0F, 10.0F));

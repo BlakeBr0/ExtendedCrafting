@@ -2,7 +2,7 @@ package com.blakebr0.extendedcrafting.singularity;
 
 import com.blakebr0.cucumber.helper.NBTHelper;
 import com.blakebr0.extendedcrafting.config.ModConfigs;
-import com.blakebr0.extendedcrafting.item.ModItems;
+import com.blakebr0.extendedcrafting.init.ModItems;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -12,7 +12,7 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.JSONUtils;
 import net.minecraft.util.ResourceLocation;
 
-public class SingularityUtils {
+public final class SingularityUtils {
     public static Singularity loadFromJson(ResourceLocation id, JsonObject json) {
         String name = JSONUtils.getString(json, "name");
         JsonArray colors = JSONUtils.getJsonArray(json, "colors");

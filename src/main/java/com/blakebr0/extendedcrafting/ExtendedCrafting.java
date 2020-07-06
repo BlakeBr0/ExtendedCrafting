@@ -1,24 +1,26 @@
 package com.blakebr0.extendedcrafting;
 
 import com.blakebr0.cucumber.helper.ConfigHelper;
-import com.blakebr0.extendedcrafting.block.ModBlocks;
 import com.blakebr0.extendedcrafting.client.ModelHandler;
 import com.blakebr0.extendedcrafting.config.ModConfigs;
-import com.blakebr0.extendedcrafting.container.ModContainerTypes;
 import com.blakebr0.extendedcrafting.crafting.DynamicRecipeManager;
-import com.blakebr0.extendedcrafting.crafting.ModRecipeSerializers;
 import com.blakebr0.extendedcrafting.handler.ColorHandler;
-import com.blakebr0.extendedcrafting.item.ModItems;
+import com.blakebr0.extendedcrafting.init.ModBlocks;
+import com.blakebr0.extendedcrafting.init.ModContainerTypes;
+import com.blakebr0.extendedcrafting.init.ModItems;
+import com.blakebr0.extendedcrafting.init.ModRecipeSerializers;
+import com.blakebr0.extendedcrafting.init.ModTileEntities;
 import com.blakebr0.extendedcrafting.network.NetworkHandler;
 import com.blakebr0.extendedcrafting.singularity.SingularityRegistry;
-import com.blakebr0.extendedcrafting.tileentity.ModTileEntities;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.resources.IReloadableResourceManager;
+import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.DeferredWorkQueue;
+import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
@@ -28,7 +30,7 @@ import net.minecraftforge.fml.event.server.FMLServerAboutToStartEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 
 @Mod(ExtendedCrafting.MOD_ID)
-public class ExtendedCrafting {
+public final class ExtendedCrafting {
 	public static final String MOD_ID = "extendedcrafting";
 	public static final String NAME = "Extended Crafting";
 
@@ -43,6 +45,10 @@ public class ExtendedCrafting {
 		bus.register(new ModRecipeSerializers());
 		bus.register(new ModTileEntities());
 		bus.register(new ModContainerTypes());
+
+		DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
+			bus.register(new ColorHandler());
+		});
 
 		ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, ModConfigs.CLIENT);
 		ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, ModConfigs.COMMON);
@@ -63,7 +69,6 @@ public class ExtendedCrafting {
 
 	@SubscribeEvent
 	public void onClientSetup(FMLClientSetupEvent event) {
-		ColorHandler.onClientSetup();
 		ModelHandler.onClientSetup();
 
 		ModTileEntities.onClientSetup();
@@ -72,7 +77,7 @@ public class ExtendedCrafting {
 
 	@SubscribeEvent(priority = EventPriority.HIGH)
 	public void onServerAboutToStart(FMLServerAboutToStartEvent event) {
-		IReloadableResourceManager manager = event.getServer().getResourceManager();
+		IReloadableResourceManager manager = (IReloadableResourceManager) event.getServer().getDataPackRegistries().func_240970_h_();
 
 		manager.addReloadListener(new DynamicRecipeManager());
 	}

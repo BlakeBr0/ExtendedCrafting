@@ -3,7 +3,7 @@ package com.blakebr0.extendedcrafting.item;
 import com.blakebr0.cucumber.iface.IColored;
 import com.blakebr0.cucumber.iface.IEnableable;
 import com.blakebr0.cucumber.item.BaseItem;
-import com.blakebr0.cucumber.lib.Localizable;
+import com.blakebr0.cucumber.util.Localizable;
 import com.blakebr0.extendedcrafting.ExtendedCrafting;
 import com.blakebr0.extendedcrafting.config.ModConfigs;
 import com.blakebr0.extendedcrafting.lib.ModTooltips;

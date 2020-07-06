@@ -1,7 +1,7 @@
 package com.blakebr0.extendedcrafting.crafting.recipe;
 
-import com.blakebr0.extendedcrafting.crafting.ModRecipeSerializers;
-import com.blakebr0.extendedcrafting.item.ModItems;
+import com.blakebr0.extendedcrafting.init.ModItems;
+import com.blakebr0.extendedcrafting.init.ModRecipeSerializers;
 import com.google.gson.JsonObject;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipeSerializer;

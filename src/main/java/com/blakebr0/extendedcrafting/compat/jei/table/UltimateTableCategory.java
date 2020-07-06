@@ -1,15 +1,14 @@
 package com.blakebr0.extendedcrafting.compat.jei.table;
 
-import com.blakebr0.cucumber.lib.Localizable;
-import com.blakebr0.cucumber.util.Utils;
+import com.blakebr0.cucumber.util.Localizable;
 import com.blakebr0.extendedcrafting.ExtendedCrafting;
 import com.blakebr0.extendedcrafting.api.crafting.ITableRecipe;
-import com.blakebr0.extendedcrafting.block.ModBlocks;
 import com.blakebr0.extendedcrafting.compat.jei.JeiCompat;
 import com.blakebr0.extendedcrafting.crafting.recipe.ShapedTableRecipe;
 import com.blakebr0.extendedcrafting.crafting.recipe.ShapelessTableRecipe;
+import com.blakebr0.extendedcrafting.init.ModBlocks;
 import com.blakebr0.extendedcrafting.lib.ModTooltips;
-import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.matrix.MatrixStack;
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.IRecipeLayout;
 import mezz.jei.api.gui.drawable.IDrawable;
@@ -19,6 +18,7 @@ import mezz.jei.api.ingredients.IIngredients;
 import mezz.jei.api.recipe.category.IRecipeCategory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextFormatting;
 
 import java.util.Collections;
@@ -66,28 +66,28 @@ public class UltimateTableCategory implements IRecipeCategory<ITableRecipe> {
 	}
 
 	@Override
-	public void draw(ITableRecipe recipe, double mouseX, double mouseY) {
-		RenderSystem.pushMatrix();
-		RenderSystem.scalef(0.5F, 0.5F, 0.5F);
+	public void draw(ITableRecipe recipe, MatrixStack stack, double mouseX, double mouseY) {
+		stack.push();
+		stack.scale(0.5F, 0.5F, 0.5F);
 		boolean shapeless = recipe instanceof ShapelessTableRecipe;
 		if (recipe.hasRequiredTier())
-			this.required.draw(shapeless ? 286 : 306, 329);
+			this.required.draw(stack, shapeless ? 286 : 306, 329);
 		if (shapeless)
-			this.shapeless.draw(306, 329);
-		RenderSystem.popMatrix();
+			this.shapeless.draw(stack, 306, 329);
+		stack.pop();
 	}
 
 	@Override
-	public List<String> getTooltipStrings(ITableRecipe recipe, double mouseX, double mouseY) {
+	public List<ITextComponent> getTooltipStrings(ITableRecipe recipe, double mouseX, double mouseY) {
 		boolean shapeless = recipe instanceof ShapelessTableRecipe;
 		int sX = (shapeless ? 286 : 306) / 2, sY = 329 / 2;
 
 		if (recipe.hasRequiredTier() && mouseX > sX - 1 && mouseX < sX + 8 && mouseY > sY - 1 && mouseY < sY + 8) {
-			return Utils.asList(ModTooltips.REQUIRES_TABLE.args(recipe.getTier()).color(TextFormatting.WHITE).buildString());
+			return Collections.singletonList(ModTooltips.REQUIRES_TABLE.args(recipe.getTier()).color(TextFormatting.WHITE).build());
 		}
 
 		if (shapeless && mouseX > sX + 10 && mouseX < sX + 20 && mouseY > sY - 1 && mouseY < sY + 8) {
-			return Utils.asList(Localizable.of("jei.tooltip.shapeless.recipe").buildString());
+			return Collections.singletonList(Localizable.of("jei.tooltip.shapeless.recipe").build());
 		}
 
 		return Collections.emptyList();

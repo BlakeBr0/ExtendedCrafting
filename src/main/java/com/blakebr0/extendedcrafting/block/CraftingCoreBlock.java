@@ -60,13 +60,12 @@ public class CraftingCoreBlock extends BaseTileEntityBlock implements IEnableabl
 					ItemStack stack = inventory.getStackInSlot(0);
 					if (stack.isEmpty()) {
 						if (!held.isEmpty()) {
-							inventory.setStackInSlot(0, StackHelper.withSize(held.copy(), 1, false));
-							player.setHeldItem(hand, StackHelper.decrease(held, 1, false));
+							inventory.setStackInSlot(0, StackHelper.withSize(held, 1, false));
+							player.setHeldItem(hand, StackHelper.shrink(held, 1, false));
 							world.playSound(null, pos, SoundEvents.ENTITY_ITEM_PICKUP, SoundCategory.BLOCKS, 1.0F, 1.0F);
 						}
 					} else {
-						BlockPos playerPos = player.getPosition();
-						ItemEntity item = new ItemEntity(world, playerPos.getX(), playerPos.getY(), playerPos.getZ(), stack);
+						ItemEntity item = new ItemEntity(world, player.getPosX(), player.getPosY(), player.getPosZ(), stack);
 						item.setNoPickupDelay();
 						world.addEntity(item);
 						inventory.setStackInSlot(0, ItemStack.EMPTY);

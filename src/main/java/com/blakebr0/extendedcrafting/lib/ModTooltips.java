@@ -1,6 +1,6 @@
 package com.blakebr0.extendedcrafting.lib;
 
-import com.blakebr0.cucumber.lib.Tooltip;
+import com.blakebr0.cucumber.util.Tooltip;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.fml.ModList;
 

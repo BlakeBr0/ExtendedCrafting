@@ -2,7 +2,7 @@ package com.blakebr0.extendedcrafting.item;
 
 import com.blakebr0.cucumber.iface.IEnableable;
 import com.blakebr0.cucumber.item.BaseItem;
-import com.blakebr0.cucumber.lib.Localizable;
+import com.blakebr0.cucumber.util.Localizable;
 import com.blakebr0.extendedcrafting.config.ModConfigs;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.container.INamedContainerProvider;
@@ -25,7 +25,7 @@ public class HandheldTableItem extends BaseItem implements IEnableable {
 	@Override
 	public ActionResult<ItemStack> onItemRightClick(World world, PlayerEntity player, Hand hand) {
 		if (!world.isRemote()) {
-			player.openContainer(this.getContainer(world, player.getPosition()));
+			player.openContainer(this.getContainer(world, player.func_233580_cy_()));
 		}
 
 		return super.onItemRightClick(world, player, hand);

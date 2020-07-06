@@ -1,12 +1,12 @@
 package com.blakebr0.extendedcrafting.compat.jei;
 
-import com.blakebr0.cucumber.lib.Localizable;
-import com.blakebr0.cucumber.util.Utils;
+import com.blakebr0.cucumber.util.Localizable;
 import com.blakebr0.extendedcrafting.ExtendedCrafting;
 import com.blakebr0.extendedcrafting.api.crafting.IEnderCrafterRecipe;
-import com.blakebr0.extendedcrafting.block.ModBlocks;
 import com.blakebr0.extendedcrafting.crafting.recipe.ShapelessEnderCrafterRecipe;
+import com.blakebr0.extendedcrafting.init.ModBlocks;
 import com.blakebr0.extendedcrafting.lib.ModTooltips;
+import com.mojang.blaze3d.matrix.MatrixStack;
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.IRecipeLayout;
 import mezz.jei.api.gui.drawable.IDrawable;
@@ -18,6 +18,7 @@ import mezz.jei.api.ingredients.IIngredients;
 import mezz.jei.api.recipe.category.IRecipeCategory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextFormatting;
 
 import java.util.Collections;
@@ -65,14 +66,14 @@ public class EnderCrafterCategory implements IRecipeCategory<IEnderCrafterRecipe
 	}
 
 	@Override
-	public void draw(IEnderCrafterRecipe recipe, double mouseX, double mouseY) {
-		this.arrow.draw(61, 19);
+	public void draw(IEnderCrafterRecipe recipe, MatrixStack stack, double mouseX, double mouseY) {
+		this.arrow.draw(stack, 61, 19);
 	}
 
 	@Override
-	public List<String> getTooltipStrings(IEnderCrafterRecipe recipe, double mouseX, double mouseY) {
+	public List<ITextComponent> getTooltipStrings(IEnderCrafterRecipe recipe, double mouseX, double mouseY) {
 		if (mouseX > 60 && mouseX < 83 && mouseY > 19 && mouseY < 34) {
-			return Utils.asList(ModTooltips.TICKS.args(recipe.getCraftingTime()).color(TextFormatting.WHITE).buildString());
+			return Collections.singletonList(ModTooltips.TICKS.args(recipe.getCraftingTime()).color(TextFormatting.WHITE).build());
 		}
 
 		return Collections.emptyList();

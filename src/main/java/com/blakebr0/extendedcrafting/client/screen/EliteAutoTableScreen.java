@@ -1,7 +1,7 @@
 package com.blakebr0.extendedcrafting.client.screen;
 
+import com.blakebr0.cucumber.client.render.GhostItemRenderer;
 import com.blakebr0.cucumber.inventory.BaseItemStackHandler;
-import com.blakebr0.cucumber.render.GhostItemRenderer;
 import com.blakebr0.extendedcrafting.ExtendedCrafting;
 import com.blakebr0.extendedcrafting.client.screen.button.RecipeSelectButton;
 import com.blakebr0.extendedcrafting.client.screen.button.ToggleTableRunningButton;

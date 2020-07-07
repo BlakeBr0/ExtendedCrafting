@@ -17,6 +17,7 @@ import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.JSONUtils;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.registries.ForgeRegistryEntry;
 
@@ -29,7 +30,7 @@ public class CombinationRecipe implements ISpecialRecipe, ICombinationRecipe {
 	private final NonNullList<Ingredient> ingredients;
 	private final int powerCost;
 	private final int powerRate;
-	private final List<String> inputsList;
+	private final List<ITextComponent> inputsList;
 	
 	public CombinationRecipe(ResourceLocation recipeId, NonNullList<Ingredient> ingredients, ItemStack output, int powerCost) {
 		this(recipeId, ingredients, output, powerCost, ModConfigs.CRAFTING_CORE_POWER_RATE.get());
@@ -96,7 +97,7 @@ public class CombinationRecipe implements ISpecialRecipe, ICombinationRecipe {
 	}
 
 	@Override
-	public List<String> getInputsList() {
+	public List<ITextComponent> getInputsList() {
 		return this.inputsList;
 	}
 

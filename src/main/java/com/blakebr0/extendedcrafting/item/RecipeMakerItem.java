@@ -109,7 +109,7 @@ public class RecipeMakerItem extends BaseItem implements IEnableable {
 							: makeShapedDatapackTableRecipe(inventory, type);
 
 					if ("TOO MANY ITEMS".equals(string)) {
-						player.sendMessage(Localizable.of("message.extendedcrafting.max_unique_items_exceeded").args(KEYS.length).build(), Util.field_240973_b_);
+						player.sendMessage(Localizable.of("message.extendedcrafting.max_unique_items_exceeded").args(KEYS.length).build(), Util.DUMMY_UUID);
 
 						return ActionResultType.SUCCESS;
 					}
@@ -117,10 +117,10 @@ public class RecipeMakerItem extends BaseItem implements IEnableable {
 					setClipboard(string);
 				}
 
-				player.sendMessage(Localizable.of("message.extendedcrafting.copied_recipe").build(), Util.field_240973_b_);
+				player.sendMessage(Localizable.of("message.extendedcrafting.copied_recipe").build(), Util.DUMMY_UUID);
 
 				if (ModConfigs.RECIPE_MAKER_USE_NBT.get() && !ModList.get().isLoaded("crafttweaker")) {
-					player.sendMessage(Localizable.of("message.extendedcrafting.nbt_requires_crafttweaker").build(), Util.field_240973_b_);
+					player.sendMessage(Localizable.of("message.extendedcrafting.nbt_requires_crafttweaker").build(), Util.DUMMY_UUID);
 				}
 			}
 
@@ -135,7 +135,7 @@ public class RecipeMakerItem extends BaseItem implements IEnableable {
 
 				setClipboard(string);
 
-				player.sendMessage(Localizable.of("message.extendedcrafting.copied_recipe").build(), Util.field_240973_b_);
+				player.sendMessage(Localizable.of("message.extendedcrafting.copied_recipe").build(), Util.DUMMY_UUID);
 			}
 
 			return ActionResultType.SUCCESS;
@@ -151,7 +151,7 @@ public class RecipeMakerItem extends BaseItem implements IEnableable {
 			NBTHelper.flipBoolean(stack, "Shapeless");
 
 			if (world.isRemote()) {
-				player.sendMessage(Localizable.of("message.extendedcrafting.changed_mode").args(getModeString(stack)).build(), Util.field_240973_b_);
+				player.sendMessage(Localizable.of("message.extendedcrafting.changed_mode").args(getModeString(stack)).build(), Util.DUMMY_UUID);
 			}
 		}
 

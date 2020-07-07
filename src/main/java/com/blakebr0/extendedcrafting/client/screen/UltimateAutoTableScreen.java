@@ -10,6 +10,7 @@ import com.blakebr0.extendedcrafting.container.UltimateAutoTableContainer;
 import com.blakebr0.extendedcrafting.lib.ModTooltips;
 import com.blakebr0.extendedcrafting.tileentity.AutoTableTileEntity;
 import com.google.common.collect.Lists;
+import com.mojang.blaze3d.matrix.MatrixStack;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.player.PlayerInventory;
@@ -18,6 +19,8 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.ITextProperties;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
 
 import java.util.List;
@@ -47,66 +50,67 @@ public class UltimateAutoTableScreen extends ContainerScreen<UltimateAutoTableCo
 	}
 
 	@Override
-	public void render(int mouseX, int mouseY, float partialTicks) {
+	public void render(MatrixStack stack, int mouseX, int mouseY, float partialTicks) {
 		int selected = this.getContainer().getSelected();
 		this.updateSelectedRecipeButtons(selected);
 
-		this.renderBackground();
-		super.render(mouseX, mouseY, partialTicks);
-		this.renderHoveredToolTip(mouseX, mouseY);
+		this.renderBackground(stack);
+		super.render(stack, mouseX, mouseY, partialTicks);
+		this.func_230459_a_(stack, mouseX, mouseY);
 	}
 
 	@Override
-	protected void renderHoveredToolTip(int mouseX, int mouseY) {
+	protected void func_230459_a_(MatrixStack stack, int mouseX, int mouseY) {
 		int x = this.getGuiLeft();
 		int y = this.getGuiTop();
 		UltimateAutoTableContainer container = this.getContainer();
 
-		super.renderHoveredToolTip(mouseX, mouseY);
+		super.func_230459_a_(stack, mouseX, mouseY);
 
 		if (mouseX > x + 7 && mouseX < x + 20 && mouseY > y + 59 && mouseY < y + 136) {
-			this.renderTooltip(container.getEnergyStored() + " FE", mouseX, mouseY);
+			StringTextComponent text = new StringTextComponent(container.getEnergyStored() + " FE");
+			this.renderTooltip(stack, text, mouseX, mouseY);
 		}
 
 		if (mouseX > x + 226 && mouseX < x + 239 && mouseY > y + 113 && mouseY < y + 129) {
-			this.renderTooltip(ModTooltips.TOGGLE_AUTO_CRAFTING.color(TextFormatting.WHITE).buildString(), mouseX, mouseY);
+			this.renderTooltip(stack, ModTooltips.TOGGLE_AUTO_CRAFTING.color(TextFormatting.WHITE).build(), mouseX, mouseY);
 		}
 
 		for (RecipeSelectButton button : this.recipeSelectButtons) {
 			if (button.isHovered()) {
 				BaseItemStackHandler recipe = this.getRecipeInfo(button.selected);
 				if (recipe != null) {
-					List<String> tooltip;
+					List<ITextProperties> tooltip;
 					boolean hasRecipe = !recipe.getStacks().stream().allMatch(ItemStack::isEmpty);
 					if (hasRecipe) {
 						ItemStack output = recipe.getStackInSlot(recipe.getSlots() - 1);
 						tooltip = Lists.newArrayList(
-								output.getCount() + "x " + output.getDisplayName().getFormattedText(),
-								"",
-								"Shift + Left Click to delete this recipe."
+								new StringTextComponent(output.getCount() + "x " + output.getDisplayName().getString()),
+								new StringTextComponent(""),
+								new StringTextComponent("Shift + Left Click to delete this recipe.")
 						);
 					} else {
 						tooltip = Lists.newArrayList(
-								"Shift + Left Click to save this recipe."
+								new StringTextComponent("Shift + Left Click to save this recipe.")
 						);
 					}
 
-					this.renderTooltip(tooltip, mouseX, mouseY);
+					this.renderTooltip(stack, tooltip, mouseX, mouseY);
 				}
 			}
 		}
 	}
 
 	@Override
-	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
-		String title = this.getTitle().getFormattedText();
-		this.font.drawString(title, 26.0F, 6.0F, 4210752);
-		String inventory = this.playerInventory.getDisplayName().getFormattedText();
-		this.font.drawString(inventory, 47.0F, this.ySize - 94.0F, 4210752);
+	protected void func_230451_b_(MatrixStack stack, int mouseX, int mouseY) {
+		String title = this.getTitle().getString();
+		this.font.drawString(stack, title, 26.0F, 6.0F, 4210752);
+		String inventory = this.playerInventory.getDisplayName().getString();
+		this.font.drawString(stack, inventory, 47.0F, this.ySize - 94.0F, 4210752);
 	}
 
 	@Override
-	protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
+	protected void func_230450_a_(MatrixStack stack, float partialTicks, int mouseX, int mouseY) {
 		this.getMinecraft().getTextureManager().bindTexture(BACKGROUND);
 		int x = this.getGuiLeft();
 		int y = this.getGuiTop();
@@ -129,8 +133,8 @@ public class UltimateAutoTableScreen extends ContainerScreen<UltimateAutoTableCo
 			for (int i = 0; i < 9; i++) {
 				for (int j = 0; j < 9; j++) {
 					int index = (i * 9) + j;
-					ItemStack stack = recipe.getStackInSlot(index);
-					GhostItemRenderer.renderItemIntoGui(stack, x + 27 + (j * 18), y + 18 + (i * 18), this.itemRenderer);
+					ItemStack item = recipe.getStackInSlot(index);
+					GhostItemRenderer.renderItemIntoGui(item, x + 27 + (j * 18), y + 18 + (i * 18), this.itemRenderer);
 				}
 			}
 		}

@@ -1,6 +1,5 @@
 package com.blakebr0.extendedcrafting.client.screen;
 
-import com.blakebr0.cucumber.util.Utils;
 import com.blakebr0.extendedcrafting.ExtendedCrafting;
 import com.blakebr0.extendedcrafting.container.CompressorContainer;
 import com.blakebr0.extendedcrafting.lib.ModTooltips;
@@ -8,6 +7,7 @@ import com.blakebr0.extendedcrafting.network.NetworkHandler;
 import com.blakebr0.extendedcrafting.network.message.EjectModeSwitchMessage;
 import com.blakebr0.extendedcrafting.network.message.InputLimitSwitchMessage;
 import com.blakebr0.extendedcrafting.tileentity.CompressorTileEntity;
+import com.mojang.blaze3d.matrix.MatrixStack;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.client.world.ClientWorld;
@@ -16,6 +16,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.ITextProperties;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
 
 import java.util.ArrayList;
@@ -37,80 +39,82 @@ public class CompressorScreen extends ContainerScreen<CompressorContainer> {
 		CompressorContainer container = this.getContainer();
 
 		super.init();
-		this.addButton(new Button(x + 69, y + 29, 11, 9, "", button -> {
+		this.addButton(new Button(x + 69, y + 29, 11, 9, new StringTextComponent(""), button -> {
 			NetworkHandler.INSTANCE.sendToServer(new EjectModeSwitchMessage(container.getPos()));
 		}) {
 			@Override
-			public void render(int mouseX, int mouseY, float partialTicks) {
+			public void render(MatrixStack stack, int mouseX, int mouseY, float partialTicks) {
 
 			}
 		});
-		this.addButton(new Button(x + 91, y + 74, 7, 10, "", button -> {
+		this.addButton(new Button(x + 91, y + 74, 7, 10, new StringTextComponent(""), button -> {
 			NetworkHandler.INSTANCE.sendToServer(new InputLimitSwitchMessage(container.getPos()));
 		}) {
 			@Override
-			public void render(int mouseX, int mouseY, float partialTicks) {
+			public void render(MatrixStack stack, int mouseX, int mouseY, float partialTicks) {
 
 			}
 		});
 	}
 
 	@Override
-	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
-		String title = this.getTitle().getFormattedText();
-		this.font.drawString(title, (float) (this.xSize / 2 - this.font.getStringWidth(title) / 2), 6.0F, 4210752);
-		String inventory = this.playerInventory.getDisplayName().getFormattedText();
-		this.font.drawString(inventory, 8.0F, this.ySize - 94.0F, 4210752);
-	}
-
-	@Override
-	public void render(int mouseX, int mouseY, float partialTicks) {
-		int left = this.guiLeft;
-		int top = this.guiTop;
+	public void render(MatrixStack stack, int mouseX, int mouseY, float partialTicks) {
+		int left = this.getGuiLeft();
+		int top = this.getGuiTop();
 		CompressorContainer container = this.getContainer();
 
-		this.renderBackground();
-		super.render(mouseX, mouseY, partialTicks);
-		this.renderHoveredToolTip(mouseX, mouseY);
+		this.renderBackground(stack);
+		super.render(stack, mouseX, mouseY, partialTicks);
+		this.func_230459_a_(stack, mouseX, mouseY);
 
 		if (mouseX > left + 7 && mouseX < left + 20 && mouseY > top + 17 && mouseY < top + 94) {
-			this.renderTooltip(Utils.asList(container.getEnergyStored() + " FE"), mouseX, mouseY);
+			StringTextComponent text = new StringTextComponent(container.getEnergyStored() + " FE");
+			this.renderTooltip(stack, text, mouseX, mouseY);
 		}
 
 		if (mouseX > left + 60 && mouseX < left + 85 && mouseY > top + 74 && mouseY < top + 83) {
-			List<String> tooltip = new ArrayList<>();
+			List<ITextProperties> tooltip = new ArrayList<>();
 			if (container.getMaterialCount() < 1) {
-				tooltip.add(ModTooltips.EMPTY.color(TextFormatting.WHITE).buildString());
+				tooltip.add(ModTooltips.EMPTY.color(TextFormatting.WHITE).build());
 			} else {
 				if (container.hasMaterialStack()) {
 					tooltip.add(this.getMaterialStackDisplayName());
 				}
 
-				tooltip.add(container.getMaterialCount() + " / " + container.getMaterialsRequired());
+				StringTextComponent text = new StringTextComponent(container.getMaterialCount() + " / " + container.getMaterialsRequired());
+				tooltip.add(text);
 			}
 
-			this.renderTooltip(tooltip, mouseX, mouseY);
+			this.renderTooltip(stack, tooltip, mouseX, mouseY);
 		}
 
 		if (mouseX > left + 68 && mouseX < left + 79 && mouseY > top + 28 && mouseY < top + 39) {
 			if (container.isEjecting()) {
-				this.renderTooltip(ModTooltips.EJECTING.color(TextFormatting.WHITE).buildString(), mouseX, mouseY);
+				this.renderTooltip(stack, ModTooltips.EJECTING.color(TextFormatting.WHITE).build(), mouseX, mouseY);
 			} else {
-				this.renderTooltip(ModTooltips.EJECT.color(TextFormatting.WHITE).buildString(), mouseX, mouseY);
+				this.renderTooltip(stack, ModTooltips.EJECT.color(TextFormatting.WHITE).build(), mouseX, mouseY);
 			}
 		}
 
 		if (mouseX > left + 90 && mouseX < left + 98 && mouseY > top + 73 && mouseY < top + 84) {
 			if (container.isLimitingInput()) {
-				this.renderTooltip(ModTooltips.LIMITED_INPUT.color(TextFormatting.WHITE).buildString(), mouseX, mouseY);
+				this.renderTooltip(stack, ModTooltips.LIMITED_INPUT.color(TextFormatting.WHITE).build(), mouseX, mouseY);
 			} else {
-				this.renderTooltip(ModTooltips.UNLIMITED_INPUT.color(TextFormatting.WHITE).buildString(), mouseX, mouseY);
+				this.renderTooltip(stack, ModTooltips.UNLIMITED_INPUT.color(TextFormatting.WHITE).build(), mouseX, mouseY);
 			}
 		}
 	}
 
 	@Override
-	protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
+	protected void func_230451_b_(MatrixStack stack, int mouseX, int mouseY) {
+		String title = this.getTitle().getString();
+		this.font.drawString(stack, title, (float) (this.xSize / 2 - this.font.getStringWidth(title) / 2), 6.0F, 4210752);
+		String inventory = this.playerInventory.getDisplayName().getString();
+		this.font.drawString(stack, inventory, 8.0F, this.ySize - 94.0F, 4210752);
+	}
+
+	@Override
+	protected void func_230450_a_(MatrixStack stack, float partialTicks, int mouseX, int mouseY) {
 		this.getMinecraft().getTextureManager().bindTexture(BACKGROUND);
 		int x = (this.width - this.xSize) / 2;
 		int y = (this.height - this.ySize) / 2;
@@ -118,43 +122,42 @@ public class CompressorScreen extends ContainerScreen<CompressorContainer> {
 		int top = this.guiTop;
 		CompressorContainer container = this.getContainer();
 
-		this.blit(x, y, 0, 0, this.xSize, this.ySize);
+		this.blit(stack, x, y, 0, 0, this.xSize, this.ySize);
 
 		int i1 = container.getEnergyBarScaled(78);
-		this.blit(x + 7, y + 95 - i1, 178, 78 - i1, 15, i1 + 1);
+		this.blit(stack, x + 7, y + 95 - i1, 178, 78 - i1, 15, i1 + 1);
 
 		if (container.hasRecipe()) {
 			if (container.getMaterialCount() > 0 && container.getMaterialsRequired() > 0) {
 				int i2 = container.getMaterialBarScaled(26);
-				this.blit(x + 60, y + 74, 194, 19, i2 + 1, 10);
+				this.blit(stack, x + 60, y + 74, 194, 19, i2 + 1, 10);
 			}
 
 			if (container.getProgress() > 0 && container.getEnergyRequired() > 0) {
 				int i2 = container.getProgressBarScaled(24);
-				this.blit(x + 96, y + 47, 194, 0, i2 + 1, 16);
+				this.blit(stack, x + 96, y + 47, 194, 0, i2 + 1, 16);
 			}
 		}
 
 		if (mouseX > left + 68 && mouseX < left + 79 && mouseY > top + 28 && mouseY < top + 39) {
-			this.blit(x + 68, y + 30, 194, 32, 11, 9);
+			this.blit(stack, x + 68, y + 30, 194, 32, 11, 9);
 		}
 		
 		
 		if (mouseX > left + 90 && mouseX < left + 98 && mouseY > top + 73 && mouseY < top + 84) {
 			if (container.isLimitingInput()) {
-				this.blit(x + 90, y + 74, 194, 56, 9, 10);
+				this.blit(stack, x + 90, y + 74, 194, 56, 9, 10);
 			} else {
-				this.blit(x + 90, y + 74, 194, 43, 9, 10);
+				this.blit(stack, x + 90, y + 74, 194, 43, 9, 10);
 			}
 		} else {
 			if (container.isLimitingInput()) {
-				this.blit(x + 90, y + 74, 203, 56, 9, 10);
+				this.blit(stack, x + 90, y + 74, 203, 56, 9, 10);
 			}
 		}
 	}
 
-	// TODO: Figure out how to sync this properly, this works for now though
-	private String getMaterialStackDisplayName() {
+	private ITextProperties getMaterialStackDisplayName() {
 		ClientWorld world = this.getMinecraft().world;
 		if (world != null) {
 			CompressorContainer container = this.getContainer();
@@ -163,10 +166,10 @@ public class CompressorScreen extends ContainerScreen<CompressorContainer> {
 				CompressorTileEntity compressor = (CompressorTileEntity) tile;
 				ItemStack materialStack = compressor.getMaterialStack();
 
-				return materialStack.getDisplayName().getFormattedText();
+				return materialStack.getDisplayName();
 			}
 		}
 
-		return "";
+		return new StringTextComponent("");
 	}
 }

@@ -1,6 +1,6 @@
 package com.blakebr0.extendedcrafting.client.screen;
 
-import com.blakebr0.cucumber.util.Localizable;
+import com.blakebr0.cucumber.client.screen.BaseContainerScreen;
 import com.blakebr0.extendedcrafting.ExtendedCrafting;
 import com.blakebr0.extendedcrafting.container.CraftingCoreContainer;
 import com.blakebr0.extendedcrafting.crafting.recipe.CombinationRecipe;
@@ -8,7 +8,6 @@ import com.blakebr0.extendedcrafting.tileentity.CraftingCoreTileEntity;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.player.PlayerInventory;
@@ -18,13 +17,11 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 
-public class CraftingCoreScreen extends ContainerScreen<CraftingCoreContainer> {
+public class CraftingCoreScreen extends BaseContainerScreen<CraftingCoreContainer> {
 	private static final ResourceLocation BACKGROUND = new ResourceLocation(ExtendedCrafting.MOD_ID, "textures/gui/crafting_core.png");
 
 	public CraftingCoreScreen(CraftingCoreContainer container, PlayerInventory inventory, ITextComponent title) {
-		super(container, inventory, title);
-		this.xSize = 176;
-		this.ySize = 194;
+		super(container, inventory, title, BACKGROUND, 176, 194);
 	}
 
 	@Override
@@ -33,9 +30,7 @@ public class CraftingCoreScreen extends ContainerScreen<CraftingCoreContainer> {
 		int top = this.guiTop;
 		CraftingCoreContainer container = this.getContainer();
 
-		this.renderBackground(stack);
 		super.render(stack, mouseX, mouseY, partialTicks);
-		this.func_230459_a_(stack, mouseX, mouseY);
 
 		if (container.hasRecipe()) {
 			ItemStack output = this.getRecipeOutput();
@@ -79,12 +74,11 @@ public class CraftingCoreScreen extends ContainerScreen<CraftingCoreContainer> {
 
 	@Override
 	protected void func_230450_a_(MatrixStack stack, float partialTicks, int mouseX, int mouseY) {
-		this.getMinecraft().getTextureManager().bindTexture(BACKGROUND);
+		super.func_230450_a_(stack, partialTicks, mouseX, mouseY);
+
 		int left = this.guiLeft;
 		int top = this.guiTop;
 		CraftingCoreContainer container = this.getContainer();
-
-		this.blit(stack, left, top, 0, 0, this.xSize, this.ySize);
 
 		int i1 = container.getEnergyBarScaled(78);
 		this.blit(stack, left + 7, top + 95 - i1, 178, 78 - i1, 15, i1 + 1);
@@ -133,10 +127,6 @@ public class CraftingCoreScreen extends ContainerScreen<CraftingCoreContainer> {
 		RenderSystem.enableLighting();
 		RenderSystem.enableDepthTest();
 		RenderSystem.popMatrix();
-	}
-
-	private String text(String key, Object... args) {
-		return Localizable.of(key).args(args).buildString();
 	}
 
 	private ItemStack getRecipeOutput() {

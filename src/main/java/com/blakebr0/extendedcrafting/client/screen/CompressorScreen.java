@@ -1,5 +1,6 @@
 package com.blakebr0.extendedcrafting.client.screen;
 
+import com.blakebr0.cucumber.client.screen.BaseContainerScreen;
 import com.blakebr0.extendedcrafting.ExtendedCrafting;
 import com.blakebr0.extendedcrafting.container.CompressorContainer;
 import com.blakebr0.extendedcrafting.lib.ModTooltips;
@@ -23,22 +24,21 @@ import net.minecraft.util.text.TextFormatting;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CompressorScreen extends ContainerScreen<CompressorContainer> {
+public class CompressorScreen extends BaseContainerScreen<CompressorContainer> {
 	private static final ResourceLocation BACKGROUND = new ResourceLocation(ExtendedCrafting.MOD_ID, "textures/gui/compressor.png");
 
 	public CompressorScreen(CompressorContainer container, PlayerInventory inventory, ITextComponent title) {
-		super(container, inventory, title);
-		this.xSize = 176;
-		this.ySize = 194;
+		super(container, inventory, title, BACKGROUND, 176, 194);
 	}
 
 	@Override
 	public void init() {
-		int x = (this.width - this.xSize) / 2;
-		int y = (this.height - this.ySize) / 2;
+		super.init();
+
+		int x = this.getGuiLeft();
+		int y = this.getGuiTop();
 		CompressorContainer container = this.getContainer();
 
-		super.init();
 		this.addButton(new Button(x + 69, y + 29, 11, 9, new StringTextComponent(""), button -> {
 			NetworkHandler.INSTANCE.sendToServer(new EjectModeSwitchMessage(container.getPos()));
 		}) {
@@ -63,9 +63,7 @@ public class CompressorScreen extends ContainerScreen<CompressorContainer> {
 		int top = this.getGuiTop();
 		CompressorContainer container = this.getContainer();
 
-		this.renderBackground(stack);
 		super.render(stack, mouseX, mouseY, partialTicks);
-		this.func_230459_a_(stack, mouseX, mouseY);
 
 		if (mouseX > left + 7 && mouseX < left + 20 && mouseY > top + 17 && mouseY < top + 94) {
 			StringTextComponent text = new StringTextComponent(container.getEnergyStored() + " FE");
@@ -115,14 +113,11 @@ public class CompressorScreen extends ContainerScreen<CompressorContainer> {
 
 	@Override
 	protected void func_230450_a_(MatrixStack stack, float partialTicks, int mouseX, int mouseY) {
-		this.getMinecraft().getTextureManager().bindTexture(BACKGROUND);
-		int x = (this.width - this.xSize) / 2;
-		int y = (this.height - this.ySize) / 2;
-		int left = this.guiLeft;
-		int top = this.guiTop;
-		CompressorContainer container = this.getContainer();
+		super.func_230450_a_(stack, partialTicks, mouseX, mouseY);
 
-		this.blit(stack, x, y, 0, 0, this.xSize, this.ySize);
+		int x = this.getGuiLeft();
+		int y = this.getGuiTop();
+		CompressorContainer container = this.getContainer();
 
 		int i1 = container.getEnergyBarScaled(78);
 		this.blit(stack, x + 7, y + 95 - i1, 178, 78 - i1, 15, i1 + 1);
@@ -139,12 +134,12 @@ public class CompressorScreen extends ContainerScreen<CompressorContainer> {
 			}
 		}
 
-		if (mouseX > left + 68 && mouseX < left + 79 && mouseY > top + 28 && mouseY < top + 39) {
+		if (mouseX > x + 68 && mouseX < x + 79 && mouseY > y + 28 && mouseY < y + 39) {
 			this.blit(stack, x + 68, y + 30, 194, 32, 11, 9);
 		}
 		
 		
-		if (mouseX > left + 90 && mouseX < left + 98 && mouseY > top + 73 && mouseY < top + 84) {
+		if (mouseX > x + 90 && mouseX < x + 98 && mouseY > y + 73 && mouseY < y + 84) {
 			if (container.isLimitingInput()) {
 				this.blit(stack, x + 90, y + 74, 194, 56, 9, 10);
 			} else {

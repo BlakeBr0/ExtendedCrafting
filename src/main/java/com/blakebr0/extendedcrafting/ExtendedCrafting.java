@@ -77,8 +77,8 @@ public final class ExtendedCrafting {
 
 	@SubscribeEvent(priority = EventPriority.HIGH)
 	public void onServerAboutToStart(FMLServerAboutToStartEvent event) {
-		IReloadableResourceManager manager = (IReloadableResourceManager) event.getServer().getDataPackRegistries().func_240970_h_();
-
-		manager.addReloadListener(new DynamicRecipeManager());
+//		IReloadableResourceManager manager = (IReloadableResourceManager) event.getServer().getDataPackRegistries().func_240970_h_();
+//
+//		manager.addReloadListener(new DynamicRecipeManager());
 	}
 }

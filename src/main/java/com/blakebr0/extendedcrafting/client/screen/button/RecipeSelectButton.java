@@ -1,24 +1,19 @@
 package com.blakebr0.extendedcrafting.client.screen.button;
 
+import com.blakebr0.cucumber.client.screen.button.IconButton;
 import com.blakebr0.extendedcrafting.client.screen.BasicAutoTableScreen;
 import com.blakebr0.extendedcrafting.network.NetworkHandler;
 import com.blakebr0.extendedcrafting.network.message.SaveRecipeMessage;
 import com.blakebr0.extendedcrafting.network.message.SelectRecipeMessage;
-import com.mojang.blaze3d.matrix.MatrixStack;
-import com.mojang.blaze3d.platform.GlStateManager;
-import com.mojang.blaze3d.systems.RenderSystem;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.StringTextComponent;
-//TODO
-public class RecipeSelectButton extends Button {
+
+public class RecipeSelectButton extends IconButton {
     public final int selected;
     public boolean active;
 
     public RecipeSelectButton(int x, int y, BlockPos pos, int selected) {
-        super(x, y, 11, 11, new StringTextComponent(""), button -> {
+        super(x, y, 11, 11, 209 + (selected * 11), 0, BasicAutoTableScreen.BACKGROUND, button -> {
             if (Screen.hasShiftDown()) {
                 NetworkHandler.INSTANCE.sendToServer(new SaveRecipeMessage(pos, selected));
             } else {
@@ -27,18 +22,6 @@ public class RecipeSelectButton extends Button {
         });
 
         this.selected = selected;
-    }
-
-    @Override
-    public void renderButton(MatrixStack stack, int mouseX, int mouseY, float partialTicks) {
-        Minecraft minecraft = Minecraft.getInstance();
-        minecraft.getTextureManager().bindTexture(BasicAutoTableScreen.BACKGROUND);
-        RenderSystem.color4f(1.0F, 1.0F, 1.0F, this.alpha);
-        int i = this.getYImage(this.isHovered());
-        RenderSystem.enableBlend();
-        RenderSystem.defaultBlendFunc();
-        RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
-        this.blit(stack, this.x, this.y, 209 + (this.selected * 11), i * 11, this.width, this.height);
     }
 
     @Override

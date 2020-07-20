@@ -2,6 +2,7 @@ package com.blakebr0.extendedcrafting.client.screen;
 
 import com.blakebr0.cucumber.client.helper.RenderHelper;
 import com.blakebr0.cucumber.client.render.GhostItemRenderer;
+import com.blakebr0.cucumber.client.screen.BaseContainerScreen;
 import com.blakebr0.cucumber.inventory.BaseItemStackHandler;
 import com.blakebr0.extendedcrafting.ExtendedCrafting;
 import com.blakebr0.extendedcrafting.client.screen.button.RecipeSelectButton;
@@ -11,7 +12,6 @@ import com.blakebr0.extendedcrafting.lib.ModTooltips;
 import com.blakebr0.extendedcrafting.tileentity.AutoTableTileEntity;
 import com.google.common.collect.Lists;
 import com.mojang.blaze3d.matrix.MatrixStack;
-import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
@@ -25,14 +25,12 @@ import net.minecraft.util.text.TextFormatting;
 
 import java.util.List;
 
-public class UltimateAutoTableScreen extends ContainerScreen<UltimateAutoTableContainer> {
+public class UltimateAutoTableScreen extends BaseContainerScreen<UltimateAutoTableContainer> {
 	public static final ResourceLocation BACKGROUND = new ResourceLocation(ExtendedCrafting.MOD_ID, "textures/gui/ultimate_auto_table.png");
 	private final RecipeSelectButton[] recipeSelectButtons = new RecipeSelectButton[3];
 
 	public UltimateAutoTableScreen(UltimateAutoTableContainer container, PlayerInventory inventory, ITextComponent title) {
-		super(container, inventory, title);
-		this.xSize = 254;
-		this.ySize = 278;
+		super(container, inventory, title, BACKGROUND, 254, 278, 512, 512);
 	}
 
 	@Override
@@ -54,9 +52,7 @@ public class UltimateAutoTableScreen extends ContainerScreen<UltimateAutoTableCo
 		int selected = this.getContainer().getSelected();
 		this.updateSelectedRecipeButtons(selected);
 
-		this.renderBackground(stack);
 		super.render(stack, mouseX, mouseY, partialTicks);
-		this.func_230459_a_(stack, mouseX, mouseY);
 	}
 
 	@Override
@@ -111,12 +107,11 @@ public class UltimateAutoTableScreen extends ContainerScreen<UltimateAutoTableCo
 
 	@Override
 	protected void func_230450_a_(MatrixStack stack, float partialTicks, int mouseX, int mouseY) {
-		this.getMinecraft().getTextureManager().bindTexture(BACKGROUND);
+		super.func_230450_a_(stack, partialTicks, mouseX, mouseY);
+
 		int x = this.getGuiLeft();
 		int y = this.getGuiTop();
 		UltimateAutoTableContainer container = this.getContainer();
-
-		RenderHelper.drawTexturedModalRect(x, y, 0, 0, this.xSize, this.ySize, 512, 512);
 
 		int i1 = container.getEnergyBarScaled(78);
 		RenderHelper.drawTexturedModalRect(x + 7, y + 137 - i1, 256, 78 - i1, 15, i1 + 1, 512, 512);

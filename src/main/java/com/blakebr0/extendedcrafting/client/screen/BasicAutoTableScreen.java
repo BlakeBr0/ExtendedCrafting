@@ -1,6 +1,7 @@
 package com.blakebr0.extendedcrafting.client.screen;
 
 import com.blakebr0.cucumber.client.render.GhostItemRenderer;
+import com.blakebr0.cucumber.client.screen.BaseContainerScreen;
 import com.blakebr0.cucumber.inventory.BaseItemStackHandler;
 import com.blakebr0.extendedcrafting.ExtendedCrafting;
 import com.blakebr0.extendedcrafting.client.screen.button.RecipeSelectButton;
@@ -10,7 +11,6 @@ import com.blakebr0.extendedcrafting.lib.ModTooltips;
 import com.blakebr0.extendedcrafting.tileentity.AutoTableTileEntity;
 import com.google.common.collect.Lists;
 import com.mojang.blaze3d.matrix.MatrixStack;
-import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
@@ -24,14 +24,12 @@ import net.minecraft.util.text.TextFormatting;
 
 import java.util.List;
 
-public class BasicAutoTableScreen extends ContainerScreen<BasicAutoTableContainer> {
+public class BasicAutoTableScreen extends BaseContainerScreen<BasicAutoTableContainer> {
 	public static final ResourceLocation BACKGROUND = new ResourceLocation(ExtendedCrafting.MOD_ID, "textures/gui/basic_auto_table.png");
 	private final RecipeSelectButton[] recipeSelectButtons = new RecipeSelectButton[3];
 
 	public BasicAutoTableScreen(BasicAutoTableContainer container, PlayerInventory inventory, ITextComponent title) {
-		super(container, inventory, title);
-		this.xSize = 176;
-		this.ySize = 194;
+		super(container, inventory, title, BACKGROUND, 176, 194);
 	}
 
 	@Override
@@ -53,9 +51,7 @@ public class BasicAutoTableScreen extends ContainerScreen<BasicAutoTableContaine
 		int selected = this.getContainer().getSelected();
 		this.updateSelectedRecipeButtons(selected);
 
-		this.renderBackground(stack);
 		super.render(stack, mouseX, mouseY, partialTicks);
-		this.func_230459_a_(stack, mouseX, mouseY);
 	}
 
 	@Override
@@ -110,12 +106,11 @@ public class BasicAutoTableScreen extends ContainerScreen<BasicAutoTableContaine
 
 	@Override
 	protected void func_230450_a_(MatrixStack stack, float partialTicks, int mouseX, int mouseY) {
-		this.getMinecraft().getTextureManager().bindTexture(BACKGROUND);
+		super.func_230450_a_(stack, partialTicks, mouseX, mouseY);
+
 		int x = this.getGuiLeft();
 		int y = this.getGuiTop();
 		BasicAutoTableContainer container = this.getContainer();
-
-		this.blit(stack, x, y, 0, 0, this.xSize, this.ySize);
 
 		int i1 = container.getEnergyBarScaled(78);
 		this.blit(stack, x + 7, y + 95 - i1, 178, 78 - i1, 15, i1 + 1);

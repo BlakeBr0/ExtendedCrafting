@@ -4,7 +4,7 @@ import com.blakebr0.cucumber.util.Tooltip;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.fml.ModList;
 
-public class ModTooltips {
+public final class ModTooltips {
     public static final Tooltip EMPTY = new Tooltip("tooltip.extendedcrafting.empty");
     public static final Tooltip EJECT = new Tooltip("tooltip.extendedcrafting.eject");
     public static final Tooltip EJECTING = new Tooltip("tooltip.extendedcrafting.ejecting");

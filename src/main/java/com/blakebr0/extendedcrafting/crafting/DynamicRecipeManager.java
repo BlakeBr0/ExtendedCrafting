@@ -15,7 +15,8 @@ import net.minecraft.item.crafting.RecipeManager;
 import net.minecraft.resources.IResourceManager;
 import net.minecraft.resources.IResourceManagerReloadListener;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.server.ServerLifecycleHooks;
+import net.minecraftforge.event.AddReloadListenerEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.HashMap;
@@ -35,14 +36,19 @@ public final class DynamicRecipeManager implements IResourceManagerReloadListene
     }
 
     public static RecipeManager getRecipeManager() {
-        if (recipeManager == null) {
-            RecipeManager recipeManager = ServerLifecycleHooks.getCurrentServer().getRecipeManager();
+        if (recipeManager != null && !recipeManager.recipes.getClass().equals(HashMap.class)) {
             recipeManager.recipes = new HashMap<>(recipeManager.recipes);
             recipeManager.recipes.replaceAll((t, v) -> new HashMap<>(recipeManager.recipes.get(t)));
-            DynamicRecipeManager.recipeManager = recipeManager;
         }
 
         return recipeManager;
+    }
+
+    @SubscribeEvent
+    public void onAddReloadListener(AddReloadListenerEvent event) {
+        recipeManager = event.getDataPackRegistries().func_240967_e_();
+
+        event.addListener(this);
     }
 
     private CompressorRecipe makeSingularityRecipe(Singularity singularity) {

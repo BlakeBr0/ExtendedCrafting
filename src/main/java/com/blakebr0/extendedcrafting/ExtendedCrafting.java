@@ -13,10 +13,8 @@ import com.blakebr0.extendedcrafting.init.ModTileEntities;
 import com.blakebr0.extendedcrafting.network.NetworkHandler;
 import com.blakebr0.extendedcrafting.singularity.SingularityRegistry;
 import net.minecraft.item.ItemGroup;
-import net.minecraft.resources.IReloadableResourceManager;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.DeferredWorkQueue;
@@ -26,7 +24,6 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
-import net.minecraftforge.fml.event.server.FMLServerAboutToStartEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 
 @Mod(ExtendedCrafting.MOD_ID)
@@ -59,6 +56,7 @@ public final class ExtendedCrafting {
 	@SubscribeEvent
 	public void onCommonSetup(FMLCommonSetupEvent event) {
 		MinecraftForge.EVENT_BUS.register(this);
+		MinecraftForge.EVENT_BUS.register(new DynamicRecipeManager());
 
 		DeferredWorkQueue.runLater(() -> {
 			NetworkHandler.onCommonSetup();
@@ -73,12 +71,5 @@ public final class ExtendedCrafting {
 
 		ModTileEntities.onClientSetup();
 		ModContainerTypes.onClientSetup();
-	}
-
-	@SubscribeEvent(priority = EventPriority.HIGH)
-	public void onServerAboutToStart(FMLServerAboutToStartEvent event) {
-//		IReloadableResourceManager manager = (IReloadableResourceManager) event.getServer().getDataPackRegistries().func_240970_h_();
-//
-//		manager.addReloadListener(new DynamicRecipeManager());
 	}
 }

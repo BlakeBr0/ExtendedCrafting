@@ -10,6 +10,7 @@ import com.blakebr0.extendedcrafting.config.ModConfigs;
 import com.blakebr0.extendedcrafting.container.CraftingCoreContainer;
 import com.blakebr0.extendedcrafting.crafting.recipe.CombinationRecipe;
 import com.blakebr0.extendedcrafting.init.ModTileEntities;
+import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;
@@ -47,29 +48,19 @@ public class CraftingCoreTileEntity extends BaseInventoryTileEntity implements I
 		@Override
 		public int get(int i) {
 			switch (i) {
-				case 0:
-					return CraftingCoreTileEntity.this.getProgress();
-				case 1:
-					return CraftingCoreTileEntity.this.getPedestalCount();
-				case 2:
-					return CraftingCoreTileEntity.this.getEnergy().getEnergyStored();
-				case 3:
-					return CraftingCoreTileEntity.this.getEnergy().getMaxEnergyStored();
-				case 4:
-					return CraftingCoreTileEntity.this.getEnergyRequired();
-				case 5:
-					return CraftingCoreTileEntity.this.getEnergyRate();
-				case 6:
-					return CraftingCoreTileEntity.this.hasRecipe() ? 1 : 0;
-				default:
-					return 0;
+				case 0: return CraftingCoreTileEntity.this.getProgress();
+				case 1: return CraftingCoreTileEntity.this.getPedestalCount();
+				case 2: return CraftingCoreTileEntity.this.getEnergy().getEnergyStored();
+				case 3: return CraftingCoreTileEntity.this.getEnergy().getMaxEnergyStored();
+				case 4: return CraftingCoreTileEntity.this.getEnergyRequired();
+				case 5: return CraftingCoreTileEntity.this.getEnergyRate();
+				case 6: return CraftingCoreTileEntity.this.hasRecipe() ? 1 : 0;
+				default: return 0;
 			}
 		}
 
 		@Override
-		public void set(int i, int value) {
-
-		}
+		public void set(int i, int value) { }
 
 		@Override
 		public int size() {
@@ -88,8 +79,8 @@ public class CraftingCoreTileEntity extends BaseInventoryTileEntity implements I
 	}
 
 	@Override
-	public void read(CompoundNBT tag) {
-		super.read(tag);
+	public void read(BlockState state, CompoundNBT tag) {
+		super.read(state, tag);
 		this.progress = tag.getInt("Progress");
 		this.energy.setEnergy(tag.getInt("Energy"));
 	}

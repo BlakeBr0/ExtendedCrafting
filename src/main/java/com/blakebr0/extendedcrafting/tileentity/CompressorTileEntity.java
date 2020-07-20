@@ -10,6 +10,7 @@ import com.blakebr0.extendedcrafting.config.ModConfigs;
 import com.blakebr0.extendedcrafting.container.CompressorContainer;
 import com.blakebr0.extendedcrafting.crafting.recipe.CompressorRecipe;
 import com.blakebr0.extendedcrafting.init.ModTileEntities;
+import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;
@@ -40,35 +41,22 @@ public class CompressorTileEntity extends BaseInventoryTileEntity implements ITi
 		@Override
 		public int get(int i) {
 			switch (i) {
-				case 0:
-					return CompressorTileEntity.this.getProgress();
-				case 1:
-					return CompressorTileEntity.this.getMaterialCount();
-				case 2:
-					return CompressorTileEntity.this.isEjecting() ? 1 : 0;
-				case 3:
-					return CompressorTileEntity.this.isLimitingInput() ? 1 : 0;
-				case 4:
-					return CompressorTileEntity.this.getEnergy().getEnergyStored();
-				case 5:
-					return CompressorTileEntity.this.getEnergy().getMaxEnergyStored();
-				case 6:
-					return CompressorTileEntity.this.getEnergyRequired();
-				case 7:
-					return CompressorTileEntity.this.getMaterialsRequired();
-				case 8:
-					return CompressorTileEntity.this.hasRecipe() ? 1 : 0;
-				case 9:
-					return CompressorTileEntity.this.hasMaterialStack() ? 1 : 0;
-				default:
-					return 0;
+				case 0: return CompressorTileEntity.this.getProgress();
+				case 1: return CompressorTileEntity.this.getMaterialCount();
+				case 2: return CompressorTileEntity.this.isEjecting() ? 1 : 0;
+				case 3: return CompressorTileEntity.this.isLimitingInput() ? 1 : 0;
+				case 4: return CompressorTileEntity.this.getEnergy().getEnergyStored();
+				case 5: return CompressorTileEntity.this.getEnergy().getMaxEnergyStored();
+				case 6: return CompressorTileEntity.this.getEnergyRequired();
+				case 7: return CompressorTileEntity.this.getMaterialsRequired();
+				case 8: return CompressorTileEntity.this.hasRecipe() ? 1 : 0;
+				case 9: return CompressorTileEntity.this.hasMaterialStack() ? 1 : 0;
+				default: return 0;
 			}
 		}
 
 		@Override
-		public void set(int i, int value) {
-
-		}
+		public void set(int i, int value) { }
 
 		@Override
 		public int size() {
@@ -88,8 +76,8 @@ public class CompressorTileEntity extends BaseInventoryTileEntity implements ITi
 	}
 
 	@Override
-	public void read(CompoundNBT tag) {
-		super.read(tag);
+	public void read(BlockState state, CompoundNBT tag) {
+		super.read(state, tag);
 		this.materialCount = tag.getInt("MaterialCount");
 		this.materialStack = ItemStack.read(tag.getCompound("MaterialStack"));
 		this.progress = tag.getInt("Progress");
@@ -201,8 +189,9 @@ public class CompressorTileEntity extends BaseInventoryTileEntity implements ITi
 			}
 
 			// TODO: Is dispatching every time necessary?
-			if (mark)
+			if (mark) {
 				this.markDirtyAndDispatch();
+			}
 		}
 	}
 

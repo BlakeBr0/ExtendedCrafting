@@ -11,6 +11,7 @@ import com.blakebr0.extendedcrafting.config.ModConfigs;
 import com.blakebr0.extendedcrafting.container.EnderCrafterContainer;
 import com.blakebr0.extendedcrafting.init.ModTileEntities;
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.IInventory;
@@ -40,19 +41,14 @@ public class EnderCrafterTileEntity extends BaseInventoryTileEntity implements I
 		@Override
 		public int get(int i) {
 			switch (i) {
-				case 0:
-					return EnderCrafterTileEntity.this.getProgress();
-				case 1:
-					return EnderCrafterTileEntity.this.getProgressRequired();
-				default:
-					return 0;
+				case 0: return EnderCrafterTileEntity.this.getProgress();
+				case 1: return EnderCrafterTileEntity.this.getProgressRequired();
+				default: return 0;
 			}
 		}
 
 		@Override
-		public void set(int i, int value) {
-
-		}
+		public void set(int i, int value) { }
 
 		@Override
 		public int size() {
@@ -70,8 +66,8 @@ public class EnderCrafterTileEntity extends BaseInventoryTileEntity implements I
 	}
 
 	@Override
-	public void read(CompoundNBT tag) {
-		super.read(tag);
+	public void read(BlockState state, CompoundNBT tag) {
+		super.read(state, tag);
 		this.progress = tag.getInt("Progress");
 		this.progressReq = tag.getInt("ProgressReq");
 	}

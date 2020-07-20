@@ -14,6 +14,7 @@ import com.blakebr0.extendedcrafting.container.EliteAutoTableContainer;
 import com.blakebr0.extendedcrafting.container.UltimateAutoTableContainer;
 import com.blakebr0.extendedcrafting.crafting.TableRecipeStorage;
 import com.blakebr0.extendedcrafting.init.ModTileEntities;
+import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.IInventory;
@@ -44,27 +45,18 @@ public abstract class AutoTableTileEntity extends BaseInventoryTileEntity implem
         @Override
         public int get(int index) {
             switch (index) {
-                case 0:
-                    return AutoTableTileEntity.this.getEnergy().getEnergyStored();
-                case 1:
-                    return AutoTableTileEntity.this.getEnergy().getMaxEnergyStored();
-                case 2:
-                    return AutoTableTileEntity.this.getProgress();
-                case 3:
-                    return AutoTableTileEntity.this.getProgressRequired();
-                case 4:
-                    return AutoTableTileEntity.this.isRunning() ? 1 : 0;
-                case 5:
-                    return AutoTableTileEntity.this.getRecipeStorage().getSelected();
-                default:
-                    return 0;
+                case 0: return AutoTableTileEntity.this.getEnergy().getEnergyStored();
+                case 1: return AutoTableTileEntity.this.getEnergy().getMaxEnergyStored();
+                case 2: return AutoTableTileEntity.this.getProgress();
+                case 3: return AutoTableTileEntity.this.getProgressRequired();
+                case 4: return AutoTableTileEntity.this.isRunning() ? 1 : 0;
+                case 5: return AutoTableTileEntity.this.getRecipeStorage().getSelected();
+                default: return 0;
             }
         }
 
         @Override
-        public void set(int index, int value) {
-
-        }
+        public void set(int index, int value) { }
 
         @Override
         public int size() {
@@ -88,8 +80,8 @@ public abstract class AutoTableTileEntity extends BaseInventoryTileEntity implem
     }
 
     @Override
-    public void read(CompoundNBT tag) {
-        super.read(tag);
+    public void read(BlockState state, CompoundNBT tag) {
+        super.read(state, tag);
         this.progress = tag.getInt("Progress");
         this.running = tag.getBoolean("Running");
         this.getEnergy().setEnergy(tag.getInt("Energy"));

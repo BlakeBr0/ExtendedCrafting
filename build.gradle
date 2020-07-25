@@ -11,7 +11,7 @@ buildscript {
 apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'idea'
 
-version = '2.0.4'
+version = '2.0.5'
 group = 'com.blakebr0.extendedcrafting'
 archivesBaseName = 'ExtendedCrafting-1.15.2'
 

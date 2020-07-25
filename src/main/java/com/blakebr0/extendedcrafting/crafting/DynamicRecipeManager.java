@@ -36,10 +36,12 @@ public class DynamicRecipeManager implements IResourceManagerReloadListener {
 
     public static RecipeManager getRecipeManager() {
         if (recipeManager == null) {
-            RecipeManager recipeManager = ServerLifecycleHooks.getCurrentServer().getRecipeManager();
+            DynamicRecipeManager.recipeManager = ServerLifecycleHooks.getCurrentServer().getRecipeManager();
+        }
+
+        if (!recipeManager.recipes.getClass().equals(HashMap.class)) {
             recipeManager.recipes = new HashMap<>(recipeManager.recipes);
             recipeManager.recipes.replaceAll((t, v) -> new HashMap<>(recipeManager.recipes.get(t)));
-            DynamicRecipeManager.recipeManager = recipeManager;
         }
 
         return recipeManager;

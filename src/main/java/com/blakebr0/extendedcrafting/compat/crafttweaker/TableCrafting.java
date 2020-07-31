@@ -1,7 +1,7 @@
 package com.blakebr0.extendedcrafting.compat.crafttweaker;
 
+import com.blakebr0.cucumber.helper.RecipeHelper;
 import com.blakebr0.extendedcrafting.api.crafting.RecipeTypes;
-import com.blakebr0.extendedcrafting.crafting.DynamicRecipeManager;
 import com.blakebr0.extendedcrafting.crafting.recipe.ShapedTableRecipe;
 import com.blakebr0.extendedcrafting.crafting.recipe.ShapelessTableRecipe;
 import com.blamejared.crafttweaker.api.CraftTweakerAPI;
@@ -65,9 +65,7 @@ public final class TableCrafting {
 				}
 
 				ShapedTableRecipe recipe = new ShapedTableRecipe(new ResourceLocation("crafttweaker", id), width, height, ingredients, output.getInternal(), clampTier(tier));
-				DynamicRecipeManager.getRecipeManager().recipes
-						.computeIfAbsent(RecipeTypes.TABLE, t -> new HashMap<>())
-						.put(recipe.getId(), recipe);
+				RecipeHelper.addRecipe(recipe);
 			}
 
 			@Override
@@ -106,9 +104,7 @@ public final class TableCrafting {
 			@Override
 			public void apply() {
 				ShapelessTableRecipe recipe = new ShapelessTableRecipe(new ResourceLocation("crafttweaker", id), toIngredientsList(inputs), output.getInternal(), clampTier(tier));
-				DynamicRecipeManager.getRecipeManager().recipes
-						.computeIfAbsent(RecipeTypes.TABLE, t -> new HashMap<>())
-						.put(recipe.getId(), recipe);
+				RecipeHelper.addRecipe(recipe);
 			}
 
 			@Override
@@ -123,7 +119,7 @@ public final class TableCrafting {
 		CraftTweakerAPI.apply(new IRuntimeAction() {
 			@Override
 			public void apply() {
-				List<ResourceLocation> recipes = DynamicRecipeManager.getRecipeManager().recipes
+				List<ResourceLocation> recipes = RecipeHelper.getRecipes()
 						.getOrDefault(RecipeTypes.TABLE, new HashMap<>())
 						.values().stream()
 						.filter(r -> r.getRecipeOutput().isItemEqual(stack.getInternal()))
@@ -131,7 +127,7 @@ public final class TableCrafting {
 						.collect(Collectors.toList());
 
 				recipes.forEach(r -> {
-					DynamicRecipeManager.getRecipeManager().recipes.get(RecipeTypes.TABLE).remove(r);
+					RecipeHelper.getRecipes().get(RecipeTypes.TABLE).remove(r);
 				});
 			}
 

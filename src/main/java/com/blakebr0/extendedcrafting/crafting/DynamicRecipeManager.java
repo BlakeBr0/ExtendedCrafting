@@ -1,7 +1,7 @@
 package com.blakebr0.extendedcrafting.crafting;
 
+import com.blakebr0.cucumber.helper.RecipeHelper;
 import com.blakebr0.extendedcrafting.ExtendedCrafting;
-import com.blakebr0.extendedcrafting.api.crafting.RecipeTypes;
 import com.blakebr0.extendedcrafting.config.ModConfigs;
 import com.blakebr0.extendedcrafting.crafting.recipe.CompressorRecipe;
 import com.blakebr0.extendedcrafting.singularity.Singularity;
@@ -9,9 +9,7 @@ import com.blakebr0.extendedcrafting.singularity.SingularityRegistry;
 import com.blakebr0.extendedcrafting.singularity.SingularityUtils;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.Ingredient;
-import net.minecraft.item.crafting.RecipeManager;
 import net.minecraft.resources.IResourceManager;
 import net.minecraft.resources.IResourceManagerReloadListener;
 import net.minecraft.util.ResourceLocation;
@@ -19,35 +17,18 @@ import net.minecraftforge.event.AddReloadListenerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.registries.ForgeRegistries;
 
-import java.util.HashMap;
-import java.util.Map;
-
 public final class DynamicRecipeManager implements IResourceManagerReloadListener {
-    private static RecipeManager recipeManager;
-
     @Override
     public void onResourceManagerReload(IResourceManager resourceManager) {
-        Map<ResourceLocation, IRecipe<?>> recipes = getRecipeManager().recipes.computeIfAbsent(RecipeTypes.COMPRESSOR, t -> new HashMap<>());
         SingularityRegistry.getInstance().getSingularities().forEach(singularity -> {
             CompressorRecipe compressorRecipe = this.makeSingularityRecipe(singularity);
             if (compressorRecipe != null)
-                recipes.put(compressorRecipe.getId(), compressorRecipe);
+                RecipeHelper.addRecipe(compressorRecipe);
         });
     }
 
-    public static RecipeManager getRecipeManager() {
-        if (recipeManager != null && !recipeManager.recipes.getClass().equals(HashMap.class)) {
-            recipeManager.recipes = new HashMap<>(recipeManager.recipes);
-            recipeManager.recipes.replaceAll((t, v) -> new HashMap<>(recipeManager.recipes.get(t)));
-        }
-
-        return recipeManager;
-    }
-
     @SubscribeEvent
-    public void onAddReloadListener(AddReloadListenerEvent event) {
-        recipeManager = event.getDataPackRegistries().getRecipeManager();
-
+    public void onAddReloadListeners(AddReloadListenerEvent event) {
         event.addListener(this);
     }
 

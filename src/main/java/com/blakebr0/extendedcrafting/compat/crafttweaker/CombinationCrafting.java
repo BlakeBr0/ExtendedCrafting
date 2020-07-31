@@ -1,7 +1,7 @@
 package com.blakebr0.extendedcrafting.compat.crafttweaker;
 
+import com.blakebr0.cucumber.helper.RecipeHelper;
 import com.blakebr0.extendedcrafting.api.crafting.RecipeTypes;
-import com.blakebr0.extendedcrafting.crafting.DynamicRecipeManager;
 import com.blakebr0.extendedcrafting.crafting.recipe.CombinationRecipe;
 import com.blamejared.crafttweaker.api.CraftTweakerAPI;
 import com.blamejared.crafttweaker.api.actions.IRuntimeAction;
@@ -28,9 +28,7 @@ public final class CombinationCrafting {
 			@Override
 			public void apply() {
 				CombinationRecipe recipe = new CombinationRecipe(new ResourceLocation("crafttweaker", id), toIngredientsList(inputs), output.getInternal(), cost);
-				DynamicRecipeManager.getRecipeManager().recipes
-						.computeIfAbsent(RecipeTypes.COMBINATION, t -> new HashMap<>())
-						.put(recipe.getId(), recipe);
+				RecipeHelper.addRecipe(recipe);
 			}
 
 			@Override
@@ -46,9 +44,7 @@ public final class CombinationCrafting {
 			@Override
 			public void apply() {
 				CombinationRecipe recipe = new CombinationRecipe(new ResourceLocation("crafttweaker", id), toIngredientsList(inputs), output.getInternal(), cost, perTick);
-				DynamicRecipeManager.getRecipeManager().recipes
-						.computeIfAbsent(RecipeTypes.COMBINATION, t -> new HashMap<>())
-						.put(recipe.getId(), recipe);
+				RecipeHelper.addRecipe(recipe);
 			}
 
 			@Override
@@ -63,7 +59,7 @@ public final class CombinationCrafting {
 		CraftTweakerAPI.apply(new IRuntimeAction() {
 			@Override
 			public void apply() {
-				List<ResourceLocation> recipes = DynamicRecipeManager.getRecipeManager().recipes
+				List<ResourceLocation> recipes = RecipeHelper.getRecipes()
 						.getOrDefault(RecipeTypes.COMBINATION, new HashMap<>())
 						.values().stream()
 						.filter(r -> r.getRecipeOutput().isItemEqual(stack.getInternal()))
@@ -71,7 +67,7 @@ public final class CombinationCrafting {
 						.collect(Collectors.toList());
 
 				recipes.forEach(r -> {
-					DynamicRecipeManager.getRecipeManager().recipes.get(RecipeTypes.COMBINATION).remove(r);
+					RecipeHelper.getRecipes().get(RecipeTypes.COMBINATION).remove(r);
 				});
 			}
 

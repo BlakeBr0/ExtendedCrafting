@@ -1,7 +1,7 @@
 package com.blakebr0.extendedcrafting.compat.crafttweaker;
 
+import com.blakebr0.cucumber.helper.RecipeHelper;
 import com.blakebr0.extendedcrafting.api.crafting.RecipeTypes;
-import com.blakebr0.extendedcrafting.crafting.DynamicRecipeManager;
 import com.blakebr0.extendedcrafting.crafting.recipe.CompressorRecipe;
 import com.blamejared.crafttweaker.api.CraftTweakerAPI;
 import com.blamejared.crafttweaker.api.actions.IRuntimeAction;
@@ -25,9 +25,7 @@ public final class CompressionCrafting {
 			@Override
 			public void apply() {
 				CompressorRecipe recipe = new CompressorRecipe(new ResourceLocation("crafttweaker", id), input.asVanillaIngredient(), output.getInternal(), inputCount, catalyst.asVanillaIngredient(), powerCost);
-				DynamicRecipeManager.getRecipeManager().recipes
-						.computeIfAbsent(RecipeTypes.COMPRESSOR, t -> new HashMap<>())
-						.put(recipe.getId(), recipe);
+				RecipeHelper.addRecipe(recipe);
 			}
 
 			@Override
@@ -43,9 +41,7 @@ public final class CompressionCrafting {
 			@Override
 			public void apply() {
 				CompressorRecipe recipe = new CompressorRecipe(new ResourceLocation("crafttweaker", id), input.asVanillaIngredient(), output.getInternal(), inputCount, catalyst.asVanillaIngredient(), powerCost, powerRate);
-				DynamicRecipeManager.getRecipeManager().recipes
-						.computeIfAbsent(RecipeTypes.COMPRESSOR, t -> new HashMap<>())
-						.put(recipe.getId(), recipe);
+				RecipeHelper.addRecipe(recipe);
 			}
 
 			@Override
@@ -60,7 +56,7 @@ public final class CompressionCrafting {
 		CraftTweakerAPI.apply(new IRuntimeAction() {
 			@Override
 			public void apply() {
-				List<ResourceLocation> recipes = DynamicRecipeManager.getRecipeManager().recipes
+				List<ResourceLocation> recipes = RecipeHelper.getRecipes()
 						.getOrDefault(RecipeTypes.COMPRESSOR, new HashMap<>())
 						.values().stream()
 						.filter(r -> r.getRecipeOutput().isItemEqual(stack.getInternal()))
@@ -68,7 +64,7 @@ public final class CompressionCrafting {
 						.collect(Collectors.toList());
 
 				recipes.forEach(r -> {
-					DynamicRecipeManager.getRecipeManager().recipes.get(RecipeTypes.COMPRESSOR).remove(r);
+					RecipeHelper.getRecipes().get(RecipeTypes.COMPRESSOR).remove(r);
 				});
 			}
 

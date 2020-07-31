@@ -1,8 +1,8 @@
 package com.blakebr0.extendedcrafting.compat.crafttweaker;
 
+import com.blakebr0.cucumber.helper.RecipeHelper;
 import com.blakebr0.extendedcrafting.api.crafting.RecipeTypes;
 import com.blakebr0.extendedcrafting.config.ModConfigs;
-import com.blakebr0.extendedcrafting.crafting.DynamicRecipeManager;
 import com.blakebr0.extendedcrafting.crafting.recipe.ShapedEnderCrafterRecipe;
 import com.blakebr0.extendedcrafting.crafting.recipe.ShapelessEnderCrafterRecipe;
 import com.blamejared.crafttweaker.api.CraftTweakerAPI;
@@ -55,9 +55,7 @@ public final class EnderCrafting implements IRecipeManager {
 				}
 
 				ShapedEnderCrafterRecipe recipe = new ShapedEnderCrafterRecipe(new ResourceLocation("crafttweaker", id), width, height, ingredients, output.getInternal(), time);
-				DynamicRecipeManager.getRecipeManager().recipes
-						.computeIfAbsent(RecipeTypes.ENDER_CRAFTER, t -> new HashMap<>())
-						.put(recipe.getId(), recipe);
+				RecipeHelper.addRecipe(recipe);
 			}
 
 			@Override
@@ -78,9 +76,7 @@ public final class EnderCrafting implements IRecipeManager {
 			@Override
 			public void apply() {
 				ShapelessEnderCrafterRecipe recipe = new ShapelessEnderCrafterRecipe(new ResourceLocation("crafttweaker", id), toIngredientsList(inputs), output.getInternal(), time);
-				DynamicRecipeManager.getRecipeManager().recipes
-						.computeIfAbsent(RecipeTypes.ENDER_CRAFTER, t -> new HashMap<>())
-						.put(recipe.getId(), recipe);
+				RecipeHelper.addRecipe(recipe);
 			}
 
 			@Override
@@ -95,7 +91,7 @@ public final class EnderCrafting implements IRecipeManager {
 		CraftTweakerAPI.apply(new IRuntimeAction() {
 			@Override
 			public void apply() {
-				List<ResourceLocation> recipes = DynamicRecipeManager.getRecipeManager().recipes
+				List<ResourceLocation> recipes = RecipeHelper.getRecipes()
 						.getOrDefault(RecipeTypes.ENDER_CRAFTER, new HashMap<>())
 						.values().stream()
 						.filter(r -> r.getRecipeOutput().isItemEqual(stack.getInternal()))
@@ -103,7 +99,7 @@ public final class EnderCrafting implements IRecipeManager {
 						.collect(Collectors.toList());
 
 				recipes.forEach(r -> {
-					DynamicRecipeManager.getRecipeManager().recipes.get(RecipeTypes.ENDER_CRAFTER).remove(r);
+					RecipeHelper.getRecipes().get(RecipeTypes.ENDER_CRAFTER).remove(r);
 				});
 			}
 

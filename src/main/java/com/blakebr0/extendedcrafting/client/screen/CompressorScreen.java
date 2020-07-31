@@ -104,7 +104,7 @@ public class CompressorScreen extends BaseContainerScreen<CompressorContainer> {
 	}
 
 	@Override
-	protected void func_230451_b_(MatrixStack stack, int mouseX, int mouseY) {
+	protected void drawGuiContainerForegroundLayer(MatrixStack stack, int mouseX, int mouseY) {
 		String title = this.getTitle().getString();
 		this.font.drawString(stack, title, (float) (this.xSize / 2 - this.font.getStringWidth(title) / 2), 6.0F, 4210752);
 		String inventory = this.playerInventory.getDisplayName().getString();
@@ -112,8 +112,8 @@ public class CompressorScreen extends BaseContainerScreen<CompressorContainer> {
 	}
 
 	@Override
-	protected void func_230450_a_(MatrixStack stack, float partialTicks, int mouseX, int mouseY) {
-		super.func_230450_a_(stack, partialTicks, mouseX, mouseY);
+	protected void drawGuiContainerBackgroundLayer(MatrixStack stack, float partialTicks, int mouseX, int mouseY) {
+		super.drawGuiContainerBackgroundLayer(stack, partialTicks, mouseX, mouseY);
 
 		int x = this.getGuiLeft();
 		int y = this.getGuiTop();

@@ -25,7 +25,7 @@ public class HandheldTableItem extends BaseItem implements IEnableable {
 	@Override
 	public ActionResult<ItemStack> onItemRightClick(World world, PlayerEntity player, Hand hand) {
 		if (!world.isRemote()) {
-			player.openContainer(this.getContainer(world, player.func_233580_cy_()));
+			player.openContainer(this.getContainer(world, player.getPosition()));
 		}
 
 		return super.onItemRightClick(world, player, hand);

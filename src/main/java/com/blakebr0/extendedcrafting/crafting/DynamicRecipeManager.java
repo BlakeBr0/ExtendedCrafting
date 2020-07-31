@@ -46,7 +46,7 @@ public final class DynamicRecipeManager implements IResourceManagerReloadListene
 
     @SubscribeEvent
     public void onAddReloadListener(AddReloadListenerEvent event) {
-        recipeManager = event.getDataPackRegistries().func_240967_e_();
+        recipeManager = event.getDataPackRegistries().getRecipeManager();
 
         event.addListener(this);
     }

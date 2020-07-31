@@ -16,7 +16,7 @@ public class BasicTableScreen extends BaseContainerScreen<BasicTableContainer> {
 	}
 
 	@Override
-	protected void func_230451_b_(MatrixStack stack, int mouseX, int mouseY) {
+	protected void drawGuiContainerForegroundLayer(MatrixStack stack, int mouseX, int mouseY) {
 		String title = this.getTitle().getString();
 		this.font.drawString(stack, title, 32.0F, 6.0F, 4210752);
 		String inventory = this.playerInventory.getDisplayName().getString();

@@ -188,7 +188,6 @@ public class CompressorTileEntity extends BaseInventoryTileEntity implements ITi
 					mark = true;
 			}
 
-			// TODO: Is dispatching every time necessary?
 			if (mark) {
 				this.markDirtyAndDispatch();
 			}

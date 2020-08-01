@@ -83,11 +83,11 @@ public class UltimateAutoTableScreen extends BaseContainerScreen<UltimateAutoTab
 						tooltip = Lists.newArrayList(
 								new StringTextComponent(output.getCount() + "x " + output.getDisplayName().getString()),
 								new StringTextComponent(""),
-								new StringTextComponent("Shift + Left Click to delete this recipe.")
+								ModTooltips.AUTO_TABLE_DELETE_RECIPE.color(TextFormatting.WHITE).build()
 						);
 					} else {
 						tooltip = Lists.newArrayList(
-								new StringTextComponent("Shift + Left Click to save this recipe.")
+								ModTooltips.AUTO_TABLE_SAVE_RECIPE.color(TextFormatting.WHITE).build()
 						);
 					}
 

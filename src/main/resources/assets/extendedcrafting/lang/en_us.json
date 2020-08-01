@@ -93,6 +93,8 @@
   "tooltip.extendedcrafting.items_required": "Items Required:",
   "tooltip.extendedcrafting.singularity_id": "Singularity ID: %s",
   "tooltip.extendedcrafting.added_by": "Added By: %s",
+  "tooltip.extendedcrafting.auto_table_save_recipe": "Shift + Left Click to save this recipe.",
+  "tooltip.extendedcrafting.auto_table_delete_recipe": "Shift + Left Click to delete this recipe.",
 
   "message.extendedcrafting.changed_mode": "Changed mode to %s.",
   "message.extendedcrafting.copied_recipe": "Copied recipe to clipboard.",

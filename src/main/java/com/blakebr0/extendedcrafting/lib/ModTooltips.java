@@ -2,6 +2,7 @@ package com.blakebr0.extendedcrafting.lib;
 
 import com.blakebr0.cucumber.util.Tooltip;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.fml.ModList;
 
 public final class ModTooltips {
@@ -21,6 +22,8 @@ public final class ModTooltips {
     public static final Tooltip ITEMS_REQUIRED = new Tooltip("tooltip.extendedcrafting.items_required");
     public static final Tooltip SINGULARITY_ID = new Tooltip("tooltip.extendedcrafting.singularity_id");
     public static final Tooltip ADDED_BY = new Tooltip("tooltip.extendedcrafting.added_by");
+    public static final Tooltip AUTO_TABLE_SAVE_RECIPE = new Tooltip("tooltip.extendedcrafting.auto_table_save_recipe");
+    public static final Tooltip AUTO_TABLE_DELETE_RECIPE = new Tooltip("tooltip.extendedcrafting.auto_table_delete_recipe");
 
     public static ITextComponent getAddedByTooltip(String modid) {
         String name = ModList.get().getModFileById(modid).getMods().get(0).getDisplayName();

@@ -182,9 +182,12 @@ public class RecipeMakerItem extends BaseItem implements IEnableable {
 		if ("TableCrafting".equals(type)) string.append("0, ");
 		string.append("<>, [").append(NEW_LINE);
 
-		int slots = clampTableSlots(inventory.getSlots());
+		int slots = inventory.getSlots();
+		int sr = (int) Math.floor(Math.sqrt(slots));
+		if (slots / sr != slots)
+			slots -= 1;
+
 		for (int i = 0; i < slots; i++) {
-			int sr = (int) Math.sqrt(slots);
 			if (i == 0 || i % sr == 0) {
 				string.append("[");
 			}
@@ -241,7 +244,11 @@ public class RecipeMakerItem extends BaseItem implements IEnableable {
 		string.append("<>, [").append(NEW_LINE);
 
 		List<Integer> slotsWithItems = new ArrayList<>();
-		int slots = clampTableSlots(inventory.getSlots());
+		int slots = inventory.getSlots();
+		double sr = Math.floor(Math.sqrt(slots));
+		if ((slots / sr) % 1 != slots)
+			slots -= 1;
+
 		int lastSlot = 0;
 		for (int i = 0; i < slots; i++) {
 			ItemStack stack = inventory.getStackInSlot(i);
@@ -334,7 +341,11 @@ public class RecipeMakerItem extends BaseItem implements IEnableable {
 		);
 
 		Map<Ingredient, Character> keysMap = new LinkedHashMap<>();
-		int slots = clampTableSlots(inventory.getSlots());
+		int slots = inventory.getSlots();
+		double sr = Math.floor(Math.sqrt(slots));
+		if ((slots / sr) % 1 != slots)
+			slots -= 1;
+
 		for (int i = 0; i < slots; i++) {
 			ItemStack stack = inventory.getStackInSlot(i);
 			if (stack.isEmpty() || keysMap.keySet().stream().anyMatch(ing -> ing.test(stack)))
@@ -403,7 +414,11 @@ public class RecipeMakerItem extends BaseItem implements IEnableable {
 		);
 
 		JsonArray ingredients = new JsonArray();
-		int slots = clampTableSlots(inventory.getSlots());
+		int slots = inventory.getSlots();
+		double sr = Math.floor(Math.sqrt(slots));
+		if ((slots / sr) % 1 != slots)
+			slots -= 1;
+
 		for (int i = 0; i < slots; i++) {
 			ItemStack stack = inventory.getStackInSlot(i);
 			if (!stack.isEmpty()) {
@@ -474,10 +489,6 @@ public class RecipeMakerItem extends BaseItem implements IEnableable {
 				tile instanceof UltimateTableTileEntity ||
 				tile instanceof AutoTableTileEntity ||
 				tile instanceof EnderCrafterTileEntity;
-	}
-
-	private static int clampTableSlots(int slots) {
-		return slots % 9 != 0 ? slots - 1 : slots;
 	}
 
 	private static String getModeString(ItemStack stack) {

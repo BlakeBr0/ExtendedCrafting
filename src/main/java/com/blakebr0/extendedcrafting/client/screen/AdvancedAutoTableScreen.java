@@ -18,7 +18,6 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.ITextProperties;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
 
@@ -75,7 +74,7 @@ public class AdvancedAutoTableScreen extends BaseContainerScreen<AdvancedAutoTab
 			if (button.isHovered()) {
 				BaseItemStackHandler recipe = this.getRecipeInfo(button.selected);
 				if (recipe != null) {
-					List<ITextProperties> tooltip;
+					List<ITextComponent> tooltip;
 					boolean hasRecipe = !recipe.getStacks().stream().allMatch(ItemStack::isEmpty);
 					if (hasRecipe) {
 						ItemStack output = recipe.getStackInSlot(recipe.getSlots() - 1);
@@ -90,7 +89,7 @@ public class AdvancedAutoTableScreen extends BaseContainerScreen<AdvancedAutoTab
 						);
 					}
 
-					this.renderTooltip(stack, tooltip, mouseX, mouseY);
+					this.func_243308_b(stack, tooltip, mouseX, mouseY);
 				}
 			}
 		}

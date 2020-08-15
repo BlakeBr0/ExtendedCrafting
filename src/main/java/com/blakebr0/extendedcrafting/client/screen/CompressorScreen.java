@@ -9,7 +9,6 @@ import com.blakebr0.extendedcrafting.network.message.EjectModeSwitchMessage;
 import com.blakebr0.extendedcrafting.network.message.InputLimitSwitchMessage;
 import com.blakebr0.extendedcrafting.tileentity.CompressorTileEntity;
 import com.mojang.blaze3d.matrix.MatrixStack;
-import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.player.PlayerInventory;
@@ -17,7 +16,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.ITextProperties;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
 
@@ -71,7 +69,7 @@ public class CompressorScreen extends BaseContainerScreen<CompressorContainer> {
 		}
 
 		if (mouseX > left + 60 && mouseX < left + 85 && mouseY > top + 74 && mouseY < top + 83) {
-			List<ITextProperties> tooltip = new ArrayList<>();
+			List<ITextComponent> tooltip = new ArrayList<>();
 			if (container.getMaterialCount() < 1) {
 				tooltip.add(ModTooltips.EMPTY.color(TextFormatting.WHITE).build());
 			} else {
@@ -83,7 +81,7 @@ public class CompressorScreen extends BaseContainerScreen<CompressorContainer> {
 				tooltip.add(text);
 			}
 
-			this.renderTooltip(stack, tooltip, mouseX, mouseY);
+			this.func_243308_b(stack, tooltip, mouseX, mouseY);
 		}
 
 		if (mouseX > left + 68 && mouseX < left + 79 && mouseY > top + 28 && mouseY < top + 39) {
@@ -152,7 +150,7 @@ public class CompressorScreen extends BaseContainerScreen<CompressorContainer> {
 		}
 	}
 
-	private ITextProperties getMaterialStackDisplayName() {
+	private ITextComponent getMaterialStackDisplayName() {
 		ClientWorld world = this.getMinecraft().world;
 		if (world != null) {
 			CompressorContainer container = this.getContainer();

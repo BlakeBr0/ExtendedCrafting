@@ -11,9 +11,9 @@ buildscript {
 apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'idea'
 
-version = '3.1.0'
+version = '3.1.1'
 group = 'com.blakebr0.extendedcrafting'
-archivesBaseName = 'ExtendedCrafting-1.16.2'
+archivesBaseName = 'ExtendedCrafting-1.16.3'
 
 sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8'
 

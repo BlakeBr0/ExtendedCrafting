@@ -55,12 +55,12 @@ public class UltimateAutoTableScreen extends BaseContainerScreen<UltimateAutoTab
 	}
 
 	@Override
-	protected void func_230459_a_(MatrixStack stack, int mouseX, int mouseY) {
+	protected void renderHoveredTooltip(MatrixStack stack, int mouseX, int mouseY) {
 		int x = this.getGuiLeft();
 		int y = this.getGuiTop();
 		UltimateAutoTableContainer container = this.getContainer();
 
-		super.func_230459_a_(stack, mouseX, mouseY);
+		super.renderHoveredTooltip(stack, mouseX, mouseY);
 
 		if (mouseX > x + 7 && mouseX < x + 20 && mouseY > y + 59 && mouseY < y + 136) {
 			StringTextComponent text = new StringTextComponent(container.getEnergyStored() + " FE");

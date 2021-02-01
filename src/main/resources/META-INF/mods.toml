@@ -19,7 +19,7 @@ license="MIT"
   [[dependencies.extendedcrafting]]
       modId="forge"
       mandatory=true
-      versionRange="[35.0,)"
+      versionRange="[35.1,)"
       ordering="NONE"
       side="BOTH"
   [[dependencies.extendedcrafting]]

@@ -182,10 +182,8 @@ public class RecipeMakerItem extends BaseItem implements IEnableable {
 		if ("TableCrafting".equals(type)) string.append("0, ");
 		string.append("<>, [").append(NEW_LINE);
 
-		int slots = inventory.getSlots();
-		int sr = (int) Math.floor(Math.sqrt(slots));
-		if (slots / sr != slots)
-			slots -= 1;
+		int slots = getGridSlots(inventory);
+		int sr = (int) Math.sqrt(slots);
 
 		for (int i = 0; i < slots; i++) {
 			if (i == 0 || i % sr == 0) {
@@ -244,10 +242,7 @@ public class RecipeMakerItem extends BaseItem implements IEnableable {
 		string.append("<>, [").append(NEW_LINE);
 
 		List<Integer> slotsWithItems = new ArrayList<>();
-		int slots = inventory.getSlots();
-		double sr = Math.floor(Math.sqrt(slots));
-		if ((slots / sr) % 1 != slots)
-			slots -= 1;
+		int slots = getGridSlots(inventory);
 
 		int lastSlot = 0;
 		for (int i = 0; i < slots; i++) {
@@ -341,10 +336,7 @@ public class RecipeMakerItem extends BaseItem implements IEnableable {
 		);
 
 		Map<Ingredient, Character> keysMap = new LinkedHashMap<>();
-		int slots = inventory.getSlots();
-		double sr = Math.floor(Math.sqrt(slots));
-		if ((slots / sr) % 1 != slots)
-			slots -= 1;
+		int slots = getGridSlots(inventory);
 
 		for (int i = 0; i < slots; i++) {
 			ItemStack stack = inventory.getStackInSlot(i);
@@ -369,8 +361,9 @@ public class RecipeMakerItem extends BaseItem implements IEnableable {
 		}
 
 		JsonArray pattern = new JsonArray();
-		int size = (int) Math.sqrt(inventory.getSlots());
+		int size = (int) Math.sqrt(slots);
 		Set<Map.Entry<Ingredient, Character>> keys = keysMap.entrySet();
+
 		for (int i = 0; i < size; i++) {
 			StringBuilder line = new StringBuilder();
 			for (int j = 0; j < size; j++) {
@@ -414,10 +407,7 @@ public class RecipeMakerItem extends BaseItem implements IEnableable {
 		);
 
 		JsonArray ingredients = new JsonArray();
-		int slots = inventory.getSlots();
-		double sr = Math.floor(Math.sqrt(slots));
-		if ((slots / sr) % 1 != slots)
-			slots -= 1;
+		int slots = getGridSlots(inventory);
 
 		for (int i = 0; i < slots; i++) {
 			ItemStack stack = inventory.getStackInSlot(i);
@@ -497,6 +487,15 @@ public class RecipeMakerItem extends BaseItem implements IEnableable {
 
 	private static boolean isShapeless(ItemStack stack) {
 		return NBTHelper.getBoolean(stack, "Shapeless");
+	}
+
+	private static int getGridSlots(IItemHandler inventory) {
+		int slots = inventory.getSlots();
+
+		if (slots >= 81) return 81;
+		else if (slots >= 49) return 49;
+		else if (slots >= 25) return 25;
+		else return 9;
 	}
 
 	private static class NBTIngredient extends net.minecraftforge.common.crafting.NBTIngredient {

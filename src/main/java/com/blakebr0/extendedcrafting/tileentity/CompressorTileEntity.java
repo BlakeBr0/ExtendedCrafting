@@ -25,11 +25,13 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.energy.CapabilityEnergy;
+import net.minecraftforge.energy.IEnergyStorage;
 
 public class CompressorTileEntity extends BaseInventoryTileEntity implements ITickableTileEntity, INamedContainerProvider {
 	private final BaseItemStackHandler inventory = new BaseItemStackHandler(3);
 	private final BaseEnergyStorage energy = new BaseEnergyStorage(ModConfigs.COMPRESSOR_POWER_CAPACITY.get());
 	private final BaseItemStackHandler recipeInventory = new BaseItemStackHandler(2);
+	private final LazyOptional<IEnergyStorage> capability = LazyOptional.of(this::getEnergy);
 	private CompressorRecipe recipe;
 	private ItemStack materialStack = ItemStack.EMPTY;
 	private int materialCount;
@@ -159,14 +161,14 @@ public class CompressorTileEntity extends BaseInventoryTileEntity implements ITi
 				}
 
 				if (this.ejecting) {
-					if (this.materialCount > 0 && !this.materialStack.isEmpty()) {
-						ItemStack toAdd = this.materialStack.copy();
-						int addCount = Math.min(this.materialCount, toAdd.getMaxStackSize());
-						toAdd.setCount(addCount);
+					if (this.materialCount > 0 && !this.materialStack.isEmpty() && (output.isEmpty() || StackHelper.areStacksEqual(this.materialStack, output))) {
+						int addCount = Math.min(this.materialCount, this.materialStack.getMaxStackSize() - output.getCount());
+						if (addCount > 0) {
+							ItemStack toAdd = StackHelper.withSize(this.materialStack, addCount, false);
 
-						int added = toAdd.getCount() - this.inventory.insertItem(0, toAdd, false).getCount();
-						if (added > 0) {
-							this.materialCount -= added;
+							this.updateResult(toAdd);
+							this.materialCount -= addCount;
+
 							if (this.materialCount < 1) {
 								this.materialStack = ItemStack.EMPTY;
 								this.ejecting = false;
@@ -197,7 +199,7 @@ public class CompressorTileEntity extends BaseInventoryTileEntity implements ITi
 	@Override
 	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
 		if (!this.isRemoved() && cap == CapabilityEnergy.ENERGY) {
-			return CapabilityEnergy.ENERGY.orEmpty(cap, LazyOptional.of(this::getEnergy));
+			return CapabilityEnergy.ENERGY.orEmpty(cap, this.capability);
 		}
 
 		return super.getCapability(cap, side);
@@ -290,7 +292,7 @@ public class CompressorTileEntity extends BaseInventoryTileEntity implements ITi
 		if (result.isEmpty()) {
 			this.inventory.setStackInSlot(0, stack);
 		} else {
-			this.inventory.setStackInSlot(0, StackHelper.grow(result, 1));
+			this.inventory.setStackInSlot(0, StackHelper.grow(result, stack.getCount()));
 		}
 	}
 

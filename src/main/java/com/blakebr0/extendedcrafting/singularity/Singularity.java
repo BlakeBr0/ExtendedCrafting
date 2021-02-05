@@ -1,9 +1,10 @@
 package com.blakebr0.extendedcrafting.singularity;
 
-import com.blakebr0.cucumber.crafting.TagMapper;
 import com.blakebr0.cucumber.util.Localizable;
 import net.minecraft.item.Item;
 import net.minecraft.item.crafting.Ingredient;
+import net.minecraft.tags.ITag;
+import net.minecraft.tags.TagCollectionManager;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 
@@ -52,17 +53,19 @@ public class Singularity {
         return this.colors[1];
     }
 
+    public String getTag() {
+        return this.tag;
+    }
+
     public Ingredient getIngredient() {
         if (this.tag != null && this.ingredient == Ingredient.EMPTY) {
-            Item item = TagMapper.getItemForTag(this.tag);
-            this.ingredient = Ingredient.fromItems(item);
+            ITag<Item> tag = TagCollectionManager.getManager().getItemTags().get(new ResourceLocation(this.tag));
+            if (tag != null) {
+                this.ingredient = Ingredient.fromTag(tag);
+            }
         }
 
         return this.ingredient;
-    }
-
-    public String getTag() {
-        return this.tag;
     }
 
     public int getIngredientCount() {

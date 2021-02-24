@@ -36,6 +36,7 @@ minecraft {
 
             property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
             property 'forge.logging.console.level', 'info'
+            property 'mixin.env.disableRefMap', 'true'
 
             ideaModule "${project.name}.main"
             environment 'MOD_CLASSES', "${project.file('out/production/resources').canonicalPath}${File.pathSeparator}${project.file('out/production/classes').canonicalPath}"
@@ -46,6 +47,7 @@ minecraft {
 
             property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
             property 'forge.logging.console.level', 'info'
+            property 'mixin.env.disableRefMap', 'true'
 
             ideaModule "${project.name}.main"
             environment 'MOD_CLASSES', "${project.file('out/production/resources').canonicalPath}${File.pathSeparator}${project.file('out/production/classes').canonicalPath}"
@@ -54,15 +56,15 @@ minecraft {
 }
 
 dependencies {
-    minecraft 'net.minecraftforge:forge:1.16.4-35.1.4'
+    minecraft 'net.minecraftforge:forge:1.16.4-35.1.37'
 
     compile fg.deobf('ignored:Cucumber:1.16.4-4.1.4')
     compileOnly fg.deobf('mcp.mobius.waila:Hwyla:1.10.11-B78_1.16.2:api')
     runtimeOnly fg.deobf('mcp.mobius.waila:Hwyla:1.10.11-B78_1.16.2')
     compileOnly fg.deobf('mezz.jei:jei-1.16.2:7.1.1.15:api')
     runtimeOnly fg.deobf('mezz.jei:jei-1.16.2:7.1.1.15')
-    compile fg.deobf('com.blamejared.crafttweaker:CraftTweaker-1.16.2:7.0.0.26')
-//    compile fg.deobf('vazkii.patchouli:Patchouli:1.16-42')
+    compile fg.deobf('com.blamejared.crafttweaker:CraftTweaker-1.16.4:7.1.0.84')
+    compile fg.deobf('vazkii.patchouli:Patchouli:1.16-42')
 }
 
 jar {

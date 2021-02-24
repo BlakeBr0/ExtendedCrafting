@@ -1,7 +1,6 @@
 package com.blakebr0.extendedcrafting.crafting.recipe;
 
 import com.blakebr0.cucumber.crafting.ISpecialRecipe;
-import com.blakebr0.cucumber.helper.StackHelper;
 import com.blakebr0.extendedcrafting.api.crafting.IEnderCrafterRecipe;
 import com.blakebr0.extendedcrafting.api.crafting.RecipeTypes;
 import com.blakebr0.extendedcrafting.config.ModConfigs;
@@ -17,8 +16,12 @@ import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.JSONUtils;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.common.util.RecipeMatcher;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.registries.ForgeRegistryEntry;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class ShapelessEnderCrafterRecipe implements ISpecialRecipe, IEnderCrafterRecipe {
 	private final ResourceLocation recipeId;
@@ -74,38 +77,20 @@ public class ShapelessEnderCrafterRecipe implements ISpecialRecipe, IEnderCrafte
 
 	@Override
 	public boolean matches(IItemHandler inventory) {
-		int matches = 0;
-		for (int x = 0; x < inventory.getSlots(); x++) {
-			ItemStack slot = inventory.getStackInSlot(x);
+		List<ItemStack> inputs = new ArrayList<>();
+		int matched = 0;
 
-			if (!slot.isEmpty()) {
-				boolean inRecipe = false;
+		for (int i = 0; i < inventory.getSlots(); i++) {
+			ItemStack stack = inventory.getStackInSlot(i);
 
-				for (Ingredient target : this.inputs) {
-					if (target.test(slot)) {
-						if (target.getMatchingStacks().length == 0) {
-							inRecipe = true;
-							matches++;
-							break;
-						}
+			if (!stack.isEmpty()) {
+				inputs.add(stack);
 
-						for (ItemStack stack : target.getMatchingStacks()) {
-							if (StackHelper.compareTags(stack, slot)) {
-								inRecipe = true;
-								matches++;
-								break;
-							}
-						}
-
-						if (inRecipe) break;
-					}
-				}
-
-				if (!inRecipe) return false;
+				matched++;
 			}
 		}
 
-		return matches == this.inputs.size();
+		return matched == this.inputs.size() && RecipeMatcher.findMatches(inputs,  this.inputs) != null;
 	}
 
 	@Override

@@ -1,7 +1,6 @@
 package com.blakebr0.extendedcrafting.crafting.recipe;
 
 import com.blakebr0.cucumber.crafting.ISpecialRecipe;
-import com.blakebr0.cucumber.helper.StackHelper;
 import com.blakebr0.extendedcrafting.api.crafting.ITableRecipe;
 import com.blakebr0.extendedcrafting.api.crafting.RecipeTypes;
 import com.blakebr0.extendedcrafting.init.ModRecipeSerializers;
@@ -16,8 +15,12 @@ import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.JSONUtils;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.common.util.RecipeMatcher;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.registries.ForgeRegistryEntry;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class ShapelessTableRecipe implements ISpecialRecipe, ITableRecipe {
 	private final ResourceLocation recipeId;
@@ -73,47 +76,29 @@ public class ShapelessTableRecipe implements ISpecialRecipe, ITableRecipe {
 
 	@Override
 	public boolean matches(IItemHandler inventory) {
-		if (this.tier != 0 && this.tier != this.getTierFromSize(inventory.getSlots()))
+		if (this.tier != 0 && this.tier != getTierFromSize(inventory.getSlots()))
 			return false;
 
-		int matches = 0;
-		for (int x = 0; x < inventory.getSlots(); x++) {
-			ItemStack slot = inventory.getStackInSlot(x);
+		List<ItemStack> inputs = new ArrayList<>();
+		int matched = 0;
 
-			if (!slot.isEmpty()) {
-				boolean inRecipe = false;
+		for (int i = 0; i < inventory.getSlots(); i++) {
+			ItemStack stack = inventory.getStackInSlot(i);
 
-				for (Ingredient target : this.inputs) {
-					if (target.test(slot)) {
-						if (target.getMatchingStacks().length == 0) {
-							inRecipe = true;
-							matches++;
-							break;
-						}
+			if (!stack.isEmpty()) {
+				inputs.add(stack);
 
-						for (ItemStack stack : target.getMatchingStacks()) {
-							if (StackHelper.compareTags(stack, slot)) {
-								inRecipe = true;
-								matches++;
-								break;
-							}
-						}
-
-						if (inRecipe) break;
-					}
-				}
-
-				if (!inRecipe) return false;
+				matched++;
 			}
 		}
 
-		return matches == this.inputs.size();
+		return matched == this.inputs.size() && RecipeMatcher.findMatches(inputs,  this.inputs) != null;
 	}
 
 	@Override
 	public int getTier() {
 		if (this.tier > 0) return this.tier;
-		return this.getTierFromSize(this.inputs.size());
+		return getTierFromSize(this.inputs.size());
 	}
 
 	@Override
@@ -121,7 +106,7 @@ public class ShapelessTableRecipe implements ISpecialRecipe, ITableRecipe {
 		return this.tier > 0;
 	}
 
-	private int getTierFromSize(int size) {
+	private static int getTierFromSize(int size) {
 		return size < 10 ? 1
 				: size < 26 ? 2
 				: size < 50 ? 3

@@ -152,7 +152,7 @@ public class EnderCrafterTileEntity extends BaseInventoryTileEntity implements I
 		if (result.isEmpty()) {
 			this.inventory.setStackInSlot(9, stack);
 		} else {
-			this.inventory.setStackInSlot(9, StackHelper.grow(result, 1));
+			this.inventory.setStackInSlot(9, StackHelper.grow(result, stack.getCount()));
 		}
 	}
 

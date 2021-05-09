@@ -19,30 +19,37 @@ import net.minecraft.util.text.StringTextComponent;
 
 public class CraftingCoreScreen extends BaseContainerScreen<CraftingCoreContainer> {
 	private static final ResourceLocation BACKGROUND = new ResourceLocation(ExtendedCrafting.MOD_ID, "textures/gui/crafting_core.png");
+	private CraftingCoreTileEntity tile;
 
 	public CraftingCoreScreen(CraftingCoreContainer container, PlayerInventory inventory, ITextComponent title) {
 		super(container, inventory, title, BACKGROUND, 176, 194);
 	}
 
 	@Override
+	protected void init() {
+		super.init();
+
+		this.tile = this.getTileEntity();
+	}
+
+	@Override
 	public void render(MatrixStack stack, int mouseX, int mouseY, float partialTicks) {
-		int left = this.guiLeft;
-		int top = this.guiTop;
-		CraftingCoreContainer container = this.getContainer();
+		int x = this.getGuiLeft();
+		int y = this.getGuiTop();
 
 		super.render(stack, mouseX, mouseY, partialTicks);
 
-		if (container.hasRecipe()) {
+		if (this.hasRecipe()) {
 			ItemStack output = this.getRecipeOutput();
-			this.drawItemStack(output, left + 148, top + 47);
+			this.drawItemStack(output, x + 148, y + 47);
 
-			if (this.isHoveringSlot(left + 148, top + 47, mouseX, mouseY)) {
+			if (isHoveringSlot(x + 148, y + 47, mouseX, mouseY)) {
 				this.renderTooltip(stack, output, mouseX, mouseY);
 			}
 		}
 
-		if (mouseX > left + 7 && mouseX < left + 20 && mouseY > top + 17 && mouseY < top + 94) {
-			StringTextComponent text = new StringTextComponent(container.getEnergyStored() + " FE");
+		if (mouseX > x + 7 && mouseX < x + 20 && mouseY > y + 17 && mouseY < y + 94) {
+			StringTextComponent text = new StringTextComponent(this.getEnergyStored() + " FE");
 			this.renderTooltip(stack, text, mouseX, mouseY);
 		}
 	}
@@ -54,17 +61,16 @@ public class CraftingCoreScreen extends BaseContainerScreen<CraftingCoreContaine
 		String inventory = this.playerInventory.getDisplayName().getString();
 		this.font.drawString(stack, inventory, 8.0F, this.ySize - 94.0F, 4210752);
 
-		CraftingCoreContainer container = this.getContainer();
 		RenderSystem.pushMatrix();
 		RenderSystem.scalef(0.75F, 0.75F, 0.75F);
-		this.font.drawString(stack, this.text("screen.extendedcrafting.crafting_core.pedestals", container.getPedestalCount()), 36, 36, -1);
+		this.font.drawString(stack, this.text("screen.extendedcrafting.crafting_core.pedestals", this.getPedestalCount()), 36, 36, -1);
 
-		if (!container.hasRecipe()) {
+		if (!this.hasRecipe()) {
 			this.font.drawString(stack, this.text("screen.extendedcrafting.crafting_core.no_recipe"), 36, 56, -1);
 		} else {
-			this.font.drawString(stack, this.text("screen.extendedcrafting.crafting_core.power_cost", container.getEnergyRequired()) + " FE", 36, 56, -1);
-			this.font.drawString(stack, this.text("screen.extendedcrafting.crafting_core.power_rate", container.getEnergyRate()) + " FE/t", 36, 66, -1);
-			if (container.getEnergyStored() < container.getEnergyRate()) {
+			this.font.drawString(stack, this.text("screen.extendedcrafting.crafting_core.power_cost", this.getEnergyRequired()) + " FE", 36, 56, -1);
+			this.font.drawString(stack, this.text("screen.extendedcrafting.crafting_core.power_rate", this.getEnergyRate()) + " FE/t", 36, 66, -1);
+			if (this.getEnergyStored() < this.getEnergyRate()) {
 				this.font.drawString(stack, this.text("screen.extendedcrafting.crafting_core.no_power"), 36, 86, -1);
 			}
 		}
@@ -76,30 +82,26 @@ public class CraftingCoreScreen extends BaseContainerScreen<CraftingCoreContaine
 	protected void drawGuiContainerBackgroundLayer(MatrixStack stack, float partialTicks, int mouseX, int mouseY) {
 		super.drawGuiContainerBackgroundLayer(stack, partialTicks, mouseX, mouseY);
 
-		int left = this.guiLeft;
-		int top = this.guiTop;
-		CraftingCoreContainer container = this.getContainer();
+		int x = this.getGuiLeft();
+		int y = this.getGuiTop();
 
-		int i1 = container.getEnergyBarScaled(78);
-		this.blit(stack, left + 7, top + 95 - i1, 178, 78 - i1, 15, i1 + 1);
+		int i1 = this.getEnergyBarScaled();
 
-		if (container.hasRecipe()) {
-			if (container.getProgress() > 0 && container.getEnergyRate() > 0) {
-				int i2 = container.getProgressBarScaled(24);
-				this.blit(stack, left + 116, top + 47, 194, 0, i2 + 1, 16);
+		this.blit(stack, x + 7, y + 95 - i1, 178, 78 - i1, 15, i1 + 1);
+
+		if (this.hasRecipe()) {
+			if (this.getProgress() > 0 && this.getEnergyRate() > 0) {
+				int i2 = this.getProgressBarScaled();
+				this.blit(stack, x + 116, y + 47, 194, 0, i2 + 1, 16);
 			}
 
 			ItemStack output = this.getRecipeOutput();
-			this.drawItemStack(output, left + 148, top + 47);
+			this.drawItemStack(output, x + 148, y + 47);
 
-			if (this.isHoveringSlot(left + 148, top + 47, mouseX, mouseY)) {
-				this.drawItemHoverOverlay(stack, left + 148, top + 47);
+			if (isHoveringSlot(x + 148, y + 47, mouseX, mouseY)) {
+				this.drawItemHoverOverlay(stack, x + 148, y + 47);
 			}
 		}
-	}
-
-	private boolean isHoveringSlot(int x, int y, int mouseX, int mouseY) {
-		return mouseX > x - 1 && mouseX < x + 16 && mouseY > y - 1 && mouseY < y + 16;
 	}
 	
 	private void drawItemStack(ItemStack stack, int x, int y) {
@@ -129,20 +131,94 @@ public class CraftingCoreScreen extends BaseContainerScreen<CraftingCoreContaine
 		RenderSystem.popMatrix();
 	}
 
-	private ItemStack getRecipeOutput() {
+	private CraftingCoreTileEntity getTileEntity() {
 		ClientWorld world = this.getMinecraft().world;
+
 		if (world != null) {
-			CraftingCoreContainer container = this.getContainer();
-			TileEntity tile = world.getTileEntity(container.getPos());
+			TileEntity tile = world.getTileEntity(this.getContainer().getPos());
+
 			if (tile instanceof CraftingCoreTileEntity) {
-				CraftingCoreTileEntity core = (CraftingCoreTileEntity) tile;
-				CombinationRecipe recipe = core.getActiveRecipe();
-				if (recipe != null) {
-					return recipe.getRecipeOutput();
-				}
+				return (CraftingCoreTileEntity) tile;
 			}
 		}
 
+		return null;
+	}
+
+	private boolean hasRecipe() {
+		if (this.tile == null)
+			return false;
+
+		return this.tile.hasRecipe();
+	}
+
+	private ItemStack getRecipeOutput() {
+		if (this.tile == null)
+			return ItemStack.EMPTY;
+
+		CombinationRecipe recipe = this.tile.getActiveRecipe();
+		if (recipe != null) {
+			return recipe.getRecipeOutput();
+		}
+
 		return ItemStack.EMPTY;
+	}
+
+	private int getEnergyStored() {
+		if (this.tile == null)
+			return 0;
+
+		return this.tile.getEnergy().getEnergyStored();
+	}
+
+	private int getMaxEnergyStored() {
+		if (this.tile == null)
+			return 0;
+
+		return this.tile.getEnergy().getMaxEnergyStored();
+	}
+
+	private int getEnergyRequired() {
+		if (this.tile == null)
+			return 0;
+
+		return this.tile.getEnergyRequired();
+	}
+
+	private int getEnergyRate() {
+		if (this.tile == null)
+			return 0;
+
+		return this.tile.getEnergyRate();
+	}
+
+	private int getProgress() {
+		if (this.tile == null)
+			return 0;
+
+		return this.tile.getProgress();
+	}
+
+	private int getPedestalCount() {
+		if (this.tile == null)
+			return 0;
+
+		return this.tile.getPedestalCount();
+	}
+
+	private int getEnergyBarScaled() {
+		int i = this.getEnergyStored();
+		int j = this.getMaxEnergyStored();
+		return (int) (j != 0 && i != 0 ? i * (long) 78 / j : 0);
+	}
+
+	private int getProgressBarScaled() {
+		int i = this.getProgress();
+		long j = this.getEnergyRequired();
+		return (int) (j != 0 && i != 0 ? (long) i * 24 / j : 0);
+	}
+
+	private static boolean isHoveringSlot(int x, int y, int mouseX, int mouseY) {
+		return mouseX > x - 1 && mouseX < x + 16 && mouseY > y - 1 && mouseY < y + 16;
 	}
 }

@@ -95,44 +95,4 @@ public class CraftingCoreContainer extends Container {
 	public BlockPos getPos() {
 		return this.pos;
 	}
-
-	public int getEnergyBarScaled(int pixels) {
-		int i = this.getEnergyStored();
-		int j = this.getMaxEnergyStored();
-		return (int) (j != 0 && i != 0 ? i * (long) pixels / j : 0);
-	}
-
-	public int getProgressBarScaled(int pixels) {
-		int i = this.getProgress();
-		long j = this.getEnergyRequired();
-		return (int) (j != 0 && i != 0 ? (long) i * pixels / j : 0);
-	}
-
-	public boolean hasRecipe() {
-		return this.data.get(6) > 0;
-	}
-
-	public int getProgress() {
-		return this.data.get(0);
-	}
-
-	public int getPedestalCount() {
-		return this.data.get(1);
-	}
-
-	public int getEnergyStored() {
-		return this.data.get(2);
-	}
-
-	public int getMaxEnergyStored() {
-		return this.data.get(3);
-	}
-
-	public int getEnergyRequired() {
-		return this.data.get(4);
-	}
-
-	public int getEnergyRate() {
-		return this.data.get(5);
-	}
 }

@@ -23,7 +23,7 @@ import net.minecraft.particles.ParticleTypes;
 import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
-import net.minecraft.util.IIntArray;
+import net.minecraft.util.IntArray;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.World;
@@ -44,29 +44,6 @@ public class CraftingCoreTileEntity extends BaseInventoryTileEntity implements I
 	private int progress;
 	private int oldEnergy;
 	private int pedestalCount;
-	protected IIntArray data = new IIntArray() {
-		@Override
-		public int get(int i) {
-			switch (i) {
-				case 0: return CraftingCoreTileEntity.this.getProgress();
-				case 1: return CraftingCoreTileEntity.this.getPedestalCount();
-				case 2: return CraftingCoreTileEntity.this.getEnergy().getEnergyStored();
-				case 3: return CraftingCoreTileEntity.this.getEnergy().getMaxEnergyStored();
-				case 4: return CraftingCoreTileEntity.this.getEnergyRequired();
-				case 5: return CraftingCoreTileEntity.this.getEnergyRate();
-				case 6: return CraftingCoreTileEntity.this.hasRecipe() ? 1 : 0;
-				default: return 0;
-			}
-		}
-
-		@Override
-		public void set(int i, int value) { }
-
-		@Override
-		public int size() {
-			return 7;
-		}
-	};
 
 	public CraftingCoreTileEntity() {
 		super(ModTileEntities.CRAFTING_CORE.get());
@@ -155,8 +132,9 @@ public class CraftingCoreTileEntity extends BaseInventoryTileEntity implements I
 				mark = true;
 		}
 
-		if (mark)
-			this.markDirty();
+		if (mark) {
+			this.markDirtyAndDispatch();
+		}
 	}
 
 	@Override
@@ -175,12 +153,41 @@ public class CraftingCoreTileEntity extends BaseInventoryTileEntity implements I
 
 	@Override
 	public Container createMenu(int windowId, PlayerInventory playerInventory, PlayerEntity player) {
-		return CraftingCoreContainer.create(windowId, playerInventory, this::isUsableByPlayer, this.data, this.getPos());
+		return CraftingCoreContainer.create(windowId, playerInventory, this::isUsableByPlayer, new IntArray(0), this.getPos());
+	}
+
+	public BaseEnergyStorage getEnergy() {
+		return this.energy;
+	}
+
+	public CombinationRecipe getActiveRecipe() {
+		return this.recipe;
+	}
+
+	public boolean hasRecipe() {
+		return this.recipe != null;
+	}
+
+	public int getEnergyRequired() {
+		return this.hasRecipe() ? this.recipe.getPowerCost() : 0;
+	}
+
+	public int getEnergyRate() {
+		return this.hasRecipe() ? this.recipe.getPowerRate() : 0;
+	}
+
+	public int getProgress() {
+		return this.progress;
+	}
+
+	public int getPedestalCount() {
+		return this.pedestalCount;
 	}
 
 	private void updateRecipeInventory(ItemStack[] items) {
 		this.recipeInventory.setSize(items.length + 1);
 		this.recipeInventory.setStackInSlot(0, this.inventory.getStackInSlot(0));
+
 		for (int i = 0; i < items.length; i++) {
 			this.recipeInventory.setStackInSlot(i + 1, items[i]);
 		}
@@ -222,7 +229,9 @@ public class CraftingCoreTileEntity extends BaseInventoryTileEntity implements I
 	}
 
 	private <T extends IParticleData> void spawnParticles(T particle, BlockPos pos, double yOffset, int count) {
-		if (this.getWorld() == null || this.getWorld().isRemote()) return;
+		if (this.getWorld() == null || this.getWorld().isRemote())
+			return;
+
 		ServerWorld world = (ServerWorld) this.getWorld();
 
 		double x = pos.getX() + 0.5D;
@@ -233,7 +242,9 @@ public class CraftingCoreTileEntity extends BaseInventoryTileEntity implements I
 	}
 
 	private void spawnItemParticles(BlockPos pedestalPos, ItemStack stack) {
-		if (this.getWorld() == null || this.getWorld().isRemote()) return;
+		if (this.getWorld() == null || this.getWorld().isRemote())
+			return;
+
 		ServerWorld world = (ServerWorld) this.getWorld();
 		BlockPos pos = this.getPos();
 
@@ -254,33 +265,5 @@ public class CraftingCoreTileEntity extends BaseInventoryTileEntity implements I
 		int endingPower = powerRate * 40;
 
 		return this.progress > (powerCost - endingPower);
-	}
-
-	public BaseEnergyStorage getEnergy() {
-		return this.energy;
-	}
-
-	public CombinationRecipe getActiveRecipe() {
-		return this.recipe;
-	}
-
-	public boolean hasRecipe() {
-		return this.recipe != null;
-	}
-
-	public int getEnergyRequired() {
-		return this.hasRecipe() ? this.recipe.getPowerCost() : 0;
-	}
-
-	public int getEnergyRate() {
-		return this.hasRecipe() ? this.recipe.getPowerRate() : 0;
-	}
-
-	public int getProgress() {
-		return this.progress;
-	}
-
-	public int getPedestalCount() {
-		return this.pedestalCount;
 	}
 }

@@ -16,7 +16,6 @@ import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.IIntArray;
 import net.minecraft.util.IntArray;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
 
 import java.util.function.Function;
 
@@ -105,73 +104,15 @@ public class CompressorContainer extends Container {
 		return this.isUsableByPlayer.apply(player);
 	}
 
+	public BlockPos getPos() {
+		return this.pos;
+	}
+
 	public static CompressorContainer create(int windowId, PlayerInventory playerInventory, PacketBuffer buffer) {
 		return new CompressorContainer(ModContainerTypes.COMPRESSOR.get(), windowId, playerInventory, buffer);
 	}
 
 	public static CompressorContainer create(int windowId, PlayerInventory playerInventory, Function<PlayerEntity, Boolean> isUsableByPlayer, BaseItemStackHandler inventory, IIntArray data, BlockPos pos) {
 		return new CompressorContainer(ModContainerTypes.COMPRESSOR.get(), windowId, playerInventory, isUsableByPlayer, inventory, data, pos);
-	}
-
-	public BlockPos getPos() {
-		return this.pos;
-	}
-
-	public int getEnergyBarScaled(int pixels) {
-		int i = this.getEnergyStored();
-		int j = this.getMaxEnergyStored();
-		return (int) (j != 0 && i != 0 ? (long) i * pixels / j : 0);
-	}
-
-	public int getMaterialBarScaled(int pixels) {
-		int i = MathHelper.clamp(this.getMaterialCount(), 0, this.getMaterialsRequired());
-		int j = this.getMaterialsRequired();
-		return j != 0 && i != 0 ? i * pixels / j : 0;
-	}
-
-	public int getProgressBarScaled(int pixels) {
-		int i = this.getProgress();
-		int j = this.getEnergyRequired();
-		return (int) (j != 0 && i != 0 ? (long) i * pixels / j : 0);
-	}
-
-	public boolean isEjecting() {
-		return this.data.get(2) > 0;
-	}
-
-	public boolean isLimitingInput() {
-		return this.data.get(3) > 0;
-	}
-
-	public boolean hasRecipe() {
-		return this.data.get(8) > 0;
-	}
-
-	public boolean hasMaterialStack() {
-		return this.data.get(9) > 0;
-	}
-
-	public int getProgress() {
-		return this.data.get(0);
-	}
-
-	public int getMaterialCount() {
-		return this.data.get(1);
-	}
-
-	public int getEnergyStored() {
-		return this.data.get(4);
-	}
-
-	public int getMaxEnergyStored() {
-		return this.data.get(5);
-	}
-
-	public int getEnergyRequired() {
-		return this.data.get(6);
-	}
-
-	public int getMaterialsRequired() {
-		return this.data.get(7);
 	}
 }

@@ -19,7 +19,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.util.Direction;
-import net.minecraft.util.IIntArray;
+import net.minecraft.util.IntArray;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
@@ -28,9 +28,9 @@ import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.IEnergyStorage;
 
 public class CompressorTileEntity extends BaseInventoryTileEntity implements ITickableTileEntity, INamedContainerProvider {
-	private final BaseItemStackHandler inventory = new BaseItemStackHandler(3);
-	private final BaseEnergyStorage energy = new BaseEnergyStorage(ModConfigs.COMPRESSOR_POWER_CAPACITY.get());
-	private final BaseItemStackHandler recipeInventory = new BaseItemStackHandler(2);
+	private final BaseItemStackHandler inventory;
+	private final BaseItemStackHandler recipeInventory;
+	private final BaseEnergyStorage energy;
 	private final LazyOptional<IEnergyStorage> capability = LazyOptional.of(this::getEnergy);
 	private CompressorRecipe recipe;
 	private ItemStack materialStack = ItemStack.EMPTY;
@@ -39,35 +39,13 @@ public class CompressorTileEntity extends BaseInventoryTileEntity implements ITi
 	private boolean ejecting = false;
 	private int oldEnergy;
 	private boolean inputLimit = true;
-	protected IIntArray data = new IIntArray() {
-		@Override
-		public int get(int i) {
-			switch (i) {
-				case 0: return CompressorTileEntity.this.getProgress();
-				case 1: return CompressorTileEntity.this.getMaterialCount();
-				case 2: return CompressorTileEntity.this.isEjecting() ? 1 : 0;
-				case 3: return CompressorTileEntity.this.isLimitingInput() ? 1 : 0;
-				case 4: return CompressorTileEntity.this.getEnergy().getEnergyStored();
-				case 5: return CompressorTileEntity.this.getEnergy().getMaxEnergyStored();
-				case 6: return CompressorTileEntity.this.getEnergyRequired();
-				case 7: return CompressorTileEntity.this.getMaterialsRequired();
-				case 8: return CompressorTileEntity.this.hasRecipe() ? 1 : 0;
-				case 9: return CompressorTileEntity.this.hasMaterialStack() ? 1 : 0;
-				default: return 0;
-			}
-		}
-
-		@Override
-		public void set(int i, int value) { }
-
-		@Override
-		public int size() {
-			return 10;
-		}
-	};
 
 	public CompressorTileEntity() {
 		super(ModTileEntities.COMPRESSOR.get());
+		this.inventory = new BaseItemStackHandler(3);
+		this.recipeInventory = new BaseItemStackHandler(2);
+		this.energy = new BaseEnergyStorage(ModConfigs.COMPRESSOR_POWER_CAPACITY.get());
+
 		this.inventory.setSlotValidator(this::canInsertStack);
 		this.inventory.setOutputSlots(0);
 	}
@@ -212,7 +190,7 @@ public class CompressorTileEntity extends BaseInventoryTileEntity implements ITi
 
 	@Override
 	public Container createMenu(int windowId, PlayerInventory playerInventory, PlayerEntity playerEntity) {
-		return CompressorContainer.create(windowId, playerInventory, this::isUsableByPlayer, this.inventory, this.data, this.getPos());
+		return CompressorContainer.create(windowId, playerInventory, this::isUsableByPlayer, this.inventory, new IntArray(0), this.getPos());
 	}
 
 	public BaseEnergyStorage getEnergy() {
@@ -238,7 +216,7 @@ public class CompressorTileEntity extends BaseInventoryTileEntity implements ITi
 	public void toggleEjecting() {
 		if (this.materialCount > 0) {
 			this.ejecting = !this.ejecting;
-			this.markDirty();
+			this.markDirtyAndDispatch();
 		}
 	}
 
@@ -248,7 +226,7 @@ public class CompressorTileEntity extends BaseInventoryTileEntity implements ITi
 
 	public void toggleInputLimit() {
 		this.inputLimit = !this.inputLimit;
-		this.markDirty();
+		this.markDirtyAndDispatch();
 	}
 
 	public int getProgress() {

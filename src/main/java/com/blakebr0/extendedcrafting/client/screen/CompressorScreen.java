@@ -15,6 +15,7 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
@@ -24,6 +25,7 @@ import java.util.List;
 
 public class CompressorScreen extends BaseContainerScreen<CompressorContainer> {
 	private static final ResourceLocation BACKGROUND = new ResourceLocation(ExtendedCrafting.MOD_ID, "textures/gui/compressor.png");
+	private CompressorTileEntity tile;
 
 	public CompressorScreen(CompressorContainer container, PlayerInventory inventory, ITextComponent title) {
 		super(container, inventory, title, BACKGROUND, 176, 194);
@@ -53,47 +55,48 @@ public class CompressorScreen extends BaseContainerScreen<CompressorContainer> {
 
 			}
 		});
+
+		this.tile = this.getTileEntity();
 	}
 
 	@Override
 	public void render(MatrixStack stack, int mouseX, int mouseY, float partialTicks) {
-		int left = this.getGuiLeft();
-		int top = this.getGuiTop();
-		CompressorContainer container = this.getContainer();
+		int x = this.getGuiLeft();
+		int y = this.getGuiTop();
 
 		super.render(stack, mouseX, mouseY, partialTicks);
 
-		if (mouseX > left + 7 && mouseX < left + 20 && mouseY > top + 17 && mouseY < top + 94) {
-			StringTextComponent text = new StringTextComponent(container.getEnergyStored() + " FE");
+		if (mouseX > x + 7 && mouseX < x + 20 && mouseY > y + 17 && mouseY < y + 94) {
+			StringTextComponent text = new StringTextComponent(this.getEnergyStored() + " FE");
 			this.renderTooltip(stack, text, mouseX, mouseY);
 		}
 
-		if (mouseX > left + 60 && mouseX < left + 85 && mouseY > top + 74 && mouseY < top + 83) {
+		if (mouseX > x + 60 && mouseX < x + 85 && mouseY > y + 74 && mouseY < y + 83) {
 			List<ITextComponent> tooltip = new ArrayList<>();
-			if (container.getMaterialCount() < 1) {
+			if (this.getMaterialCount() < 1) {
 				tooltip.add(ModTooltips.EMPTY.color(TextFormatting.WHITE).build());
 			} else {
-				if (container.hasMaterialStack()) {
+				if (this.hasMaterialStack()) {
 					tooltip.add(this.getMaterialStackDisplayName());
 				}
 
-				StringTextComponent text = new StringTextComponent(container.getMaterialCount() + " / " + container.getMaterialsRequired());
+				StringTextComponent text = new StringTextComponent(this.getMaterialCount() + " / " + this.getMaterialsRequired());
 				tooltip.add(text);
 			}
 
 			this.func_243308_b(stack, tooltip, mouseX, mouseY);
 		}
 
-		if (mouseX > left + 68 && mouseX < left + 79 && mouseY > top + 28 && mouseY < top + 39) {
-			if (container.isEjecting()) {
+		if (mouseX > x + 68 && mouseX < x + 79 && mouseY > y + 28 && mouseY < y + 39) {
+			if (this.isEjecting()) {
 				this.renderTooltip(stack, ModTooltips.EJECTING.color(TextFormatting.WHITE).build(), mouseX, mouseY);
 			} else {
 				this.renderTooltip(stack, ModTooltips.EJECT.color(TextFormatting.WHITE).build(), mouseX, mouseY);
 			}
 		}
 
-		if (mouseX > left + 90 && mouseX < left + 98 && mouseY > top + 73 && mouseY < top + 84) {
-			if (container.isLimitingInput()) {
+		if (mouseX > x + 90 && mouseX < x + 98 && mouseY > y + 73 && mouseY < y + 84) {
+			if (this.isLimitingInput()) {
 				this.renderTooltip(stack, ModTooltips.LIMITED_INPUT.color(TextFormatting.WHITE).build(), mouseX, mouseY);
 			} else {
 				this.renderTooltip(stack, ModTooltips.UNLIMITED_INPUT.color(TextFormatting.WHITE).build(), mouseX, mouseY);
@@ -115,19 +118,18 @@ public class CompressorScreen extends BaseContainerScreen<CompressorContainer> {
 
 		int x = this.getGuiLeft();
 		int y = this.getGuiTop();
-		CompressorContainer container = this.getContainer();
 
-		int i1 = container.getEnergyBarScaled(78);
+		int i1 = this.getEnergyBarScaled(78);
 		this.blit(stack, x + 7, y + 95 - i1, 178, 78 - i1, 15, i1 + 1);
 
-		if (container.hasRecipe()) {
-			if (container.getMaterialCount() > 0 && container.getMaterialsRequired() > 0) {
-				int i2 = container.getMaterialBarScaled(26);
+		if (this.hasRecipe()) {
+			if (this.getMaterialCount() > 0 && this.getMaterialsRequired() > 0) {
+				int i2 = this.getMaterialBarScaled(26);
 				this.blit(stack, x + 60, y + 74, 194, 19, i2 + 1, 10);
 			}
 
-			if (container.getProgress() > 0 && container.getEnergyRequired() > 0) {
-				int i2 = container.getProgressBarScaled(24);
+			if (this.getProgress() > 0 && this.getEnergyRequired() > 0) {
+				int i2 = this.getProgressBarScaled(24);
 				this.blit(stack, x + 96, y + 47, 194, 0, i2 + 1, 16);
 			}
 		}
@@ -138,13 +140,13 @@ public class CompressorScreen extends BaseContainerScreen<CompressorContainer> {
 		
 		
 		if (mouseX > x + 90 && mouseX < x + 98 && mouseY > y + 73 && mouseY < y + 84) {
-			if (container.isLimitingInput()) {
+			if (this.isLimitingInput()) {
 				this.blit(stack, x + 90, y + 74, 194, 56, 9, 10);
 			} else {
 				this.blit(stack, x + 90, y + 74, 194, 43, 9, 10);
 			}
 		} else {
-			if (container.isLimitingInput()) {
+			if (this.isLimitingInput()) {
 				this.blit(stack, x + 90, y + 74, 203, 56, 9, 10);
 			}
 		}
@@ -164,5 +166,107 @@ public class CompressorScreen extends BaseContainerScreen<CompressorContainer> {
 		}
 
 		return new StringTextComponent("");
+	}
+
+	private CompressorTileEntity getTileEntity() {
+		ClientWorld world = this.getMinecraft().world;
+
+		if (world != null) {
+			TileEntity tile = world.getTileEntity(this.getContainer().getPos());
+
+			if (tile instanceof CompressorTileEntity) {
+				return (CompressorTileEntity) tile;
+			}
+		}
+
+		return null;
+	}
+
+	public boolean isEjecting() {
+		if (this.tile == null)
+			return false;
+
+		return this.tile.isEjecting();
+	}
+
+	public boolean isLimitingInput() {
+		if (this.tile == null)
+			return false;
+
+		return this.tile.isLimitingInput();
+	}
+
+	public boolean hasRecipe() {
+		if (this.tile == null)
+			return false;
+
+		return this.tile.hasRecipe();
+	}
+
+	public boolean hasMaterialStack() {
+		if (this.tile == null)
+			return false;
+
+		return this.tile.hasMaterialStack();
+	}
+
+	public int getProgress() {
+		if (this.tile == null)
+			return 0;
+
+		return this.tile.getProgress();
+	}
+
+	public int getMaterialCount() {
+		if (this.tile == null)
+			return 0;
+
+		return this.tile.getMaterialCount();
+	}
+
+	public int getEnergyStored() {
+		if (this.tile == null)
+			return 0;
+
+		return this.tile.getEnergy().getEnergyStored();
+	}
+
+	public int getMaxEnergyStored() {
+		if (this.tile == null)
+			return 0;
+
+		return this.tile.getEnergy().getMaxEnergyStored();
+	}
+
+	public int getEnergyRequired() {
+		if (this.tile == null)
+			return 0;
+
+		return this.tile.getEnergyRequired();
+	}
+
+	public int getMaterialsRequired() {
+		if (this.tile == null)
+			return 0;
+
+		return this.tile.getMaterialsRequired();
+	}
+
+	public int getEnergyBarScaled(int pixels) {
+		int i = this.getEnergyStored();
+		int j = this.getMaxEnergyStored();
+		return (int) (j != 0 && i != 0 ? (long) i * pixels / j : 0);
+	}
+
+	public int getMaterialBarScaled(int pixels) {
+		int i = MathHelper.clamp(this.getMaterialCount(), 0, this.getMaterialsRequired());
+		int j = this.getMaterialsRequired();
+		return j != 0 && i != 0 ? i * pixels / j : 0;
+	}
+
+	public int getProgressBarScaled(int pixels) {
+		int i = this.getProgress();
+		int j = this.getEnergyRequired();
+		return (int) (j != 0 && i != 0 ? (long) i * pixels / j : 0);
 	}
 }

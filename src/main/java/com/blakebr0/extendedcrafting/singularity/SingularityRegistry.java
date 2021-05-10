@@ -21,8 +21,9 @@ import java.io.File;
 import java.io.FileFilter;
 import java.io.FileReader;
 import java.io.FileWriter;
-import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 public final class SingularityRegistry {
@@ -30,7 +31,7 @@ public final class SingularityRegistry {
     private static final SingularityRegistry INSTANCE = new SingularityRegistry();
     private static final Gson GSON = (new GsonBuilder()).setPrettyPrinting().create();
 
-    private final List<Singularity> singularities = new ArrayList<>();
+    private final Map<ResourceLocation, Singularity> singularities = new LinkedHashMap<>();
 
     public void loadSingularities() {
         Stopwatch stopwatch = Stopwatch.createStarted();
@@ -40,6 +41,7 @@ public final class SingularityRegistry {
             for (Singularity singularity : defaults()) {
                 JsonObject json = SingularityUtils.writeToJson(singularity);
                 FileWriter writer = null;
+
                 try {
                     File file = new File(dir, singularity.getId().getPath() + ".json");
                     writer = new FileWriter(file);
@@ -62,11 +64,11 @@ public final class SingularityRegistry {
     }
 
     public List<Singularity> getSingularities() {
-        return this.singularities;
+        return Lists.newArrayList(this.singularities.values());
     }
 
     public Singularity getSingularityById(ResourceLocation id) {
-        return this.singularities.stream().filter(s -> id.equals(s.getId())).findFirst().orElse(null);
+        return this.singularities.get(id);
     }
 
     private void loadFiles(File dir) {
@@ -78,6 +80,7 @@ public final class SingularityRegistry {
             JsonObject json;
             FileReader reader = null;
             Singularity singularity = null;
+
             try {
                 JsonParser parser = new JsonParser();
                 reader = new FileReader(file);
@@ -94,8 +97,8 @@ public final class SingularityRegistry {
 
             if (singularity != null) {
                 ResourceLocation id = singularity.getId();
-                this.singularities.removeIf(s -> id.equals(s.getId()));
-                this.singularities.add(singularity);
+
+                this.singularities.put(id, singularity);
             }
         }
     }
@@ -106,6 +109,7 @@ public final class SingularityRegistry {
 
     private static List<Singularity> defaults() {
         int count = ModConfigs.SINGULARITY_MATERIALS_REQUIRED.get();
+
         return Lists.newArrayList(
                 new Singularity(new ResourceLocation(ExtendedCrafting.MOD_ID, "coal"), "singularity.extendedcrafting.coal", new int[] { 3289650, 1052693 }, Ingredient.fromItems(Items.COAL), count, true),
                 new Singularity(new ResourceLocation(ExtendedCrafting.MOD_ID, "iron"), "singularity.extendedcrafting.iron", new int[] { 14211288, 11053224 }, Ingredient.fromItems(Items.IRON_INGOT), count, true),

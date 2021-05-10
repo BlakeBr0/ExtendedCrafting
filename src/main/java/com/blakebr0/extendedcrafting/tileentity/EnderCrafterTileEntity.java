@@ -22,7 +22,7 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.particles.IParticleData;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.tileentity.ITickableTileEntity;
-import net.minecraft.util.IIntArray;
+import net.minecraft.util.IntArray;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.World;
@@ -32,32 +32,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class EnderCrafterTileEntity extends BaseInventoryTileEntity implements ITickableTileEntity, INamedContainerProvider {
-	private final BaseItemStackHandler inventory = new BaseItemStackHandler(10, this::markDirtyAndDispatch);
-	private final BaseItemStackHandler recipeInventory = new BaseItemStackHandler(9);
+	private final BaseItemStackHandler inventory;
+	private final BaseItemStackHandler recipeInventory;
 	private IEnderCrafterRecipe recipe;
 	private int progress;
 	private int progressReq;
-	protected IIntArray data = new IIntArray() {
-		@Override
-		public int get(int i) {
-			switch (i) {
-				case 0: return EnderCrafterTileEntity.this.getProgress();
-				case 1: return EnderCrafterTileEntity.this.getProgressRequired();
-				default: return 0;
-			}
-		}
-
-		@Override
-		public void set(int i, int value) { }
-
-		@Override
-		public int size() {
-			return 2;
-		}
-	};
 
 	public EnderCrafterTileEntity() {
 		super(ModTileEntities.ENDER_CRAFTER.get());
+		this.inventory = new BaseItemStackHandler(10, this::markDirtyAndDispatch);
+		this.recipeInventory = new BaseItemStackHandler(9);
 	}
 
 	@Override
@@ -83,7 +67,9 @@ public class EnderCrafterTileEntity extends BaseInventoryTileEntity implements I
 
 	@Override
 	public void tick() {
+		boolean mark = false;
 		World world = this.getWorld();
+
 		if (world != null) {
 			this.updateRecipeInventory();
 			IInventory recipeInventory = this.recipeInventory.toIInventory();
@@ -117,22 +103,28 @@ public class EnderCrafterTileEntity extends BaseInventoryTileEntity implements I
 								this.progress = 0;
 							}
 
-							this.markDirty();
+							mark = true;
 						}
 					} else {
 						if (this.progress > 0 || this.progressReq > 0) {
 							this.progress = 0;
 							this.progressReq = 0;
-							this.markDirty();
+
+							mark = true;
 						}
 					}
 				} else {
 					if (this.progress > 0 || this.progressReq > 0) {
 						this.progress = 0;
 						this.progressReq = 0;
-						this.markDirty();
+
+						mark = true;
 					}
 				}
+			}
+
+			if (mark) {
+				this.markDirtyAndDispatch();
 			}
 		}
 	}
@@ -144,7 +136,7 @@ public class EnderCrafterTileEntity extends BaseInventoryTileEntity implements I
 
 	@Override
 	public Container createMenu(int windowId, PlayerInventory playerInventory, PlayerEntity player) {
-		return EnderCrafterContainer.create(windowId, playerInventory, this::isUsableByPlayer, this.inventory, this.data);
+		return EnderCrafterContainer.create(windowId, playerInventory, this::isUsableByPlayer, this.inventory, new IntArray(0), this.getPos());
 	}
 
 	private void updateResult(ItemStack stack) {

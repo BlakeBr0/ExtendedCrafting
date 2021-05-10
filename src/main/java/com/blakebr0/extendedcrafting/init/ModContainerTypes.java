@@ -52,7 +52,7 @@ public final class ModContainerTypes {
     public static final RegistryObject<ContainerType<EliteAutoTableContainer>> ELITE_AUTO_TABLE = register("elite_auto_table", () -> new ContainerType<>((IContainerFactory<EliteAutoTableContainer>) EliteAutoTableContainer::create));
     public static final RegistryObject<ContainerType<UltimateAutoTableContainer>> ULTIMATE_AUTO_TABLE = register("ultimate_auto_table", () -> new ContainerType<>((IContainerFactory<UltimateAutoTableContainer>) UltimateAutoTableContainer::create));
     public static final RegistryObject<ContainerType<CompressorContainer>> COMPRESSOR = register("compressor", () -> new ContainerType<>((IContainerFactory<CompressorContainer>) CompressorContainer::create));
-    public static final RegistryObject<ContainerType<EnderCrafterContainer>> ENDER_CRAFTER = register("ender_crafter", () -> new ContainerType<>(EnderCrafterContainer::create));
+    public static final RegistryObject<ContainerType<EnderCrafterContainer>> ENDER_CRAFTER = register("ender_crafter", () -> new ContainerType<>((IContainerFactory<EnderCrafterContainer>) EnderCrafterContainer::create));
 
     @SubscribeEvent
     public void onRegisterContainerTypes(RegistryEvent.Register<ContainerType<?>> event) {

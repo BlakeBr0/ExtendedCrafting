@@ -8,8 +8,10 @@ import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
+import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.IIntArray;
 import net.minecraft.util.IntArray;
+import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.items.ItemStackHandler;
 import net.minecraftforge.items.SlotItemHandler;
@@ -19,15 +21,17 @@ import java.util.function.Function;
 public class EnderCrafterContainer extends Container {
 	private final Function<PlayerEntity, Boolean> isUsableByPlayer;
 	private final IIntArray data;
+	private final BlockPos pos;
 
-	private EnderCrafterContainer(ContainerType<?> type, int id, PlayerInventory playerInventory) {
-		this(type, id, playerInventory, p -> false, new ItemStackHandler(10), new IntArray(2));
+	private EnderCrafterContainer(ContainerType<?> type, int id, PlayerInventory playerInventory, PacketBuffer buffer) {
+		this(type, id, playerInventory, p -> false, new ItemStackHandler(10), new IntArray(2), buffer.readBlockPos());
 	}
 
-	private EnderCrafterContainer(ContainerType<?> type, int id, PlayerInventory playerInventory, Function<PlayerEntity, Boolean> isUsableByPlayer, IItemHandlerModifiable inventory, IIntArray data) {
+	private EnderCrafterContainer(ContainerType<?> type, int id, PlayerInventory playerInventory, Function<PlayerEntity, Boolean> isUsableByPlayer, IItemHandlerModifiable inventory, IIntArray data, BlockPos pos) {
 		super(type, id);
 		this.isUsableByPlayer = isUsableByPlayer;
 		this.data = data;
+		this.pos = pos;
 
 		this.addSlot(new OutputSlot(inventory, 9, 124, 36));
 		
@@ -95,25 +99,15 @@ public class EnderCrafterContainer extends Container {
 		return itemstack;
 	}
 
-	public static EnderCrafterContainer create(int windowId, PlayerInventory playerInventory) {
-		return new EnderCrafterContainer(ModContainerTypes.ENDER_CRAFTER.get(), windowId, playerInventory);
+	public BlockPos getPos() {
+		return this.pos;
 	}
 
-	public static EnderCrafterContainer create(int windowId, PlayerInventory playerInventory, Function<PlayerEntity, Boolean> isUsableByPlayer, IItemHandlerModifiable inventory, IIntArray data) {
-		return new EnderCrafterContainer(ModContainerTypes.ENDER_CRAFTER.get(), windowId, playerInventory, isUsableByPlayer, inventory, data);
+	public static EnderCrafterContainer create(int windowId, PlayerInventory playerInventory, PacketBuffer buffer) {
+		return new EnderCrafterContainer(ModContainerTypes.ENDER_CRAFTER.get(), windowId, playerInventory, buffer);
 	}
 
-	public int getProgressBarScaled(int pixels) {
-		int i = this.getProgress();
-		int j = Math.max(this.getProgressRequired(), i);
-		return j != 0 && i != 0 ? i * pixels / j : 0;
-	}
-
-	public int getProgress() {
-		return this.data.get(0);
-	}
-
-	public int getProgressRequired() {
-		return this.data.get(1);
+	public static EnderCrafterContainer create(int windowId, PlayerInventory playerInventory, Function<PlayerEntity, Boolean> isUsableByPlayer, IItemHandlerModifiable inventory, IIntArray data, BlockPos pos) {
+		return new EnderCrafterContainer(ModContainerTypes.ENDER_CRAFTER.get(), windowId, playerInventory, isUsableByPlayer, inventory, data, pos);
 	}
 }

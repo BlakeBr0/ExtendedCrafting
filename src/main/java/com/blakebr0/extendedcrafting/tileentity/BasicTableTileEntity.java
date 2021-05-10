@@ -16,10 +16,11 @@ import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.CapabilityItemHandler;
 
 public class BasicTableTileEntity extends BaseInventoryTileEntity implements INamedContainerProvider {
-	private final BaseItemStackHandler inventory = new BaseItemStackHandler(9, this::markDirtyAndDispatch);
+	private final BaseItemStackHandler inventory;
 
 	public BasicTableTileEntity() {
 		super(ModTileEntities.BASIC_TABLE.get());
+		this.inventory = new BaseItemStackHandler(9, this::markDirtyAndDispatch);
 	}
 
 	@Override

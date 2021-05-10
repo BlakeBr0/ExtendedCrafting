@@ -26,7 +26,7 @@ import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
-import net.minecraft.util.IIntArray;
+import net.minecraft.util.IntArray;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.World;
@@ -41,28 +41,6 @@ public abstract class AutoTableTileEntity extends BaseInventoryTileEntity implem
     private int progress;
     private boolean running = true;
     private int oldEnergy;
-    protected final IIntArray data = new IIntArray() {
-        @Override
-        public int get(int index) {
-            switch (index) {
-                case 0: return AutoTableTileEntity.this.getEnergy().getEnergyStored();
-                case 1: return AutoTableTileEntity.this.getEnergy().getMaxEnergyStored();
-                case 2: return AutoTableTileEntity.this.getProgress();
-                case 3: return AutoTableTileEntity.this.getProgressRequired();
-                case 4: return AutoTableTileEntity.this.isRunning() ? 1 : 0;
-                case 5: return AutoTableTileEntity.this.getRecipeStorage().getSelected();
-                default: return 0;
-            }
-        }
-
-        @Override
-        public void set(int index, int value) { }
-
-        @Override
-        public int size() {
-            return 6;
-        }
-    };
 
     public AutoTableTileEntity(TileEntityType<?> type) {
         super(type);
@@ -166,8 +144,9 @@ public abstract class AutoTableTileEntity extends BaseInventoryTileEntity implem
                 mark = true;
         }
 
-        if (mark)
+        if (mark) {
             this.markDirty();
+        }
     }
 
     @Override
@@ -316,13 +295,18 @@ public abstract class AutoTableTileEntity extends BaseInventoryTileEntity implem
 	}
 
     public static class Basic extends AutoTableTileEntity {
-        private final BaseItemStackHandler inventory = new BaseItemStackHandler(10, this::markDirtyAndDispatch);
-        private final BaseItemStackHandler recipeInventory = new BaseItemStackHandler(9);
-        private final TableRecipeStorage recipeStorage = new TableRecipeStorage(10);
-        private final BaseEnergyStorage energy = new BaseEnergyStorage(ModConfigs.AUTO_TABLE_POWER_CAPACITY.get());
+        private final BaseItemStackHandler inventory;
+        private final BaseItemStackHandler recipeInventory;
+        private final TableRecipeStorage recipeStorage;
+        private final BaseEnergyStorage energy;
 
         public Basic() {
             super(ModTileEntities.BASIC_AUTO_TABLE.get());
+            this.inventory = new BaseItemStackHandler(10, this::markDirtyAndDispatch);
+            this.recipeInventory = new BaseItemStackHandler(9);
+            this.recipeStorage = new TableRecipeStorage(10);
+            this.energy = new BaseEnergyStorage(ModConfigs.AUTO_TABLE_POWER_CAPACITY.get());
+
             this.inventory.setOutputSlots(9);
             this.inventory.setSlotValidator(super::canInsertStack);
         }
@@ -339,7 +323,7 @@ public abstract class AutoTableTileEntity extends BaseInventoryTileEntity implem
 
         @Override
         public Container createMenu(int windowId, PlayerInventory playerInventory, PlayerEntity player) {
-            return BasicAutoTableContainer.create(windowId, playerInventory, this::isUsableByPlayer, this.inventory, this.data, this.getPos());
+            return BasicAutoTableContainer.create(windowId, playerInventory, this::isUsableByPlayer, this.inventory, new IntArray(0), this.getPos());
         }
 
         @Override
@@ -364,13 +348,18 @@ public abstract class AutoTableTileEntity extends BaseInventoryTileEntity implem
     }
 
     public static class Advanced extends AutoTableTileEntity {
-        private final BaseItemStackHandler inventory = new BaseItemStackHandler(26, this::markDirtyAndDispatch);
-        private final BaseItemStackHandler recipeInventory = new BaseItemStackHandler(25);
-        private final TableRecipeStorage recipeStorage = new TableRecipeStorage(26);
-        private final BaseEnergyStorage energy = new BaseEnergyStorage(ModConfigs.AUTO_TABLE_POWER_CAPACITY.get() * 2);
+        private final BaseItemStackHandler inventory;
+        private final BaseItemStackHandler recipeInventory;
+        private final TableRecipeStorage recipeStorage;
+        private final BaseEnergyStorage energy;
 
         public Advanced() {
             super(ModTileEntities.ADVANCED_AUTO_TABLE.get());
+            this.inventory = new BaseItemStackHandler(26, this::markDirtyAndDispatch);
+            this.recipeInventory = new BaseItemStackHandler(25);
+            this.recipeStorage = new TableRecipeStorage(26);
+            this.energy = new BaseEnergyStorage(ModConfigs.AUTO_TABLE_POWER_CAPACITY.get() * 2);
+
             this.inventory.setOutputSlots(25);
             this.inventory.setSlotValidator(super::canInsertStack);
         }
@@ -387,7 +376,7 @@ public abstract class AutoTableTileEntity extends BaseInventoryTileEntity implem
 
         @Override
         public Container createMenu(int windowId, PlayerInventory playerInventory, PlayerEntity player) {
-            return AdvancedAutoTableContainer.create(windowId, playerInventory, this::isUsableByPlayer, this.inventory, this.data, this.getPos());
+            return AdvancedAutoTableContainer.create(windowId, playerInventory, this::isUsableByPlayer, this.inventory, new IntArray(0), this.getPos());
         }
 
         @Override
@@ -412,13 +401,18 @@ public abstract class AutoTableTileEntity extends BaseInventoryTileEntity implem
     }
 
     public static class Elite extends AutoTableTileEntity {
-        private final BaseItemStackHandler inventory = new BaseItemStackHandler(50, this::markDirtyAndDispatch);
-        private final BaseItemStackHandler recipeInventory = new BaseItemStackHandler(49);
-        private final TableRecipeStorage recipeStorage = new TableRecipeStorage(50);
-        private final BaseEnergyStorage energy = new BaseEnergyStorage(ModConfigs.AUTO_TABLE_POWER_CAPACITY.get() * 4);
+        private final BaseItemStackHandler inventory;
+        private final BaseItemStackHandler recipeInventory;
+        private final TableRecipeStorage recipeStorage;
+        private final BaseEnergyStorage energy;
 
         public Elite() {
             super(ModTileEntities.ELITE_AUTO_TABLE.get());
+            this.inventory = new BaseItemStackHandler(50, this::markDirtyAndDispatch);
+            this.recipeInventory = new BaseItemStackHandler(49);
+            this.recipeStorage = new TableRecipeStorage(50);
+            this.energy = new BaseEnergyStorage(ModConfigs.AUTO_TABLE_POWER_CAPACITY.get() * 4);
+
             this.inventory.setOutputSlots(49);
             this.inventory.setSlotValidator(super::canInsertStack);
         }
@@ -435,7 +429,7 @@ public abstract class AutoTableTileEntity extends BaseInventoryTileEntity implem
 
         @Override
         public Container createMenu(int windowId, PlayerInventory playerInventory, PlayerEntity player) {
-            return EliteAutoTableContainer.create(windowId, playerInventory, this::isUsableByPlayer, this.inventory, this.data, this.getPos());
+            return EliteAutoTableContainer.create(windowId, playerInventory, this::isUsableByPlayer, this.inventory, new IntArray(0), this.getPos());
         }
 
         @Override
@@ -460,13 +454,18 @@ public abstract class AutoTableTileEntity extends BaseInventoryTileEntity implem
     }
 
     public static class Ultimate extends AutoTableTileEntity {
-        private final BaseItemStackHandler inventory = new BaseItemStackHandler(82, this::markDirtyAndDispatch);
-        private final BaseItemStackHandler recipeInventory = new BaseItemStackHandler(81);
-        private final TableRecipeStorage recipeStorage = new TableRecipeStorage(82);
-        private final BaseEnergyStorage energy = new BaseEnergyStorage(ModConfigs.AUTO_TABLE_POWER_CAPACITY.get() * 8);
+        private final BaseItemStackHandler inventory;
+        private final BaseItemStackHandler recipeInventory;
+        private final TableRecipeStorage recipeStorage;
+        private final BaseEnergyStorage energy;
 
         public Ultimate() {
             super(ModTileEntities.ULTIMATE_AUTO_TABLE.get());
+            this.inventory = new BaseItemStackHandler(82, this::markDirtyAndDispatch);
+            this.recipeInventory = new BaseItemStackHandler(81);
+            this.recipeStorage = new TableRecipeStorage(82);
+            this.energy = new BaseEnergyStorage(ModConfigs.AUTO_TABLE_POWER_CAPACITY.get() * 8);
+
             this.inventory.setOutputSlots(81);
             this.inventory.setSlotValidator(super::canInsertStack);
         }
@@ -483,7 +482,7 @@ public abstract class AutoTableTileEntity extends BaseInventoryTileEntity implem
 
         @Override
         public Container createMenu(int windowId, PlayerInventory playerInventory, PlayerEntity player) {
-            return UltimateAutoTableContainer.create(windowId, playerInventory, this::isUsableByPlayer, this.inventory, this.data, this.getPos());
+            return UltimateAutoTableContainer.create(windowId, playerInventory, this::isUsableByPlayer, this.inventory, new IntArray(0), this.getPos());
         }
 
         @Override

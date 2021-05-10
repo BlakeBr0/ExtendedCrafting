@@ -37,9 +37,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class CraftingCoreTileEntity extends BaseInventoryTileEntity implements ITickableTileEntity, INamedContainerProvider {
-	private final BaseItemStackHandler inventory = new BaseItemStackHandler(1, this::markDirtyAndDispatch);
-	private final BaseEnergyStorage energy = new BaseEnergyStorage(ModConfigs.CRAFTING_CORE_POWER_CAPACITY.get());
-	private final BaseItemStackHandler recipeInventory = new BaseItemStackHandler(49);
+	private final BaseItemStackHandler inventory;
+	private final BaseEnergyStorage energy;
+	private final BaseItemStackHandler recipeInventory;
 	private CombinationRecipe recipe;
 	private int progress;
 	private int oldEnergy;
@@ -47,6 +47,10 @@ public class CraftingCoreTileEntity extends BaseInventoryTileEntity implements I
 
 	public CraftingCoreTileEntity() {
 		super(ModTileEntities.CRAFTING_CORE.get());
+		this.inventory = new BaseItemStackHandler(1, this::markDirtyAndDispatch);
+		this.energy = new BaseEnergyStorage(ModConfigs.CRAFTING_CORE_POWER_CAPACITY.get());
+		this.recipeInventory = new BaseItemStackHandler(49);
+
 		this.inventory.setDefaultSlotLimit(1);
 	}
 
@@ -77,9 +81,11 @@ public class CraftingCoreTileEntity extends BaseInventoryTileEntity implements I
 
 		Map<BlockPos, ItemStack> pedestalsWithItems = this.getPedestalsWithItems();
 		World world = this.getWorld();
+
 		if (world != null) {
 			ItemStack[] stacks = pedestalsWithItems.values().toArray(new ItemStack[0]);
 			this.updateRecipeInventory(stacks);
+
 			if (this.recipe == null || !this.recipe.matches(this.recipeInventory)) {
 				this.recipe = (CombinationRecipe) world.getRecipeManager().getRecipe(RecipeTypes.COMBINATION, this.recipeInventory.toIInventory(), world).orElse(null);
 			}
@@ -88,9 +94,11 @@ public class CraftingCoreTileEntity extends BaseInventoryTileEntity implements I
 				if (this.recipe != null) {
 					if (this.energy.getEnergyStored() > 0) {
 						boolean done = this.process(this.recipe);
+
 						if (done) {
 							for (BlockPos pedestalPos : pedestalsWithItems.keySet()) {
 								TileEntity tile = world.getTileEntity(pedestalPos);
+
 								if (tile instanceof PedestalTileEntity) {
 									PedestalTileEntity pedestal = (PedestalTileEntity) tile;
 									IItemHandlerModifiable inventory = pedestal.getInventory();
@@ -103,6 +111,7 @@ public class CraftingCoreTileEntity extends BaseInventoryTileEntity implements I
 							this.spawnParticles(ParticleTypes.END_ROD, this.getPos(), 1.1, 50);
 							this.inventory.setStackInSlot(0, this.recipe.getCraftingResult(this.recipeInventory));
 							this.progress = 0;
+
 							mark = true;
 						} else {
 							this.spawnParticles(ParticleTypes.ENTITY_EFFECT, this.getPos(), 1.15, 2);
@@ -110,6 +119,7 @@ public class CraftingCoreTileEntity extends BaseInventoryTileEntity implements I
 							if (this.shouldSpawnItemParticles()) {
 								for (BlockPos pedestalPos : pedestalsWithItems.keySet()) {
 									TileEntity tile = world.getTileEntity(pedestalPos);
+
 									if (tile instanceof PedestalTileEntity) {
 										PedestalTileEntity pedestal = (PedestalTileEntity) tile;
 										IItemHandlerModifiable inventory = pedestal.getInventory();
@@ -208,10 +218,12 @@ public class CraftingCoreTileEntity extends BaseInventoryTileEntity implements I
 	public Map<BlockPos, ItemStack> getPedestalsWithItems() {
 		Map<BlockPos, ItemStack> pedestals = new HashMap<>();
 		World world = this.getWorld();
+
 		if (world != null) {
 			BlockPos pos = this.getPos();
 			BlockPos.getAllInBox(pos.add(-3, 0, -3), pos.add(3, 0, 3)).forEach(aoePos -> {
 				TileEntity tile = world.getTileEntity(aoePos);
+
 				if (tile instanceof PedestalTileEntity) {
 					PedestalTileEntity pedestal = (PedestalTileEntity) tile;
 					ItemStack stack = pedestal.getInventory().getStackInSlot(0);

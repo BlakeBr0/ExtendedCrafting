@@ -2,10 +2,14 @@ package com.blakebr0.extendedcrafting.container.slot;
 
 import com.blakebr0.cucumber.inventory.slot.OutputSlot;
 import com.blakebr0.extendedcrafting.api.crafting.RecipeTypes;
+import com.blakebr0.extendedcrafting.container.BasicAutoTableContainer;
+import com.blakebr0.extendedcrafting.container.BasicTableContainer;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.inventory.CraftingInventory;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.IRecipeType;
 import net.minecraft.util.NonNullList;
 import net.minecraftforge.items.IItemHandler;
 
@@ -21,7 +25,21 @@ public class TableOutputSlot extends OutputSlot {
 
     @Override
     public ItemStack onTake(PlayerEntity player, ItemStack stack) {
-        NonNullList<ItemStack> remaining = player.world.getRecipeManager().getRecipeNonNull(RecipeTypes.TABLE, this.matrix, player.world);
+        boolean isVanilla = false;
+
+        if (this.container instanceof BasicTableContainer) {
+            isVanilla = ((BasicTableContainer) this.container).isVanillaRecipe();
+        } else if (this.container instanceof BasicAutoTableContainer) {
+            isVanilla = ((BasicAutoTableContainer) this.container).isVanillaRecipe();
+        }
+
+        NonNullList<ItemStack> remaining;
+
+        if (isVanilla) {
+            remaining = player.world.getRecipeManager().getRecipeNonNull(IRecipeType.CRAFTING, (CraftingInventory) this.matrix, player.world);
+        } else {
+            remaining = player.world.getRecipeManager().getRecipeNonNull(RecipeTypes.TABLE, this.matrix, player.world);
+        }
 
         for (int i = 0; i < remaining.size(); i++) {
             ItemStack slotStack = this.matrix.getStackInSlot(i);

@@ -34,7 +34,8 @@ public class UltimateTableContainer extends Container {
 		this.isUsableByPlayer = isUsableByPlayer;
 		this.world = playerInventory.player.world;
 		this.result = new ItemStackHandler();
-		IInventory matrix = new ExtendedCraftingInventory(this, inventory);
+
+		IInventory matrix = new ExtendedCraftingInventory(this, inventory, 9);
 
 		this.addSlot(new TableOutputSlot(this, matrix, this.result, 0, 206, 89));
 		

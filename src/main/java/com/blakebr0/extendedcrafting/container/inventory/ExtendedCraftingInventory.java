@@ -2,20 +2,21 @@ package com.blakebr0.extendedcrafting.container.inventory;
 
 import com.blakebr0.cucumber.inventory.BaseItemStackHandler;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.IInventory;
+import net.minecraft.inventory.CraftingInventory;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.item.ItemStack;
 
-public class ExtendedCraftingInventory implements IInventory {
+public class ExtendedCraftingInventory extends CraftingInventory {
     private final Container container;
     private final BaseItemStackHandler inventory;
     private final boolean autoTable;
 
-    public ExtendedCraftingInventory(Container container, BaseItemStackHandler inventory) {
-        this(container, inventory, false);
+    public ExtendedCraftingInventory(Container container, BaseItemStackHandler inventory, int size) {
+        this(container, inventory, size, false);
     }
 
-    public ExtendedCraftingInventory(Container container, BaseItemStackHandler inventory, boolean autoTable) {
+    public ExtendedCraftingInventory(Container container, BaseItemStackHandler inventory, int size, boolean autoTable) {
+        super(container, size, size);
         this.container = container;
         this.inventory = inventory;
         this.autoTable = autoTable;

@@ -43,7 +43,8 @@ public class UltimateAutoTableContainer extends Container {
 		this.pos = pos;
 		this.world = playerInventory.player.world;
 		this.result = new ItemStackHandler();
-		IInventory matrix = new ExtendedCraftingInventory(this, inventory, true);
+
+		IInventory matrix = new ExtendedCraftingInventory(this, inventory, 9, true);
 
 		this.addSlot(new TableOutputSlot(this, matrix, this.result, 0, 225, 89));
 		

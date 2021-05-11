@@ -139,11 +139,19 @@ public final class JeiCompat implements IModPlugin {
 			registration.addRecipeCatalyst(new ItemStack(ModBlocks.ELITE_TABLE.get()), EliteTableCategory.UID);
 			registration.addRecipeCatalyst(new ItemStack(ModBlocks.ULTIMATE_TABLE.get()), UltimateTableCategory.UID);
 
+			if (ModConfigs.TABLE_USE_VANILLA_RECIPES.get()) {
+				registration.addRecipeCatalyst(new ItemStack(ModBlocks.BASIC_TABLE.get()), VanillaRecipeCategoryUid.CRAFTING);
+			}
+
 			if (ModConfigs.ENABLE_AUTO_TABLES.get()) {
 				registration.addRecipeCatalyst(new ItemStack(ModBlocks.BASIC_AUTO_TABLE.get()), BasicTableCategory.UID);
 				registration.addRecipeCatalyst(new ItemStack(ModBlocks.ADVANCED_AUTO_TABLE.get()), AdvancedTableCategory.UID);
 				registration.addRecipeCatalyst(new ItemStack(ModBlocks.ELITE_AUTO_TABLE.get()), EliteTableCategory.UID);
 				registration.addRecipeCatalyst(new ItemStack(ModBlocks.ULTIMATE_AUTO_TABLE.get()), UltimateTableCategory.UID);
+
+				if (ModConfigs.TABLE_USE_VANILLA_RECIPES.get()) {
+					registration.addRecipeCatalyst(new ItemStack(ModBlocks.BASIC_AUTO_TABLE.get()), VanillaRecipeCategoryUid.CRAFTING);
+				}
 			}
 		}
 
@@ -165,11 +173,19 @@ public final class JeiCompat implements IModPlugin {
 			registration.addRecipeTransferHandler(EliteTableContainer.class, EliteTableCategory.UID, 1, 49, 50, 36);
 			registration.addRecipeTransferHandler(UltimateTableContainer.class, UltimateTableCategory.UID, 1, 81, 82, 36);
 
+			if (ModConfigs.TABLE_USE_VANILLA_RECIPES.get()) {
+				registration.addRecipeTransferHandler(BasicTableContainer.class, VanillaRecipeCategoryUid.CRAFTING, 1, 9, 10, 36);
+			}
+
 			if (ModConfigs.ENABLE_AUTO_TABLES.get()) {
 				registration.addRecipeTransferHandler(BasicAutoTableContainer.class, BasicTableCategory.UID, 1, 9, 11, 36);
 				registration.addRecipeTransferHandler(AdvancedAutoTableContainer.class, AdvancedTableCategory.UID, 1, 25, 27, 36);
 				registration.addRecipeTransferHandler(EliteAutoTableContainer.class, EliteTableCategory.UID, 1, 49, 51, 36);
 				registration.addRecipeTransferHandler(UltimateAutoTableContainer.class, UltimateTableCategory.UID, 1, 81, 83, 36);
+
+				if (ModConfigs.TABLE_USE_VANILLA_RECIPES.get()) {
+					registration.addRecipeTransferHandler(BasicAutoTableContainer.class, VanillaRecipeCategoryUid.CRAFTING, 1, 9, 11, 36);
+				}
 			}
 		}
 

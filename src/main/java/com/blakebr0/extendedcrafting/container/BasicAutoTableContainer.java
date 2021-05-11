@@ -4,16 +4,20 @@ import com.blakebr0.cucumber.inventory.BaseItemStackHandler;
 import com.blakebr0.cucumber.inventory.slot.OutputSlot;
 import com.blakebr0.extendedcrafting.api.crafting.ITableRecipe;
 import com.blakebr0.extendedcrafting.api.crafting.RecipeTypes;
+import com.blakebr0.extendedcrafting.config.ModConfigs;
 import com.blakebr0.extendedcrafting.container.inventory.ExtendedCraftingInventory;
 import com.blakebr0.extendedcrafting.container.slot.TableOutputSlot;
 import com.blakebr0.extendedcrafting.init.ModContainerTypes;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.inventory.CraftingInventory;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.ICraftingRecipe;
+import net.minecraft.item.crafting.IRecipeType;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.IIntArray;
 import net.minecraft.util.IntArray;
@@ -31,6 +35,7 @@ public class BasicAutoTableContainer extends Container {
 	private final BlockPos pos;
 	private final World world;
 	private final IItemHandlerModifiable result;
+	private boolean isVanillaRecipe = false;
 
 	private BasicAutoTableContainer(ContainerType<?> type, int id, PlayerInventory playerInventory, PacketBuffer buffer) {
 		this(type, id, playerInventory, p -> false, new BaseItemStackHandler(10), new IntArray(6), buffer.readBlockPos());
@@ -43,7 +48,8 @@ public class BasicAutoTableContainer extends Container {
 		this.pos = pos;
 		this.world = playerInventory.player.world;
 		this.result = new ItemStackHandler();
-		IInventory matrix = new ExtendedCraftingInventory(this, inventory, true);
+
+		IInventory matrix = new ExtendedCraftingInventory(this, inventory, 3, true);
 
 		this.addSlot(new TableOutputSlot(this, matrix, this.result, 0, 129, 34));
 		
@@ -73,9 +79,24 @@ public class BasicAutoTableContainer extends Container {
 	@Override
 	public void onCraftMatrixChanged(IInventory matrix) {
 		Optional<ITableRecipe> recipe = this.world.getRecipeManager().getRecipe(RecipeTypes.TABLE, matrix, this.world);
+
+		this.isVanillaRecipe = false;
+
 		if (recipe.isPresent()) {
 			ItemStack result = recipe.get().getCraftingResult(matrix);
+
 			this.result.setStackInSlot(0, result);
+		} else if (ModConfigs.TABLE_USE_VANILLA_RECIPES.get()) {
+			Optional<ICraftingRecipe> vanilla = this.world.getRecipeManager().getRecipe(IRecipeType.CRAFTING, (CraftingInventory) matrix, this.world);
+
+			if (vanilla.isPresent()) {
+				ItemStack result = vanilla.get().getCraftingResult((CraftingInventory) matrix);
+
+				this.isVanillaRecipe = true;
+				this.result.setStackInSlot(0, result);
+			} else {
+				this.result.setStackInSlot(0, ItemStack.EMPTY);
+			}
 		} else {
 			this.result.setStackInSlot(0, ItemStack.EMPTY);
 		}
@@ -127,16 +148,12 @@ public class BasicAutoTableContainer extends Container {
 		return itemstack;
 	}
 
-	public static BasicAutoTableContainer create(int windowId, PlayerInventory playerInventory, PacketBuffer buffer) {
-		return new BasicAutoTableContainer(ModContainerTypes.BASIC_AUTO_TABLE.get(), windowId, playerInventory, buffer);
-	}
-
-	public static BasicAutoTableContainer create(int windowId, PlayerInventory playerInventory, Function<PlayerEntity, Boolean> isUsableByPlayer, BaseItemStackHandler inventory, IIntArray data, BlockPos pos) {
-		return new BasicAutoTableContainer(ModContainerTypes.BASIC_AUTO_TABLE.get(), windowId, playerInventory, isUsableByPlayer, inventory, data, pos);
-	}
-
 	public BlockPos getPos() {
 		return this.pos;
+	}
+
+	public boolean isVanillaRecipe() {
+		return this.isVanillaRecipe;
 	}
 
 	public int getEnergyBarScaled(int pixels) {
@@ -173,5 +190,13 @@ public class BasicAutoTableContainer extends Container {
 
 	public int getSelected() {
 		return this.data.get(5);
+	}
+
+	public static BasicAutoTableContainer create(int windowId, PlayerInventory playerInventory, PacketBuffer buffer) {
+		return new BasicAutoTableContainer(ModContainerTypes.BASIC_AUTO_TABLE.get(), windowId, playerInventory, buffer);
+	}
+
+	public static BasicAutoTableContainer create(int windowId, PlayerInventory playerInventory, Function<PlayerEntity, Boolean> isUsableByPlayer, BaseItemStackHandler inventory, IIntArray data, BlockPos pos) {
+		return new BasicAutoTableContainer(ModContainerTypes.BASIC_AUTO_TABLE.get(), windowId, playerInventory, isUsableByPlayer, inventory, data, pos);
 	}
 }

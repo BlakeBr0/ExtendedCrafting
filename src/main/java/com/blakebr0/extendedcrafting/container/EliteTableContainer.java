@@ -34,7 +34,8 @@ public class EliteTableContainer extends Container {
 		this.isUsableByPlayer = isUsableByPlayer;
 		this.world = playerInventory.player.world;
 		this.result = new ItemStackHandler();
-		IInventory matrix = new ExtendedCraftingInventory(this, inventory);
+
+		IInventory matrix = new ExtendedCraftingInventory(this, inventory, 7);
 
 		this.addSlot(new TableOutputSlot(this, matrix, this.result, 0, 172, 71));
 		

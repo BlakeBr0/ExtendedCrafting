@@ -11,6 +11,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.world.IBlockReader;
+import net.minecraftforge.common.ToolType;
 
 public class EnderAlternatorBlock extends BaseBlock implements IEnableable {
 	private static final VoxelShape ENDER_ALTERNATOR_SHAPE = new VoxelShapeBuilder()
@@ -20,7 +21,7 @@ public class EnderAlternatorBlock extends BaseBlock implements IEnableable {
 			.build();
 
 	public EnderAlternatorBlock() {
-		super(Material.IRON, SoundType.METAL, 5.0F, 10.0F);
+		super(Material.IRON, SoundType.METAL, 5.0F, 10.0F, ToolType.PICKAXE);
 	}
 
 	@Override

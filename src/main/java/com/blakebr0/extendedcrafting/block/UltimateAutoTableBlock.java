@@ -26,6 +26,7 @@ import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.common.ToolType;
 import net.minecraftforge.fml.network.NetworkHooks;
 
 import java.util.List;
@@ -42,7 +43,7 @@ public class UltimateAutoTableBlock extends BaseTileEntityBlock implements IEnab
             .build();
 
     public UltimateAutoTableBlock() {
-        super(Material.IRON, SoundType.METAL, 5.0F, 10.0F);
+        super(Material.IRON, SoundType.METAL, 5.0F, 10.0F, ToolType.PICKAXE);
     }
 
     @Override

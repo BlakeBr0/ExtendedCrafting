@@ -25,6 +25,7 @@ import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
+import net.minecraftforge.common.ToolType;
 
 public class PedestalBlock extends BaseTileEntityBlock implements IEnableable {
 	public static final VoxelShape PEDESTAL_SHAPE = new VoxelShapeBuilder()
@@ -34,7 +35,7 @@ public class PedestalBlock extends BaseTileEntityBlock implements IEnableable {
 			.build();
 
 	public PedestalBlock() {
-		super(Material.IRON, SoundType.METAL, 5.0F, 10.0F);
+		super(Material.IRON, SoundType.METAL, 5.0F, 10.0F, ToolType.PICKAXE);
 	}
 
 	@Override

@@ -27,6 +27,7 @@ import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
+import net.minecraftforge.common.ToolType;
 import net.minecraftforge.fml.network.NetworkHooks;
 
 public class CraftingCoreBlock extends BaseTileEntityBlock implements IEnableable {
@@ -40,7 +41,7 @@ public class CraftingCoreBlock extends BaseTileEntityBlock implements IEnableabl
 			.build();
 
 	public CraftingCoreBlock() {
-		super(Material.IRON, SoundType.METAL, 5.0F, 10.0F);
+		super(Material.IRON, SoundType.METAL, 5.0F, 10.0F, ToolType.PICKAXE);
 	}
 
 	@Override

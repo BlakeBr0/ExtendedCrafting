@@ -26,13 +26,14 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
+import net.minecraftforge.common.ToolType;
 import net.minecraftforge.fml.network.NetworkHooks;
 
 public class CompressorBlock extends BaseTileEntityBlock implements IEnableable {
 	private static final DirectionProperty FACING = HorizontalBlock.HORIZONTAL_FACING;
 
 	public CompressorBlock() {
-		super(Material.IRON, SoundType.METAL, 5.0F, 10.0F);
+		super(Material.IRON, SoundType.METAL, 5.0F, 10.0F, ToolType.PICKAXE);
 	}
 
 	@Override

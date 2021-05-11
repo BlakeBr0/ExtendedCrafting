@@ -25,6 +25,7 @@ import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.common.ToolType;
 
 import java.util.List;
 
@@ -39,7 +40,7 @@ public class EliteTableBlock extends BaseTileEntityBlock implements IEnableable 
 			.build();
 
 	public EliteTableBlock() {
-		super(Material.IRON, SoundType.METAL, 5.0F, 10.0F);
+		super(Material.IRON, SoundType.METAL, 5.0F, 10.0F, ToolType.PICKAXE);
 	}
 
 	@Override

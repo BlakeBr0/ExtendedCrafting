@@ -26,6 +26,7 @@ import java.util.List;
 public class BasicAutoTableScreen extends BaseContainerScreen<BasicAutoTableContainer> {
 	public static final ResourceLocation BACKGROUND = new ResourceLocation(ExtendedCrafting.MOD_ID, "textures/gui/basic_auto_table.png");
 	private final RecipeSelectButton[] recipeSelectButtons = new RecipeSelectButton[3];
+	private AutoTableTileEntity tile;
 
 	public BasicAutoTableScreen(BasicAutoTableContainer container, PlayerInventory inventory, ITextComponent title) {
 		super(container, inventory, title, BACKGROUND, 176, 194);
@@ -40,15 +41,17 @@ public class BasicAutoTableScreen extends BaseContainerScreen<BasicAutoTableCont
 		BlockPos pos = this.getContainer().getPos();
 
 		this.addButton(new ToggleTableRunningButton(x + 129, y + 58, pos));
+
 		this.recipeSelectButtons[0] = this.addButton(new RecipeSelectButton(x + 132, y + 7, pos, 0));
 		this.recipeSelectButtons[1] = this.addButton(new RecipeSelectButton(x + 145, y + 7, pos, 1));
 		this.recipeSelectButtons[2] = this.addButton(new RecipeSelectButton(x + 158, y + 7, pos, 2));
+
+		this.tile = this.getTileEntity();
 	}
 
 	@Override
 	public void render(MatrixStack stack, int mouseX, int mouseY, float partialTicks) {
-		int selected = this.getContainer().getSelected();
-		this.updateSelectedRecipeButtons(selected);
+		this.updateSelectedRecipeButtons();
 
 		super.render(stack, mouseX, mouseY, partialTicks);
 	}
@@ -62,7 +65,7 @@ public class BasicAutoTableScreen extends BaseContainerScreen<BasicAutoTableCont
 		super.renderHoveredTooltip(stack, mouseX, mouseY);
 
 		if (mouseX > x + 7 && mouseX < x + 20 && mouseY > y + 17 && mouseY < y + 94) {
-			StringTextComponent text = new StringTextComponent(container.getEnergyStored() + " FE");
+			StringTextComponent text = new StringTextComponent(this.getEnergyStored() + " FE");
 			this.renderTooltip(stack, text, mouseX, mouseY);
 		}
 
@@ -109,13 +112,12 @@ public class BasicAutoTableScreen extends BaseContainerScreen<BasicAutoTableCont
 
 		int x = this.getGuiLeft();
 		int y = this.getGuiTop();
-		BasicAutoTableContainer container = this.getContainer();
 
-		int i1 = container.getEnergyBarScaled(78);
+		int i1 = this.getEnergyBarScaled();
 		this.blit(stack, x + 7, y + 95 - i1, 178, 78 - i1, 15, i1 + 1);
 
-		if (container.isRunning()) {
-			int i2 = container.getProgressBarScaled(16);
+		if (this.isRunning()) {
+			int i2 = this.getProgressBarScaled();
 			this.blit(stack, x + 129, y + 58, 194, 0, 13, i2);
 		} else {
 			this.blit(stack, x + 130, y + 60, 194, 18, 13, 13);
@@ -133,37 +135,91 @@ public class BasicAutoTableScreen extends BaseContainerScreen<BasicAutoTableCont
 		}
 	}
 
-	private void updateSelectedRecipeButtons(int selected) {
+	private void updateSelectedRecipeButtons() {
 		for (RecipeSelectButton button : this.recipeSelectButtons) {
-			button.active = button.selected == selected;
+			button.active = button.selected == this.getSelected();
 		}
+	}
+
+	private AutoTableTileEntity getTileEntity() {
+		ClientWorld world = this.getMinecraft().world;
+
+		if (world != null) {
+			TileEntity tile = world.getTileEntity(this.getContainer().getPos());
+
+			if (tile instanceof AutoTableTileEntity) {
+				return (AutoTableTileEntity) tile;
+			}
+		}
+
+		return null;
+	}
+
+	private boolean isRunning() {
+		if (this.tile == null)
+			return false;
+
+		return this.tile.isRunning();
 	}
 
 	private BaseItemStackHandler getRecipeInfo(int selected) {
-		ClientWorld world = this.getMinecraft().world;
-		if (world != null) {
-			BasicAutoTableContainer container = this.getContainer();
-			TileEntity tile = world.getTileEntity(container.getPos());
-			if (tile instanceof AutoTableTileEntity) {
-				AutoTableTileEntity table = (AutoTableTileEntity) tile;
-				return table.getRecipeStorage().getRecipe(selected);
-			}
-		}
+		if (this.tile == null)
+			return null;
 
-		return null;
+		return this.tile.getRecipeStorage().getRecipe(selected);
 	}
 
 	private BaseItemStackHandler getSelectedRecipe() {
-		ClientWorld world = this.getMinecraft().world;
-		if (world != null) {
-			BasicAutoTableContainer container = this.getContainer();
-			TileEntity tile = world.getTileEntity(container.getPos());
-			if (tile instanceof AutoTableTileEntity) {
-				AutoTableTileEntity table = (AutoTableTileEntity) tile;
-				return table.getRecipeStorage().getSelectedRecipe();
-			}
-		}
+		if (this.tile == null)
+			return null;
 
-		return null;
+		return this.tile.getRecipeStorage().getSelectedRecipe();
+	}
+
+	private int getSelected() {
+		if (this.tile == null)
+			return 0;
+
+		return this.tile.getRecipeStorage().getSelected();
+	}
+
+	private int getEnergyStored() {
+		if (this.tile == null)
+			return 0;
+
+		return this.tile.getEnergy().getEnergyStored();
+	}
+
+	private int getMaxEnergyStored() {
+		if (this.tile == null)
+			return 0;
+
+		return this.tile.getEnergy().getMaxEnergyStored();
+	}
+
+	private int getProgress() {
+		if (this.tile == null)
+			return 0;
+
+		return this.tile.getProgress();
+	}
+
+	private int getProgressRequired() {
+		if (this.tile == null)
+			return 0;
+
+		return this.tile.getProgressRequired();
+	}
+
+	private int getEnergyBarScaled() {
+		int i = this.getEnergyStored();
+		int j = this.getMaxEnergyStored();
+		return (int) (j != 0 && i != 0 ? (long) i * 78 / j : 0);
+	}
+
+	private int getProgressBarScaled() {
+		int i = this.getProgress();
+		int j = this.getProgressRequired();
+		return j != 0 && i != 0 ? i * 16 / j : 0;
 	}
 }

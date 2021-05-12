@@ -145,7 +145,7 @@ public abstract class AutoTableTileEntity extends BaseInventoryTileEntity implem
         }
 
         if (mark) {
-            this.markDirty();
+            this.markDirtyAndDispatch();
         }
     }
 
@@ -168,7 +168,7 @@ public abstract class AutoTableTileEntity extends BaseInventoryTileEntity implem
 
     public void toggleRunning() {
         this.running = !this.running;
-        this.markDirty();
+        this.markDirtyAndDispatch();
     }
 
     public void selectRecipe(int index) {

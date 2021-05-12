@@ -128,51 +128,15 @@ public class EliteAutoTableContainer extends Container {
 		return itemstack;
 	}
 
+	public BlockPos getPos() {
+		return this.pos;
+	}
+
 	public static EliteAutoTableContainer create(int windowId, PlayerInventory playerInventory, PacketBuffer buffer) {
 		return new EliteAutoTableContainer(ModContainerTypes.ELITE_AUTO_TABLE.get(), windowId, playerInventory, buffer);
 	}
 
 	public static EliteAutoTableContainer create(int windowId, PlayerInventory playerInventory, Function<PlayerEntity, Boolean> isUsableByPlayer, BaseItemStackHandler inventory, IIntArray data, BlockPos pos) {
 		return new EliteAutoTableContainer(ModContainerTypes.ELITE_AUTO_TABLE.get(), windowId, playerInventory, isUsableByPlayer, inventory, data, pos);
-	}
-
-	public BlockPos getPos() {
-		return this.pos;
-	}
-
-	public int getEnergyBarScaled(int pixels) {
-		int i = this.getEnergyStored();
-		int j = this.getMaxEnergyStored();
-		return (int) (j != 0 && i != 0 ? (long) i * pixels / j : 0);
-	}
-
-	public int getProgressBarScaled(int pixels) {
-		int i = this.getProgress();
-		int j = this.getProgressRequired();
-		return j != 0 && i != 0 ? i * pixels / j : 0;
-	}
-
-	public boolean isRunning() {
-		return this.data.get(4) > 0;
-	}
-
-	public int getEnergyStored() {
-		return this.data.get(0);
-	}
-
-	public int getMaxEnergyStored() {
-		return this.data.get(1);
-	}
-
-	public int getProgress() {
-		return this.data.get(2);
-	}
-
-	public int getProgressRequired() {
-		return this.data.get(3);
-	}
-
-	public int getSelected() {
-		return this.data.get(5);
 	}
 }

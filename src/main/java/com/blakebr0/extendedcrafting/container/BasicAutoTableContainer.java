@@ -156,42 +156,6 @@ public class BasicAutoTableContainer extends Container {
 		return this.isVanillaRecipe;
 	}
 
-	public int getEnergyBarScaled(int pixels) {
-		int i = this.getEnergyStored();
-		int j = this.getMaxEnergyStored();
-		return (int) (j != 0 && i != 0 ? (long) i * pixels / j : 0);
-	}
-
-	public int getProgressBarScaled(int pixels) {
-		int i = this.getProgress();
-		int j = this.getProgressRequired();
-		return j != 0 && i != 0 ? i * pixels / j : 0;
-	}
-
-	public boolean isRunning() {
-		return this.data.get(4) > 0;
-	}
-
-	public int getEnergyStored() {
-		return this.data.get(0);
-	}
-
-	public int getMaxEnergyStored() {
-		return this.data.get(1);
-	}
-
-	public int getProgress() {
-		return this.data.get(2);
-	}
-
-	public int getProgressRequired() {
-		return this.data.get(3);
-	}
-
-	public int getSelected() {
-		return this.data.get(5);
-	}
-
 	public static BasicAutoTableContainer create(int windowId, PlayerInventory playerInventory, PacketBuffer buffer) {
 		return new BasicAutoTableContainer(ModContainerTypes.BASIC_AUTO_TABLE.get(), windowId, playerInventory, buffer);
 	}

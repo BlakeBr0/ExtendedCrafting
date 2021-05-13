@@ -2,6 +2,7 @@ package com.blakebr0.extendedcrafting.singularity;
 
 import com.blakebr0.extendedcrafting.ExtendedCrafting;
 import com.blakebr0.extendedcrafting.config.ModConfigs;
+import com.blakebr0.extendedcrafting.network.message.SyncSingularitiesMessage;
 import com.google.common.base.Stopwatch;
 import com.google.common.collect.Lists;
 import com.google.gson.Gson;
@@ -10,6 +11,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import net.minecraft.item.Items;
 import net.minecraft.item.crafting.Ingredient;
+import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.loading.FMLPaths;
 import org.apache.commons.io.IOUtils;
@@ -21,10 +23,12 @@ import java.io.File;
 import java.io.FileFilter;
 import java.io.FileReader;
 import java.io.FileWriter;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 public final class SingularityRegistry {
     private static final Logger LOGGER = LogManager.getLogger(ExtendedCrafting.NAME);
@@ -69,6 +73,39 @@ public final class SingularityRegistry {
 
     public Singularity getSingularityById(ResourceLocation id) {
         return this.singularities.get(id);
+    }
+
+    public void writeToBuffer(PacketBuffer buffer) {
+        buffer.writeVarInt(this.singularities.size());
+
+        this.singularities.forEach((id, singularity) -> {
+            singularity.write(buffer);
+        });
+    }
+
+    public List<Singularity> readFromBuffer(PacketBuffer buffer) {
+        List<Singularity> singularities = new ArrayList<>();
+
+        int size = buffer.readVarInt();
+
+        for (int i = 0; i < size; i++) {
+            Singularity singularity = Singularity.read(buffer);
+
+            singularities.add(singularity);
+        }
+
+        return singularities;
+    }
+
+    public void loadSingularities(SyncSingularitiesMessage message) {
+        Map<ResourceLocation, Singularity> singularities = message.getSingularities()
+                .stream()
+                .collect(Collectors.toMap(Singularity::getId, s -> s));
+
+        this.singularities.clear();
+        this.singularities.putAll(singularities);
+
+        LOGGER.info("Loaded {} singularities from the server", singularities.size());
     }
 
     private void loadFiles(File dir) {

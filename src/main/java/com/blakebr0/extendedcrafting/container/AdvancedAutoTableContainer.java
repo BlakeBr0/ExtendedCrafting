@@ -10,6 +10,7 @@ import com.blakebr0.extendedcrafting.init.ModContainerTypes;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.IInventory;
+import net.minecraft.inventory.Inventory;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.inventory.container.Slot;
@@ -19,8 +20,6 @@ import net.minecraft.util.IIntArray;
 import net.minecraft.util.IntArray;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraftforge.items.IItemHandlerModifiable;
-import net.minecraftforge.items.ItemStackHandler;
 
 import java.util.Optional;
 import java.util.function.Function;
@@ -30,7 +29,7 @@ public class AdvancedAutoTableContainer extends Container {
 	private final IIntArray data;
 	private final BlockPos pos;
 	private final World world;
-	private final IItemHandlerModifiable result;
+	private final IInventory result;
 
 	private AdvancedAutoTableContainer(ContainerType<?> type, int id, PlayerInventory playerInventory, PacketBuffer buffer) {
 		this(type, id, playerInventory, p -> false, new BaseItemStackHandler(26), new IntArray(6), buffer.readBlockPos());
@@ -42,7 +41,7 @@ public class AdvancedAutoTableContainer extends Container {
 		this.data = data;
 		this.pos = pos;
 		this.world = playerInventory.player.world;
-		this.result = new ItemStackHandler();
+		this.result = new Inventory(1);
 
 		IInventory matrix = new ExtendedCraftingInventory(this, inventory, 5, true);
 
@@ -76,9 +75,9 @@ public class AdvancedAutoTableContainer extends Container {
 		Optional<ITableRecipe> recipe = this.world.getRecipeManager().getRecipe(RecipeTypes.TABLE, matrix, this.world);
 		if (recipe.isPresent()) {
 			ItemStack result = recipe.get().getCraftingResult(matrix);
-			this.result.setStackInSlot(0, result);
+			this.result.setInventorySlotContents(0, result);
 		} else {
-			this.result.setStackInSlot(0, ItemStack.EMPTY);
+			this.result.setInventorySlotContents(0, ItemStack.EMPTY);
 		}
 
 		super.onCraftMatrixChanged(matrix);

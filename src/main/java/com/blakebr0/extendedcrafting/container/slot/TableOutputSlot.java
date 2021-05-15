@@ -1,6 +1,5 @@
 package com.blakebr0.extendedcrafting.container.slot;
 
-import com.blakebr0.cucumber.inventory.slot.OutputSlot;
 import com.blakebr0.extendedcrafting.api.crafting.RecipeTypes;
 import com.blakebr0.extendedcrafting.container.BasicAutoTableContainer;
 import com.blakebr0.extendedcrafting.container.BasicTableContainer;
@@ -8,19 +7,24 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.CraftingInventory;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.container.Container;
+import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipeType;
 import net.minecraft.util.NonNullList;
-import net.minecraftforge.items.IItemHandler;
 
-public class TableOutputSlot extends OutputSlot {
+public class TableOutputSlot extends Slot {
     private final Container container;
     private final IInventory matrix;
 
-    public TableOutputSlot(Container container, IInventory matrix, IItemHandler inventory, int index, int xPosition, int yPosition) {
+    public TableOutputSlot(Container container, IInventory matrix, IInventory inventory, int index, int xPosition, int yPosition) {
         super(inventory, index, xPosition, yPosition);
         this.container = container;
         this.matrix = matrix;
+    }
+
+    @Override
+    public boolean isItemValid(ItemStack stack) {
+        return false;
     }
 
     @Override

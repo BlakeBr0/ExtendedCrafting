@@ -9,13 +9,12 @@ import com.blakebr0.extendedcrafting.init.ModContainerTypes;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.IInventory;
+import net.minecraft.inventory.Inventory;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
-import net.minecraftforge.items.IItemHandlerModifiable;
-import net.minecraftforge.items.ItemStackHandler;
 
 import java.util.Optional;
 import java.util.function.Function;
@@ -23,7 +22,7 @@ import java.util.function.Function;
 public class UltimateTableContainer extends Container {
 	private final Function<PlayerEntity, Boolean> isUsableByPlayer;
 	private final World world;
-	private final IItemHandlerModifiable result;
+	private final IInventory result;
 
 	private UltimateTableContainer(ContainerType<?> type, int id, PlayerInventory playerInventory) {
 		this(type, id, playerInventory, p -> false, new BaseItemStackHandler(81));
@@ -33,7 +32,7 @@ public class UltimateTableContainer extends Container {
 		super(type, id);
 		this.isUsableByPlayer = isUsableByPlayer;
 		this.world = playerInventory.player.world;
-		this.result = new ItemStackHandler();
+		this.result = new Inventory(1);
 
 		IInventory matrix = new ExtendedCraftingInventory(this, inventory, 9);
 
@@ -64,9 +63,9 @@ public class UltimateTableContainer extends Container {
 		Optional<ITableRecipe> recipe = this.world.getRecipeManager().getRecipe(RecipeTypes.TABLE, matrix, this.world);
 		if (recipe.isPresent()) {
 			ItemStack result = recipe.get().getCraftingResult(matrix);
-			this.result.setStackInSlot(0, result);
+			this.result.setInventorySlotContents(0, result);
 		} else {
-			this.result.setStackInSlot(0, ItemStack.EMPTY);
+			this.result.setInventorySlotContents(0, ItemStack.EMPTY);
 		}
 
 		super.onCraftMatrixChanged(matrix);

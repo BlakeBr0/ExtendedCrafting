@@ -3,6 +3,7 @@ package com.blakebr0.extendedcrafting.compat.jei;
 import com.blakebr0.cucumber.util.Localizable;
 import com.blakebr0.extendedcrafting.ExtendedCrafting;
 import com.blakebr0.extendedcrafting.api.crafting.IEnderCrafterRecipe;
+import com.blakebr0.extendedcrafting.crafting.recipe.ShapedEnderCrafterRecipe;
 import com.blakebr0.extendedcrafting.crafting.recipe.ShapelessEnderCrafterRecipe;
 import com.blakebr0.extendedcrafting.init.ModBlocks;
 import com.blakebr0.extendedcrafting.lib.ModTooltips;
@@ -73,7 +74,7 @@ public class EnderCrafterCategory implements IRecipeCategory<IEnderCrafterRecipe
 	@Override
 	public List<ITextComponent> getTooltipStrings(IEnderCrafterRecipe recipe, double mouseX, double mouseY) {
 		if (mouseX > 60 && mouseX < 83 && mouseY > 19 && mouseY < 34) {
-			return Collections.singletonList(ModTooltips.TICKS.args(recipe.getCraftingTime()).color(TextFormatting.WHITE).build());
+			return Collections.singletonList(ModTooltips.SECONDS.args(recipe.getCraftingTime()).color(TextFormatting.WHITE).build());
 		}
 
 		return Collections.emptyList();
@@ -102,14 +103,25 @@ public class EnderCrafterCategory implements IRecipeCategory<IEnderCrafterRecipe
 			}
 		}
 
-		int xd = 1;
-		for (List<ItemStack> stack : inputs) {
-			stacks.set(xd, stack);
-			xd++;
-		}
+		if (recipe instanceof ShapedEnderCrafterRecipe) {
+			ShapedEnderCrafterRecipe shaped = (ShapedEnderCrafterRecipe) recipe;
+			int stackIndex = 0;
+			for (int i = 0; i < shaped.getHeight(); i++) {
+				for (int j = 0; j < shaped.getWidth(); j++) {
+					int index = 1 + (i * 3) + j;
 
-		if (recipe instanceof ShapelessEnderCrafterRecipe)
+					stacks.set(index, inputs.get(stackIndex));
+
+					stackIndex++;
+				}
+			}
+		} else if (recipe instanceof ShapelessEnderCrafterRecipe) {
+			for (int i = 0; i < inputs.size(); i++) {
+				stacks.set(i + 1, inputs.get(i));
+			}
+
 			layout.setShapeless();
+		}
 
 		layout.moveRecipeTransferButton(122, 41);
 	}

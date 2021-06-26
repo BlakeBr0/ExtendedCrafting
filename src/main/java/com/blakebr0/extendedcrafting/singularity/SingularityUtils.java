@@ -23,6 +23,10 @@ public final class SingularityUtils {
 
         boolean inUltimateSingularity = JSONUtils.getBoolean(json, "inUltimateSingularity", true);
 
+        if (!json.has("ingredient")) {
+            return new Singularity(id, name, new int[] { overlayColor, underlayColor }, Ingredient.EMPTY, materialCount, inUltimateSingularity);
+        }
+
         JsonObject ing = JSONUtils.getJsonObject(json, "ingredient");
         if (ing.has("tag")) {
             String tag = ing.get("tag").getAsString();

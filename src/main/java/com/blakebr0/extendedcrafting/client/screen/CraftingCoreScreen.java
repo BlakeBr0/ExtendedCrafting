@@ -63,15 +63,15 @@ public class CraftingCoreScreen extends BaseContainerScreen<CraftingCoreContaine
 
 		RenderSystem.pushMatrix();
 		RenderSystem.scalef(0.75F, 0.75F, 0.75F);
-		this.font.drawString(stack, this.text("screen.extendedcrafting.crafting_core.pedestals", this.getPedestalCount()), 36, 36, -1);
+		this.font.drawString(stack, text("screen.extendedcrafting.crafting_core.pedestals", this.getPedestalCount()), 36, 36, -1);
 
 		if (!this.hasRecipe()) {
-			this.font.drawString(stack, this.text("screen.extendedcrafting.crafting_core.no_recipe"), 36, 56, -1);
+			this.font.drawString(stack, text("screen.extendedcrafting.crafting_core.no_recipe"), 36, 56, -1);
 		} else {
-			this.font.drawString(stack, this.text("screen.extendedcrafting.crafting_core.power_cost", this.getEnergyRequired()) + " FE", 36, 56, -1);
-			this.font.drawString(stack, this.text("screen.extendedcrafting.crafting_core.power_rate", this.getEnergyRate()) + " FE/t", 36, 66, -1);
+			this.font.drawString(stack, text("screen.extendedcrafting.crafting_core.power_cost", number(this.getEnergyRequired())) + " FE", 36, 56, -1);
+			this.font.drawString(stack, text("screen.extendedcrafting.crafting_core.power_rate", number(this.getEnergyRate())) + " FE/t", 36, 66, -1);
 			if (this.getEnergyStored() < this.getEnergyRate()) {
-				this.font.drawString(stack, this.text("screen.extendedcrafting.crafting_core.no_power"), 36, 86, -1);
+				this.font.drawString(stack, text("screen.extendedcrafting.crafting_core.no_power"), 36, 86, -1);
 			}
 		}
 

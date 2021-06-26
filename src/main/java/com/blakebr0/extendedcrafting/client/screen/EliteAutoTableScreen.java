@@ -64,7 +64,7 @@ public class EliteAutoTableScreen extends BaseContainerScreen<EliteAutoTableCont
 		super.renderHoveredTooltip(stack, mouseX, mouseY);
 
 		if (mouseX > x + 7 && mouseX < x + 20 && mouseY > y + 41 && mouseY < y + 118) {
-			StringTextComponent text = new StringTextComponent(this.getEnergyStored() + " FE");
+			StringTextComponent text = new StringTextComponent(number(this.getEnergyStored()) + " FE");
 			this.renderTooltip(stack, text, mouseX, mouseY);
 		}
 

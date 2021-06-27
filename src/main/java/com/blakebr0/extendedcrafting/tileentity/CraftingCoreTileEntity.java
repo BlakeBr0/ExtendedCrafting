@@ -34,6 +34,7 @@ import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.items.IItemHandlerModifiable;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 public class CraftingCoreTileEntity extends BaseInventoryTileEntity implements ITickableTileEntity, INamedContainerProvider {
@@ -219,23 +220,29 @@ public class CraftingCoreTileEntity extends BaseInventoryTileEntity implements I
 		Map<BlockPos, ItemStack> pedestals = new HashMap<>();
 		World world = this.getWorld();
 
+		int pedestalCount = 0;
 		if (world != null) {
 			BlockPos pos = this.getPos();
-			BlockPos.getAllInBox(pos.add(-3, 0, -3), pos.add(3, 0, 3)).forEach(aoePos -> {
+			Iterator<BlockPos> positions = BlockPos.getAllInBox(pos.add(-3, 0, -3), pos.add(3, 0, 3)).iterator();
+
+			while (positions.hasNext()) {
+				BlockPos aoePos = positions.next();
 				TileEntity tile = world.getTileEntity(aoePos);
 
 				if (tile instanceof PedestalTileEntity) {
 					PedestalTileEntity pedestal = (PedestalTileEntity) tile;
 					ItemStack stack = pedestal.getInventory().getStackInSlot(0);
 
+					pedestalCount++;
+
 					if (!stack.isEmpty()) {
 						pedestals.put(aoePos.toImmutable(), stack);
 					}
 				}
-			});
+			}
 		}
 
-		this.pedestalCount = pedestals.size();
+		this.pedestalCount = pedestalCount;
 
 		return pedestals;
 	}

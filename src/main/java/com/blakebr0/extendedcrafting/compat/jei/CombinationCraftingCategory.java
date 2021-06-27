@@ -17,13 +17,14 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 
 import java.awt.*;
+import java.text.NumberFormat;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
 public class CombinationCraftingCategory implements IRecipeCategory<ICombinationRecipe> {
-	public static final ResourceLocation UID = new ResourceLocation(ExtendedCrafting.MOD_ID, "combination");
 	private static final ResourceLocation TEXTURE = new ResourceLocation(ExtendedCrafting.MOD_ID, "textures/gui/jei/combination_crafting.png");
+	public static final ResourceLocation UID = new ResourceLocation(ExtendedCrafting.MOD_ID, "combination");
 
 	private final IDrawable background;
 	private final IDrawable icon;
@@ -62,8 +63,8 @@ public class CombinationCraftingCategory implements IRecipeCategory<ICombination
 	public List<ITextComponent> getTooltipStrings(ICombinationRecipe recipe, double mouseX, double mouseY) {
 		if (mouseX > 1 && mouseX < 14 && mouseY > 9 && mouseY < 86) {
 			return Arrays.asList(
-					new StringTextComponent(recipe.getPowerCost() + " FE"),
-					new StringTextComponent(recipe.getPowerRate() + " FE/t")
+					new StringTextComponent(NumberFormat.getInstance().format(recipe.getPowerCost()) + " FE"),
+					new StringTextComponent(NumberFormat.getInstance().format(recipe.getPowerRate()) + " FE/t")
 			);
 		}
 

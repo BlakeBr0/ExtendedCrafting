@@ -20,13 +20,14 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
 
+import java.text.NumberFormat;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
 public class CompressorCraftingCategory implements IRecipeCategory<ICompressorRecipe> {
-	public static final ResourceLocation UID = new ResourceLocation(ExtendedCrafting.MOD_ID, "compressor");
 	private static final ResourceLocation TEXTURE = new ResourceLocation(ExtendedCrafting.MOD_ID, "textures/gui/jei/compressor.png");
+	public static final ResourceLocation UID = new ResourceLocation(ExtendedCrafting.MOD_ID, "compressor");
 
 	private final IDrawable background;
 	private final IDrawable icon;
@@ -65,8 +66,8 @@ public class CompressorCraftingCategory implements IRecipeCategory<ICompressorRe
 	public List<ITextComponent> getTooltipStrings(ICompressorRecipe recipe, double mouseX, double mouseY) {
 		if (mouseX > 1 && mouseX < 14 && mouseY > 1 && mouseY < 78) {
 			return Arrays.asList(
-					new StringTextComponent(recipe.getPowerCost() + " FE"),
-					new StringTextComponent(recipe.getPowerRate() + " FE/t")
+					new StringTextComponent(NumberFormat.getInstance().format(recipe.getPowerCost()) + " FE"),
+					new StringTextComponent(NumberFormat.getInstance().format(recipe.getPowerRate()) + " FE/t")
 			);
 		}
 

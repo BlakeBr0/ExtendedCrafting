@@ -57,7 +57,7 @@ public class AdvancedAutoTableScreen extends BaseContainerScreen<AdvancedAutoTab
 		super.renderHoveredTooltip(stack, mouseX, mouseY);
 
 		if (mouseX > x + 7 && mouseX < x + 20 && mouseY > y + 23 && mouseY < y + 100) {
-			StringTextComponent text = new StringTextComponent(number(this.getEnergyStored()) + " FE");
+			StringTextComponent text = new StringTextComponent(number(this.getEnergyStored()) + " / " + number(this.getMaxEnergyStored()) + " FE");
 			this.renderTooltip(stack, text, mouseX, mouseY);
 		}
 

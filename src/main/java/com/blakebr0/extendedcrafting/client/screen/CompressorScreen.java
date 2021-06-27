@@ -52,7 +52,7 @@ public class CompressorScreen extends BaseContainerScreen<CompressorContainer> {
 		super.render(stack, mouseX, mouseY, partialTicks);
 
 		if (mouseX > x + 7 && mouseX < x + 20 && mouseY > y + 17 && mouseY < y + 94) {
-			StringTextComponent text = new StringTextComponent(number(this.getEnergyStored()) + " FE");
+			StringTextComponent text = new StringTextComponent(number(this.getEnergyStored()) + " / " + number(this.getMaxEnergyStored()) + " FE");
 			this.renderTooltip(stack, text, mouseX, mouseY);
 		}
 

@@ -1,6 +1,5 @@
 package com.blakebr0.extendedcrafting.client.screen;
 
-import com.blakebr0.cucumber.client.helper.RenderHelper;
 import com.blakebr0.cucumber.client.render.GhostItemRenderer;
 import com.blakebr0.cucumber.client.screen.BaseContainerScreen;
 import com.blakebr0.cucumber.inventory.BaseItemStackHandler;
@@ -41,20 +40,13 @@ public class UltimateAutoTableScreen extends BaseContainerScreen<UltimateAutoTab
 		int y = this.getGuiTop();
 		BlockPos pos = this.getContainer().getPos();
 
-		this.addButton(new ToggleTableRunningButton(x + 226, y + 113, pos));
+		this.addButton(new ToggleTableRunningButton(x + 226, y + 114, pos, this::isRunning));
 
-		this.recipeSelectButtons[0] = this.addButton(new RecipeSelectButton(x + 210, y + 7, pos, 0));
-		this.recipeSelectButtons[1] = this.addButton(new RecipeSelectButton(x + 223, y + 7, pos, 1));
-		this.recipeSelectButtons[2] = this.addButton(new RecipeSelectButton(x + 236, y + 7, pos, 2));
+		this.recipeSelectButtons[0] = this.addButton(new RecipeSelectButton(x + 210, y + 7, pos, 0, this::isRecipeSelected));
+		this.recipeSelectButtons[1] = this.addButton(new RecipeSelectButton(x + 223, y + 7, pos, 1, this::isRecipeSelected));
+		this.recipeSelectButtons[2] = this.addButton(new RecipeSelectButton(x + 236, y + 7, pos, 2, this::isRecipeSelected));
 
 		this.tile = this.getTileEntity();
-	}
-
-	@Override
-	public void render(MatrixStack stack, int mouseX, int mouseY, float partialTicks) {
-		this.updateSelectedRecipeButtons();
-
-		super.render(stack, mouseX, mouseY, partialTicks);
 	}
 
 	@Override
@@ -75,7 +67,7 @@ public class UltimateAutoTableScreen extends BaseContainerScreen<UltimateAutoTab
 
 		for (RecipeSelectButton button : this.recipeSelectButtons) {
 			if (button.isHovered()) {
-				BaseItemStackHandler recipe = this.getRecipeInfo(button.selected);
+				BaseItemStackHandler recipe = this.getRecipeInfo(button.getIndex());
 				if (recipe != null) {
 					List<ITextComponent> tooltip;
 					boolean hasRecipe = !recipe.getStacks().stream().allMatch(ItemStack::isEmpty);
@@ -114,13 +106,11 @@ public class UltimateAutoTableScreen extends BaseContainerScreen<UltimateAutoTab
 		int y = this.getGuiTop();
 
 		int i1 = this.getEnergyBarScaled();
-		RenderHelper.drawTexturedModalRect(x + 7, y + 137 - i1, 256, 78 - i1, 15, i1 + 1, 512, 512);
+		blit(stack, x + 7, y + 137 - i1, 256, 78 - i1, 15, i1 + 1, 512, 512);
 
 		if (this.isRunning()) {
 			int i2 = this.getProgressBarScaled();
-			RenderHelper.drawTexturedModalRect(x + 225, y + 113, 272, 0, 13, i2, 512, 512);
-		} else {
-			RenderHelper.drawTexturedModalRect(x + 226, y + 115, 272, 18, 13, 13, 512, 512);
+			blit(stack, x + 225, y + 113, 272, 0, 13, i2, 512, 512);
 		}
 
 		BaseItemStackHandler recipe = this.getSelectedRecipe();
@@ -135,10 +125,8 @@ public class UltimateAutoTableScreen extends BaseContainerScreen<UltimateAutoTab
 		}
 	}
 
-	private void updateSelectedRecipeButtons() {
-		for (RecipeSelectButton button : this.recipeSelectButtons) {
-			button.active = button.selected == this.getSelected();
-		}
+	private boolean isRecipeSelected(int index) {
+		return index == this.getSelected();
 	}
 
 	private AutoTableTileEntity getTileEntity() {

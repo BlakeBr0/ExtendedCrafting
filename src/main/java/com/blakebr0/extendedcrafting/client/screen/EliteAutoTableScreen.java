@@ -40,20 +40,13 @@ public class EliteAutoTableScreen extends BaseContainerScreen<EliteAutoTableCont
 		int y = this.getGuiTop();
 		BlockPos pos = this.getContainer().getPos();
 
-		this.addButton(new ToggleTableRunningButton(x + 192, y + 95, pos));
+		this.addButton(new ToggleTableRunningButton(x + 192, y + 96, pos, this::isRunning));
 
-		this.recipeSelectButtons[0] = this.addButton(new RecipeSelectButton(x + 176, y + 7, pos, 0));
-		this.recipeSelectButtons[1] = this.addButton(new RecipeSelectButton(x + 189, y + 7, pos, 1));
-		this.recipeSelectButtons[2] = this.addButton(new RecipeSelectButton(x + 202, y + 7, pos, 2));
+		this.recipeSelectButtons[0] = this.addButton(new RecipeSelectButton(x + 176, y + 7, pos, 0, this::isRecipeSelected));
+		this.recipeSelectButtons[1] = this.addButton(new RecipeSelectButton(x + 189, y + 7, pos, 1, this::isRecipeSelected));
+		this.recipeSelectButtons[2] = this.addButton(new RecipeSelectButton(x + 202, y + 7, pos, 2, this::isRecipeSelected));
 
 		this.tile = this.getTileEntity();
-	}
-
-	@Override
-	public void render(MatrixStack stack, int mouseX, int mouseY, float partialTicks) {
-		this.updateSelectedRecipeButtons();
-
-		super.render(stack, mouseX, mouseY, partialTicks);
 	}
 
 	@Override
@@ -74,7 +67,7 @@ public class EliteAutoTableScreen extends BaseContainerScreen<EliteAutoTableCont
 
 		for (RecipeSelectButton button : this.recipeSelectButtons) {
 			if (button.isHovered()) {
-				BaseItemStackHandler recipe = this.getRecipeInfo(button.selected);
+				BaseItemStackHandler recipe = this.getRecipeInfo(button.getIndex());
 				if (recipe != null) {
 					List<ITextComponent> tooltip;
 					boolean hasRecipe = !recipe.getStacks().stream().allMatch(ItemStack::isEmpty);
@@ -118,8 +111,6 @@ public class EliteAutoTableScreen extends BaseContainerScreen<EliteAutoTableCont
 		if (this.isRunning()) {
 			int i2 = this.getProgressBarScaled();
 			this.blit(stack, x + 191, y + 95, 238, 0, 13, i2);
-		} else {
-			this.blit(stack, x + 192, y + 97, 238, 18, 13, 13);
 		}
 
 		BaseItemStackHandler recipe = this.getSelectedRecipe();
@@ -134,10 +125,8 @@ public class EliteAutoTableScreen extends BaseContainerScreen<EliteAutoTableCont
 		}
 	}
 
-	private void updateSelectedRecipeButtons() {
-		for (RecipeSelectButton button : this.recipeSelectButtons) {
-			button.active = button.selected == this.getSelected();
-		}
+	private boolean isRecipeSelected(int index) {
+		return index == this.getSelected();
 	}
 
 	private AutoTableTileEntity getTileEntity() {

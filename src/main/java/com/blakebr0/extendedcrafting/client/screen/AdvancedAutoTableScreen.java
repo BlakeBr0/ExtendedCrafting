@@ -40,27 +40,19 @@ public class AdvancedAutoTableScreen extends BaseContainerScreen<AdvancedAutoTab
 		int y = this.getGuiTop();
 		BlockPos pos = this.getContainer().getPos();
 
-		this.addButton(new ToggleTableRunningButton(x + 155, y + 62, pos));
+		this.addButton(new ToggleTableRunningButton(x + 155, y + 62, pos, this::isRunning));
 
-		this.recipeSelectButtons[0] = this.addButton(new RecipeSelectButton(x + 142, y + 7, pos, 0));
-		this.recipeSelectButtons[1] = this.addButton(new RecipeSelectButton(x + 155, y + 7, pos, 1));
-		this.recipeSelectButtons[2] = this.addButton(new RecipeSelectButton(x + 168, y + 7, pos, 2));
+		this.recipeSelectButtons[0] = this.addButton(new RecipeSelectButton(x + 142, y + 7, pos, 0, this::isRecipeSelected));
+		this.recipeSelectButtons[1] = this.addButton(new RecipeSelectButton(x + 155, y + 7, pos, 1, this::isRecipeSelected));
+		this.recipeSelectButtons[2] = this.addButton(new RecipeSelectButton(x + 168, y + 7, pos, 2, this::isRecipeSelected));
 
 		this.tile = this.getTileEntity();
-	}
-
-	@Override
-	public void render(MatrixStack stack, int mouseX, int mouseY, float partialTicks) {
-		this.updateSelectedRecipeButtons();
-
-		super.render(stack, mouseX, mouseY, partialTicks);
 	}
 
 	@Override
 	protected void renderHoveredTooltip(MatrixStack stack, int mouseX, int mouseY) {
 		int x = this.getGuiLeft();
 		int y = this.getGuiTop();
-		AdvancedAutoTableContainer container = this.getContainer();
 
 		super.renderHoveredTooltip(stack, mouseX, mouseY);
 
@@ -75,7 +67,7 @@ public class AdvancedAutoTableScreen extends BaseContainerScreen<AdvancedAutoTab
 
 		for (RecipeSelectButton button : this.recipeSelectButtons) {
 			if (button.isHovered()) {
-				BaseItemStackHandler recipe = this.getRecipeInfo(button.selected);
+				BaseItemStackHandler recipe = this.getRecipeInfo(button.getIndex());
 				if (recipe != null) {
 					List<ITextComponent> tooltip;
 					boolean hasRecipe = !recipe.getStacks().stream().allMatch(ItemStack::isEmpty);
@@ -119,8 +111,6 @@ public class AdvancedAutoTableScreen extends BaseContainerScreen<AdvancedAutoTab
 		if (this.isRunning()) {
 			int i2 = this.getProgressBarScaled();
 			this.blit(stack, x + 154, y + 61, 204, 0, 13, i2);
-		} else {
-			this.blit(stack, x + 155, y + 63, 204, 18, 13, 13);
 		}
 
 		BaseItemStackHandler recipe = this.getSelectedRecipe();
@@ -135,10 +125,8 @@ public class AdvancedAutoTableScreen extends BaseContainerScreen<AdvancedAutoTab
 		}
 	}
 
-	private void updateSelectedRecipeButtons() {
-		for (RecipeSelectButton button : this.recipeSelectButtons) {
-			button.active = button.selected == this.getSelected();
-		}
+	private boolean isRecipeSelected(int index) {
+		return index == this.getSelected();
 	}
 
 	private AutoTableTileEntity getTileEntity() {

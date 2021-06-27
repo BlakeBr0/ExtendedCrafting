@@ -2,19 +2,18 @@ package com.blakebr0.extendedcrafting.client.screen;
 
 import com.blakebr0.cucumber.client.screen.BaseContainerScreen;
 import com.blakebr0.extendedcrafting.ExtendedCrafting;
+import com.blakebr0.extendedcrafting.client.screen.button.EjectModeSwitchButton;
+import com.blakebr0.extendedcrafting.client.screen.button.InputLimitSwitchButton;
 import com.blakebr0.extendedcrafting.container.CompressorContainer;
 import com.blakebr0.extendedcrafting.lib.ModTooltips;
-import com.blakebr0.extendedcrafting.network.NetworkHandler;
-import com.blakebr0.extendedcrafting.network.message.EjectModeSwitchMessage;
-import com.blakebr0.extendedcrafting.network.message.InputLimitSwitchMessage;
 import com.blakebr0.extendedcrafting.tileentity.CompressorTileEntity;
 import com.mojang.blaze3d.matrix.MatrixStack;
-import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
@@ -24,7 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CompressorScreen extends BaseContainerScreen<CompressorContainer> {
-	private static final ResourceLocation BACKGROUND = new ResourceLocation(ExtendedCrafting.MOD_ID, "textures/gui/compressor.png");
+	public static final ResourceLocation BACKGROUND = new ResourceLocation(ExtendedCrafting.MOD_ID, "textures/gui/compressor.png");
 	private CompressorTileEntity tile;
 
 	public CompressorScreen(CompressorContainer container, PlayerInventory inventory, ITextComponent title) {
@@ -37,24 +36,10 @@ public class CompressorScreen extends BaseContainerScreen<CompressorContainer> {
 
 		int x = this.getGuiLeft();
 		int y = this.getGuiTop();
-		CompressorContainer container = this.getContainer();
+		BlockPos pos = this.getContainer().getPos();
 
-		this.addButton(new Button(x + 69, y + 29, 11, 9, new StringTextComponent(""), button -> {
-			NetworkHandler.INSTANCE.sendToServer(new EjectModeSwitchMessage(container.getPos()));
-		}) {
-			@Override
-			public void render(MatrixStack stack, int mouseX, int mouseY, float partialTicks) {
-
-			}
-		});
-		this.addButton(new Button(x + 91, y + 74, 7, 10, new StringTextComponent(""), button -> {
-			NetworkHandler.INSTANCE.sendToServer(new InputLimitSwitchMessage(container.getPos()));
-		}) {
-			@Override
-			public void render(MatrixStack stack, int mouseX, int mouseY, float partialTicks) {
-
-			}
-		});
+		this.addButton(new EjectModeSwitchButton(x + 69, y + 30, pos));
+		this.addButton(new InputLimitSwitchButton(x + 91, y + 74, pos, this::isLimitingInput));
 
 		this.tile = this.getTileEntity();
 	}
@@ -134,21 +119,8 @@ public class CompressorScreen extends BaseContainerScreen<CompressorContainer> {
 			}
 		}
 
-		if (mouseX > x + 68 && mouseX < x + 79 && mouseY > y + 28 && mouseY < y + 39) {
-			this.blit(stack, x + 68, y + 30, 194, 32, 11, 9);
-		}
-		
-		
-		if (mouseX > x + 90 && mouseX < x + 98 && mouseY > y + 73 && mouseY < y + 84) {
-			if (this.isLimitingInput()) {
-				this.blit(stack, x + 90, y + 74, 194, 56, 9, 10);
-			} else {
-				this.blit(stack, x + 90, y + 74, 194, 43, 9, 10);
-			}
-		} else {
-			if (this.isLimitingInput()) {
-				this.blit(stack, x + 90, y + 74, 203, 56, 9, 10);
-			}
+		if (this.isLimitingInput()) {
+			this.blit(stack, x + 90, y + 74, 203, 56, 9, 10);
 		}
 	}
 

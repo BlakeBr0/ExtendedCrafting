@@ -122,6 +122,9 @@ public class EliteAutoTableScreen extends BaseContainerScreen<EliteAutoTableCont
 					GhostItemRenderer.renderItemIntoGui(item, x + 27 + (j * 18), y + 18 + (i * 18), this.itemRenderer);
 				}
 			}
+
+			ItemStack output = recipe.getStackInSlot(recipe.getSlots() - 1);
+			GhostItemRenderer.renderItemIntoGui(output, x + 191, y + 71, this.itemRenderer);
 		}
 	}
 

@@ -45,7 +45,7 @@ public class BasicAutoTableContainer extends Container {
 		this.isUsableByPlayer = isUsableByPlayer;
 		this.data = data;
 		this.pos = pos;
-		this.world = playerInventory.player.world;
+		this.world = playerInventory.player.level;
 		this.result = new Inventory(1);
 
 		IInventory matrix = new ExtendedCraftingInventory(this, inventory, 3, true);
@@ -71,70 +71,70 @@ public class BasicAutoTableContainer extends Container {
 			this.addSlot(new Slot(playerInventory, j, 8 + j * 18, 170));
 		}
 
-		this.onCraftMatrixChanged(matrix);
-		this.trackIntArray(data);
+		this.slotsChanged(matrix);
+		this.addDataSlots(data);
 	}
 
 	@Override
-	public void onCraftMatrixChanged(IInventory matrix) {
-		Optional<ITableRecipe> recipe = this.world.getRecipeManager().getRecipe(RecipeTypes.TABLE, matrix, this.world);
+	public void slotsChanged(IInventory matrix) {
+		Optional<ITableRecipe> recipe = this.world.getRecipeManager().getRecipeFor(RecipeTypes.TABLE, matrix, this.world);
 
 		this.isVanillaRecipe = false;
 
 		if (recipe.isPresent()) {
-			ItemStack result = recipe.get().getCraftingResult(matrix);
+			ItemStack result = recipe.get().assemble(matrix);
 
-			this.result.setInventorySlotContents(0, result);
+			this.result.setItem(0, result);
 		} else if (ModConfigs.TABLE_USE_VANILLA_RECIPES.get()) {
-			Optional<ICraftingRecipe> vanilla = this.world.getRecipeManager().getRecipe(IRecipeType.CRAFTING, (CraftingInventory) matrix, this.world);
+			Optional<ICraftingRecipe> vanilla = this.world.getRecipeManager().getRecipeFor(IRecipeType.CRAFTING, (CraftingInventory) matrix, this.world);
 
 			if (vanilla.isPresent()) {
-				ItemStack result = vanilla.get().getCraftingResult((CraftingInventory) matrix);
+				ItemStack result = vanilla.get().assemble((CraftingInventory) matrix);
 
 				this.isVanillaRecipe = true;
-				this.result.setInventorySlotContents(0, result);
+				this.result.setItem(0, result);
 			} else {
-				this.result.setInventorySlotContents(0, ItemStack.EMPTY);
+				this.result.setItem(0, ItemStack.EMPTY);
 			}
 		} else {
-			this.result.setInventorySlotContents(0, ItemStack.EMPTY);
+			this.result.setItem(0, ItemStack.EMPTY);
 		}
 
-		super.onCraftMatrixChanged(matrix);
+		super.slotsChanged(matrix);
 	}
 
 	@Override
-	public boolean canInteractWith(PlayerEntity player) {
+	public boolean stillValid(PlayerEntity player) {
 		return this.isUsableByPlayer.apply(player);
 	}
 
 	@Override
-	public ItemStack transferStackInSlot(PlayerEntity player, int slotNumber) {
+	public ItemStack quickMoveStack(PlayerEntity player, int slotNumber) {
 		ItemStack itemstack = ItemStack.EMPTY;
-		Slot slot = this.inventorySlots.get(slotNumber);
+		Slot slot = this.slots.get(slotNumber);
 
-		if (slot != null && slot.getHasStack()) {
-			ItemStack itemstack1 = slot.getStack();
+		if (slot != null && slot.hasItem()) {
+			ItemStack itemstack1 = slot.getItem();
 			itemstack = itemstack1.copy();
 
 			if (slotNumber == 0 || slotNumber == 10) {
-				if (!this.mergeItemStack(itemstack1, 11, 47, true)) {
+				if (!this.moveItemStackTo(itemstack1, 11, 47, true)) {
 					return ItemStack.EMPTY;
 				}
 
-				slot.onSlotChange(itemstack1, itemstack);
+				slot.onQuickCraft(itemstack1, itemstack);
 			} else if (slotNumber >= 11 && slotNumber < 47) {
-				if (!this.mergeItemStack(itemstack1, 1, 10, false)) {
+				if (!this.moveItemStackTo(itemstack1, 1, 10, false)) {
 					return ItemStack.EMPTY;
 				}
-			} else if (!this.mergeItemStack(itemstack1, 11, 47, false)) {
+			} else if (!this.moveItemStackTo(itemstack1, 11, 47, false)) {
 				return ItemStack.EMPTY;
 			}
 
 			if (itemstack1.isEmpty()) {
-				slot.putStack(ItemStack.EMPTY);
+				slot.set(ItemStack.EMPTY);
 			} else {
-				slot.onSlotChanged();
+				slot.setChanged();
 			}
 
 			if (itemstack1.getCount() == itemstack.getCount()) {

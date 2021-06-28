@@ -39,34 +39,34 @@ public class CraftingCoreContainer extends Container {
 			this.addSlot(new Slot(playerInventory, i, 8 + i * 18, 170));
 		}
 
-		this.trackIntArray(data);
+		this.addDataSlots(data);
 	}
 
 	@Override
-	public ItemStack transferStackInSlot(PlayerEntity player, int slotNumber) {
+	public ItemStack quickMoveStack(PlayerEntity player, int slotNumber) {
 		ItemStack itemstack = ItemStack.EMPTY;
-		Slot slot = this.inventorySlots.get(slotNumber);
+		Slot slot = this.slots.get(slotNumber);
 
-		if (slot != null && slot.getHasStack()) {
-			ItemStack itemstack1 = slot.getStack();
+		if (slot != null && slot.hasItem()) {
+			ItemStack itemstack1 = slot.getItem();
 			itemstack = itemstack1.copy();
 
 			if (slotNumber < 27) {
-				if (!this.mergeItemStack(itemstack1, 27, 36, false)) {
+				if (!this.moveItemStackTo(itemstack1, 27, 36, false)) {
 					return ItemStack.EMPTY;
 				}
 			} else if (slotNumber < 36) {
-				if (!this.mergeItemStack(itemstack1, 0, 27, false)) {
+				if (!this.moveItemStackTo(itemstack1, 0, 27, false)) {
 					return ItemStack.EMPTY;
 				}
-			} else if (!this.mergeItemStack(itemstack1, 0, 27, false)) {
+			} else if (!this.moveItemStackTo(itemstack1, 0, 27, false)) {
 				return ItemStack.EMPTY;
 			}
 
 			if (itemstack1.getCount() == 0) {
-				slot.putStack(ItemStack.EMPTY);
+				slot.set(ItemStack.EMPTY);
 			} else {
-				slot.onSlotChanged();
+				slot.setChanged();
 			}
 
 			if (itemstack1.getCount() == itemstack.getCount()) {
@@ -80,7 +80,7 @@ public class CraftingCoreContainer extends Container {
 	}
 
 	@Override
-	public boolean canInteractWith(PlayerEntity player) {
+	public boolean stillValid(PlayerEntity player) {
 		return this.isUsableByPlayer.apply(player);
 	}
 

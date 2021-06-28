@@ -17,18 +17,20 @@ import net.minecraft.world.World;
 
 import java.util.function.Function;
 
+import net.minecraft.item.Item.Properties;
+
 public class HandheldTableItem extends BaseItem implements IEnableable {
 	public HandheldTableItem(Function<Properties, Properties> properties) {
-		super(properties.compose(p -> p.maxStackSize(1)));
+		super(properties.compose(p -> p.stacksTo(1)));
 	}
 
 	@Override
-	public ActionResult<ItemStack> onItemRightClick(World world, PlayerEntity player, Hand hand) {
-		if (!world.isRemote()) {
-			player.openContainer(this.getContainer(world, player.getPosition()));
+	public ActionResult<ItemStack> use(World world, PlayerEntity player, Hand hand) {
+		if (!world.isClientSide()) {
+			player.openMenu(this.getContainer(world, player.blockPosition()));
 		}
 
-		return super.onItemRightClick(world, player, hand);
+		return super.use(world, player, hand);
 	}
 
 	@Override
@@ -38,9 +40,9 @@ public class HandheldTableItem extends BaseItem implements IEnableable {
 
 	private INamedContainerProvider getContainer(World world, BlockPos pos) {
 		return new SimpleNamedContainerProvider((windowId, playerInventory, playerEntity) -> {
-			return new WorkbenchContainer(windowId, playerInventory, IWorldPosCallable.of(world, pos)) {
+			return new WorkbenchContainer(windowId, playerInventory, IWorldPosCallable.create(world, pos)) {
 				@Override
-				public boolean canInteractWith(PlayerEntity player) {
+				public boolean stillValid(PlayerEntity player) {
 					return true;
 				}
 			};

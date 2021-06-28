@@ -92,16 +92,16 @@ public final class JeiCompat implements IModPlugin {
 
 	@Override
 	public void registerRecipes(IRecipeRegistration registration) {
-		ClientWorld world = Minecraft.getInstance().world;
+		ClientWorld world = Minecraft.getInstance().level;
 		if (world != null) {
 			RecipeManager manager = world.getRecipeManager();
 
 			if (ModConfigs.ENABLE_CRAFTING_CORE.get()) {
-				registration.addRecipes(manager.getRecipes(RecipeTypes.COMBINATION).values(), CombinationCraftingCategory.UID);
+				registration.addRecipes(manager.byType(RecipeTypes.COMBINATION).values(), CombinationCraftingCategory.UID);
 			}
 
 			if (ModConfigs.ENABLE_TABLES.get()) {
-				Map<Integer, List<ITableRecipe>> recipes = manager.getRecipes(RecipeTypes.TABLE).values()
+				Map<Integer, List<ITableRecipe>> recipes = manager.byType(RecipeTypes.TABLE).values()
 						.stream()
 						.map(recipe -> (ITableRecipe) recipe)
 						.collect(Collectors.groupingBy(ITableRecipe::getTier));
@@ -113,11 +113,11 @@ public final class JeiCompat implements IModPlugin {
 			}
 
 			if (ModConfigs.ENABLE_COMPRESSOR.get()) {
-				registration.addRecipes(manager.getRecipes(RecipeTypes.COMPRESSOR).values(), CompressorCraftingCategory.UID);
+				registration.addRecipes(manager.byType(RecipeTypes.COMPRESSOR).values(), CompressorCraftingCategory.UID);
 			}
 
 			if (ModConfigs.ENABLE_ENDER_CRAFTER.get()) {
-				registration.addRecipes(manager.getRecipes(RecipeTypes.ENDER_CRAFTER).values(), EnderCrafterCategory.UID);
+				registration.addRecipes(manager.byType(RecipeTypes.ENDER_CRAFTER).values(), EnderCrafterCategory.UID);
 			}
 		}
 	}

@@ -48,45 +48,45 @@ public class CompressorContainer extends Container {
 			this.addSlot(new Slot(playerInventory, i, 8 + i * 18, 170));
 		}
 
-		this.trackIntArray(data);
+		this.addDataSlots(data);
 	}
 
 	@Override
-	public ItemStack transferStackInSlot(PlayerEntity player, int slotNumber) {
+	public ItemStack quickMoveStack(PlayerEntity player, int slotNumber) {
 		ItemStack itemstack = ItemStack.EMPTY;
-		Slot slot = this.inventorySlots.get(slotNumber);
+		Slot slot = this.slots.get(slotNumber);
 
-		if (slot != null && slot.getHasStack()) {
-			ItemStack itemstack1 = slot.getStack();
+		if (slot != null && slot.hasItem()) {
+			ItemStack itemstack1 = slot.getItem();
 			itemstack = itemstack1.copy();
 
 			if (slotNumber < 3) {
-				if (!this.mergeItemStack(itemstack1, 3, 39, true)) {
+				if (!this.moveItemStackTo(itemstack1, 3, 39, true)) {
 					return ItemStack.EMPTY;
 				}
 				
-				slot.onSlotChange(itemstack1, itemstack);
+				slot.onQuickCraft(itemstack1, itemstack);
 			} else {
-				ItemStack inputStack = this.inventorySlots.get(1).getStack();
-                if (inputStack.isEmpty() || (inputStack.isItemEqual(itemstack1) && inputStack.getCount() < inputStack.getMaxStackSize())) {
-					if (!this.mergeItemStack(itemstack1, 1, 2, false)) {
+				ItemStack inputStack = this.slots.get(1).getItem();
+                if (inputStack.isEmpty() || (inputStack.sameItem(itemstack1) && inputStack.getCount() < inputStack.getMaxStackSize())) {
+					if (!this.moveItemStackTo(itemstack1, 1, 2, false)) {
 						return ItemStack.EMPTY;
 					}
 				} else if (slotNumber < 30) {
-					if (!this.mergeItemStack(itemstack1, 30, 39, false)) {
+					if (!this.moveItemStackTo(itemstack1, 30, 39, false)) {
 						return ItemStack.EMPTY;
 					}
 				} else if (slotNumber < 39) {
-					if (!this.mergeItemStack(itemstack1, 3, 30, false)) {
+					if (!this.moveItemStackTo(itemstack1, 3, 30, false)) {
 						return ItemStack.EMPTY;
 					}
 				}
 			}
 
 			if (itemstack1.getCount() == 0) {
-				slot.putStack(ItemStack.EMPTY);
+				slot.set(ItemStack.EMPTY);
 			} else {
-				slot.onSlotChanged();
+				slot.setChanged();
 			}
 
 			if (itemstack1.getCount() == itemstack.getCount()) {
@@ -100,7 +100,7 @@ public class CompressorContainer extends Container {
 	}
 
 	@Override
-	public boolean canInteractWith(PlayerEntity player) {
+	public boolean stillValid(PlayerEntity player) {
 		return this.isUsableByPlayer.apply(player);
 	}
 

@@ -61,15 +61,15 @@ public class CraftingCoreTileEntity extends BaseInventoryTileEntity implements I
 	}
 
 	@Override
-	public void read(BlockState state, CompoundNBT tag) {
-		super.read(state, tag);
+	public void load(BlockState state, CompoundNBT tag) {
+		super.load(state, tag);
 		this.progress = tag.getInt("Progress");
 		this.energy.setEnergy(tag.getInt("Energy"));
 	}
 
 	@Override
-	public CompoundNBT write(CompoundNBT tag) {
-		tag = super.write(tag);
+	public CompoundNBT save(CompoundNBT tag) {
+		tag = super.save(tag);
 		tag.putInt("Progress", this.progress);
 		tag.putInt("Energy", this.energy.getEnergyStored());
 
@@ -81,24 +81,24 @@ public class CraftingCoreTileEntity extends BaseInventoryTileEntity implements I
 		boolean mark = false;
 
 		Map<BlockPos, ItemStack> pedestalsWithItems = this.getPedestalsWithItems();
-		World world = this.getWorld();
+		World world = this.getLevel();
 
 		if (world != null) {
 			ItemStack[] stacks = pedestalsWithItems.values().toArray(new ItemStack[0]);
 			this.updateRecipeInventory(stacks);
 
 			if (this.recipe == null || !this.recipe.matches(this.recipeInventory)) {
-				this.recipe = (CombinationRecipe) world.getRecipeManager().getRecipe(RecipeTypes.COMBINATION, this.recipeInventory.toIInventory(), world).orElse(null);
+				this.recipe = (CombinationRecipe) world.getRecipeManager().getRecipeFor(RecipeTypes.COMBINATION, this.recipeInventory.toIInventory(), world).orElse(null);
 			}
 
-			if (!world.isRemote()) {
+			if (!world.isClientSide()) {
 				if (this.recipe != null) {
 					if (this.energy.getEnergyStored() > 0) {
 						boolean done = this.process(this.recipe);
 
 						if (done) {
 							for (BlockPos pedestalPos : pedestalsWithItems.keySet()) {
-								TileEntity tile = world.getTileEntity(pedestalPos);
+								TileEntity tile = world.getBlockEntity(pedestalPos);
 
 								if (tile instanceof PedestalTileEntity) {
 									PedestalTileEntity pedestal = (PedestalTileEntity) tile;
@@ -109,17 +109,17 @@ public class CraftingCoreTileEntity extends BaseInventoryTileEntity implements I
 								}
 							}
 
-							this.spawnParticles(ParticleTypes.END_ROD, this.getPos(), 1.1, 50);
+							this.spawnParticles(ParticleTypes.END_ROD, this.getBlockPos(), 1.1, 50);
 							this.inventory.setStackInSlot(0, this.recipe.getCraftingResult(this.recipeInventory));
 							this.progress = 0;
 
 							mark = true;
 						} else {
-							this.spawnParticles(ParticleTypes.ENTITY_EFFECT, this.getPos(), 1.15, 2);
+							this.spawnParticles(ParticleTypes.ENTITY_EFFECT, this.getBlockPos(), 1.15, 2);
 
 							if (this.shouldSpawnItemParticles()) {
 								for (BlockPos pedestalPos : pedestalsWithItems.keySet()) {
-									TileEntity tile = world.getTileEntity(pedestalPos);
+									TileEntity tile = world.getBlockEntity(pedestalPos);
 
 									if (tile instanceof PedestalTileEntity) {
 										PedestalTileEntity pedestal = (PedestalTileEntity) tile;
@@ -164,7 +164,7 @@ public class CraftingCoreTileEntity extends BaseInventoryTileEntity implements I
 
 	@Override
 	public Container createMenu(int windowId, PlayerInventory playerInventory, PlayerEntity player) {
-		return CraftingCoreContainer.create(windowId, playerInventory, this::isUsableByPlayer, new IntArray(0), this.getPos());
+		return CraftingCoreContainer.create(windowId, playerInventory, this::isUsableByPlayer, new IntArray(0), this.getBlockPos());
 	}
 
 	public BaseEnergyStorage getEnergy() {
@@ -218,16 +218,16 @@ public class CraftingCoreTileEntity extends BaseInventoryTileEntity implements I
 
 	public Map<BlockPos, ItemStack> getPedestalsWithItems() {
 		Map<BlockPos, ItemStack> pedestals = new HashMap<>();
-		World world = this.getWorld();
+		World world = this.getLevel();
 
 		int pedestalCount = 0;
 		if (world != null) {
-			BlockPos pos = this.getPos();
-			Iterator<BlockPos> positions = BlockPos.getAllInBox(pos.add(-3, 0, -3), pos.add(3, 0, 3)).iterator();
+			BlockPos pos = this.getBlockPos();
+			Iterator<BlockPos> positions = BlockPos.betweenClosedStream(pos.offset(-3, 0, -3), pos.offset(3, 0, 3)).iterator();
 
 			while (positions.hasNext()) {
 				BlockPos aoePos = positions.next();
-				TileEntity tile = world.getTileEntity(aoePos);
+				TileEntity tile = world.getBlockEntity(aoePos);
 
 				if (tile instanceof PedestalTileEntity) {
 					PedestalTileEntity pedestal = (PedestalTileEntity) tile;
@@ -236,7 +236,7 @@ public class CraftingCoreTileEntity extends BaseInventoryTileEntity implements I
 					pedestalCount++;
 
 					if (!stack.isEmpty()) {
-						pedestals.put(aoePos.toImmutable(), stack);
+						pedestals.put(aoePos.immutable(), stack);
 					}
 				}
 			}
@@ -248,24 +248,24 @@ public class CraftingCoreTileEntity extends BaseInventoryTileEntity implements I
 	}
 
 	private <T extends IParticleData> void spawnParticles(T particle, BlockPos pos, double yOffset, int count) {
-		if (this.getWorld() == null || this.getWorld().isRemote())
+		if (this.getLevel() == null || this.getLevel().isClientSide())
 			return;
 
-		ServerWorld world = (ServerWorld) this.getWorld();
+		ServerWorld world = (ServerWorld) this.getLevel();
 
 		double x = pos.getX() + 0.5D;
 		double y = pos.getY() + yOffset;
 		double z = pos.getZ() + 0.5D;
 
-		world.spawnParticle(particle, x, y, z, count, 0, 0, 0, 0.1D);
+		world.sendParticles(particle, x, y, z, count, 0, 0, 0, 0.1D);
 	}
 
 	private void spawnItemParticles(BlockPos pedestalPos, ItemStack stack) {
-		if (this.getWorld() == null || this.getWorld().isRemote())
+		if (this.getLevel() == null || this.getLevel().isClientSide())
 			return;
 
-		ServerWorld world = (ServerWorld) this.getWorld();
-		BlockPos pos = this.getPos();
+		ServerWorld world = (ServerWorld) this.getLevel();
+		BlockPos pos = this.getBlockPos();
 
 		double x = pedestalPos.getX() + (world.getRandom().nextDouble() * 0.2D) + 0.4D;
 		double y = pedestalPos.getY() + (world.getRandom().nextDouble() * 0.2D) + 1.4D;
@@ -275,7 +275,7 @@ public class CraftingCoreTileEntity extends BaseInventoryTileEntity implements I
 		double velY = 0.25D;
 		double velZ = pos.getZ() - pedestalPos.getZ();
 
-		world.spawnParticle(new ItemParticleData(ParticleTypes.ITEM, stack), x, y, z, 0, velX, velY, velZ, 0.18D);
+		world.sendParticles(new ItemParticleData(ParticleTypes.ITEM, stack), x, y, z, 0, velX, velY, velZ, 0.18D);
 	}
 
 	private boolean shouldSpawnItemParticles() {

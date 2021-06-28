@@ -23,13 +23,13 @@ public class ExtendedCraftingInventory extends CraftingInventory {
     }
 
     @Override
-    public int getSizeInventory() {
+    public int getContainerSize() {
         return this.autoTable ? this.inventory.getSlots() - 1 : this.inventory.getSlots();
     }
 
     @Override
     public boolean isEmpty() {
-        for (int i = 0; i < this.getSizeInventory(); i++) {
+        for (int i = 0; i < this.getContainerSize(); i++) {
             if (!this.inventory.getStackInSlot(i).isEmpty())
                 return false;
         }
@@ -38,20 +38,20 @@ public class ExtendedCraftingInventory extends CraftingInventory {
     }
 
     @Override
-    public ItemStack getStackInSlot(int slot) {
+    public ItemStack getItem(int slot) {
         return this.inventory.getStackInSlot(slot);
     }
 
     @Override
-    public ItemStack decrStackSize(int slot, int amount) {
+    public ItemStack removeItem(int slot, int amount) {
         ItemStack stack = this.inventory.extractItemSuper(slot, amount, false);
-        this.container.onCraftMatrixChanged(this);
+        this.container.slotsChanged(this);
 
         return stack;
     }
 
     @Override
-    public ItemStack removeStackFromSlot(int slot) {
+    public ItemStack removeItemNoUpdate(int slot) {
         ItemStack stack = this.inventory.getStackInSlot(slot);
         this.inventory.setStackInSlot(slot, ItemStack.EMPTY);
 
@@ -59,22 +59,22 @@ public class ExtendedCraftingInventory extends CraftingInventory {
     }
 
     @Override
-    public void setInventorySlotContents(int slot, ItemStack stack) {
+    public void setItem(int slot, ItemStack stack) {
         this.inventory.setStackInSlot(slot, stack);
-        this.container.onCraftMatrixChanged(this);
+        this.container.slotsChanged(this);
     }
 
     @Override
-    public void markDirty() { }
+    public void setChanged() { }
 
     @Override
-    public boolean isUsableByPlayer(PlayerEntity player) {
+    public boolean stillValid(PlayerEntity player) {
         return true;
     }
 
     @Override
-    public void clear() {
-        for (int i = 0; i < this.getSizeInventory(); i++) {
+    public void clearContent() {
+        for (int i = 0; i < this.getContainerSize(); i++) {
             this.inventory.setStackInSlot(i, ItemStack.EMPTY);
         }
     }

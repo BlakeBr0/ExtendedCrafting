@@ -21,15 +21,15 @@ public class CraftingCoreRenderer extends TileEntityRenderer<CraftingCoreTileEnt
 		Minecraft minecraft = Minecraft.getInstance();
 		ItemStack stack = tile.getInventory().getStackInSlot(0);
 		if (!stack.isEmpty()) {
-			matrix.push();
+			matrix.pushPose();
 			matrix.translate(0.5D, 1.2D, 0.5D);
 			float scale = stack.getItem() instanceof BlockItem ? 0.9F : 0.65F;
 			matrix.scale(scale, scale, scale);
 			double tick = System.currentTimeMillis() / 800.0D;
 			matrix.translate(0.0D, Math.sin(tick % (2 * Math.PI)) * 0.065D, 0.0D);
-			matrix.rotate(Vector3f.YP.rotationDegrees((float) ((tick * 40.0D) % 360)));
-			minecraft.getItemRenderer().renderItem(stack, ItemCameraTransforms.TransformType.GROUND, i, i1, matrix, buffer);
-			matrix.pop();
+			matrix.mulPose(Vector3f.YP.rotationDegrees((float) ((tick * 40.0D) % 360)));
+			minecraft.getItemRenderer().renderStatic(stack, ItemCameraTransforms.TransformType.GROUND, i, i1, matrix, buffer);
+			matrix.popPose();
 		}
 	}
 }

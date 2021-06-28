@@ -55,18 +55,20 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.function.Function;
 
+import net.minecraft.item.Item.Properties;
+
 public class RecipeMakerItem extends BaseItem implements IEnableable {
 	private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
 	private static final String NEW_LINE = System.lineSeparator() + "\t";
 	private static final char[] KEYS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ123456789".toCharArray();
 
 	public RecipeMakerItem(Function<Properties, Properties> properties) {
-		super(properties.compose(p -> p.maxStackSize(1)));
+		super(properties.compose(p -> p.stacksTo(1)));
 	}
 	
 	@Override
-	public void fillItemGroup(ItemGroup group, NonNullList<ItemStack> items) {
-		if (this.isEnabled() && this.isInGroup(group)) {
+	public void fillItemCategory(ItemGroup group, NonNullList<ItemStack> items) {
+		if (this.isEnabled() && this.allowdedIn(group)) {
 			ItemStack stack1 = new ItemStack(this);
 			NBTHelper.setBoolean(stack1, "Shapeless", false);
 			NBTHelper.setString(stack1, "Type", "Datapack");
@@ -83,16 +85,16 @@ public class RecipeMakerItem extends BaseItem implements IEnableable {
 	@Override
 	public ActionResultType onItemUseFirst(ItemStack stack, ItemUseContext context) {
 		PlayerEntity player = context.getPlayer();
-		BlockPos pos = context.getPos();
-		Direction facing = context.getFace();
-		World world = context.getWorld();
-		if (player == null || !player.canPlayerEdit(pos.offset(facing), facing, stack)) {
+		BlockPos pos = context.getClickedPos();
+		Direction facing = context.getClickedFace();
+		World world = context.getLevel();
+		if (player == null || !player.mayUseItemAt(pos.relative(facing), facing, stack)) {
 			return ActionResultType.PASS;
 		}
 
-		TileEntity tile = world.getTileEntity(pos);
+		TileEntity tile = world.getBlockEntity(pos);
 		if (isTable(tile)) {
-			if (world.isRemote()) {
+			if (world.isClientSide()) {
 				String type = NBTHelper.getString(stack, "Type");
 				BaseItemStackHandler inventory = ((BaseInventoryTileEntity) tile).getInventory();
 				if ("CraftTweaker".equals(type)) {
@@ -109,7 +111,7 @@ public class RecipeMakerItem extends BaseItem implements IEnableable {
 							: makeShapedDatapackTableRecipe(inventory, type);
 
 					if ("TOO MANY ITEMS".equals(string)) {
-						player.sendMessage(Localizable.of("message.extendedcrafting.max_unique_items_exceeded").args(KEYS.length).build(), Util.DUMMY_UUID);
+						player.sendMessage(Localizable.of("message.extendedcrafting.max_unique_items_exceeded").args(KEYS.length).build(), Util.NIL_UUID);
 
 						return ActionResultType.SUCCESS;
 					}
@@ -117,16 +119,16 @@ public class RecipeMakerItem extends BaseItem implements IEnableable {
 					setClipboard(string);
 				}
 
-				player.sendMessage(Localizable.of("message.extendedcrafting.copied_recipe").build(), Util.DUMMY_UUID);
+				player.sendMessage(Localizable.of("message.extendedcrafting.copied_recipe").build(), Util.NIL_UUID);
 
 				if (ModConfigs.RECIPE_MAKER_USE_NBT.get() && !ModList.get().isLoaded("crafttweaker")) {
-					player.sendMessage(Localizable.of("message.extendedcrafting.nbt_requires_crafttweaker").build(), Util.DUMMY_UUID);
+					player.sendMessage(Localizable.of("message.extendedcrafting.nbt_requires_crafttweaker").build(), Util.NIL_UUID);
 				}
 			}
 
 			return ActionResultType.SUCCESS;
 		} else if (tile instanceof CraftingCoreTileEntity) {
-			if (world.isRemote()) {
+			if (world.isClientSide()) {
 				String type = NBTHelper.getString(stack, "Type");
 				CraftingCoreTileEntity core = (CraftingCoreTileEntity) tile;
 				String string = "CraftTweaker".equals(type)
@@ -135,7 +137,7 @@ public class RecipeMakerItem extends BaseItem implements IEnableable {
 
 				setClipboard(string);
 
-				player.sendMessage(Localizable.of("message.extendedcrafting.copied_recipe").build(), Util.DUMMY_UUID);
+				player.sendMessage(Localizable.of("message.extendedcrafting.copied_recipe").build(), Util.NIL_UUID);
 			}
 
 			return ActionResultType.SUCCESS;
@@ -145,22 +147,22 @@ public class RecipeMakerItem extends BaseItem implements IEnableable {
 	}
 
 	@Override
-	public ActionResult<ItemStack> onItemRightClick(World world, PlayerEntity player, Hand hand) {
+	public ActionResult<ItemStack> use(World world, PlayerEntity player, Hand hand) {
 		if (player.isCrouching()) {
-			ItemStack stack = player.getHeldItem(hand);
+			ItemStack stack = player.getItemInHand(hand);
 			NBTHelper.flipBoolean(stack, "Shapeless");
 
-			if (world.isRemote()) {
-				player.sendMessage(Localizable.of("message.extendedcrafting.changed_mode").args(getModeString(stack)).build(), Util.DUMMY_UUID);
+			if (world.isClientSide()) {
+				player.sendMessage(Localizable.of("message.extendedcrafting.changed_mode").args(getModeString(stack)).build(), Util.NIL_UUID);
 			}
 		}
 
-		return super.onItemRightClick(world, player, hand);
+		return super.use(world, player, hand);
 	}
 
 	@OnlyIn(Dist.CLIENT)
 	@Override
-	public void addInformation(ItemStack stack, World world, List<ITextComponent> tooltip, ITooltipFlag flag) {
+	public void appendHoverText(ItemStack stack, World world, List<ITextComponent> tooltip, ITooltipFlag flag) {
 		tooltip.add(ModTooltips.TYPE.args(NBTHelper.getString(stack, "Type")).build());
 		tooltip.add(ModTooltips.MODE.args(getModeString(stack)).build());
 	}
@@ -171,7 +173,7 @@ public class RecipeMakerItem extends BaseItem implements IEnableable {
 	}
 
 	private static void setClipboard(String string) {
-		Minecraft.getInstance().keyboardListener.setClipboardString(string);
+		Minecraft.getInstance().keyboardHandler.setClipboard(string);
 	}
 
 	// Create a shaped CraftTweaker recipe for a Table or Ender Crafter
@@ -344,15 +346,15 @@ public class RecipeMakerItem extends BaseItem implements IEnableable {
 				continue;
 
 			ResourceLocation tagId = stack.getItem().getTags().stream().findFirst().orElse(null);
-			ITag<Item> tag = tagId == null ? null : ItemTags.getCollection().get(tagId);
+			ITag<Item> tag = tagId == null ? null : ItemTags.getAllTags().getTag(tagId);
 			char key = KEYS[keysMap.size()];
 			if (ModConfigs.RECIPE_MAKER_USE_TAGS.get() && tag != null) {
-				keysMap.put(Ingredient.fromTag(tag), key);
+				keysMap.put(Ingredient.of(tag), key);
 			} else {
 				if (ModConfigs.RECIPE_MAKER_USE_NBT.get() && stack.hasTag()) {
 					keysMap.put(new NBTIngredient(stack), key);
 				} else {
-					keysMap.put(Ingredient.fromStacks(stack), key);
+					keysMap.put(Ingredient.of(stack), key);
 				}
 			}
 
@@ -385,7 +387,7 @@ public class RecipeMakerItem extends BaseItem implements IEnableable {
 
 		JsonObject key = new JsonObject();
 		for (Map.Entry<Ingredient, Character> entry : keys) {
-			key.add(entry.getValue().toString(), entry.getKey().serialize());
+			key.add(entry.getValue().toString(), entry.getKey().toJson());
 		}
 
 		object.add("key", key);
@@ -419,9 +421,9 @@ public class RecipeMakerItem extends BaseItem implements IEnableable {
 					ingredients.add(tag);
 				} else {
 					if (ModConfigs.RECIPE_MAKER_USE_NBT.get() && stack.hasTag()) {
-						ingredients.add(new NBTIngredient(stack).serialize());
+						ingredients.add(new NBTIngredient(stack).toJson());
 					} else {
-						ingredients.add(Ingredient.fromStacks(stack).serialize());
+						ingredients.add(Ingredient.of(stack).toJson());
 					}
 				}
 			}
@@ -444,7 +446,7 @@ public class RecipeMakerItem extends BaseItem implements IEnableable {
 		object.addProperty("powerCost", 100000);
 
 		ItemStack input = core.getInventory().getStackInSlot(0);
-		object.add("input", Ingredient.fromStacks(input).serialize());
+		object.add("input", Ingredient.of(input).toJson());
 
 		JsonArray ingredients = new JsonArray();
 		ItemStack[] stacks = core.getPedestalsWithItems().values().stream().filter(s -> !s.isEmpty()).toArray(ItemStack[]::new);
@@ -456,9 +458,9 @@ public class RecipeMakerItem extends BaseItem implements IEnableable {
 				ingredients.add(tag);
 			} else {
 				if (ModConfigs.RECIPE_MAKER_USE_NBT.get() && stack.hasTag()) {
-					ingredients.add(new NBTIngredient(stack).serialize());
+					ingredients.add(new NBTIngredient(stack).toJson());
 				} else {
-					ingredients.add(Ingredient.fromStacks(stack).serialize());
+					ingredients.add(Ingredient.of(stack).toJson());
 				}
 			}
 		}

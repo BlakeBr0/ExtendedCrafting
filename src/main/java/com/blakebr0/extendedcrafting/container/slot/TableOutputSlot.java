@@ -23,7 +23,7 @@ public class TableOutputSlot extends Slot {
     }
 
     @Override
-    public boolean isItemValid(ItemStack stack) {
+    public boolean mayPlace(ItemStack stack) {
         return false;
     }
 
@@ -40,31 +40,31 @@ public class TableOutputSlot extends Slot {
         NonNullList<ItemStack> remaining;
 
         if (isVanilla) {
-            remaining = player.world.getRecipeManager().getRecipeNonNull(IRecipeType.CRAFTING, (CraftingInventory) this.matrix, player.world);
+            remaining = player.level.getRecipeManager().getRemainingItemsFor(IRecipeType.CRAFTING, (CraftingInventory) this.matrix, player.level);
         } else {
-            remaining = player.world.getRecipeManager().getRecipeNonNull(RecipeTypes.TABLE, this.matrix, player.world);
+            remaining = player.level.getRecipeManager().getRemainingItemsFor(RecipeTypes.TABLE, this.matrix, player.level);
         }
 
         for (int i = 0; i < remaining.size(); i++) {
-            ItemStack slotStack = this.matrix.getStackInSlot(i);
+            ItemStack slotStack = this.matrix.getItem(i);
             ItemStack remainingStack = remaining.get(i);
 
             if (!slotStack.isEmpty()) {
-                this.matrix.decrStackSize(i, 1);
-                slotStack = this.matrix.getStackInSlot(i);
+                this.matrix.removeItem(i, 1);
+                slotStack = this.matrix.getItem(i);
             }
 
             if (!remainingStack.isEmpty()) {
                 if (slotStack.isEmpty()) {
-                    this.matrix.setInventorySlotContents(i, remainingStack);
-                } else if (ItemStack.areItemsEqual(slotStack, remainingStack) && ItemStack.areItemStackTagsEqual(slotStack, remainingStack)) {
+                    this.matrix.setItem(i, remainingStack);
+                } else if (ItemStack.isSame(slotStack, remainingStack) && ItemStack.tagMatches(slotStack, remainingStack)) {
                     remainingStack.grow(slotStack.getCount());
-                    this.matrix.setInventorySlotContents(i, remainingStack);
+                    this.matrix.setItem(i, remainingStack);
                 }
             }
         }
 
-        this.container.onCraftMatrixChanged(this.matrix);
+        this.container.slotsChanged(this.matrix);
 
         return stack;
     }

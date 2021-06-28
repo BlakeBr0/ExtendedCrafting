@@ -29,8 +29,8 @@ public class EjectModeSwitchMessage {
         context.get().enqueueWork(() -> {
             ServerPlayerEntity player = context.get().getSender();
             if (player != null) {
-                World world = player.getEntityWorld();
-                TileEntity tile = world.getTileEntity(message.pos);
+                World world = player.getCommandSenderWorld();
+                TileEntity tile = world.getBlockEntity(message.pos);
                 if (tile instanceof CompressorTileEntity) {
                     ((CompressorTileEntity) tile).toggleEjecting();
                 }

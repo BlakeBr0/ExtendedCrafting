@@ -21,7 +21,7 @@ public class EnderAlternatorBlock extends BaseBlock implements IEnableable {
 			.build();
 
 	public EnderAlternatorBlock() {
-		super(Material.IRON, SoundType.METAL, 5.0F, 10.0F, ToolType.PICKAXE);
+		super(Material.METAL, SoundType.METAL, 5.0F, 10.0F, ToolType.PICKAXE);
 	}
 
 	@Override

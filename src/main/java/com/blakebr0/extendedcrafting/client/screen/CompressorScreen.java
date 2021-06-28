@@ -36,7 +36,7 @@ public class CompressorScreen extends BaseContainerScreen<CompressorContainer> {
 
 		int x = this.getGuiLeft();
 		int y = this.getGuiTop();
-		BlockPos pos = this.getContainer().getPos();
+		BlockPos pos = this.getMenu().getPos();
 
 		this.addButton(new EjectModeSwitchButton(x + 69, y + 30, pos));
 		this.addButton(new InputLimitSwitchButton(x + 91, y + 74, pos, this::isLimitingInput));
@@ -69,7 +69,7 @@ public class CompressorScreen extends BaseContainerScreen<CompressorContainer> {
 				tooltip.add(text);
 			}
 
-			this.func_243308_b(stack, tooltip, mouseX, mouseY);
+			this.renderComponentTooltip(stack, tooltip, mouseX, mouseY);
 		}
 
 		if (mouseX > x + 68 && mouseX < x + 79 && mouseY > y + 28 && mouseY < y + 39) {
@@ -90,16 +90,16 @@ public class CompressorScreen extends BaseContainerScreen<CompressorContainer> {
 	}
 
 	@Override
-	protected void drawGuiContainerForegroundLayer(MatrixStack stack, int mouseX, int mouseY) {
+	protected void renderLabels(MatrixStack stack, int mouseX, int mouseY) {
 		String title = this.getTitle().getString();
-		this.font.drawString(stack, title, (float) (this.xSize / 2 - this.font.getStringWidth(title) / 2), 6.0F, 4210752);
-		String inventory = this.playerInventory.getDisplayName().getString();
-		this.font.drawString(stack, inventory, 8.0F, this.ySize - 94.0F, 4210752);
+		this.font.draw(stack, title, (float) (this.imageWidth / 2 - this.font.width(title) / 2), 6.0F, 4210752);
+		String inventory = this.inventory.getDisplayName().getString();
+		this.font.draw(stack, inventory, 8.0F, this.imageHeight - 94.0F, 4210752);
 	}
 
 	@Override
-	protected void drawGuiContainerBackgroundLayer(MatrixStack stack, float partialTicks, int mouseX, int mouseY) {
-		super.drawGuiContainerBackgroundLayer(stack, partialTicks, mouseX, mouseY);
+	protected void renderBg(MatrixStack stack, float partialTicks, int mouseX, int mouseY) {
+		super.renderBg(stack, partialTicks, mouseX, mouseY);
 
 		int x = this.getGuiLeft();
 		int y = this.getGuiTop();
@@ -125,15 +125,15 @@ public class CompressorScreen extends BaseContainerScreen<CompressorContainer> {
 	}
 
 	private ITextComponent getMaterialStackDisplayName() {
-		ClientWorld world = this.getMinecraft().world;
+		ClientWorld world = this.getMinecraft().level;
 		if (world != null) {
-			CompressorContainer container = this.getContainer();
-			TileEntity tile = world.getTileEntity(container.getPos());
+			CompressorContainer container = this.getMenu();
+			TileEntity tile = world.getBlockEntity(container.getPos());
 			if (tile instanceof CompressorTileEntity) {
 				CompressorTileEntity compressor = (CompressorTileEntity) tile;
 				ItemStack materialStack = compressor.getMaterialStack();
 
-				return materialStack.getDisplayName();
+				return materialStack.getHoverName();
 			}
 		}
 
@@ -141,10 +141,10 @@ public class CompressorScreen extends BaseContainerScreen<CompressorContainer> {
 	}
 
 	private CompressorTileEntity getTileEntity() {
-		ClientWorld world = this.getMinecraft().world;
+		ClientWorld world = this.getMinecraft().level;
 
 		if (world != null) {
-			TileEntity tile = world.getTileEntity(this.getContainer().getPos());
+			TileEntity tile = world.getBlockEntity(this.getMenu().getPos());
 
 			if (tile instanceof CompressorTileEntity) {
 				return (CompressorTileEntity) tile;

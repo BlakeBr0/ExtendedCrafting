@@ -29,24 +29,24 @@ public class UltimateSingularityRecipe extends ShapelessTableRecipe {
 
     public static class Serializer extends ForgeRegistryEntry<IRecipeSerializer<?>> implements IRecipeSerializer<UltimateSingularityRecipe> {
         @Override
-        public UltimateSingularityRecipe read(ResourceLocation recipeId, JsonObject json) {
+        public UltimateSingularityRecipe fromJson(ResourceLocation recipeId, JsonObject json) {
             return new UltimateSingularityRecipe(recipeId, SINGULARITIES, new ItemStack(ModItems.ULTIMATE_SINGULARITY.get()));
         }
 
         @Override
-        public UltimateSingularityRecipe read(ResourceLocation recipeId, PacketBuffer buffer) {
+        public UltimateSingularityRecipe fromNetwork(ResourceLocation recipeId, PacketBuffer buffer) {
             NonNullList<Ingredient> singularities = SingularityRegistry.getInstance().getSingularities()
                     .stream()
                     .filter(singularity -> singularity.isInUltimateSingularity() && singularity.getIngredient() != Ingredient.EMPTY)
                     .limit(81)
                     .map(SingularityUtils::getItemForSingularity)
-                    .map(Ingredient::fromStacks)
+                    .map(Ingredient::of)
                     .collect(Collectors.toCollection(NonNullList::create));
 
             return new UltimateSingularityRecipe(recipeId, singularities, new ItemStack(ModItems.ULTIMATE_SINGULARITY.get()));
         }
 
         @Override
-        public void write(PacketBuffer buffer, UltimateSingularityRecipe recipe) { }
+        public void toNetwork(PacketBuffer buffer, UltimateSingularityRecipe recipe) { }
     }
 }

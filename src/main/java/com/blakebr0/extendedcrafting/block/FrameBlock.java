@@ -29,7 +29,7 @@ public class FrameBlock extends BaseBlock {
             .build();
 
     public FrameBlock() {
-        super(Material.ROCK, SoundType.STONE, 5.0F, 10.0F, ToolType.PICKAXE);
+        super(Material.STONE, SoundType.STONE, 5.0F, 10.0F, ToolType.PICKAXE);
     }
 
     @Override

@@ -40,7 +40,7 @@ public class ShapelessTableRecipe implements ISpecialRecipe, ITableRecipe {
 	}
 
 	@Override
-	public ItemStack getRecipeOutput() {
+	public ItemStack getResultItem() {
 		return this.output;
 	}
 
@@ -65,7 +65,7 @@ public class ShapelessTableRecipe implements ISpecialRecipe, ITableRecipe {
 	}
 
 	@Override
-	public boolean canFit(int width, int height) {
+	public boolean canCraftInDimensions(int width, int height) {
 		return width * height >= this.inputs.size();
 	}
 
@@ -115,43 +115,43 @@ public class ShapelessTableRecipe implements ISpecialRecipe, ITableRecipe {
 
 	public static class Serializer extends ForgeRegistryEntry<IRecipeSerializer<?>> implements IRecipeSerializer<ShapelessTableRecipe> {
 		@Override
-		public ShapelessTableRecipe read(ResourceLocation recipeId, JsonObject json) {
+		public ShapelessTableRecipe fromJson(ResourceLocation recipeId, JsonObject json) {
 			NonNullList<Ingredient> inputs = NonNullList.create();
-			JsonArray ingredients = JSONUtils.getJsonArray(json, "ingredients");
+			JsonArray ingredients = JSONUtils.getAsJsonArray(json, "ingredients");
 			for (int i = 0; i < ingredients.size(); i++) {
-				inputs.add(Ingredient.deserialize(ingredients.get(i)));
+				inputs.add(Ingredient.fromJson(ingredients.get(i)));
 			}
 
-			ItemStack output = ShapedRecipe.deserializeItem(JSONUtils.getJsonObject(json, "result"));
-			int tier = JSONUtils.getInt(json, "tier", 0);
+			ItemStack output = ShapedRecipe.itemFromJson(JSONUtils.getAsJsonObject(json, "result"));
+			int tier = JSONUtils.getAsInt(json, "tier", 0);
 
 			return new ShapelessTableRecipe(recipeId, inputs, output, tier);
 		}
 
 		@Override
-		public ShapelessTableRecipe read(ResourceLocation recipeId, PacketBuffer buffer) {
+		public ShapelessTableRecipe fromNetwork(ResourceLocation recipeId, PacketBuffer buffer) {
 			int size = buffer.readVarInt();
 			NonNullList<Ingredient> inputs = NonNullList.withSize(size, Ingredient.EMPTY);
 
 			for (int i = 0; i < size; ++i) {
-				inputs.set(i, Ingredient.read(buffer));
+				inputs.set(i, Ingredient.fromNetwork(buffer));
 			}
 
-			ItemStack output = buffer.readItemStack();
+			ItemStack output = buffer.readItem();
 			int tier = buffer.readVarInt();
 
 			return new ShapelessTableRecipe(recipeId, inputs, output, tier);
 		}
 
 		@Override
-		public void write(PacketBuffer buffer, ShapelessTableRecipe recipe) {
+		public void toNetwork(PacketBuffer buffer, ShapelessTableRecipe recipe) {
 			buffer.writeVarInt(recipe.inputs.size());
 
 			for (Ingredient ingredient : recipe.inputs) {
-				ingredient.write(buffer);
+				ingredient.toNetwork(buffer);
 			}
 
-			buffer.writeItemStack(recipe.output);
+			buffer.writeItem(recipe.output);
 			buffer.writeVarInt(recipe.tier);
 		}
 	}

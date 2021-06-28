@@ -14,25 +14,25 @@ import net.minecraft.util.ResourceLocation;
 
 public final class SingularityUtils {
     public static Singularity loadFromJson(ResourceLocation id, JsonObject json) {
-        String name = JSONUtils.getString(json, "name");
-        JsonArray colors = JSONUtils.getJsonArray(json, "colors");
-        int materialCount = JSONUtils.getInt(json, "materialCount", ModConfigs.SINGULARITY_MATERIALS_REQUIRED.get());
+        String name = JSONUtils.getAsString(json, "name");
+        JsonArray colors = JSONUtils.getAsJsonArray(json, "colors");
+        int materialCount = JSONUtils.getAsInt(json, "materialCount", ModConfigs.SINGULARITY_MATERIALS_REQUIRED.get());
 
         int overlayColor = Integer.parseInt(colors.get(0).getAsString(), 16);
         int underlayColor = Integer.parseInt(colors.get(1).getAsString(), 16);
 
-        boolean inUltimateSingularity = JSONUtils.getBoolean(json, "inUltimateSingularity", true);
+        boolean inUltimateSingularity = JSONUtils.getAsBoolean(json, "inUltimateSingularity", true);
 
         if (!json.has("ingredient")) {
             return new Singularity(id, name, new int[] { overlayColor, underlayColor }, Ingredient.EMPTY, materialCount, inUltimateSingularity);
         }
 
-        JsonObject ing = JSONUtils.getJsonObject(json, "ingredient");
+        JsonObject ing = JSONUtils.getAsJsonObject(json, "ingredient");
         if (ing.has("tag")) {
             String tag = ing.get("tag").getAsString();
             return new Singularity(id, name, new int[] { overlayColor, underlayColor }, tag, materialCount, inUltimateSingularity);
         } else {
-            Ingredient ingredient = Ingredient.deserialize(json.get("ingredient"));
+            Ingredient ingredient = Ingredient.fromJson(json.get("ingredient"));
             return new Singularity(id, name, new int[] { overlayColor, underlayColor }, ingredient, materialCount, inUltimateSingularity);
         }
     }
@@ -51,7 +51,7 @@ public final class SingularityUtils {
             obj.addProperty("tag", singularity.getTag());
             ingredient = obj;
         } else {
-            ingredient = singularity.getIngredient().serialize();
+            ingredient = singularity.getIngredient().toJson();
         }
         json.add("ingredient", ingredient);
 

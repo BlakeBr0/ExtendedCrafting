@@ -33,7 +33,7 @@ public class CompressorRecipe implements ISpecialRecipe, ICompressorRecipe {
 
 	public CompressorRecipe(ResourceLocation recipeId, Ingredient input, ItemStack output, int inputCount, Ingredient catalyst, int powerCost, int powerRate) {
 		this.recipeId = recipeId;
-		this.inputs = NonNullList.from(Ingredient.EMPTY, input);
+		this.inputs = NonNullList.of(Ingredient.EMPTY, input);
 		this.output = output;
 		this.inputCount = inputCount;
 		this.catalyst = catalyst;
@@ -42,12 +42,12 @@ public class CompressorRecipe implements ISpecialRecipe, ICompressorRecipe {
 	}
 
 	@Override
-	public boolean canFit(int width, int height) {
+	public boolean canCraftInDimensions(int width, int height) {
 		return true;
 	}
 
 	@Override
-	public ItemStack getRecipeOutput() {
+	public ItemStack getResultItem() {
 		return this.output;
 	}
 
@@ -105,23 +105,23 @@ public class CompressorRecipe implements ISpecialRecipe, ICompressorRecipe {
 
 	public static class Serializer extends ForgeRegistryEntry<IRecipeSerializer<?>> implements IRecipeSerializer<CompressorRecipe> {
 		@Override
-		public CompressorRecipe read(ResourceLocation recipeId, JsonObject json) {
-			Ingredient input = Ingredient.deserialize(json.getAsJsonObject("ingredient"));
-			ItemStack output = ShapedRecipe.deserializeItem(JSONUtils.getJsonObject(json, "result"));
-			int inputCount = JSONUtils.getInt(json, "inputCount", 10000);
-			Ingredient catalyst = Ingredient.deserialize(JSONUtils.getJsonObject(json, "catalyst"));
-			int powerCost = JSONUtils.getInt(json, "powerCost");
-			int powerRate = JSONUtils.getInt(json, "powerRate", ModConfigs.COMPRESSOR_POWER_RATE.get());
+		public CompressorRecipe fromJson(ResourceLocation recipeId, JsonObject json) {
+			Ingredient input = Ingredient.fromJson(json.getAsJsonObject("ingredient"));
+			ItemStack output = ShapedRecipe.itemFromJson(JSONUtils.getAsJsonObject(json, "result"));
+			int inputCount = JSONUtils.getAsInt(json, "inputCount", 10000);
+			Ingredient catalyst = Ingredient.fromJson(JSONUtils.getAsJsonObject(json, "catalyst"));
+			int powerCost = JSONUtils.getAsInt(json, "powerCost");
+			int powerRate = JSONUtils.getAsInt(json, "powerRate", ModConfigs.COMPRESSOR_POWER_RATE.get());
 
 			return new CompressorRecipe(recipeId, input, output, inputCount, catalyst, powerCost, powerRate);
 		}
 
 		@Override
-		public CompressorRecipe read(ResourceLocation recipeId, PacketBuffer buffer) {
-			Ingredient input = Ingredient.read(buffer);
-			ItemStack output = buffer.readItemStack();
+		public CompressorRecipe fromNetwork(ResourceLocation recipeId, PacketBuffer buffer) {
+			Ingredient input = Ingredient.fromNetwork(buffer);
+			ItemStack output = buffer.readItem();
 			int inputCount = buffer.readInt();
-			Ingredient catalyst = Ingredient.read(buffer);
+			Ingredient catalyst = Ingredient.fromNetwork(buffer);
 			int powerCost = buffer.readInt();
 			int powerRate = buffer.readInt();
 
@@ -129,11 +129,11 @@ public class CompressorRecipe implements ISpecialRecipe, ICompressorRecipe {
 		}
 
 		@Override
-		public void write(PacketBuffer buffer, CompressorRecipe recipe) {
-			recipe.inputs.get(0).write(buffer);
-			buffer.writeItemStack(recipe.output);
+		public void toNetwork(PacketBuffer buffer, CompressorRecipe recipe) {
+			recipe.inputs.get(0).toNetwork(buffer);
+			buffer.writeItem(recipe.output);
 			buffer.writeInt(recipe.inputCount);
-			recipe.catalyst.write(buffer);
+			recipe.catalyst.toNetwork(buffer);
 			buffer.writeInt(recipe.powerCost);
 			buffer.writeInt(recipe.powerRate);
 		}

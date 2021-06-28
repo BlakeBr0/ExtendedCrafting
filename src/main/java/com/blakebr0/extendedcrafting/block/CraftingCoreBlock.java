@@ -41,7 +41,7 @@ public class CraftingCoreBlock extends BaseTileEntityBlock implements IEnableabl
 			.build();
 
 	public CraftingCoreBlock() {
-		super(Material.IRON, SoundType.METAL, 5.0F, 10.0F, ToolType.PICKAXE);
+		super(Material.METAL, SoundType.METAL, 5.0F, 10.0F, ToolType.PICKAXE);
 	}
 
 	@Override
@@ -50,25 +50,25 @@ public class CraftingCoreBlock extends BaseTileEntityBlock implements IEnableabl
 	}
 
 	@Override
-	public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult trace) {
-		ItemStack held = player.getHeldItem(hand);
-		if (!world.isRemote()) {
-			TileEntity tile = world.getTileEntity(pos);
+	public ActionResultType use(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult trace) {
+		ItemStack held = player.getItemInHand(hand);
+		if (!world.isClientSide()) {
+			TileEntity tile = world.getBlockEntity(pos);
 			if (tile instanceof CraftingCoreTileEntity) {
 				CraftingCoreTileEntity core = (CraftingCoreTileEntity) tile;
-				if (trace.getFace() == Direction.UP) {
+				if (trace.getDirection() == Direction.UP) {
 					BaseItemStackHandler inventory = core.getInventory();
 					ItemStack stack = inventory.getStackInSlot(0);
 					if (stack.isEmpty()) {
 						if (!held.isEmpty()) {
 							inventory.setStackInSlot(0, StackHelper.withSize(held, 1, false));
-							player.setHeldItem(hand, StackHelper.shrink(held, 1, false));
-							world.playSound(null, pos, SoundEvents.ENTITY_ITEM_PICKUP, SoundCategory.BLOCKS, 1.0F, 1.0F);
+							player.setItemInHand(hand, StackHelper.shrink(held, 1, false));
+							world.playSound(null, pos, SoundEvents.ITEM_PICKUP, SoundCategory.BLOCKS, 1.0F, 1.0F);
 						}
 					} else {
-						ItemEntity item = new ItemEntity(world, player.getPosX(), player.getPosY(), player.getPosZ(), stack);
-						item.setNoPickupDelay();
-						world.addEntity(item);
+						ItemEntity item = new ItemEntity(world, player.getX(), player.getY(), player.getZ(), stack);
+						item.setNoPickUpDelay();
+						world.addFreshEntity(item);
 						inventory.setStackInSlot(0, ItemStack.EMPTY);
 					}
 				} else {
@@ -81,16 +81,16 @@ public class CraftingCoreBlock extends BaseTileEntityBlock implements IEnableabl
 	}
 
 	@Override
-	public void onReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean isMoving) {
+	public void onRemove(BlockState state, World world, BlockPos pos, BlockState newState, boolean isMoving) {
 		if (state.getBlock() != newState.getBlock()) {
-			TileEntity tile = world.getTileEntity(pos);
+			TileEntity tile = world.getBlockEntity(pos);
 			if (tile instanceof CraftingCoreTileEntity) {
 				CraftingCoreTileEntity core = (CraftingCoreTileEntity) tile;
-				InventoryHelper.dropItems(world, pos, core.getInventory().getStacks());
+				InventoryHelper.dropContents(world, pos, core.getInventory().getStacks());
 			}
 		}
 
-		super.onReplaced(state, world, pos, newState, isMoving);
+		super.onRemove(state, world, pos, newState, isMoving);
 	}
 
 	@Override

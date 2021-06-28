@@ -77,7 +77,7 @@ public class CombinationCraftingCategory implements IRecipeCategory<ICombination
 
 	@Override
 	public void setIngredients(ICombinationRecipe recipe, IIngredients ingredients) {
-		ingredients.setOutput(VanillaTypes.ITEM, recipe.getRecipeOutput());
+		ingredients.setOutput(VanillaTypes.ITEM, recipe.getResultItem());
 		ingredients.setInputIngredients(recipe.getIngredients());
 	}
 

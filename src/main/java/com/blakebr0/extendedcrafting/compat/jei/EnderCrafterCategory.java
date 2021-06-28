@@ -82,7 +82,7 @@ public class EnderCrafterCategory implements IRecipeCategory<IEnderCrafterRecipe
 
 	@Override
 	public void setIngredients(IEnderCrafterRecipe recipe, IIngredients ingredients) {
-		ingredients.setOutput(VanillaTypes.ITEM, recipe.getRecipeOutput());
+		ingredients.setOutput(VanillaTypes.ITEM, recipe.getResultItem());
 		ingredients.setInputIngredients(recipe.getIngredients());
 	}
 

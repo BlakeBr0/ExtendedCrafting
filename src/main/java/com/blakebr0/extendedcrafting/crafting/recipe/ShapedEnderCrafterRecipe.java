@@ -44,7 +44,7 @@ public class ShapedEnderCrafterRecipe implements ISpecialRecipe, IEnderCrafterRe
 	}
 
 	@Override
-	public ItemStack getRecipeOutput() {
+	public ItemStack getResultItem() {
 		return this.output;
 	}
 
@@ -92,7 +92,7 @@ public class ShapedEnderCrafterRecipe implements ISpecialRecipe, IEnderCrafterRe
 	}
 
 	@Override
-	public boolean canFit(int width, int height) {
+	public boolean canCraftInDimensions(int width, int height) {
 		return width >= this.width && height >= this.height;
 	}
 
@@ -136,7 +136,7 @@ public class ShapedEnderCrafterRecipe implements ISpecialRecipe, IEnderCrafterRe
 	private static String[] patternFromJson(JsonArray jsonArr) {
 		String[] astring = new String[jsonArr.size()];
 		for (int i = 0; i < astring.length; ++i) {
-			String s = JSONUtils.getString(jsonArr.get(i), "pattern[" + i + "]");
+			String s = JSONUtils.convertToString(jsonArr.get(i), "pattern[" + i + "]");
 
 			if (i > 0 && astring[0].length() != s.length()) {
 				throw new JsonSyntaxException("Invalid pattern: each row must be the same width");
@@ -150,44 +150,44 @@ public class ShapedEnderCrafterRecipe implements ISpecialRecipe, IEnderCrafterRe
 
 	public static class Serializer extends ForgeRegistryEntry<IRecipeSerializer<?>> implements IRecipeSerializer<ShapedEnderCrafterRecipe> {
 		@Override
-		public ShapedEnderCrafterRecipe read(ResourceLocation recipeId, JsonObject json) {
-			Map<String, Ingredient> map = ShapedRecipe.deserializeKey(JSONUtils.getJsonObject(json, "key"));
-			String[] pattern = ShapedRecipe.shrink(ShapedEnderCrafterRecipe.patternFromJson(JSONUtils.getJsonArray(json, "pattern")));
+		public ShapedEnderCrafterRecipe fromJson(ResourceLocation recipeId, JsonObject json) {
+			Map<String, Ingredient> map = ShapedRecipe.keyFromJson(JSONUtils.getAsJsonObject(json, "key"));
+			String[] pattern = ShapedRecipe.shrink(ShapedEnderCrafterRecipe.patternFromJson(JSONUtils.getAsJsonArray(json, "pattern")));
 			int width = pattern[0].length();
 			int height = pattern.length;
-			NonNullList<Ingredient> inputs = ShapedRecipe.deserializeIngredients(pattern, map, width, height);
-			ItemStack output = ShapedRecipe.deserializeItem(JSONUtils.getJsonObject(json, "result"));
-			int craftingTime = JSONUtils.getInt(json, "craftingTime", ModConfigs.ENDER_CRAFTER_TIME_REQUIRED.get());
+			NonNullList<Ingredient> inputs = ShapedRecipe.dissolvePattern(pattern, map, width, height);
+			ItemStack output = ShapedRecipe.itemFromJson(JSONUtils.getAsJsonObject(json, "result"));
+			int craftingTime = JSONUtils.getAsInt(json, "craftingTime", ModConfigs.ENDER_CRAFTER_TIME_REQUIRED.get());
 
 			return new ShapedEnderCrafterRecipe(recipeId, width, height, inputs, output, craftingTime);
 		}
 
 		@Override
-		public ShapedEnderCrafterRecipe read(ResourceLocation recipeId, PacketBuffer buffer) {
+		public ShapedEnderCrafterRecipe fromNetwork(ResourceLocation recipeId, PacketBuffer buffer) {
 			int width = buffer.readVarInt();
 			int height = buffer.readVarInt();
 			NonNullList<Ingredient> inputs = NonNullList.withSize(width * height, Ingredient.EMPTY);
 
 			for (int i = 0; i < inputs.size(); i++) {
-				inputs.set(i, Ingredient.read(buffer));
+				inputs.set(i, Ingredient.fromNetwork(buffer));
 			}
 
-			ItemStack output = buffer.readItemStack();
+			ItemStack output = buffer.readItem();
 			int craftingTime = buffer.readVarInt();
 
 			return new ShapedEnderCrafterRecipe(recipeId, width, height, inputs, output, craftingTime);
 		}
 
 		@Override
-		public void write(PacketBuffer buffer, ShapedEnderCrafterRecipe recipe) {
+		public void toNetwork(PacketBuffer buffer, ShapedEnderCrafterRecipe recipe) {
 			buffer.writeVarInt(recipe.width);
 			buffer.writeVarInt(recipe.height);
 
 			for (Ingredient ingredient : recipe.inputs) {
-				ingredient.write(buffer);
+				ingredient.toNetwork(buffer);
 			}
 
-			buffer.writeItemStack(recipe.output);
+			buffer.writeItem(recipe.output);
 			buffer.writeVarInt(recipe.craftingTime);
 		}
 	}

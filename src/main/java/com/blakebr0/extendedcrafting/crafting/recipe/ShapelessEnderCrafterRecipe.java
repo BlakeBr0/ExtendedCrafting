@@ -41,7 +41,7 @@ public class ShapelessEnderCrafterRecipe implements ISpecialRecipe, IEnderCrafte
 	}
 
 	@Override
-	public ItemStack getRecipeOutput() {
+	public ItemStack getResultItem() {
 		return this.output;
 	}
 
@@ -66,7 +66,7 @@ public class ShapelessEnderCrafterRecipe implements ISpecialRecipe, IEnderCrafte
 	}
 
 	@Override
-	public boolean canFit(int width, int height) {
+	public boolean canCraftInDimensions(int width, int height) {
 		return width * height >= this.inputs.size();
 	}
 
@@ -100,43 +100,43 @@ public class ShapelessEnderCrafterRecipe implements ISpecialRecipe, IEnderCrafte
 
 	public static class Serializer extends ForgeRegistryEntry<IRecipeSerializer<?>> implements IRecipeSerializer<ShapelessEnderCrafterRecipe> {
 		@Override
-		public ShapelessEnderCrafterRecipe read(ResourceLocation recipeId, JsonObject json) {
+		public ShapelessEnderCrafterRecipe fromJson(ResourceLocation recipeId, JsonObject json) {
 			NonNullList<Ingredient> inputs = NonNullList.create();
-			JsonArray ingredients = JSONUtils.getJsonArray(json, "ingredients");
+			JsonArray ingredients = JSONUtils.getAsJsonArray(json, "ingredients");
 			for (int i = 0; i < ingredients.size(); i++) {
-				inputs.add(Ingredient.deserialize(ingredients.get(i)));
+				inputs.add(Ingredient.fromJson(ingredients.get(i)));
 			}
 
-			ItemStack output = ShapedRecipe.deserializeItem(JSONUtils.getJsonObject(json, "result"));
-			int craftingTime = JSONUtils.getInt(json, "craftingTime", 0);
+			ItemStack output = ShapedRecipe.itemFromJson(JSONUtils.getAsJsonObject(json, "result"));
+			int craftingTime = JSONUtils.getAsInt(json, "craftingTime", 0);
 
 			return new ShapelessEnderCrafterRecipe(recipeId, inputs, output, craftingTime);
 		}
 
 		@Override
-		public ShapelessEnderCrafterRecipe read(ResourceLocation recipeId, PacketBuffer buffer) {
+		public ShapelessEnderCrafterRecipe fromNetwork(ResourceLocation recipeId, PacketBuffer buffer) {
 			int size = buffer.readVarInt();
 			NonNullList<Ingredient> inputs = NonNullList.withSize(size, Ingredient.EMPTY);
 
 			for (int i = 0; i < size; ++i) {
-				inputs.set(i, Ingredient.read(buffer));
+				inputs.set(i, Ingredient.fromNetwork(buffer));
 			}
 
-			ItemStack output = buffer.readItemStack();
+			ItemStack output = buffer.readItem();
 			int craftingTime = buffer.readVarInt();
 
 			return new ShapelessEnderCrafterRecipe(recipeId, inputs, output, craftingTime);
 		}
 
 		@Override
-		public void write(PacketBuffer buffer, ShapelessEnderCrafterRecipe recipe) {
+		public void toNetwork(PacketBuffer buffer, ShapelessEnderCrafterRecipe recipe) {
 			buffer.writeVarInt(recipe.inputs.size());
 
 			for (Ingredient ingredient : recipe.inputs) {
-				ingredient.write(buffer);
+				ingredient.toNetwork(buffer);
 			}
 
-			buffer.writeItemStack(recipe.output);
+			buffer.writeItem(recipe.output);
 			buffer.writeVarInt(recipe.craftingTime);
 		}
 	}

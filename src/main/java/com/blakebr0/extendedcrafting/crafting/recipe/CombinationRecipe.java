@@ -46,12 +46,12 @@ public class CombinationRecipe implements ISpecialRecipe, ICombinationRecipe {
 	}
 
 	@Override
-	public boolean canFit(int width, int height) {
+	public boolean canCraftInDimensions(int width, int height) {
 		return true;
 	}
 
 	@Override
-	public ItemStack getRecipeOutput() {
+	public ItemStack getResultItem() {
 		return this.output;
 	}
 
@@ -103,36 +103,36 @@ public class CombinationRecipe implements ISpecialRecipe, ICombinationRecipe {
 
 	public static class Serializer extends ForgeRegistryEntry<IRecipeSerializer<?>> implements IRecipeSerializer<CombinationRecipe> {
 		@Override
-		public CombinationRecipe read(ResourceLocation recipeId, JsonObject json) {
+		public CombinationRecipe fromJson(ResourceLocation recipeId, JsonObject json) {
 			NonNullList<Ingredient> inputs = NonNullList.create();
-			Ingredient input = Ingredient.deserialize(JSONUtils.getJsonObject(json, "input"));
+			Ingredient input = Ingredient.fromJson(JSONUtils.getAsJsonObject(json, "input"));
 			inputs.add(input);
 
-			JsonArray ingredients = JSONUtils.getJsonArray(json, "ingredients");
+			JsonArray ingredients = JSONUtils.getAsJsonArray(json, "ingredients");
 			for (int i = 0; i < ingredients.size(); i++) {
-				Ingredient ingredient = Ingredient.deserialize(ingredients.get(i));
+				Ingredient ingredient = Ingredient.fromJson(ingredients.get(i));
 				inputs.add(ingredient);
 			}
 
-			ItemStack output = ShapedRecipe.deserializeItem(JSONUtils.getJsonObject(json, "result"));
+			ItemStack output = ShapedRecipe.itemFromJson(JSONUtils.getAsJsonObject(json, "result"));
 			if (!json.has("powerCost"))
 				throw new JsonSyntaxException("Missing powerCost for combination crafting recipe");
-			int powerCost = JSONUtils.getInt(json, "powerCost");
-			int powerRate = JSONUtils.getInt(json, "powerRate", ModConfigs.CRAFTING_CORE_POWER_RATE.get());
+			int powerCost = JSONUtils.getAsInt(json, "powerCost");
+			int powerRate = JSONUtils.getAsInt(json, "powerRate", ModConfigs.CRAFTING_CORE_POWER_RATE.get());
 
 			return new CombinationRecipe(recipeId, inputs, output, powerCost, powerRate);
 		}
 
 		@Override
-		public CombinationRecipe read(ResourceLocation recipeId, PacketBuffer buffer) {
+		public CombinationRecipe fromNetwork(ResourceLocation recipeId, PacketBuffer buffer) {
 			int size = buffer.readVarInt();
 
 			NonNullList<Ingredient> inputs = NonNullList.withSize(size, Ingredient.EMPTY);
 			for (int i = 0; i < size; i++) {
-				inputs.set(i, Ingredient.read(buffer));
+				inputs.set(i, Ingredient.fromNetwork(buffer));
 			}
 
-			ItemStack output = buffer.readItemStack();
+			ItemStack output = buffer.readItem();
 			int powerCost = buffer.readVarInt();
 			int powerRate = buffer.readVarInt();
 
@@ -140,14 +140,14 @@ public class CombinationRecipe implements ISpecialRecipe, ICombinationRecipe {
 		}
 
 		@Override
-		public void write(PacketBuffer buffer, CombinationRecipe recipe) {
+		public void toNetwork(PacketBuffer buffer, CombinationRecipe recipe) {
 			buffer.writeVarInt(recipe.ingredients.size());
 
 			for (Ingredient ingredient : recipe.ingredients) {
-				ingredient.write(buffer);
+				ingredient.toNetwork(buffer);
 			}
 
-			buffer.writeItemStack(recipe.output);
+			buffer.writeItem(recipe.output);
 			buffer.writeVarInt(recipe.powerCost);
 			buffer.writeVarInt(recipe.powerRate);
 		}

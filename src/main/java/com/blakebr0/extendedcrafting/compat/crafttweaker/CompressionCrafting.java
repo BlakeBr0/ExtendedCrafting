@@ -59,7 +59,7 @@ public final class CompressionCrafting {
 				List<ResourceLocation> recipes = RecipeHelper.getRecipes()
 						.getOrDefault(RecipeTypes.COMPRESSOR, new HashMap<>())
 						.values().stream()
-						.filter(r -> r.getRecipeOutput().isItemEqual(stack.getInternal()))
+						.filter(r -> r.getResultItem().sameItem(stack.getInternal()))
 						.map(IRecipe::getId)
 						.collect(Collectors.toList());
 

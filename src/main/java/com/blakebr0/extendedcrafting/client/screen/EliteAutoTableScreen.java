@@ -38,7 +38,7 @@ public class EliteAutoTableScreen extends BaseContainerScreen<EliteAutoTableCont
 
 		int x = this.getGuiLeft();
 		int y = this.getGuiTop();
-		BlockPos pos = this.getContainer().getPos();
+		BlockPos pos = this.getMenu().getPos();
 
 		this.addButton(new ToggleTableRunningButton(x + 192, y + 96, pos, this::isRunning));
 
@@ -50,11 +50,11 @@ public class EliteAutoTableScreen extends BaseContainerScreen<EliteAutoTableCont
 	}
 
 	@Override
-	protected void renderHoveredTooltip(MatrixStack stack, int mouseX, int mouseY) {
+	protected void renderTooltip(MatrixStack stack, int mouseX, int mouseY) {
 		int x = this.getGuiLeft();
 		int y = this.getGuiTop();
 
-		super.renderHoveredTooltip(stack, mouseX, mouseY);
+		super.renderTooltip(stack, mouseX, mouseY);
 
 		if (mouseX > x + 7 && mouseX < x + 20 && mouseY > y + 41 && mouseY < y + 118) {
 			StringTextComponent text = new StringTextComponent(number(this.getEnergyStored()) + " / " + number(this.getMaxEnergyStored()) + " FE");
@@ -74,7 +74,7 @@ public class EliteAutoTableScreen extends BaseContainerScreen<EliteAutoTableCont
 					if (hasRecipe) {
 						ItemStack output = recipe.getStackInSlot(recipe.getSlots() - 1);
 						tooltip = Lists.newArrayList(
-								new StringTextComponent(output.getCount() + "x " + output.getDisplayName().getString()),
+								new StringTextComponent(output.getCount() + "x " + output.getHoverName().getString()),
 								new StringTextComponent(""),
 								ModTooltips.AUTO_TABLE_DELETE_RECIPE.color(TextFormatting.WHITE).build()
 						);
@@ -84,23 +84,23 @@ public class EliteAutoTableScreen extends BaseContainerScreen<EliteAutoTableCont
 						);
 					}
 
-					this.func_243308_b(stack, tooltip, mouseX, mouseY);
+					this.renderComponentTooltip(stack, tooltip, mouseX, mouseY);
 				}
 			}
 		}
 	}
 
 	@Override
-	protected void drawGuiContainerForegroundLayer(MatrixStack stack, int mouseX, int mouseY) {
+	protected void renderLabels(MatrixStack stack, int mouseX, int mouseY) {
 		String title = this.getTitle().getString();
-		this.font.drawString(stack, title, 26.0F, 6.0F, 4210752);
-		String inventory = this.playerInventory.getDisplayName().getString();
-		this.font.drawString(stack, inventory, 30.0F, this.ySize - 94.0F, 4210752);
+		this.font.draw(stack, title, 26.0F, 6.0F, 4210752);
+		String inventory = this.inventory.getDisplayName().getString();
+		this.font.draw(stack, inventory, 30.0F, this.imageHeight - 94.0F, 4210752);
 	}
 
 	@Override
-	protected void drawGuiContainerBackgroundLayer(MatrixStack stack, float partialTicks, int mouseX, int mouseY) {
-		super.drawGuiContainerBackgroundLayer(stack, partialTicks, mouseX, mouseY);
+	protected void renderBg(MatrixStack stack, float partialTicks, int mouseX, int mouseY) {
+		super.renderBg(stack, partialTicks, mouseX, mouseY);
 
 		int x = this.getGuiLeft();
 		int y = this.getGuiTop();
@@ -133,10 +133,10 @@ public class EliteAutoTableScreen extends BaseContainerScreen<EliteAutoTableCont
 	}
 
 	private AutoTableTileEntity getTileEntity() {
-		ClientWorld world = this.getMinecraft().world;
+		ClientWorld world = this.getMinecraft().level;
 
 		if (world != null) {
-			TileEntity tile = world.getTileEntity(this.getContainer().getPos());
+			TileEntity tile = world.getBlockEntity(this.getMenu().getPos());
 
 			if (tile instanceof AutoTableTileEntity) {
 				return (AutoTableTileEntity) tile;

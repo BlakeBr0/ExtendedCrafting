@@ -30,10 +30,10 @@ import net.minecraftforge.common.ToolType;
 import net.minecraftforge.fml.network.NetworkHooks;
 
 public class CompressorBlock extends BaseTileEntityBlock implements IEnableable {
-	private static final DirectionProperty FACING = HorizontalBlock.HORIZONTAL_FACING;
+	private static final DirectionProperty FACING = HorizontalBlock.FACING;
 
 	public CompressorBlock() {
-		super(Material.IRON, SoundType.METAL, 5.0F, 10.0F, ToolType.PICKAXE);
+		super(Material.METAL, SoundType.METAL, 5.0F, 10.0F, ToolType.PICKAXE);
 	}
 
 	@Override
@@ -42,9 +42,9 @@ public class CompressorBlock extends BaseTileEntityBlock implements IEnableable 
 	}
 
 	@Override
-	public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult trace) {
-		if (!world.isRemote()) {
-			TileEntity tile = world.getTileEntity(pos);
+	public ActionResultType use(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult trace) {
+		if (!world.isClientSide()) {
+			TileEntity tile = world.getBlockEntity(pos);
 			if (tile instanceof CompressorTileEntity) {
 				NetworkHooks.openGui((ServerPlayerEntity) player, (INamedContainerProvider) tile, pos);
 			}
@@ -54,45 +54,45 @@ public class CompressorBlock extends BaseTileEntityBlock implements IEnableable 
 	}
 
 	@Override
-	public void onReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean isMoving) {
+	public void onRemove(BlockState state, World world, BlockPos pos, BlockState newState, boolean isMoving) {
 		if (state.getBlock() != newState.getBlock()) {
-			TileEntity tile = world.getTileEntity(pos);
+			TileEntity tile = world.getBlockEntity(pos);
 			if (tile instanceof CompressorTileEntity) {
 				CompressorTileEntity compressor = (CompressorTileEntity) tile;
-				InventoryHelper.dropItems(world, pos, compressor.getInventory().getStacks());
+				InventoryHelper.dropContents(world, pos, compressor.getInventory().getStacks());
 			}
 		}
 
-		super.onReplaced(state, world, pos, newState, isMoving);
+		super.onRemove(state, world, pos, newState, isMoving);
 	}
 
 	@Override
 	public BlockState getStateForPlacement(BlockItemUseContext context) {
-		return this.getDefaultState().with(FACING, context.getPlacementHorizontalFacing().getOpposite());
+		return this.defaultBlockState().setValue(FACING, context.getHorizontalDirection().getOpposite());
 	}
 
 	@Override
-	public boolean hasComparatorInputOverride(BlockState state) {
+	public boolean hasAnalogOutputSignal(BlockState state) {
 		return true;
 	}
 
 	@Override
-	public int getComparatorInputOverride(BlockState state, World world, BlockPos pos) {
-		return Container.calcRedstone(world.getTileEntity(pos));
+	public int getAnalogOutputSignal(BlockState state, World world, BlockPos pos) {
+		return Container.getRedstoneSignalFromBlockEntity(world.getBlockEntity(pos));
 	}
 
 	@Override
 	public BlockState rotate(BlockState state, Rotation rot) {
-		return state.with(FACING, rot.rotate(state.get(FACING)));
+		return state.setValue(FACING, rot.rotate(state.getValue(FACING)));
 	}
 
 	@Override
 	public BlockState mirror(BlockState state, Mirror mirror) {
-		return state.rotate(mirror.toRotation(state.get(FACING)));
+		return state.rotate(mirror.getRotation(state.getValue(FACING)));
 	}
 
 	@Override
-	protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
+	protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder) {
 		builder.add(FACING);
 	}
 

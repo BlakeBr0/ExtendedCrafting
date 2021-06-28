@@ -16,10 +16,10 @@ public class AdvancedTableScreen extends BaseContainerScreen<AdvancedTableContai
 	}
 	
 	@Override
-	protected void drawGuiContainerForegroundLayer(MatrixStack stack, int mouseX, int mouseY) {
+	protected void renderLabels(MatrixStack stack, int mouseX, int mouseY) {
 		String title = this.getTitle().getString();
-		this.font.drawString(stack, title, 14.0F, 6.0F, 4210752);
-		String inventory = this.playerInventory.getDisplayName().getString();
-		this.font.drawString(stack, inventory, 8.0F, this.ySize - 94.0F, 4210752);
+		this.font.draw(stack, title, 14.0F, 6.0F, 4210752);
+		String inventory = this.inventory.getDisplayName().getString();
+		this.font.draw(stack, inventory, 8.0F, this.imageHeight - 94.0F, 4210752);
 	}
 }

@@ -52,41 +52,41 @@ public class EnderCrafterContainer extends Container {
 			this.addSlot(new Slot(playerInventory, j, 8 + j * 18, 146));
 		}
 
-		this.trackIntArray(data);
+		this.addDataSlots(data);
 	}
 
 	@Override
-	public boolean canInteractWith(PlayerEntity player) {
+	public boolean stillValid(PlayerEntity player) {
 		return this.isUsableByPlayer.apply(player);
 	}
 
 	@Override
-	public ItemStack transferStackInSlot(PlayerEntity player, int slotNumber) {
+	public ItemStack quickMoveStack(PlayerEntity player, int slotNumber) {
 		ItemStack itemstack = ItemStack.EMPTY;
-		Slot slot = this.inventorySlots.get(slotNumber);
+		Slot slot = this.slots.get(slotNumber);
 
-		if (slot != null && slot.getHasStack()) {
-			ItemStack itemstack1 = slot.getStack();
+		if (slot != null && slot.hasItem()) {
+			ItemStack itemstack1 = slot.getItem();
 			itemstack = itemstack1.copy();
 
 			if (slotNumber == 0) {
-				if (!this.mergeItemStack(itemstack1, 10, 46, true)) {
+				if (!this.moveItemStackTo(itemstack1, 10, 46, true)) {
 					return ItemStack.EMPTY;
 				}
 
-				slot.onSlotChange(itemstack1, itemstack);
+				slot.onQuickCraft(itemstack1, itemstack);
 			} else if (slotNumber >= 10 && slotNumber < 46) {
-				if (!this.mergeItemStack(itemstack1, 1, 10, false)) {
+				if (!this.moveItemStackTo(itemstack1, 1, 10, false)) {
 					return ItemStack.EMPTY;
 				}
-			} else if (!this.mergeItemStack(itemstack1, 10, 46, false)) {
+			} else if (!this.moveItemStackTo(itemstack1, 10, 46, false)) {
 				return ItemStack.EMPTY;
 			}
 
 			if (itemstack1.isEmpty()) {
-				slot.putStack(ItemStack.EMPTY);
+				slot.set(ItemStack.EMPTY);
 			} else {
-				slot.onSlotChanged();
+				slot.setChanged();
 			}
 
 			if (itemstack1.getCount() == itemstack.getCount()) {

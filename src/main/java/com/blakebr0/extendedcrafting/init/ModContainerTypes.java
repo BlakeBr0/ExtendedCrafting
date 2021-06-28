@@ -63,17 +63,17 @@ public final class ModContainerTypes {
 
     @OnlyIn(Dist.CLIENT)
     public static void onClientSetup() {
-        CRAFTING_CORE.ifPresent(container -> ScreenManager.registerFactory(container, CraftingCoreScreen::new));
-        BASIC_TABLE.ifPresent(container -> ScreenManager.registerFactory(container, BasicTableScreen::new));
-        ADVANCED_TABLE.ifPresent(container -> ScreenManager.registerFactory(container, AdvancedTableScreen::new));
-        ELITE_TABLE.ifPresent(container -> ScreenManager.registerFactory(container, EliteTableScreen::new));
-        ULTIMATE_TABLE.ifPresent(container -> ScreenManager.registerFactory(container, UltimateTableScreen::new));
-        BASIC_AUTO_TABLE.ifPresent(container -> ScreenManager.registerFactory(container, BasicAutoTableScreen::new));
-        ADVANCED_AUTO_TABLE.ifPresent(container -> ScreenManager.registerFactory(container, AdvancedAutoTableScreen::new));
-        ELITE_AUTO_TABLE.ifPresent(container -> ScreenManager.registerFactory(container, EliteAutoTableScreen::new));
-        ULTIMATE_AUTO_TABLE.ifPresent(container -> ScreenManager.registerFactory(container, UltimateAutoTableScreen::new));
-        COMPRESSOR.ifPresent(container -> ScreenManager.registerFactory(container, CompressorScreen::new));
-        ENDER_CRAFTER.ifPresent(container -> ScreenManager.registerFactory(container, EnderCrafterScreen::new));
+        CRAFTING_CORE.ifPresent(container -> ScreenManager.register(container, CraftingCoreScreen::new));
+        BASIC_TABLE.ifPresent(container -> ScreenManager.register(container, BasicTableScreen::new));
+        ADVANCED_TABLE.ifPresent(container -> ScreenManager.register(container, AdvancedTableScreen::new));
+        ELITE_TABLE.ifPresent(container -> ScreenManager.register(container, EliteTableScreen::new));
+        ULTIMATE_TABLE.ifPresent(container -> ScreenManager.register(container, UltimateTableScreen::new));
+        BASIC_AUTO_TABLE.ifPresent(container -> ScreenManager.register(container, BasicAutoTableScreen::new));
+        ADVANCED_AUTO_TABLE.ifPresent(container -> ScreenManager.register(container, AdvancedAutoTableScreen::new));
+        ELITE_AUTO_TABLE.ifPresent(container -> ScreenManager.register(container, EliteAutoTableScreen::new));
+        ULTIMATE_AUTO_TABLE.ifPresent(container -> ScreenManager.register(container, UltimateAutoTableScreen::new));
+        COMPRESSOR.ifPresent(container -> ScreenManager.register(container, CompressorScreen::new));
+        ENDER_CRAFTER.ifPresent(container -> ScreenManager.register(container, EnderCrafterScreen::new));
     }
 
     private static <T extends ContainerType<?>> RegistryObject<T> register(String name, Supplier<? extends ContainerType<?>> container) {

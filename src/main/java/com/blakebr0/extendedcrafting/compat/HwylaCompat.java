@@ -42,7 +42,7 @@ public class HwylaCompat implements IWailaPlugin {
 				PedestalTileEntity pedestal = (PedestalTileEntity) accessor.getTileEntity();
 				ItemStack stack = pedestal.getInventory().getStackInSlot(0);
 				if (!stack.isEmpty())
-					tooltip.add(stack.getDisplayName());
+					tooltip.add(stack.getHoverName());
 			}
 		}, TooltipPosition.BODY, PedestalBlock.class);
 
@@ -52,8 +52,8 @@ public class HwylaCompat implements IWailaPlugin {
 				CraftingCoreTileEntity core = (CraftingCoreTileEntity) accessor.getTileEntity();
 				CombinationRecipe recipe = core.getActiveRecipe();
 				if (recipe != null) {
-					ItemStack output = recipe.getRecipeOutput();
-					tooltip.add(ModTooltips.CRAFTING.args(output.getCount(), output.getDisplayName()).build());
+					ItemStack output = recipe.getResultItem();
+					tooltip.add(ModTooltips.CRAFTING.args(output.getCount(), output.getHoverName()).build());
 				}
 			}
 		}, TooltipPosition.BODY, CraftingCoreBlock.class);
@@ -120,8 +120,8 @@ public class HwylaCompat implements IWailaPlugin {
 				EnderCrafterTileEntity crafter = (EnderCrafterTileEntity) accessor.getTileEntity();
 				IEnderCrafterRecipe recipe = crafter.getActiveRecipe();
 				if (recipe != null) {
-					ItemStack output = recipe.getRecipeOutput();
-					tooltip.add(ModTooltips.CRAFTING.args(output.getCount(), output.getDisplayName()).build());
+					ItemStack output = recipe.getResultItem();
+					tooltip.add(ModTooltips.CRAFTING.args(output.getCount(), output.getHoverName()).build());
 				}
 			}
 		}, TooltipPosition.BODY, EnderCrafterBlock.class);
@@ -132,8 +132,8 @@ public class HwylaCompat implements IWailaPlugin {
 				CompressorTileEntity compressor = (CompressorTileEntity) accessor.getTileEntity();
 				CompressorRecipe recipe = compressor.getActiveRecipe();
 				if (recipe != null) {
-					ItemStack output = recipe.getRecipeOutput();
-					tooltip.add(ModTooltips.CRAFTING.args(output.getCount(), output.getDisplayName()).build());
+					ItemStack output = recipe.getResultItem();
+					tooltip.add(ModTooltips.CRAFTING.args(output.getCount(), output.getHoverName()).build());
 				}
 			}
 		}, TooltipPosition.BODY, CompressorBlock.class);

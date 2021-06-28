@@ -27,16 +27,16 @@ public class EnderCrafterScreen extends BaseContainerScreen<EnderCrafterContaine
 	}
 
 	@Override
-	protected void drawGuiContainerForegroundLayer(MatrixStack stack, int mouseX, int mouseY) {
+	protected void renderLabels(MatrixStack stack, int mouseX, int mouseY) {
 		String title = this.getTitle().getString();
-		this.font.drawString(stack, title, 30.0F, 6.0F, 4210752);
-		String inventory = this.playerInventory.getDisplayName().getString();
-		this.font.drawString(stack, inventory, 8.0F, this.ySize - 94.0F, 4210752);
+		this.font.draw(stack, title, 30.0F, 6.0F, 4210752);
+		String inventory = this.inventory.getDisplayName().getString();
+		this.font.draw(stack, inventory, 8.0F, this.imageHeight - 94.0F, 4210752);
 	}
 
 	@Override
-	protected void drawGuiContainerBackgroundLayer(MatrixStack stack, float partialTicks, int mouseX, int mouseY) {
-		super.drawGuiContainerBackgroundLayer(stack, partialTicks, mouseX, mouseY);
+	protected void renderBg(MatrixStack stack, float partialTicks, int mouseX, int mouseY) {
+		super.renderBg(stack, partialTicks, mouseX, mouseY);
 
 		int x = this.getGuiLeft();
 		int y = this.getGuiTop();
@@ -48,10 +48,10 @@ public class EnderCrafterScreen extends BaseContainerScreen<EnderCrafterContaine
 	}
 
 	private EnderCrafterTileEntity getTileEntity() {
-		ClientWorld world = this.getMinecraft().world;
+		ClientWorld world = this.getMinecraft().level;
 
 		if (world != null) {
-			TileEntity tile = world.getTileEntity(this.getContainer().getPos());
+			TileEntity tile = world.getBlockEntity(this.getMenu().getPos());
 
 			if (tile instanceof EnderCrafterTileEntity) {
 				return (EnderCrafterTileEntity) tile;

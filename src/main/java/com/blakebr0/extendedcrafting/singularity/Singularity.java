@@ -60,9 +60,9 @@ public class Singularity {
 
     public Ingredient getIngredient() {
         if (this.tag != null && this.ingredient == Ingredient.EMPTY) {
-            ITag<Item> tag = TagCollectionManager.getManager().getItemTags().get(new ResourceLocation(this.tag));
+            ITag<Item> tag = TagCollectionManager.getInstance().getItems().getTag(new ResourceLocation(this.tag));
             if (tag != null) {
-                this.ingredient = Ingredient.fromTag(tag);
+                this.ingredient = Ingredient.of(tag);
             }
         }
 
@@ -83,14 +83,14 @@ public class Singularity {
 
     public void write(PacketBuffer buffer) {
         buffer.writeResourceLocation(this.id);
-        buffer.writeString(this.name);
+        buffer.writeUtf(this.name);
         buffer.writeVarIntArray(this.colors);
         buffer.writeBoolean(this.tag != null);
 
         if (this.tag != null) {
-            buffer.writeString(this.tag);
+            buffer.writeUtf(this.tag);
         } else {
-            this.ingredient.write(buffer);
+            this.ingredient.toNetwork(buffer);
         }
 
         buffer.writeVarInt(this.ingredientCount);
@@ -99,7 +99,7 @@ public class Singularity {
 
     public static Singularity read(PacketBuffer buffer) {
         ResourceLocation id = buffer.readResourceLocation();
-        String name = buffer.readString();
+        String name = buffer.readUtf();
         int[] colors = buffer.readVarIntArray();
         boolean isTagIngredient = buffer.readBoolean();
 
@@ -107,9 +107,9 @@ public class Singularity {
         Ingredient ingredient = Ingredient.EMPTY;
 
         if (isTagIngredient) {
-            tag = buffer.readString();
+            tag = buffer.readUtf();
         } else {
-            ingredient = Ingredient.read(buffer);
+            ingredient = Ingredient.fromNetwork(buffer);
         }
 
         int ingredientCount = buffer.readVarInt();

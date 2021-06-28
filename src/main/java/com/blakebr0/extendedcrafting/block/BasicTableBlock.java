@@ -40,7 +40,7 @@ public class BasicTableBlock extends BaseTileEntityBlock implements IEnableable 
 			.build();
 
 	public BasicTableBlock() {
-		super(Material.IRON, SoundType.METAL, 5.0F, 10.0F, ToolType.PICKAXE);
+		super(Material.METAL, SoundType.METAL, 5.0F, 10.0F, ToolType.PICKAXE);
 	}
 
 	@Override
@@ -49,28 +49,28 @@ public class BasicTableBlock extends BaseTileEntityBlock implements IEnableable 
 	}
 
 	@Override
-	public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult trace) {
-		if (!world.isRemote()) {
-			TileEntity tile = world.getTileEntity(pos);
+	public ActionResultType use(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult trace) {
+		if (!world.isClientSide()) {
+			TileEntity tile = world.getBlockEntity(pos);
 
 			if (tile instanceof BasicTableTileEntity)
-				player.openContainer((BasicTableTileEntity) tile);
+				player.openMenu((BasicTableTileEntity) tile);
 		}
 
 		return ActionResultType.SUCCESS;
 	}
 
 	@Override
-	public void onReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean isMoving) {
+	public void onRemove(BlockState state, World world, BlockPos pos, BlockState newState, boolean isMoving) {
 		if (state.getBlock() != newState.getBlock()) {
-			TileEntity tile = world.getTileEntity(pos);
+			TileEntity tile = world.getBlockEntity(pos);
 			if (tile instanceof BasicTableTileEntity) {
 				BasicTableTileEntity table = (BasicTableTileEntity) tile;
-				InventoryHelper.dropItems(world, pos, table.getInventory().getStacks());
+				InventoryHelper.dropContents(world, pos, table.getInventory().getStacks());
 			}
 		}
 
-		super.onReplaced(state, world, pos, newState, isMoving);
+		super.onRemove(state, world, pos, newState, isMoving);
 	}
 
 	@Override
@@ -80,7 +80,7 @@ public class BasicTableBlock extends BaseTileEntityBlock implements IEnableable 
 
 	@OnlyIn(Dist.CLIENT)
 	@Override
-	public void addInformation(ItemStack stack, IBlockReader world, List<ITextComponent> tooltip, ITooltipFlag flag) {
+	public void appendHoverText(ItemStack stack, IBlockReader world, List<ITextComponent> tooltip, ITooltipFlag flag) {
 		tooltip.add(ModTooltips.TIER.args(1).build());
 	}
 

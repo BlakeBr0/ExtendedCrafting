@@ -80,7 +80,7 @@ public class CompressorCraftingCategory implements IRecipeCategory<ICompressorRe
 
 	@Override
 	public void setIngredients(ICompressorRecipe recipe, IIngredients ingredients) {
-		ingredients.setOutput(VanillaTypes.ITEM, recipe.getRecipeOutput());
+		ingredients.setOutput(VanillaTypes.ITEM, recipe.getResultItem());
 
 		NonNullList<Ingredient> inputs = NonNullList.create();
 		inputs.addAll(recipe.getIngredients());

@@ -56,10 +56,10 @@ public class CompressorTileEntity extends BaseInventoryTileEntity implements ITi
 	}
 
 	@Override
-	public void read(BlockState state, CompoundNBT tag) {
-		super.read(state, tag);
+	public void load(BlockState state, CompoundNBT tag) {
+		super.load(state, tag);
 		this.materialCount = tag.getInt("MaterialCount");
-		this.materialStack = ItemStack.read(tag.getCompound("MaterialStack"));
+		this.materialStack = ItemStack.of(tag.getCompound("MaterialStack"));
 		this.progress = tag.getInt("Progress");
 		this.ejecting = tag.getBoolean("Ejecting");
 		this.energy.setEnergy(tag.getInt("Energy"));
@@ -67,8 +67,8 @@ public class CompressorTileEntity extends BaseInventoryTileEntity implements ITi
 	}
 
 	@Override
-	public CompoundNBT write(CompoundNBT tag) {
-		tag = super.write(tag);
+	public CompoundNBT save(CompoundNBT tag) {
+		tag = super.save(tag);
 		tag.putInt("MaterialCount", this.materialCount);
 		tag.put("MaterialStack", this.materialStack.serializeNBT());
 		tag.putInt("Progress", this.progress);
@@ -83,7 +83,7 @@ public class CompressorTileEntity extends BaseInventoryTileEntity implements ITi
 	public void tick() {
 		boolean mark = false;
 
-		World world = this.getWorld();
+		World world = this.getLevel();
 		if (world != null) {
 			ItemStack output = this.inventory.getStackInSlot(0);
 			ItemStack input = this.inventory.getStackInSlot(1);
@@ -93,10 +93,10 @@ public class CompressorTileEntity extends BaseInventoryTileEntity implements ITi
 			this.recipeInventory.setStackInSlot(1, catalyst);
 
 			if (this.recipe == null || !this.recipe.matches(this.recipeInventory)) {
-				this.recipe = (CompressorRecipe) world.getRecipeManager().getRecipe(RecipeTypes.COMPRESSOR, this.recipeInventory.toIInventory(), world).orElse(null);
+				this.recipe = (CompressorRecipe) world.getRecipeManager().getRecipeFor(RecipeTypes.COMPRESSOR, this.recipeInventory.toIInventory(), world).orElse(null);
 			}
 
-			if (!world.isRemote()) {
+			if (!world.isClientSide()) {
 				if (!input.isEmpty()) {
 					if (this.materialStack.isEmpty() || this.materialCount <= 0) {
 						this.materialStack = input.copy();
@@ -190,7 +190,7 @@ public class CompressorTileEntity extends BaseInventoryTileEntity implements ITi
 
 	@Override
 	public Container createMenu(int windowId, PlayerInventory playerInventory, PlayerEntity playerEntity) {
-		return CompressorContainer.create(windowId, playerInventory, this::isUsableByPlayer, this.inventory, new IntArray(0), this.getPos());
+		return CompressorContainer.create(windowId, playerInventory, this::isUsableByPlayer, this.inventory, new IntArray(0), this.getBlockPos());
 	}
 
 	public BaseEnergyStorage getEnergy() {

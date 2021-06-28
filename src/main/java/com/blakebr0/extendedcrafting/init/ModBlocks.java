@@ -39,15 +39,15 @@ import static com.blakebr0.extendedcrafting.ExtendedCrafting.ITEM_GROUP;
 public final class ModBlocks {
 	public static final Map<RegistryObject<Block>, Supplier<Block>> ENTRIES = new LinkedHashMap<>();
 
-	public static final RegistryObject<Block> LUMINESSENCE_BLOCK = register("luminessence_block", () -> new BaseBlock(Material.ROCK, SoundType.STONE, 5.0F, 10.0F, ToolType.PICKAXE));
-	public static final RegistryObject<Block> BLACK_IRON_BLOCK = register("black_iron_block", () -> new BaseBlock(Material.IRON, SoundType.METAL, 5.0F, 10.0F, ToolType.PICKAXE));
-	public static final RegistryObject<Block> REDSTONE_INGOT_BLOCK = register("redstone_ingot_block", () -> new BaseBlock(Material.IRON, SoundType.METAL, 5.0F, 10.0F, ToolType.PICKAXE));
-	public static final RegistryObject<Block> ENDER_INGOT_BLOCK = register("ender_ingot_block", () -> new BaseBlock(Material.IRON, SoundType.METAL, 5.0F, 10.0F, ToolType.PICKAXE));
-	public static final RegistryObject<Block> ENHANCED_ENDER_INGOT_BLOCK = register("enhanced_ender_ingot_block", () -> new BaseBlock(Material.IRON, SoundType.METAL, 5.0F, 10.0F, ToolType.PICKAXE));
-	public static final RegistryObject<Block> CRYSTALTINE_BLOCK = register("crystaltine_block", () -> new BaseBlock(Material.IRON, SoundType.METAL, 5.0F, 10.0F, ToolType.PICKAXE));
-	public static final RegistryObject<Block> THE_ULTIMATE_BLOCK = register("the_ultimate_block", () -> new BaseBlock(Material.IRON, SoundType.METAL, 5.0F, 10.0F, ToolType.PICKAXE));
-	public static final RegistryObject<Block> NETHER_STAR_BLOCK = register("nether_star_block", () -> new BaseBlock(Material.IRON, SoundType.METAL, 5.0F, 10.0F, ToolType.PICKAXE));
-	public static final RegistryObject<Block> ENDER_STAR_BLOCK = register("ender_star_block", () -> new BaseBlock(Material.IRON, SoundType.METAL, 5.0F, 10.0F, ToolType.PICKAXE));
+	public static final RegistryObject<Block> LUMINESSENCE_BLOCK = register("luminessence_block", () -> new BaseBlock(Material.STONE, SoundType.STONE, 5.0F, 10.0F, ToolType.PICKAXE));
+	public static final RegistryObject<Block> BLACK_IRON_BLOCK = register("black_iron_block", () -> new BaseBlock(Material.METAL, SoundType.METAL, 5.0F, 10.0F, ToolType.PICKAXE));
+	public static final RegistryObject<Block> REDSTONE_INGOT_BLOCK = register("redstone_ingot_block", () -> new BaseBlock(Material.METAL, SoundType.METAL, 5.0F, 10.0F, ToolType.PICKAXE));
+	public static final RegistryObject<Block> ENDER_INGOT_BLOCK = register("ender_ingot_block", () -> new BaseBlock(Material.METAL, SoundType.METAL, 5.0F, 10.0F, ToolType.PICKAXE));
+	public static final RegistryObject<Block> ENHANCED_ENDER_INGOT_BLOCK = register("enhanced_ender_ingot_block", () -> new BaseBlock(Material.METAL, SoundType.METAL, 5.0F, 10.0F, ToolType.PICKAXE));
+	public static final RegistryObject<Block> CRYSTALTINE_BLOCK = register("crystaltine_block", () -> new BaseBlock(Material.METAL, SoundType.METAL, 5.0F, 10.0F, ToolType.PICKAXE));
+	public static final RegistryObject<Block> THE_ULTIMATE_BLOCK = register("the_ultimate_block", () -> new BaseBlock(Material.METAL, SoundType.METAL, 5.0F, 10.0F, ToolType.PICKAXE));
+	public static final RegistryObject<Block> NETHER_STAR_BLOCK = register("nether_star_block", () -> new BaseBlock(Material.METAL, SoundType.METAL, 5.0F, 10.0F, ToolType.PICKAXE));
+	public static final RegistryObject<Block> ENDER_STAR_BLOCK = register("ender_star_block", () -> new BaseBlock(Material.METAL, SoundType.METAL, 5.0F, 10.0F, ToolType.PICKAXE));
 
 	public static final RegistryObject<Block> FRAME = register("frame", FrameBlock::new);
 	public static final RegistryObject<Block> PEDESTAL = register("pedestal", PedestalBlock::new);
@@ -75,7 +75,7 @@ public final class ModBlocks {
 	}
 
 	private static RegistryObject<Block> register(String name, Supplier<Block> block) {
-		return register(name, block, b -> () -> new BaseBlockItem(b.get(), p -> p.group(ITEM_GROUP)));
+		return register(name, block, b -> () -> new BaseBlockItem(b.get(), p -> p.tab(ITEM_GROUP)));
 	}
 
 	private static RegistryObject<Block> register(String name, Supplier<Block> block, Function<RegistryObject<Block>, Supplier<? extends BlockItem>> item) {

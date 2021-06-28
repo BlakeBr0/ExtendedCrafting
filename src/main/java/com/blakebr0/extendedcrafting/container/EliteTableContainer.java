@@ -33,7 +33,7 @@ public class EliteTableContainer extends Container {
 	private EliteTableContainer(ContainerType<?> type, int id, PlayerInventory playerInventory, Function<PlayerEntity, Boolean> isUsableByPlayer, BaseItemStackHandler inventory) {
 		super(type, id);
 		this.isUsableByPlayer = isUsableByPlayer;
-		this.world = playerInventory.player.world;
+		this.world = playerInventory.player.level;
 		this.result = new Inventory(1);
 
 		IInventory matrix = new ExtendedCraftingInventory(this, inventory, 7);
@@ -57,54 +57,54 @@ public class EliteTableContainer extends Container {
 			this.addSlot(new Slot(playerInventory, j, 20 + j * 18, 218));
 		}
 
-		this.onCraftMatrixChanged(matrix);
+		this.slotsChanged(matrix);
 	}
 
 	@Override
-	public void onCraftMatrixChanged(IInventory matrix) {
-		Optional<ITableRecipe> recipe = this.world.getRecipeManager().getRecipe(RecipeTypes.TABLE, matrix, this.world);
+	public void slotsChanged(IInventory matrix) {
+		Optional<ITableRecipe> recipe = this.world.getRecipeManager().getRecipeFor(RecipeTypes.TABLE, matrix, this.world);
 		if (recipe.isPresent()) {
-			ItemStack result = recipe.get().getCraftingResult(matrix);
-			this.result.setInventorySlotContents(0, result);
+			ItemStack result = recipe.get().assemble(matrix);
+			this.result.setItem(0, result);
 		} else {
-			this.result.setInventorySlotContents(0, ItemStack.EMPTY);
+			this.result.setItem(0, ItemStack.EMPTY);
 		}
 
-		super.onCraftMatrixChanged(matrix);
+		super.slotsChanged(matrix);
 	}
 
 	@Override
-	public boolean canInteractWith(PlayerEntity player) {
+	public boolean stillValid(PlayerEntity player) {
 		return this.isUsableByPlayer.apply(player);
 	}
 
 	@Override
-	public ItemStack transferStackInSlot(PlayerEntity player, int slotNumber) {
+	public ItemStack quickMoveStack(PlayerEntity player, int slotNumber) {
 		ItemStack itemstack = ItemStack.EMPTY;
-		Slot slot = this.inventorySlots.get(slotNumber);
+		Slot slot = this.slots.get(slotNumber);
 
-		if (slot != null && slot.getHasStack()) {
-			ItemStack itemstack1 = slot.getStack();
+		if (slot != null && slot.hasItem()) {
+			ItemStack itemstack1 = slot.getItem();
 			itemstack = itemstack1.copy();
 
 			if (slotNumber == 0) {
-				if (!this.mergeItemStack(itemstack1, 50, 86, true)) {
+				if (!this.moveItemStackTo(itemstack1, 50, 86, true)) {
 					return ItemStack.EMPTY;
 				}
 
-				slot.onSlotChange(itemstack1, itemstack);
+				slot.onQuickCraft(itemstack1, itemstack);
 			} else if (slotNumber >= 50 && slotNumber < 86) {
-				if (!this.mergeItemStack(itemstack1, 1, 50, false)) {
+				if (!this.moveItemStackTo(itemstack1, 1, 50, false)) {
 					return ItemStack.EMPTY;
 				}
-			} else if (!this.mergeItemStack(itemstack1, 50, 86, false)) {
+			} else if (!this.moveItemStackTo(itemstack1, 50, 86, false)) {
 				return ItemStack.EMPTY;
 			}
 
 			if (itemstack1.getCount() == 0) {
-				slot.putStack(ItemStack.EMPTY);
+				slot.set(ItemStack.EMPTY);
 			} else {
-				slot.onSlotChanged();
+				slot.setChanged();
 			}
 
 			if (itemstack1.getCount() == itemstack.getCount()) {

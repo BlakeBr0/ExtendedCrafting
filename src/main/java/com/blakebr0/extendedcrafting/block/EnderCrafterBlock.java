@@ -22,7 +22,7 @@ import net.minecraftforge.fml.network.NetworkHooks;
 
 public class EnderCrafterBlock extends BaseTileEntityBlock implements IEnableable {
 	public EnderCrafterBlock() {
-		super(Material.IRON, SoundType.METAL, 6.0F, 12.0F, ToolType.PICKAXE);
+		super(Material.METAL, SoundType.METAL, 6.0F, 12.0F, ToolType.PICKAXE);
 	}
 
 	@Override
@@ -31,9 +31,9 @@ public class EnderCrafterBlock extends BaseTileEntityBlock implements IEnableabl
 	}
 
 	@Override
-	public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult trace) {
-		if (!world.isRemote()) {
-			TileEntity tile = world.getTileEntity(pos);
+	public ActionResultType use(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult trace) {
+		if (!world.isClientSide()) {
+			TileEntity tile = world.getBlockEntity(pos);
 
 			if (tile instanceof EnderCrafterTileEntity){
 				NetworkHooks.openGui((ServerPlayerEntity) player, (EnderCrafterTileEntity) tile, pos);
@@ -44,15 +44,15 @@ public class EnderCrafterBlock extends BaseTileEntityBlock implements IEnableabl
 	}
 
 	@Override
-	public void onReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean isMoving) {
-		TileEntity tile = world.getTileEntity(pos);
+	public void onRemove(BlockState state, World world, BlockPos pos, BlockState newState, boolean isMoving) {
+		TileEntity tile = world.getBlockEntity(pos);
 
 		if (tile instanceof EnderCrafterTileEntity) {
 			EnderCrafterTileEntity table = (EnderCrafterTileEntity) tile;
-			InventoryHelper.dropItems(world, pos, table.getInventory().getStacks());
+			InventoryHelper.dropContents(world, pos, table.getInventory().getStacks());
 		}
 
-		super.onReplaced(state, world, pos, newState, isMoving);
+		super.onRemove(state, world, pos, newState, isMoving);
 	}
 
 	@Override

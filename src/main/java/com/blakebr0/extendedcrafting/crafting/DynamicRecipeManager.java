@@ -51,7 +51,7 @@ public final class DynamicRecipeManager implements IResourceManagerReloadListene
         int ingredientCount = singularity.getIngredientCount();
         String catalystId = ModConfigs.SINGULARITY_DEFAULT_CATALYST.get();
         Item catalystItem = ForgeRegistries.ITEMS.getValue(new ResourceLocation(catalystId));
-        Ingredient catalyst = Ingredient.fromItems(catalystItem);
+        Ingredient catalyst = Ingredient.of(catalystItem);
         int powerRequired = ModConfigs.SINGULARITY_POWER_REQUIRED.get();
 
         return new CompressorRecipe(recipeId, ingredient, output, ingredientCount, catalyst, powerRequired);
@@ -69,7 +69,7 @@ public final class DynamicRecipeManager implements IResourceManagerReloadListene
             Singularity singularity = singularities.get(i);
             if (singularity.getIngredient() != Ingredient.EMPTY && singularity.isInUltimateSingularity()) {
                 ItemStack stack = SingularityUtils.getItemForSingularity(singularity);
-                UltimateSingularityRecipe.SINGULARITIES.add(Ingredient.fromStacks(stack));
+                UltimateSingularityRecipe.SINGULARITIES.add(Ingredient.of(stack));
 
                 added++;
             }

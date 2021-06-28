@@ -67,14 +67,14 @@ public class UltimateTableCategory implements IRecipeCategory<ITableRecipe> {
 
 	@Override
 	public void draw(ITableRecipe recipe, MatrixStack stack, double mouseX, double mouseY) {
-		stack.push();
+		stack.pushPose();
 		stack.scale(0.5F, 0.5F, 0.5F);
 		boolean shapeless = recipe instanceof ShapelessTableRecipe;
 		if (recipe.hasRequiredTier())
 			this.required.draw(stack, shapeless ? 286 : 306, 329);
 		if (shapeless)
 			this.shapeless.draw(stack, 306, 329);
-		stack.pop();
+		stack.popPose();
 	}
 
 	@Override
@@ -95,7 +95,7 @@ public class UltimateTableCategory implements IRecipeCategory<ITableRecipe> {
 
 	@Override
 	public void setIngredients(ITableRecipe recipe, IIngredients ingredients) {
-    	ingredients.setOutput(VanillaTypes.ITEM, recipe.getRecipeOutput());
+    	ingredients.setOutput(VanillaTypes.ITEM, recipe.getResultItem());
     	ingredients.setInputIngredients(recipe.getIngredients());
 	}
 

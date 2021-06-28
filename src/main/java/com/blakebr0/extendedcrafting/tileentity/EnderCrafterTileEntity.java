@@ -50,15 +50,15 @@ public class EnderCrafterTileEntity extends BaseInventoryTileEntity implements I
 	}
 
 	@Override
-	public void read(BlockState state, CompoundNBT tag) {
-		super.read(state, tag);
+	public void load(BlockState state, CompoundNBT tag) {
+		super.load(state, tag);
 		this.progress = tag.getInt("Progress");
 		this.progressReq = tag.getInt("ProgressReq");
 	}
 
 	@Override
-	public CompoundNBT write(CompoundNBT tag) {
-		tag = super.write(tag);
+	public CompoundNBT save(CompoundNBT tag) {
+		tag = super.save(tag);
 		tag.putInt("Progress", this.progress);
 		tag.putInt("ProgressReq", this.progressReq);
 
@@ -68,18 +68,18 @@ public class EnderCrafterTileEntity extends BaseInventoryTileEntity implements I
 	@Override
 	public void tick() {
 		boolean mark = false;
-		World world = this.getWorld();
+		World world = this.getLevel();
 
 		if (world != null) {
 			this.updateRecipeInventory();
 			IInventory recipeInventory = this.recipeInventory.toIInventory();
 			if (this.recipe == null || !this.recipe.matches(recipeInventory, world)) {
-				this.recipe = world.getRecipeManager().getRecipe(RecipeTypes.ENDER_CRAFTER, recipeInventory, world).orElse(null);
+				this.recipe = world.getRecipeManager().getRecipeFor(RecipeTypes.ENDER_CRAFTER, recipeInventory, world).orElse(null);
 			}
 
-			if (!world.isRemote()) {
+			if (!world.isClientSide()) {
 				if (this.recipe != null) {
-					ItemStack result = this.recipe.getCraftingResult(recipeInventory);
+					ItemStack result = this.recipe.assemble(recipeInventory);
 					ItemStack output = this.inventory.getStackInSlot(9);
 					if (StackHelper.canCombineStacks(result, output)) {
 						List<BlockPos> alternators = this.getAlternatorPositions();
@@ -89,7 +89,7 @@ public class EnderCrafterTileEntity extends BaseInventoryTileEntity implements I
 							this.progress(alternatorCount, this.recipe.getCraftingTime());
 
 							for (BlockPos pos : alternators) {
-								if (world.isAirBlock(pos.up())) {
+								if (world.isEmptyBlock(pos.above())) {
 									this.spawnParticles(ParticleTypes.PORTAL, pos, 1, 1);
 								}
 							}
@@ -136,7 +136,7 @@ public class EnderCrafterTileEntity extends BaseInventoryTileEntity implements I
 
 	@Override
 	public Container createMenu(int windowId, PlayerInventory playerInventory, PlayerEntity player) {
-		return EnderCrafterContainer.create(windowId, playerInventory, this::isUsableByPlayer, this.inventory, new IntArray(0), this.getPos());
+		return EnderCrafterContainer.create(windowId, playerInventory, this::isUsableByPlayer, this.inventory, new IntArray(0), this.getBlockPos());
 	}
 
 	private void updateResult(ItemStack stack) {
@@ -157,13 +157,13 @@ public class EnderCrafterTileEntity extends BaseInventoryTileEntity implements I
 
 	private List<BlockPos> getAlternatorPositions() {
 		List<BlockPos> alternators = new ArrayList<>();
-		World world = this.getWorld();
+		World world = this.getLevel();
 		if (world != null) {
-			BlockPos pos = this.getPos();
-			BlockPos.getAllInBox(pos.add(-3, -3, -3), pos.add(3, 3, 3)).forEach(aoePos -> {
+			BlockPos pos = this.getBlockPos();
+			BlockPos.betweenClosedStream(pos.offset(-3, -3, -3), pos.offset(3, 3, 3)).forEach(aoePos -> {
 				Block block = world.getBlockState(aoePos).getBlock();
 				if (block instanceof EnderAlternatorBlock)
-					alternators.add(aoePos.toImmutable());
+					alternators.add(aoePos.immutable());
 			});
 		}
 
@@ -179,14 +179,14 @@ public class EnderCrafterTileEntity extends BaseInventoryTileEntity implements I
 	}
 
 	private <T extends IParticleData> void spawnParticles(T particle, BlockPos pos, double yOffset, int count) {
-		if (this.getWorld() == null || this.getWorld().isRemote()) return;
-		ServerWorld world = (ServerWorld) this.getWorld();
+		if (this.getLevel() == null || this.getLevel().isClientSide()) return;
+		ServerWorld world = (ServerWorld) this.getLevel();
 
 		double x = pos.getX() + 0.5D;
 		double y = pos.getY() + yOffset;
 		double z = pos.getZ() + 0.5D;
 
-		world.spawnParticle(particle, x, y, z, count, 0, 0, 0, 0.1D);
+		world.sendParticles(particle, x, y, z, count, 0, 0, 0, 0.1D);
 	}
 
 	public int getProgress() {

@@ -24,14 +24,16 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import java.util.List;
 import java.util.function.Function;
 
+import net.minecraft.item.Item.Properties;
+
 public class SingularityItem extends BaseItem implements IEnableable, IColored {
 	public SingularityItem(Function<Properties, Properties> properties) {
 		super(properties.compose(p -> p.rarity(Rarity.UNCOMMON)));
 	}
 
 	@Override
-	public void fillItemGroup(ItemGroup group, NonNullList<ItemStack> items) {
-		if (this.isEnabled() && this.isInGroup(group)) {
+	public void fillItemCategory(ItemGroup group, NonNullList<ItemStack> items) {
+		if (this.isEnabled() && this.allowdedIn(group)) {
 			SingularityRegistry.getInstance().getSingularities().forEach(singularity -> {
 				items.add(SingularityUtils.getItemForSingularity(singularity));
 			});
@@ -39,18 +41,18 @@ public class SingularityItem extends BaseItem implements IEnableable, IColored {
 	}
 
 	@Override
-	public ITextComponent getDisplayName(ItemStack stack) {
+	public ITextComponent getName(ItemStack stack) {
 		Singularity singularity = SingularityUtils.getSingularity(stack);
 		if (singularity == null) {
-			return Localizable.of(this.getTranslationKey(stack)).args("NULL").build();
+			return Localizable.of(this.getDescriptionId(stack)).args("NULL").build();
 		}
 
-		return Localizable.of(this.getTranslationKey(stack)).args(singularity.getDisplayName()).build();
+		return Localizable.of(this.getDescriptionId(stack)).args(singularity.getDisplayName()).build();
 	}
 
 	@OnlyIn(Dist.CLIENT)
 	@Override
-	public void addInformation(ItemStack stack, World world, List<ITextComponent> tooltip, ITooltipFlag flag) {
+	public void appendHoverText(ItemStack stack, World world, List<ITextComponent> tooltip, ITooltipFlag flag) {
 		Singularity singularity = SingularityUtils.getSingularity(stack);
 		if (singularity != null) {
 			String modid = singularity.getId().getNamespace();

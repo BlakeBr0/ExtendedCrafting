@@ -55,23 +55,23 @@ public class CraftingCoreScreen extends BaseContainerScreen<CraftingCoreContaine
 	}
 
 	@Override
-	protected void drawGuiContainerForegroundLayer(MatrixStack stack, int mouseX, int mouseY) {
+	protected void renderLabels(MatrixStack stack, int mouseX, int mouseY) {
 		String title = this.getTitle().getString();
-		this.font.drawString(stack, title, (float) (this.xSize / 2 - this.font.getStringWidth(title) / 2), 6.0F, 4210752);
-		String inventory = this.playerInventory.getDisplayName().getString();
-		this.font.drawString(stack, inventory, 8.0F, this.ySize - 94.0F, 4210752);
+		this.font.draw(stack, title, (float) (this.imageWidth / 2 - this.font.width(title) / 2), 6.0F, 4210752);
+		String inventory = this.inventory.getDisplayName().getString();
+		this.font.draw(stack, inventory, 8.0F, this.imageHeight - 94.0F, 4210752);
 
 		RenderSystem.pushMatrix();
 		RenderSystem.scalef(0.75F, 0.75F, 0.75F);
-		this.font.drawString(stack, text("screen.extendedcrafting.crafting_core.pedestals", this.getPedestalCount()), 36, 36, -1);
+		this.font.draw(stack, text("screen.extendedcrafting.crafting_core.pedestals", this.getPedestalCount()), 36, 36, -1);
 
 		if (!this.hasRecipe()) {
-			this.font.drawString(stack, text("screen.extendedcrafting.crafting_core.no_recipe"), 36, 56, -1);
+			this.font.draw(stack, text("screen.extendedcrafting.crafting_core.no_recipe"), 36, 56, -1);
 		} else {
-			this.font.drawString(stack, text("screen.extendedcrafting.crafting_core.power_cost", number(this.getEnergyRequired())) + " FE", 36, 56, -1);
-			this.font.drawString(stack, text("screen.extendedcrafting.crafting_core.power_rate", number(this.getEnergyRate())) + " FE/t", 36, 66, -1);
+			this.font.draw(stack, text("screen.extendedcrafting.crafting_core.power_cost", number(this.getEnergyRequired())) + " FE", 36, 56, -1);
+			this.font.draw(stack, text("screen.extendedcrafting.crafting_core.power_rate", number(this.getEnergyRate())) + " FE/t", 36, 66, -1);
 			if (this.getEnergyStored() < this.getEnergyRate()) {
-				this.font.drawString(stack, text("screen.extendedcrafting.crafting_core.no_power"), 36, 86, -1);
+				this.font.draw(stack, text("screen.extendedcrafting.crafting_core.no_power"), 36, 86, -1);
 			}
 		}
 
@@ -79,8 +79,8 @@ public class CraftingCoreScreen extends BaseContainerScreen<CraftingCoreContaine
 	}
 
 	@Override
-	protected void drawGuiContainerBackgroundLayer(MatrixStack stack, float partialTicks, int mouseX, int mouseY) {
-		super.drawGuiContainerBackgroundLayer(stack, partialTicks, mouseX, mouseY);
+	protected void renderBg(MatrixStack stack, float partialTicks, int mouseX, int mouseY) {
+		super.renderBg(stack, partialTicks, mouseX, mouseY);
 
 		int x = this.getGuiLeft();
 		int y = this.getGuiTop();
@@ -106,16 +106,16 @@ public class CraftingCoreScreen extends BaseContainerScreen<CraftingCoreContaine
 	
 	private void drawItemStack(ItemStack stack, int x, int y) {
     	RenderSystem.pushMatrix();
-    	RenderHelper.enableStandardItemLighting();
+    	RenderHelper.turnBackOn();
         RenderSystem.translatef(0.0F, 0.0F, -32.0F);
 //        this.itemRenderer.zLevel = 200.0F;
         FontRenderer font = stack.getItem().getFontRenderer(stack);
         if (font == null) font = this.font;
         RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
-        this.itemRenderer.renderItemAndEffectIntoGUI(stack, x, y);
-        this.itemRenderer.renderItemOverlayIntoGUI(font, stack, x, y, null);
+        this.itemRenderer.renderAndDecorateItem(stack, x, y);
+        this.itemRenderer.renderGuiItemDecorations(font, stack, x, y, null);
 //        this.itemRenderer.zLevel = 0.0F;
-        RenderHelper.disableStandardItemLighting();
+        RenderHelper.turnOff();
         RenderSystem.popMatrix();
 	}
 
@@ -132,10 +132,10 @@ public class CraftingCoreScreen extends BaseContainerScreen<CraftingCoreContaine
 	}
 
 	private CraftingCoreTileEntity getTileEntity() {
-		ClientWorld world = this.getMinecraft().world;
+		ClientWorld world = this.getMinecraft().level;
 
 		if (world != null) {
-			TileEntity tile = world.getTileEntity(this.getContainer().getPos());
+			TileEntity tile = world.getBlockEntity(this.getMenu().getPos());
 
 			if (tile instanceof CraftingCoreTileEntity) {
 				return (CraftingCoreTileEntity) tile;
@@ -158,7 +158,7 @@ public class CraftingCoreScreen extends BaseContainerScreen<CraftingCoreContaine
 
 		CombinationRecipe recipe = this.tile.getActiveRecipe();
 		if (recipe != null) {
-			return recipe.getRecipeOutput();
+			return recipe.getResultItem();
 		}
 
 		return ItemStack.EMPTY;

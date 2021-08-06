@@ -8,21 +8,21 @@ import com.blakebr0.extendedcrafting.crafting.recipe.UltimateSingularityRecipe;
 import com.blakebr0.extendedcrafting.singularity.Singularity;
 import com.blakebr0.extendedcrafting.singularity.SingularityRegistry;
 import com.blakebr0.extendedcrafting.singularity.SingularityUtils;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.Ingredient;
-import net.minecraft.resources.IResourceManager;
-import net.minecraft.resources.IResourceManagerReloadListener;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.packs.resources.ResourceManager;
+import net.minecraft.server.packs.resources.ResourceManagerReloadListener;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraftforge.event.AddReloadListenerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.List;
 
-public final class DynamicRecipeManager implements IResourceManagerReloadListener {
+public final class DynamicRecipeManager implements ResourceManagerReloadListener {
     @Override
-    public void onResourceManagerReload(IResourceManager resourceManager) {
+    public void onResourceManagerReload(ResourceManager resourceManager) {
         SingularityRegistry.getInstance().getSingularities().forEach(singularity -> {
             CompressorRecipe compressorRecipe = makeSingularityRecipe(singularity);
             if (compressorRecipe != null)

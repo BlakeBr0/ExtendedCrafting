@@ -4,13 +4,13 @@ import com.blakebr0.cucumber.block.BaseBlock;
 import com.blakebr0.cucumber.iface.IEnableable;
 import com.blakebr0.cucumber.util.VoxelShapeBuilder;
 import com.blakebr0.extendedcrafting.config.ModConfigs;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.SoundType;
-import net.minecraft.block.material.Material;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.shapes.ISelectionContext;
-import net.minecraft.util.math.shapes.VoxelShape;
-import net.minecraft.world.IBlockReader;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.block.SoundType;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.Material;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.common.ToolType;
 
 public class EnderAlternatorBlock extends BaseBlock implements IEnableable {
@@ -25,7 +25,7 @@ public class EnderAlternatorBlock extends BaseBlock implements IEnableable {
 	}
 
 	@Override
-	public VoxelShape getShape(BlockState state, IBlockReader world, BlockPos pos, ISelectionContext context) {
+	public VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
 		return ENDER_ALTERNATOR_SHAPE;
 	}
 

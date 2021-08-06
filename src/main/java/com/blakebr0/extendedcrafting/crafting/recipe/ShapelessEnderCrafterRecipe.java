@@ -7,15 +7,15 @@ import com.blakebr0.extendedcrafting.config.ModConfigs;
 import com.blakebr0.extendedcrafting.init.ModRecipeSerializers;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.IRecipeSerializer;
-import net.minecraft.item.crafting.IRecipeType;
-import net.minecraft.item.crafting.Ingredient;
-import net.minecraft.item.crafting.ShapedRecipe;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.JSONUtils;
-import net.minecraft.util.NonNullList;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.core.NonNullList;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.GsonHelper;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.item.crafting.ShapedRecipe;
 import net.minecraftforge.common.util.RecipeMatcher;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.registries.ForgeRegistryEntry;
@@ -56,12 +56,12 @@ public class ShapelessEnderCrafterRecipe implements ISpecialRecipe, IEnderCrafte
 	}
 
 	@Override
-	public IRecipeSerializer<?> getSerializer() {
+	public RecipeSerializer<?> getSerializer() {
 		return ModRecipeSerializers.SHAPELESS_ENDER_CRAFTER;
 	}
 
 	@Override
-	public IRecipeType<?> getType() {
+	public RecipeType<?> getType() {
 		return RecipeTypes.ENDER_CRAFTER;
 	}
 
@@ -98,23 +98,23 @@ public class ShapelessEnderCrafterRecipe implements ISpecialRecipe, IEnderCrafte
 		return this.craftingTime;
 	}
 
-	public static class Serializer extends ForgeRegistryEntry<IRecipeSerializer<?>> implements IRecipeSerializer<ShapelessEnderCrafterRecipe> {
+	public static class Serializer extends ForgeRegistryEntry<RecipeSerializer<?>> implements RecipeSerializer<ShapelessEnderCrafterRecipe> {
 		@Override
 		public ShapelessEnderCrafterRecipe fromJson(ResourceLocation recipeId, JsonObject json) {
 			NonNullList<Ingredient> inputs = NonNullList.create();
-			JsonArray ingredients = JSONUtils.getAsJsonArray(json, "ingredients");
+			JsonArray ingredients = GsonHelper.getAsJsonArray(json, "ingredients");
 			for (int i = 0; i < ingredients.size(); i++) {
 				inputs.add(Ingredient.fromJson(ingredients.get(i)));
 			}
 
-			ItemStack output = ShapedRecipe.itemFromJson(JSONUtils.getAsJsonObject(json, "result"));
-			int craftingTime = JSONUtils.getAsInt(json, "craftingTime", 0);
+			ItemStack output = ShapedRecipe.itemFromJson(GsonHelper.getAsJsonObject(json, "result"));
+			int craftingTime = GsonHelper.getAsInt(json, "craftingTime", 0);
 
 			return new ShapelessEnderCrafterRecipe(recipeId, inputs, output, craftingTime);
 		}
 
 		@Override
-		public ShapelessEnderCrafterRecipe fromNetwork(ResourceLocation recipeId, PacketBuffer buffer) {
+		public ShapelessEnderCrafterRecipe fromNetwork(ResourceLocation recipeId, FriendlyByteBuf buffer) {
 			int size = buffer.readVarInt();
 			NonNullList<Ingredient> inputs = NonNullList.withSize(size, Ingredient.EMPTY);
 
@@ -129,7 +129,7 @@ public class ShapelessEnderCrafterRecipe implements ISpecialRecipe, IEnderCrafte
 		}
 
 		@Override
-		public void toNetwork(PacketBuffer buffer, ShapelessEnderCrafterRecipe recipe) {
+		public void toNetwork(FriendlyByteBuf buffer, ShapelessEnderCrafterRecipe recipe) {
 			buffer.writeVarInt(recipe.inputs.size());
 
 			for (Ingredient ingredient : recipe.inputs) {

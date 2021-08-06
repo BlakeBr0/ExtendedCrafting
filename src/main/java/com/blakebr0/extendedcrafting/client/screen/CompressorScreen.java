@@ -7,17 +7,17 @@ import com.blakebr0.extendedcrafting.client.screen.button.InputLimitSwitchButton
 import com.blakebr0.extendedcrafting.container.CompressorContainer;
 import com.blakebr0.extendedcrafting.lib.ModTooltips;
 import com.blakebr0.extendedcrafting.tileentity.CompressorTileEntity;
-import com.mojang.blaze3d.matrix.MatrixStack;
-import net.minecraft.client.world.ClientWorld;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TextFormatting;
+import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.ChatFormatting;
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Mth;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.entity.BlockEntity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,7 +26,7 @@ public class CompressorScreen extends BaseContainerScreen<CompressorContainer> {
 	public static final ResourceLocation BACKGROUND = new ResourceLocation(ExtendedCrafting.MOD_ID, "textures/gui/compressor.png");
 	private CompressorTileEntity tile;
 
-	public CompressorScreen(CompressorContainer container, PlayerInventory inventory, ITextComponent title) {
+	public CompressorScreen(CompressorContainer container, Inventory inventory, Component title) {
 		super(container, inventory, title, BACKGROUND, 176, 194);
 	}
 
@@ -45,27 +45,27 @@ public class CompressorScreen extends BaseContainerScreen<CompressorContainer> {
 	}
 
 	@Override
-	public void render(MatrixStack stack, int mouseX, int mouseY, float partialTicks) {
+	public void render(PoseStack stack, int mouseX, int mouseY, float partialTicks) {
 		int x = this.getGuiLeft();
 		int y = this.getGuiTop();
 
 		super.render(stack, mouseX, mouseY, partialTicks);
 
 		if (mouseX > x + 7 && mouseX < x + 20 && mouseY > y + 17 && mouseY < y + 94) {
-			StringTextComponent text = new StringTextComponent(number(this.getEnergyStored()) + " / " + number(this.getMaxEnergyStored()) + " FE");
+			TextComponent text = new TextComponent(number(this.getEnergyStored()) + " / " + number(this.getMaxEnergyStored()) + " FE");
 			this.renderTooltip(stack, text, mouseX, mouseY);
 		}
 
 		if (mouseX > x + 60 && mouseX < x + 85 && mouseY > y + 74 && mouseY < y + 83) {
-			List<ITextComponent> tooltip = new ArrayList<>();
+			List<Component> tooltip = new ArrayList<>();
 			if (this.getMaterialCount() < 1) {
-				tooltip.add(ModTooltips.EMPTY.color(TextFormatting.WHITE).build());
+				tooltip.add(ModTooltips.EMPTY.color(ChatFormatting.WHITE).build());
 			} else {
 				if (this.hasMaterialStack()) {
 					tooltip.add(this.getMaterialStackDisplayName());
 				}
 
-				StringTextComponent text = new StringTextComponent(number(this.getMaterialCount()) + " / " + number(this.getMaterialsRequired()));
+				TextComponent text = new TextComponent(number(this.getMaterialCount()) + " / " + number(this.getMaterialsRequired()));
 				tooltip.add(text);
 			}
 
@@ -74,23 +74,23 @@ public class CompressorScreen extends BaseContainerScreen<CompressorContainer> {
 
 		if (mouseX > x + 68 && mouseX < x + 79 && mouseY > y + 28 && mouseY < y + 39) {
 			if (this.isEjecting()) {
-				this.renderTooltip(stack, ModTooltips.EJECTING.color(TextFormatting.WHITE).build(), mouseX, mouseY);
+				this.renderTooltip(stack, ModTooltips.EJECTING.color(ChatFormatting.WHITE).build(), mouseX, mouseY);
 			} else {
-				this.renderTooltip(stack, ModTooltips.EJECT.color(TextFormatting.WHITE).build(), mouseX, mouseY);
+				this.renderTooltip(stack, ModTooltips.EJECT.color(ChatFormatting.WHITE).build(), mouseX, mouseY);
 			}
 		}
 
 		if (mouseX > x + 90 && mouseX < x + 98 && mouseY > y + 73 && mouseY < y + 84) {
 			if (this.isLimitingInput()) {
-				this.renderTooltip(stack, ModTooltips.LIMITED_INPUT.color(TextFormatting.WHITE).build(), mouseX, mouseY);
+				this.renderTooltip(stack, ModTooltips.LIMITED_INPUT.color(ChatFormatting.WHITE).build(), mouseX, mouseY);
 			} else {
-				this.renderTooltip(stack, ModTooltips.UNLIMITED_INPUT.color(TextFormatting.WHITE).build(), mouseX, mouseY);
+				this.renderTooltip(stack, ModTooltips.UNLIMITED_INPUT.color(ChatFormatting.WHITE).build(), mouseX, mouseY);
 			}
 		}
 	}
 
 	@Override
-	protected void renderLabels(MatrixStack stack, int mouseX, int mouseY) {
+	protected void renderLabels(PoseStack stack, int mouseX, int mouseY) {
 		String title = this.getTitle().getString();
 		this.font.draw(stack, title, (float) (this.imageWidth / 2 - this.font.width(title) / 2), 6.0F, 4210752);
 		String inventory = this.inventory.getDisplayName().getString();
@@ -98,7 +98,7 @@ public class CompressorScreen extends BaseContainerScreen<CompressorContainer> {
 	}
 
 	@Override
-	protected void renderBg(MatrixStack stack, float partialTicks, int mouseX, int mouseY) {
+	protected void renderBg(PoseStack stack, float partialTicks, int mouseX, int mouseY) {
 		super.renderBg(stack, partialTicks, mouseX, mouseY);
 
 		int x = this.getGuiLeft();
@@ -124,11 +124,11 @@ public class CompressorScreen extends BaseContainerScreen<CompressorContainer> {
 		}
 	}
 
-	private ITextComponent getMaterialStackDisplayName() {
-		ClientWorld world = this.getMinecraft().level;
+	private Component getMaterialStackDisplayName() {
+		ClientLevel world = this.getMinecraft().level;
 		if (world != null) {
 			CompressorContainer container = this.getMenu();
-			TileEntity tile = world.getBlockEntity(container.getPos());
+			BlockEntity tile = world.getBlockEntity(container.getPos());
 			if (tile instanceof CompressorTileEntity) {
 				CompressorTileEntity compressor = (CompressorTileEntity) tile;
 				ItemStack materialStack = compressor.getMaterialStack();
@@ -137,14 +137,14 @@ public class CompressorScreen extends BaseContainerScreen<CompressorContainer> {
 			}
 		}
 
-		return new StringTextComponent("");
+		return new TextComponent("");
 	}
 
 	private CompressorTileEntity getTileEntity() {
-		ClientWorld world = this.getMinecraft().level;
+		ClientLevel world = this.getMinecraft().level;
 
 		if (world != null) {
-			TileEntity tile = world.getBlockEntity(this.getMenu().getPos());
+			BlockEntity tile = world.getBlockEntity(this.getMenu().getPos());
 
 			if (tile instanceof CompressorTileEntity) {
 				return (CompressorTileEntity) tile;
@@ -231,7 +231,7 @@ public class CompressorScreen extends BaseContainerScreen<CompressorContainer> {
 	}
 
 	public int getMaterialBarScaled(int pixels) {
-		int i = MathHelper.clamp(this.getMaterialCount(), 0, this.getMaterialsRequired());
+		int i = Mth.clamp(this.getMaterialCount(), 0, this.getMaterialsRequired());
 		int j = this.getMaterialsRequired();
 		return j != 0 && i != 0 ? i * pixels / j : 0;
 	}

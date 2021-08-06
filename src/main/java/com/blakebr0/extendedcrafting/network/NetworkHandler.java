@@ -8,7 +8,7 @@ import com.blakebr0.extendedcrafting.network.message.RunningSwitchMessage;
 import com.blakebr0.extendedcrafting.network.message.SaveRecipeMessage;
 import com.blakebr0.extendedcrafting.network.message.SelectRecipeMessage;
 import com.blakebr0.extendedcrafting.network.message.SyncSingularitiesMessage;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.fml.network.FMLHandshakeHandler;
 import net.minecraftforge.fml.network.NetworkEvent;
 import net.minecraftforge.fml.network.NetworkRegistry;

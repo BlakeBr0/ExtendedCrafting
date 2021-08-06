@@ -1,5 +1,5 @@
 modLoader="javafml"
-loaderVersion="[35,)"
+loaderVersion="[37,)"
 license="MIT"
 
 [[mods]]
@@ -19,13 +19,13 @@ license="MIT"
   [[dependencies.extendedcrafting]]
       modId="forge"
       mandatory=true
-      versionRange="[35.1,)"
+      versionRange="[37.0,)"
       ordering="NONE"
       side="BOTH"
   [[dependencies.extendedcrafting]]
       modId="minecraft"
       mandatory=true
-      versionRange="[1.16.4,1.17)"
+      versionRange="[1.17.1,1.18)"
       ordering="NONE"
       side="BOTH"
   [[dependencies.extendedcrafting]]

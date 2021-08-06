@@ -20,28 +20,27 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemGroup;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.ItemUseContext;
-import net.minecraft.item.crafting.Ingredient;
-import net.minecraft.nbt.INBT;
-import net.minecraft.tags.ITag;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.core.NonNullList;
+import net.minecraft.nbt.Tag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.ItemTags;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.Hand;
-import net.minecraft.util.NonNullList;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.Util;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.world.World;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.context.UseOnContext;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.ModList;
@@ -55,8 +54,6 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.function.Function;
 
-import net.minecraft.item.Item.Properties;
-
 public class RecipeMakerItem extends BaseItem implements IEnableable {
 	private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
 	private static final String NEW_LINE = System.lineSeparator() + "\t";
@@ -67,7 +64,7 @@ public class RecipeMakerItem extends BaseItem implements IEnableable {
 	}
 	
 	@Override
-	public void fillItemCategory(ItemGroup group, NonNullList<ItemStack> items) {
+	public void fillItemCategory(CreativeModeTab group, NonNullList<ItemStack> items) {
 		if (this.isEnabled() && this.allowdedIn(group)) {
 			ItemStack stack1 = new ItemStack(this);
 			NBTHelper.setBoolean(stack1, "Shapeless", false);
@@ -83,16 +80,16 @@ public class RecipeMakerItem extends BaseItem implements IEnableable {
 	}
 
 	@Override
-	public ActionResultType onItemUseFirst(ItemStack stack, ItemUseContext context) {
-		PlayerEntity player = context.getPlayer();
+	public InteractionResult onItemUseFirst(ItemStack stack, UseOnContext context) {
+		Player player = context.getPlayer();
 		BlockPos pos = context.getClickedPos();
 		Direction facing = context.getClickedFace();
-		World world = context.getLevel();
+		Level world = context.getLevel();
 		if (player == null || !player.mayUseItemAt(pos.relative(facing), facing, stack)) {
-			return ActionResultType.PASS;
+			return InteractionResult.PASS;
 		}
 
-		TileEntity tile = world.getBlockEntity(pos);
+		BlockEntity tile = world.getBlockEntity(pos);
 		if (isTable(tile)) {
 			if (world.isClientSide()) {
 				String type = NBTHelper.getString(stack, "Type");
@@ -113,7 +110,7 @@ public class RecipeMakerItem extends BaseItem implements IEnableable {
 					if ("TOO MANY ITEMS".equals(string)) {
 						player.sendMessage(Localizable.of("message.extendedcrafting.max_unique_items_exceeded").args(KEYS.length).build(), Util.NIL_UUID);
 
-						return ActionResultType.SUCCESS;
+						return InteractionResult.SUCCESS;
 					}
 
 					setClipboard(string);
@@ -126,7 +123,7 @@ public class RecipeMakerItem extends BaseItem implements IEnableable {
 				}
 			}
 
-			return ActionResultType.SUCCESS;
+			return InteractionResult.SUCCESS;
 		} else if (tile instanceof CraftingCoreTileEntity) {
 			if (world.isClientSide()) {
 				String type = NBTHelper.getString(stack, "Type");
@@ -140,14 +137,14 @@ public class RecipeMakerItem extends BaseItem implements IEnableable {
 				player.sendMessage(Localizable.of("message.extendedcrafting.copied_recipe").build(), Util.NIL_UUID);
 			}
 
-			return ActionResultType.SUCCESS;
+			return InteractionResult.SUCCESS;
 		}
 
-		return ActionResultType.PASS;
+		return InteractionResult.PASS;
 	}
 
 	@Override
-	public ActionResult<ItemStack> use(World world, PlayerEntity player, Hand hand) {
+	public InteractionResultHolder<ItemStack> use(Level world, Player player, InteractionHand hand) {
 		if (player.isCrouching()) {
 			ItemStack stack = player.getItemInHand(hand);
 			NBTHelper.flipBoolean(stack, "Shapeless");
@@ -162,7 +159,7 @@ public class RecipeMakerItem extends BaseItem implements IEnableable {
 
 	@OnlyIn(Dist.CLIENT)
 	@Override
-	public void appendHoverText(ItemStack stack, World world, List<ITextComponent> tooltip, ITooltipFlag flag) {
+	public void appendHoverText(ItemStack stack, Level world, List<Component> tooltip, TooltipFlag flag) {
 		tooltip.add(ModTooltips.TYPE.args(NBTHelper.getString(stack, "Type")).build());
 		tooltip.add(ModTooltips.MODE.args(getModeString(stack)).build());
 	}
@@ -210,7 +207,7 @@ public class RecipeMakerItem extends BaseItem implements IEnableable {
 			string.append("<").append(item).append(">");
 
 			if (ModConfigs.RECIPE_MAKER_USE_NBT.get() && !stack.isEmpty() && stack.hasTag() && !item.startsWith("tag") && ModList.get().isLoaded("crafttweaker")) {
-				INBT nbt = stack.serializeNBT().get("tag");
+				Tag nbt = stack.serializeNBT().get("tag");
 				String tag = CraftTweakerUtils.writeTag(nbt);
 				string.append(".withTag(").append(tag).append(")");
 			}
@@ -269,7 +266,7 @@ public class RecipeMakerItem extends BaseItem implements IEnableable {
 			string.append("<").append(item).append(">");
 
 			if (ModConfigs.RECIPE_MAKER_USE_NBT.get() && !stack.isEmpty() && stack.hasTag() && !item.startsWith("tag") && ModList.get().isLoaded("crafttweaker")) {
-				INBT nbt = stack.serializeNBT().get("tag");
+				Tag nbt = stack.serializeNBT().get("tag");
 				String tag = CraftTweakerUtils.writeTag(nbt);
 				string.append(".withTag(").append(tag).append(")");
 			}
@@ -311,7 +308,7 @@ public class RecipeMakerItem extends BaseItem implements IEnableable {
 			}
 
 			if (ModConfigs.RECIPE_MAKER_USE_NBT.get() && !stack.isEmpty() && stack.hasTag() && !item.startsWith("tag") && ModList.get().isLoaded("crafttweaker")) {
-				INBT nbt = stack.serializeNBT().get("tag");
+				Tag nbt = stack.serializeNBT().get("tag");
 				String tag = CraftTweakerUtils.writeTag(nbt);
 				string.append(".withTag(").append(tag).append(")");
 			}
@@ -346,7 +343,7 @@ public class RecipeMakerItem extends BaseItem implements IEnableable {
 				continue;
 
 			ResourceLocation tagId = stack.getItem().getTags().stream().findFirst().orElse(null);
-			ITag<Item> tag = tagId == null ? null : ItemTags.getAllTags().getTag(tagId);
+			Tag<Item> tag = tagId == null ? null : ItemTags.getAllTags().getTag(tagId);
 			char key = KEYS[keysMap.size()];
 			if (ModConfigs.RECIPE_MAKER_USE_TAGS.get() && tag != null) {
 				keysMap.put(Ingredient.of(tag), key);
@@ -474,7 +471,7 @@ public class RecipeMakerItem extends BaseItem implements IEnableable {
 		return GSON.toJson(object);
 	}
 
-	private static boolean isTable(TileEntity tile) {
+	private static boolean isTable(BlockEntity tile) {
 		return tile instanceof BasicTableTileEntity ||
 				tile instanceof AdvancedTableTileEntity ||
 				tile instanceof EliteTableTileEntity ||

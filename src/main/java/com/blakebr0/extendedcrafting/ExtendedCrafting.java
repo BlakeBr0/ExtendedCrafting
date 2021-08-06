@@ -12,7 +12,7 @@ import com.blakebr0.extendedcrafting.init.ModRecipeSerializers;
 import com.blakebr0.extendedcrafting.init.ModTileEntities;
 import com.blakebr0.extendedcrafting.network.NetworkHandler;
 import com.blakebr0.extendedcrafting.singularity.SingularityRegistry;
-import net.minecraft.item.ItemGroup;
+import net.minecraft.world.item.CreativeModeTab;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -30,7 +30,7 @@ public final class ExtendedCrafting {
 	public static final String MOD_ID = "extendedcrafting";
 	public static final String NAME = "Extended Crafting";
 
-	public static final ItemGroup ITEM_GROUP = new ECItemGroup();
+	public static final CreativeModeTab ITEM_GROUP = new ECItemGroup();
 
 	public ExtendedCrafting() {
 		IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();

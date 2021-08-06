@@ -7,26 +7,26 @@ import com.blakebr0.cucumber.inventory.BaseItemStackHandler;
 import com.blakebr0.cucumber.util.VoxelShapeBuilder;
 import com.blakebr0.extendedcrafting.config.ModConfigs;
 import com.blakebr0.extendedcrafting.tileentity.CraftingCoreTileEntity;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.SoundType;
-import net.minecraft.block.material.Material;
-import net.minecraft.entity.item.ItemEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.inventory.InventoryHelper;
-import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.Hand;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvents;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.shapes.ISelectionContext;
-import net.minecraft.util.math.shapes.VoxelShape;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.Containers;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.SoundType;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.Material;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.common.ToolType;
 import net.minecraftforge.fml.network.NetworkHooks;
 
@@ -45,15 +45,15 @@ public class CraftingCoreBlock extends BaseTileEntityBlock implements IEnableabl
 	}
 
 	@Override
-	public TileEntity createTileEntity(BlockState state, IBlockReader world) {
+	public BlockEntity createTileEntity(BlockState state, BlockGetter world) {
 		return new CraftingCoreTileEntity();
 	}
 
 	@Override
-	public ActionResultType use(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult trace) {
+	public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult trace) {
 		ItemStack held = player.getItemInHand(hand);
 		if (!world.isClientSide()) {
-			TileEntity tile = world.getBlockEntity(pos);
+			BlockEntity tile = world.getBlockEntity(pos);
 			if (tile instanceof CraftingCoreTileEntity) {
 				CraftingCoreTileEntity core = (CraftingCoreTileEntity) tile;
 				if (trace.getDirection() == Direction.UP) {
@@ -63,7 +63,7 @@ public class CraftingCoreBlock extends BaseTileEntityBlock implements IEnableabl
 						if (!held.isEmpty()) {
 							inventory.setStackInSlot(0, StackHelper.withSize(held, 1, false));
 							player.setItemInHand(hand, StackHelper.shrink(held, 1, false));
-							world.playSound(null, pos, SoundEvents.ITEM_PICKUP, SoundCategory.BLOCKS, 1.0F, 1.0F);
+							world.playSound(null, pos, SoundEvents.ITEM_PICKUP, SoundSource.BLOCKS, 1.0F, 1.0F);
 						}
 					} else {
 						ItemEntity item = new ItemEntity(world, player.getX(), player.getY(), player.getZ(), stack);
@@ -72,21 +72,21 @@ public class CraftingCoreBlock extends BaseTileEntityBlock implements IEnableabl
 						inventory.setStackInSlot(0, ItemStack.EMPTY);
 					}
 				} else {
-					NetworkHooks.openGui((ServerPlayerEntity) player, core, pos);
+					NetworkHooks.openGui((ServerPlayer) player, core, pos);
 				}
 			}
 		}
 
-		return ActionResultType.SUCCESS;
+		return InteractionResult.SUCCESS;
 	}
 
 	@Override
-	public void onRemove(BlockState state, World world, BlockPos pos, BlockState newState, boolean isMoving) {
+	public void onRemove(BlockState state, Level world, BlockPos pos, BlockState newState, boolean isMoving) {
 		if (state.getBlock() != newState.getBlock()) {
-			TileEntity tile = world.getBlockEntity(pos);
+			BlockEntity tile = world.getBlockEntity(pos);
 			if (tile instanceof CraftingCoreTileEntity) {
 				CraftingCoreTileEntity core = (CraftingCoreTileEntity) tile;
-				InventoryHelper.dropContents(world, pos, core.getInventory().getStacks());
+				Containers.dropContents(world, pos, core.getInventory().getStacks());
 			}
 		}
 
@@ -94,7 +94,7 @@ public class CraftingCoreBlock extends BaseTileEntityBlock implements IEnableabl
 	}
 
 	@Override
-	public VoxelShape getShape(BlockState state, IBlockReader world, BlockPos pos, ISelectionContext context) {
+	public VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
 		return CRAFTING_CORE_SHAPE;
 	}
 

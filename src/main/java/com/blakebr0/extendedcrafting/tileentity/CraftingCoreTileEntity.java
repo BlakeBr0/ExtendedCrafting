@@ -10,24 +10,24 @@ import com.blakebr0.extendedcrafting.config.ModConfigs;
 import com.blakebr0.extendedcrafting.container.CraftingCoreContainer;
 import com.blakebr0.extendedcrafting.crafting.recipe.CombinationRecipe;
 import com.blakebr0.extendedcrafting.init.ModTileEntities;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.inventory.container.INamedContainerProvider;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.particles.IParticleData;
-import net.minecraft.particles.ItemParticleData;
-import net.minecraft.particles.ParticleTypes;
-import net.minecraft.tileentity.ITickableTileEntity;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Direction;
-import net.minecraft.util.IntArray;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.world.World;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.core.particles.ItemParticleOption;
+import net.minecraft.core.particles.ParticleOptions;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.MenuProvider;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.SimpleContainerData;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.TickableBlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.energy.CapabilityEnergy;
@@ -37,7 +37,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-public class CraftingCoreTileEntity extends BaseInventoryTileEntity implements ITickableTileEntity, INamedContainerProvider {
+public class CraftingCoreTileEntity extends BaseInventoryTileEntity implements TickableBlockEntity, MenuProvider {
 	private final BaseItemStackHandler inventory;
 	private final BaseEnergyStorage energy;
 	private final BaseItemStackHandler recipeInventory;
@@ -61,14 +61,14 @@ public class CraftingCoreTileEntity extends BaseInventoryTileEntity implements I
 	}
 
 	@Override
-	public void load(BlockState state, CompoundNBT tag) {
+	public void load(BlockState state, CompoundTag tag) {
 		super.load(state, tag);
 		this.progress = tag.getInt("Progress");
 		this.energy.setEnergy(tag.getInt("Energy"));
 	}
 
 	@Override
-	public CompoundNBT save(CompoundNBT tag) {
+	public CompoundTag save(CompoundTag tag) {
 		tag = super.save(tag);
 		tag.putInt("Progress", this.progress);
 		tag.putInt("Energy", this.energy.getEnergyStored());
@@ -81,7 +81,7 @@ public class CraftingCoreTileEntity extends BaseInventoryTileEntity implements I
 		boolean mark = false;
 
 		Map<BlockPos, ItemStack> pedestalsWithItems = this.getPedestalsWithItems();
-		World world = this.getLevel();
+		Level world = this.getLevel();
 
 		if (world != null) {
 			ItemStack[] stacks = pedestalsWithItems.values().toArray(new ItemStack[0]);
@@ -98,7 +98,7 @@ public class CraftingCoreTileEntity extends BaseInventoryTileEntity implements I
 
 						if (done) {
 							for (BlockPos pedestalPos : pedestalsWithItems.keySet()) {
-								TileEntity tile = world.getBlockEntity(pedestalPos);
+								BlockEntity tile = world.getBlockEntity(pedestalPos);
 
 								if (tile instanceof PedestalTileEntity) {
 									PedestalTileEntity pedestal = (PedestalTileEntity) tile;
@@ -119,7 +119,7 @@ public class CraftingCoreTileEntity extends BaseInventoryTileEntity implements I
 
 							if (this.shouldSpawnItemParticles()) {
 								for (BlockPos pedestalPos : pedestalsWithItems.keySet()) {
-									TileEntity tile = world.getBlockEntity(pedestalPos);
+									BlockEntity tile = world.getBlockEntity(pedestalPos);
 
 									if (tile instanceof PedestalTileEntity) {
 										PedestalTileEntity pedestal = (PedestalTileEntity) tile;
@@ -158,13 +158,13 @@ public class CraftingCoreTileEntity extends BaseInventoryTileEntity implements I
 	}
 
 	@Override
-	public ITextComponent getDisplayName() {
+	public Component getDisplayName() {
 		return Localizable.of("container.extendedcrafting.crafting_core").build();
 	}
 
 	@Override
-	public Container createMenu(int windowId, PlayerInventory playerInventory, PlayerEntity player) {
-		return CraftingCoreContainer.create(windowId, playerInventory, this::isUsableByPlayer, new IntArray(0), this.getBlockPos());
+	public AbstractContainerMenu createMenu(int windowId, Inventory playerInventory, Player player) {
+		return CraftingCoreContainer.create(windowId, playerInventory, this::isUsableByPlayer, new SimpleContainerData(0), this.getBlockPos());
 	}
 
 	public BaseEnergyStorage getEnergy() {
@@ -218,7 +218,7 @@ public class CraftingCoreTileEntity extends BaseInventoryTileEntity implements I
 
 	public Map<BlockPos, ItemStack> getPedestalsWithItems() {
 		Map<BlockPos, ItemStack> pedestals = new HashMap<>();
-		World world = this.getLevel();
+		Level world = this.getLevel();
 
 		int pedestalCount = 0;
 		if (world != null) {
@@ -227,7 +227,7 @@ public class CraftingCoreTileEntity extends BaseInventoryTileEntity implements I
 
 			while (positions.hasNext()) {
 				BlockPos aoePos = positions.next();
-				TileEntity tile = world.getBlockEntity(aoePos);
+				BlockEntity tile = world.getBlockEntity(aoePos);
 
 				if (tile instanceof PedestalTileEntity) {
 					PedestalTileEntity pedestal = (PedestalTileEntity) tile;
@@ -247,11 +247,11 @@ public class CraftingCoreTileEntity extends BaseInventoryTileEntity implements I
 		return pedestals;
 	}
 
-	private <T extends IParticleData> void spawnParticles(T particle, BlockPos pos, double yOffset, int count) {
+	private <T extends ParticleOptions> void spawnParticles(T particle, BlockPos pos, double yOffset, int count) {
 		if (this.getLevel() == null || this.getLevel().isClientSide())
 			return;
 
-		ServerWorld world = (ServerWorld) this.getLevel();
+		ServerLevel world = (ServerLevel) this.getLevel();
 
 		double x = pos.getX() + 0.5D;
 		double y = pos.getY() + yOffset;
@@ -264,7 +264,7 @@ public class CraftingCoreTileEntity extends BaseInventoryTileEntity implements I
 		if (this.getLevel() == null || this.getLevel().isClientSide())
 			return;
 
-		ServerWorld world = (ServerWorld) this.getLevel();
+		ServerLevel world = (ServerLevel) this.getLevel();
 		BlockPos pos = this.getBlockPos();
 
 		double x = pedestalPos.getX() + (world.getRandom().nextDouble() * 0.2D) + 0.4D;
@@ -275,7 +275,7 @@ public class CraftingCoreTileEntity extends BaseInventoryTileEntity implements I
 		double velY = 0.25D;
 		double velZ = pos.getZ() - pedestalPos.getZ();
 
-		world.sendParticles(new ItemParticleData(ParticleTypes.ITEM, stack), x, y, z, 0, velX, velY, velZ, 0.18D);
+		world.sendParticles(new ItemParticleOption(ParticleTypes.ITEM, stack), x, y, z, 0, velX, velY, velZ, 0.18D);
 	}
 
 	private boolean shouldSpawnItemParticles() {

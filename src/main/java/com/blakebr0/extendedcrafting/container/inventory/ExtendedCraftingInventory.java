@@ -1,21 +1,21 @@
 package com.blakebr0.extendedcrafting.container.inventory;
 
 import com.blakebr0.cucumber.inventory.BaseItemStackHandler;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.CraftingInventory;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.CraftingContainer;
+import net.minecraft.world.item.ItemStack;
 
-public class ExtendedCraftingInventory extends CraftingInventory {
-    private final Container container;
+public class ExtendedCraftingInventory extends CraftingContainer {
+    private final AbstractContainerMenu container;
     private final BaseItemStackHandler inventory;
     private final boolean autoTable;
 
-    public ExtendedCraftingInventory(Container container, BaseItemStackHandler inventory, int size) {
+    public ExtendedCraftingInventory(AbstractContainerMenu container, BaseItemStackHandler inventory, int size) {
         this(container, inventory, size, false);
     }
 
-    public ExtendedCraftingInventory(Container container, BaseItemStackHandler inventory, int size, boolean autoTable) {
+    public ExtendedCraftingInventory(AbstractContainerMenu container, BaseItemStackHandler inventory, int size, boolean autoTable) {
         super(container, size, size);
         this.container = container;
         this.inventory = inventory;
@@ -68,7 +68,7 @@ public class ExtendedCraftingInventory extends CraftingInventory {
     public void setChanged() { }
 
     @Override
-    public boolean stillValid(PlayerEntity player) {
+    public boolean stillValid(Player player) {
         return true;
     }
 

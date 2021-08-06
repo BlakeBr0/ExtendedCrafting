@@ -15,25 +15,25 @@ import com.blakebr0.extendedcrafting.container.UltimateAutoTableContainer;
 import com.blakebr0.extendedcrafting.container.inventory.ExtendedCraftingInventory;
 import com.blakebr0.extendedcrafting.crafting.TableRecipeStorage;
 import com.blakebr0.extendedcrafting.init.ModTileEntities;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.CraftingInventory;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.inventory.container.INamedContainerProvider;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.ICraftingRecipe;
-import net.minecraft.item.crafting.IRecipeType;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.tileentity.ITickableTileEntity;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.IntArray;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.Container;
+import net.minecraft.world.MenuProvider;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.CraftingContainer;
+import net.minecraft.world.inventory.SimpleContainerData;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.CraftingRecipe;
+import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.entity.TickableBlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.energy.CapabilityEnergy;
@@ -43,10 +43,10 @@ import net.minecraftforge.items.IItemHandler;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
-public abstract class AutoTableTileEntity extends BaseInventoryTileEntity implements ITickableTileEntity, INamedContainerProvider {
-    private static final Container EMPTY_CONTAINER = new Container(null, -1) {
+public abstract class AutoTableTileEntity extends BaseInventoryTileEntity implements TickableBlockEntity, MenuProvider {
+    private static final AbstractContainerMenu EMPTY_CONTAINER = new AbstractContainerMenu(null, -1) {
         @Override
-        public boolean stillValid(PlayerEntity player) {
+        public boolean stillValid(Player player) {
             return false;
         }
     };
@@ -56,12 +56,12 @@ public abstract class AutoTableTileEntity extends BaseInventoryTileEntity implem
     private boolean running = true;
     private int oldEnergy;
 
-    public AutoTableTileEntity(TileEntityType<?> type) {
+    public AutoTableTileEntity(BlockEntityType<?> type) {
         super(type);
     }
 
     @Override
-    public CompoundNBT save(CompoundNBT tag) {
+    public CompoundTag save(CompoundTag tag) {
         tag = super.save(tag);
         tag.putInt("Progress", this.progress);
         tag.putBoolean("Running", this.running);
@@ -72,7 +72,7 @@ public abstract class AutoTableTileEntity extends BaseInventoryTileEntity implem
     }
 
     @Override
-    public void load(BlockState state, CompoundNBT tag) {
+    public void load(BlockState state, CompoundTag tag) {
         super.load(state, tag);
         this.progress = tag.getInt("Progress");
         this.running = tag.getBoolean("Running");
@@ -83,13 +83,13 @@ public abstract class AutoTableTileEntity extends BaseInventoryTileEntity implem
     @Override
     public void tick() {
         boolean mark = false;
-        World world = this.getLevel();
+        Level world = this.getLevel();
         BaseEnergyStorage energy = this.getEnergy();
 
         if (world != null) {
             if (this.running) {
                 this.updateRecipeInventory();
-                IInventory recipeInventory = this.getRecipeInventory().toIInventory();
+                Container recipeInventory = this.getRecipeInventory().toIInventory();
 
                 if (this.recipe == null || !this.recipe.matches(recipeInventory, world)) {
                     ITableRecipe recipe = world.getRecipeManager().getRecipeFor(RecipeTypes.TABLE, recipeInventory, world).orElse(null);
@@ -98,7 +98,7 @@ public abstract class AutoTableTileEntity extends BaseInventoryTileEntity implem
 
                     if (this.recipe == null && ModConfigs.TABLE_USE_VANILLA_RECIPES.get() && this instanceof Basic) {
                         ExtendedCraftingInventory craftingInventory = new ExtendedCraftingInventory(EMPTY_CONTAINER, this.getRecipeInventory(), 3);
-                        ICraftingRecipe vanilla = world.getRecipeManager().getRecipeFor(IRecipeType.CRAFTING, craftingInventory, world).orElse(null);
+                        CraftingRecipe vanilla = world.getRecipeManager().getRecipeFor(RecipeType.CRAFTING, craftingInventory, world).orElse(null);
 
                         this.recipe = vanilla != null ? new WrappedRecipe(vanilla, craftingInventory) : null;
                     }
@@ -201,14 +201,14 @@ public abstract class AutoTableTileEntity extends BaseInventoryTileEntity implem
     }
 
     public void saveRecipe(int index) {
-        World world = this.getLevel();
+        Level world = this.getLevel();
         if (world == null)
             return;
 
         this.updateRecipeInventory();
 
         BaseItemStackHandler recipeInventory = this.getRecipeInventory();
-        IInventory recipeIInventory = recipeInventory.toIInventory();
+        Container recipeIInventory = recipeInventory.toIInventory();
         BaseItemStackHandler newRecipeInventory = new BaseItemStackHandler(recipeInventory.getSlots());
 
         for (int i = 0; i < recipeInventory.getSlots(); i++) {
@@ -222,7 +222,7 @@ public abstract class AutoTableTileEntity extends BaseInventoryTileEntity implem
             result = recipe.assemble(recipeIInventory);
         } else {
             ExtendedCraftingInventory craftingInventory = new ExtendedCraftingInventory(EMPTY_CONTAINER, recipeInventory, 3);
-            ICraftingRecipe vanilla = world.getRecipeManager().getRecipeFor(IRecipeType.CRAFTING, craftingInventory, world).orElse(null);
+            CraftingRecipe vanilla = world.getRecipeManager().getRecipeFor(RecipeType.CRAFTING, craftingInventory, world).orElse(null);
 
             if (vanilla != null) {
                 result = vanilla.assemble(craftingInventory);
@@ -280,11 +280,11 @@ public abstract class AutoTableTileEntity extends BaseInventoryTileEntity implem
     }
 
     private LazyOptional<IItemHandler> getAboveInventory() {
-        World world = this.getLevel();
+        Level world = this.getLevel();
         BlockPos pos = this.getBlockPos().above();
 
         if (world != null) {
-            TileEntity tile = world.getBlockEntity(pos);
+            BlockEntity tile = world.getBlockEntity(pos);
             if (tile != null) {
                 return tile.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, Direction.DOWN);
             }
@@ -330,10 +330,10 @@ public abstract class AutoTableTileEntity extends BaseInventoryTileEntity implem
 	}
 
 	public static class WrappedRecipe {
-        private final Function<IInventory, ItemStack> resultFunc;
-        private final BiFunction<IInventory, World, Boolean> matchesFunc;
+        private final Function<Container, ItemStack> resultFunc;
+        private final BiFunction<Container, Level, Boolean> matchesFunc;
 
-        public WrappedRecipe(ICraftingRecipe recipe, CraftingInventory craftingInventory) {
+        public WrappedRecipe(CraftingRecipe recipe, CraftingContainer craftingInventory) {
             this.resultFunc = inventory -> recipe.assemble(craftingInventory);
             this.matchesFunc = (inventory, world) -> recipe.matches(craftingInventory, world);
         }
@@ -343,11 +343,11 @@ public abstract class AutoTableTileEntity extends BaseInventoryTileEntity implem
             this.matchesFunc = recipe::matches;
         }
 
-        public ItemStack getCraftingResult(IInventory inventory) {
+        public ItemStack getCraftingResult(Container inventory) {
             return this.resultFunc.apply(inventory);
         }
 
-        public boolean matches(IInventory inventory, World world) {
+        public boolean matches(Container inventory, Level world) {
             return this.matchesFunc.apply(inventory, world);
         }
     }
@@ -375,13 +375,13 @@ public abstract class AutoTableTileEntity extends BaseInventoryTileEntity implem
         }
 
         @Override
-        public ITextComponent getDisplayName() {
+        public Component getDisplayName() {
             return Localizable.of("container.extendedcrafting.basic_table").build();
         }
 
         @Override
-        public Container createMenu(int windowId, PlayerInventory playerInventory, PlayerEntity player) {
-            return BasicAutoTableContainer.create(windowId, playerInventory, this::isUsableByPlayer, this.inventory, new IntArray(0), this.getBlockPos());
+        public AbstractContainerMenu createMenu(int windowId, Inventory playerInventory, Player player) {
+            return BasicAutoTableContainer.create(windowId, playerInventory, this::isUsableByPlayer, this.inventory, new SimpleContainerData(0), this.getBlockPos());
         }
 
         @Override
@@ -428,13 +428,13 @@ public abstract class AutoTableTileEntity extends BaseInventoryTileEntity implem
         }
 
         @Override
-        public ITextComponent getDisplayName() {
+        public Component getDisplayName() {
             return Localizable.of("container.extendedcrafting.advanced_table").build();
         }
 
         @Override
-        public Container createMenu(int windowId, PlayerInventory playerInventory, PlayerEntity player) {
-            return AdvancedAutoTableContainer.create(windowId, playerInventory, this::isUsableByPlayer, this.inventory, new IntArray(0), this.getBlockPos());
+        public AbstractContainerMenu createMenu(int windowId, Inventory playerInventory, Player player) {
+            return AdvancedAutoTableContainer.create(windowId, playerInventory, this::isUsableByPlayer, this.inventory, new SimpleContainerData(0), this.getBlockPos());
         }
 
         @Override
@@ -481,13 +481,13 @@ public abstract class AutoTableTileEntity extends BaseInventoryTileEntity implem
         }
 
         @Override
-        public ITextComponent getDisplayName() {
+        public Component getDisplayName() {
             return Localizable.of("container.extendedcrafting.elite_table").build();
         }
 
         @Override
-        public Container createMenu(int windowId, PlayerInventory playerInventory, PlayerEntity player) {
-            return EliteAutoTableContainer.create(windowId, playerInventory, this::isUsableByPlayer, this.inventory, new IntArray(0), this.getBlockPos());
+        public AbstractContainerMenu createMenu(int windowId, Inventory playerInventory, Player player) {
+            return EliteAutoTableContainer.create(windowId, playerInventory, this::isUsableByPlayer, this.inventory, new SimpleContainerData(0), this.getBlockPos());
         }
 
         @Override
@@ -534,13 +534,13 @@ public abstract class AutoTableTileEntity extends BaseInventoryTileEntity implem
         }
 
         @Override
-        public ITextComponent getDisplayName() {
+        public Component getDisplayName() {
             return Localizable.of("container.extendedcrafting.ultimate_table").build();
         }
 
         @Override
-        public Container createMenu(int windowId, PlayerInventory playerInventory, PlayerEntity player) {
-            return UltimateAutoTableContainer.create(windowId, playerInventory, this::isUsableByPlayer, this.inventory, new IntArray(0), this.getBlockPos());
+        public AbstractContainerMenu createMenu(int windowId, Inventory playerInventory, Player player) {
+            return UltimateAutoTableContainer.create(windowId, playerInventory, this::isUsableByPlayer, this.inventory, new SimpleContainerData(0), this.getBlockPos());
         }
 
         @Override

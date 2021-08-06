@@ -5,17 +5,17 @@ import com.blakebr0.cucumber.tileentity.BaseInventoryTileEntity;
 import com.blakebr0.cucumber.util.Localizable;
 import com.blakebr0.extendedcrafting.container.AdvancedTableContainer;
 import com.blakebr0.extendedcrafting.init.ModTileEntities;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.inventory.container.INamedContainerProvider;
-import net.minecraft.util.Direction;
-import net.minecraft.util.text.ITextComponent;
+import net.minecraft.core.Direction;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.MenuProvider;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.CapabilityItemHandler;
 
-public class AdvancedTableTileEntity extends BaseInventoryTileEntity implements INamedContainerProvider {
+public class AdvancedTableTileEntity extends BaseInventoryTileEntity implements MenuProvider {
     private final BaseItemStackHandler inventory;
 
     public AdvancedTableTileEntity() {
@@ -29,12 +29,12 @@ public class AdvancedTableTileEntity extends BaseInventoryTileEntity implements 
     }
 
     @Override
-    public ITextComponent getDisplayName() {
+    public Component getDisplayName() {
         return Localizable.of("container.extendedcrafting.advanced_table").build();
     }
 
     @Override
-    public Container createMenu(int windowId, PlayerInventory playerInventory, PlayerEntity player) {
+    public AbstractContainerMenu createMenu(int windowId, Inventory playerInventory, Player player) {
         return AdvancedTableContainer.create(windowId, playerInventory, this::isUsableByPlayer, this.inventory);
     }
 

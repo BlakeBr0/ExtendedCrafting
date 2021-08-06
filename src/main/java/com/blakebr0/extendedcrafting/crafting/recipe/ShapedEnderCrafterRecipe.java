@@ -8,15 +8,15 @@ import com.blakebr0.extendedcrafting.init.ModRecipeSerializers;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.IRecipeSerializer;
-import net.minecraft.item.crafting.IRecipeType;
-import net.minecraft.item.crafting.Ingredient;
-import net.minecraft.item.crafting.ShapedRecipe;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.JSONUtils;
-import net.minecraft.util.NonNullList;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.core.NonNullList;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.GsonHelper;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.item.crafting.ShapedRecipe;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.registries.ForgeRegistryEntry;
 
@@ -82,12 +82,12 @@ public class ShapedEnderCrafterRecipe implements ISpecialRecipe, IEnderCrafterRe
 	}
 
 	@Override
-	public IRecipeSerializer<?> getSerializer() {
+	public RecipeSerializer<?> getSerializer() {
 		return ModRecipeSerializers.SHAPED_ENDER_CRAFTER;
 	}
 
 	@Override
-	public IRecipeType<?> getType() {
+	public RecipeType<?> getType() {
 		return RecipeTypes.ENDER_CRAFTER;
 	}
 
@@ -136,7 +136,7 @@ public class ShapedEnderCrafterRecipe implements ISpecialRecipe, IEnderCrafterRe
 	private static String[] patternFromJson(JsonArray jsonArr) {
 		String[] astring = new String[jsonArr.size()];
 		for (int i = 0; i < astring.length; ++i) {
-			String s = JSONUtils.convertToString(jsonArr.get(i), "pattern[" + i + "]");
+			String s = GsonHelper.convertToString(jsonArr.get(i), "pattern[" + i + "]");
 
 			if (i > 0 && astring[0].length() != s.length()) {
 				throw new JsonSyntaxException("Invalid pattern: each row must be the same width");
@@ -148,22 +148,22 @@ public class ShapedEnderCrafterRecipe implements ISpecialRecipe, IEnderCrafterRe
 		return astring;
 	}
 
-	public static class Serializer extends ForgeRegistryEntry<IRecipeSerializer<?>> implements IRecipeSerializer<ShapedEnderCrafterRecipe> {
+	public static class Serializer extends ForgeRegistryEntry<RecipeSerializer<?>> implements RecipeSerializer<ShapedEnderCrafterRecipe> {
 		@Override
 		public ShapedEnderCrafterRecipe fromJson(ResourceLocation recipeId, JsonObject json) {
-			Map<String, Ingredient> map = ShapedRecipe.keyFromJson(JSONUtils.getAsJsonObject(json, "key"));
-			String[] pattern = ShapedRecipe.shrink(ShapedEnderCrafterRecipe.patternFromJson(JSONUtils.getAsJsonArray(json, "pattern")));
+			Map<String, Ingredient> map = ShapedRecipe.keyFromJson(GsonHelper.getAsJsonObject(json, "key"));
+			String[] pattern = ShapedRecipe.shrink(ShapedEnderCrafterRecipe.patternFromJson(GsonHelper.getAsJsonArray(json, "pattern")));
 			int width = pattern[0].length();
 			int height = pattern.length;
 			NonNullList<Ingredient> inputs = ShapedRecipe.dissolvePattern(pattern, map, width, height);
-			ItemStack output = ShapedRecipe.itemFromJson(JSONUtils.getAsJsonObject(json, "result"));
-			int craftingTime = JSONUtils.getAsInt(json, "craftingTime", ModConfigs.ENDER_CRAFTER_TIME_REQUIRED.get());
+			ItemStack output = ShapedRecipe.itemFromJson(GsonHelper.getAsJsonObject(json, "result"));
+			int craftingTime = GsonHelper.getAsInt(json, "craftingTime", ModConfigs.ENDER_CRAFTER_TIME_REQUIRED.get());
 
 			return new ShapedEnderCrafterRecipe(recipeId, width, height, inputs, output, craftingTime);
 		}
 
 		@Override
-		public ShapedEnderCrafterRecipe fromNetwork(ResourceLocation recipeId, PacketBuffer buffer) {
+		public ShapedEnderCrafterRecipe fromNetwork(ResourceLocation recipeId, FriendlyByteBuf buffer) {
 			int width = buffer.readVarInt();
 			int height = buffer.readVarInt();
 			NonNullList<Ingredient> inputs = NonNullList.withSize(width * height, Ingredient.EMPTY);
@@ -179,7 +179,7 @@ public class ShapedEnderCrafterRecipe implements ISpecialRecipe, IEnderCrafterRe
 		}
 
 		@Override
-		public void toNetwork(PacketBuffer buffer, ShapedEnderCrafterRecipe recipe) {
+		public void toNetwork(FriendlyByteBuf buffer, ShapedEnderCrafterRecipe recipe) {
 			buffer.writeVarInt(recipe.width);
 			buffer.writeVarInt(recipe.height);
 

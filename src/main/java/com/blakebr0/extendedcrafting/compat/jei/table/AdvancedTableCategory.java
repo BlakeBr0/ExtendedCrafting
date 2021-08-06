@@ -8,7 +8,7 @@ import com.blakebr0.extendedcrafting.crafting.recipe.ShapedTableRecipe;
 import com.blakebr0.extendedcrafting.crafting.recipe.ShapelessTableRecipe;
 import com.blakebr0.extendedcrafting.init.ModBlocks;
 import com.blakebr0.extendedcrafting.lib.ModTooltips;
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.IRecipeLayout;
 import mezz.jei.api.gui.drawable.IDrawable;
@@ -16,12 +16,11 @@ import mezz.jei.api.gui.ingredient.IGuiItemStackGroup;
 import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.ingredients.IIngredients;
 import mezz.jei.api.recipe.category.IRecipeCategory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextFormatting;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.ItemStack;
 
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -67,7 +66,7 @@ public class AdvancedTableCategory implements IRecipeCategory<ITableRecipe> {
 	}
 
 	@Override
-	public void draw(ITableRecipe recipe, MatrixStack stack, double mouseX, double mouseY) {
+	public void draw(ITableRecipe recipe, PoseStack stack, double mouseX, double mouseY) {
 		stack.pushPose();
 		stack.scale(0.5F, 0.5F, 0.5F);
 		boolean shapeless = recipe instanceof ShapelessTableRecipe;
@@ -79,12 +78,12 @@ public class AdvancedTableCategory implements IRecipeCategory<ITableRecipe> {
 	}
 
 	@Override
-	public List<ITextComponent> getTooltipStrings(ITableRecipe recipe, double mouseX, double mouseY) {
+	public List<Component> getTooltipStrings(ITableRecipe recipe, double mouseX, double mouseY) {
 		boolean shapeless = recipe instanceof ShapelessTableRecipe;
 		int sX = (shapeless ? 265 : 285) / 2, sY = 0;
 
 		if (recipe.hasRequiredTier() && mouseX > sX - 1 && mouseX < sX + 8 && mouseY > sY - 1 && mouseY < sY + 8) {
-			return Collections.singletonList(ModTooltips.REQUIRES_TABLE.args(recipe.getTier()).color(TextFormatting.WHITE).build());
+			return Collections.singletonList(ModTooltips.REQUIRES_TABLE.args(recipe.getTier()).color(ChatFormatting.WHITE).build());
 		}
 
 		if (shapeless && mouseX > sX + 10 && mouseX < sX + 20 && mouseY > sY - 1 && mouseY < sY + 8) {

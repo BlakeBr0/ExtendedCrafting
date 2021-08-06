@@ -27,8 +27,8 @@ import mcp.mobius.waila.api.IRegistrar;
 import mcp.mobius.waila.api.IWailaPlugin;
 import mcp.mobius.waila.api.TooltipPosition;
 import mcp.mobius.waila.api.WailaPlugin;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.text.ITextComponent;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.item.ItemStack;
 
 import java.util.List;
 
@@ -38,7 +38,7 @@ public class HwylaCompat implements IWailaPlugin {
 	public void register(IRegistrar registrar) {
 		registrar.registerComponentProvider(new IComponentProvider() {
 			@Override
-			public void appendBody(List<ITextComponent> tooltip, IDataAccessor accessor, IPluginConfig config) {
+			public void appendBody(List<Component> tooltip, IDataAccessor accessor, IPluginConfig config) {
 				PedestalTileEntity pedestal = (PedestalTileEntity) accessor.getTileEntity();
 				ItemStack stack = pedestal.getInventory().getStackInSlot(0);
 				if (!stack.isEmpty())
@@ -48,7 +48,7 @@ public class HwylaCompat implements IWailaPlugin {
 
 		registrar.registerComponentProvider(new IComponentProvider() {
 			@Override
-			public void appendBody(List<ITextComponent> tooltip, IDataAccessor accessor, IPluginConfig config) {
+			public void appendBody(List<Component> tooltip, IDataAccessor accessor, IPluginConfig config) {
 				CraftingCoreTileEntity core = (CraftingCoreTileEntity) accessor.getTileEntity();
 				CombinationRecipe recipe = core.getActiveRecipe();
 				if (recipe != null) {
@@ -60,63 +60,63 @@ public class HwylaCompat implements IWailaPlugin {
 
 		registrar.registerComponentProvider(new IComponentProvider() {
 			@Override
-			public void appendBody(List<ITextComponent> tooltip, IDataAccessor accessor, IPluginConfig config) {
+			public void appendBody(List<Component> tooltip, IDataAccessor accessor, IPluginConfig config) {
 				tooltip.add(ModTooltips.TIER.args(1).build());
 			}
 		}, TooltipPosition.BODY, BasicTableBlock.class);
 
 		registrar.registerComponentProvider(new IComponentProvider() {
 			@Override
-			public void appendBody(List<ITextComponent> tooltip, IDataAccessor accessor, IPluginConfig config) {
+			public void appendBody(List<Component> tooltip, IDataAccessor accessor, IPluginConfig config) {
 				tooltip.add(ModTooltips.TIER.args(2).build());
 			}
 		}, TooltipPosition.BODY, AdvancedTableBlock.class);
 
 		registrar.registerComponentProvider(new IComponentProvider() {
 			@Override
-			public void appendBody(List<ITextComponent> tooltip, IDataAccessor accessor, IPluginConfig config) {
+			public void appendBody(List<Component> tooltip, IDataAccessor accessor, IPluginConfig config) {
 				tooltip.add(ModTooltips.TIER.args(3).build());
 			}
 		}, TooltipPosition.BODY, EliteTableBlock.class);
 
 		registrar.registerComponentProvider(new IComponentProvider() {
 			@Override
-			public void appendBody(List<ITextComponent> tooltip, IDataAccessor accessor, IPluginConfig config) {
+			public void appendBody(List<Component> tooltip, IDataAccessor accessor, IPluginConfig config) {
 				tooltip.add(ModTooltips.TIER.args(4).build());
 			}
 		}, TooltipPosition.BODY, UltimateTableBlock.class);
 
 		registrar.registerComponentProvider(new IComponentProvider() {
 			@Override
-			public void appendBody(List<ITextComponent> tooltip, IDataAccessor accessor, IPluginConfig config) {
+			public void appendBody(List<Component> tooltip, IDataAccessor accessor, IPluginConfig config) {
 				tooltip.add(ModTooltips.TIER.args(1).build());
 			}
 		}, TooltipPosition.BODY, BasicAutoTableBlock.class);
 
 		registrar.registerComponentProvider(new IComponentProvider() {
 			@Override
-			public void appendBody(List<ITextComponent> tooltip, IDataAccessor accessor, IPluginConfig config) {
+			public void appendBody(List<Component> tooltip, IDataAccessor accessor, IPluginConfig config) {
 				tooltip.add(ModTooltips.TIER.args(2).build());
 			}
 		}, TooltipPosition.BODY, AdvancedAutoTableBlock.class);
 
 		registrar.registerComponentProvider(new IComponentProvider() {
 			@Override
-			public void appendBody(List<ITextComponent> tooltip, IDataAccessor accessor, IPluginConfig config) {
+			public void appendBody(List<Component> tooltip, IDataAccessor accessor, IPluginConfig config) {
 				tooltip.add(ModTooltips.TIER.args(3).build());
 			}
 		}, TooltipPosition.BODY, EliteAutoTableBlock.class);
 
 		registrar.registerComponentProvider(new IComponentProvider() {
 			@Override
-			public void appendBody(List<ITextComponent> tooltip, IDataAccessor accessor, IPluginConfig config) {
+			public void appendBody(List<Component> tooltip, IDataAccessor accessor, IPluginConfig config) {
 				tooltip.add(ModTooltips.TIER.args(4).build());
 			}
 		}, TooltipPosition.BODY, UltimateAutoTableBlock.class);
 
 		registrar.registerComponentProvider(new IComponentProvider() {
 			@Override
-			public void appendBody(List<ITextComponent> tooltip, IDataAccessor accessor, IPluginConfig config) {
+			public void appendBody(List<Component> tooltip, IDataAccessor accessor, IPluginConfig config) {
 				EnderCrafterTileEntity crafter = (EnderCrafterTileEntity) accessor.getTileEntity();
 				IEnderCrafterRecipe recipe = crafter.getActiveRecipe();
 				if (recipe != null) {
@@ -128,7 +128,7 @@ public class HwylaCompat implements IWailaPlugin {
 
 		registrar.registerComponentProvider(new IComponentProvider() {
 			@Override
-			public void appendBody(List<ITextComponent> tooltip, IDataAccessor accessor, IPluginConfig config) {
+			public void appendBody(List<Component> tooltip, IDataAccessor accessor, IPluginConfig config) {
 				CompressorTileEntity compressor = (CompressorTileEntity) accessor.getTileEntity();
 				CompressorRecipe recipe = compressor.getActiveRecipe();
 				if (recipe != null) {

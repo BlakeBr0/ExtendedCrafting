@@ -6,29 +6,29 @@ import com.blakebr0.cucumber.inventory.slot.OutputSlot;
 import com.blakebr0.extendedcrafting.container.slot.CatalystSlot;
 import com.blakebr0.extendedcrafting.init.ModContainerTypes;
 import com.blakebr0.extendedcrafting.tileentity.CompressorTileEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.inventory.container.ContainerType;
-import net.minecraft.inventory.container.Slot;
-import net.minecraft.item.ItemStack;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.IIntArray;
-import net.minecraft.util.IntArray;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.ContainerData;
+import net.minecraft.world.inventory.MenuType;
+import net.minecraft.world.inventory.SimpleContainerData;
+import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.ItemStack;
 
 import java.util.function.Function;
 
-public class CompressorContainer extends Container {
-	private final Function<PlayerEntity, Boolean> isUsableByPlayer;
-	private final IIntArray data;
+public class CompressorContainer extends AbstractContainerMenu {
+	private final Function<Player, Boolean> isUsableByPlayer;
+	private final ContainerData data;
 	private final BlockPos pos;
 
-	private CompressorContainer(ContainerType<?> type, int id, PlayerInventory playerInventory, PacketBuffer buffer) {
-		this(type, id, playerInventory, p -> false, (new CompressorTileEntity()).getInventory(), new IntArray(10), buffer.readBlockPos());
+	private CompressorContainer(MenuType<?> type, int id, Inventory playerInventory, FriendlyByteBuf buffer) {
+		this(type, id, playerInventory, p -> false, (new CompressorTileEntity()).getInventory(), new SimpleContainerData(10), buffer.readBlockPos());
 	}
 
-	private CompressorContainer(ContainerType<?> type, int id, PlayerInventory playerInventory, Function<PlayerEntity, Boolean> isUsableByPlayer, BaseItemStackHandler inventory, IIntArray data, BlockPos pos) {
+	private CompressorContainer(MenuType<?> type, int id, Inventory playerInventory, Function<Player, Boolean> isUsableByPlayer, BaseItemStackHandler inventory, ContainerData data, BlockPos pos) {
 		super(type, id);
 		this.isUsableByPlayer = isUsableByPlayer;
 		this.data = data;
@@ -52,7 +52,7 @@ public class CompressorContainer extends Container {
 	}
 
 	@Override
-	public ItemStack quickMoveStack(PlayerEntity player, int slotNumber) {
+	public ItemStack quickMoveStack(Player player, int slotNumber) {
 		ItemStack itemstack = ItemStack.EMPTY;
 		Slot slot = this.slots.get(slotNumber);
 
@@ -100,7 +100,7 @@ public class CompressorContainer extends Container {
 	}
 
 	@Override
-	public boolean stillValid(PlayerEntity player) {
+	public boolean stillValid(Player player) {
 		return this.isUsableByPlayer.apply(player);
 	}
 
@@ -108,11 +108,11 @@ public class CompressorContainer extends Container {
 		return this.pos;
 	}
 
-	public static CompressorContainer create(int windowId, PlayerInventory playerInventory, PacketBuffer buffer) {
+	public static CompressorContainer create(int windowId, Inventory playerInventory, FriendlyByteBuf buffer) {
 		return new CompressorContainer(ModContainerTypes.COMPRESSOR.get(), windowId, playerInventory, buffer);
 	}
 
-	public static CompressorContainer create(int windowId, PlayerInventory playerInventory, Function<PlayerEntity, Boolean> isUsableByPlayer, BaseItemStackHandler inventory, IIntArray data, BlockPos pos) {
+	public static CompressorContainer create(int windowId, Inventory playerInventory, Function<Player, Boolean> isUsableByPlayer, BaseItemStackHandler inventory, ContainerData data, BlockPos pos) {
 		return new CompressorContainer(ModContainerTypes.COMPRESSOR.get(), windowId, playerInventory, isUsableByPlayer, inventory, data, pos);
 	}
 }

@@ -1,12 +1,12 @@
 package com.blakebr0.extendedcrafting.api.crafting;
 
 import com.blakebr0.extendedcrafting.ExtendedCrafting;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.item.crafting.IRecipe;
-import net.minecraft.item.crafting.IRecipeType;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.registry.Registry;
-import net.minecraft.world.World;
+import net.minecraft.core.Registry;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.Container;
+import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.level.Level;
 
 import java.util.Optional;
 
@@ -14,27 +14,27 @@ import java.util.Optional;
  * The custom recipe types added by Extended Crafting
  */
 public class RecipeTypes {
-    public static final IRecipeType<ICombinationRecipe> COMBINATION = new IRecipeType<ICombinationRecipe>() {
+    public static final RecipeType<ICombinationRecipe> COMBINATION = new RecipeType<ICombinationRecipe>() {
         @Override
-        public <C extends IInventory> Optional<ICombinationRecipe> tryMatch(IRecipe<C> recipe, World world, C inv) {
+        public <C extends Container> Optional<ICombinationRecipe> tryMatch(Recipe<C> recipe, Level world, C inv) {
             return recipe.matches(inv, world) ? Optional.of((ICombinationRecipe) recipe) : Optional.empty();
         }
     };
-    public static final IRecipeType<ITableRecipe> TABLE = new IRecipeType<ITableRecipe>() {
+    public static final RecipeType<ITableRecipe> TABLE = new RecipeType<ITableRecipe>() {
         @Override
-        public <C extends IInventory> Optional<ITableRecipe> tryMatch(IRecipe<C> recipe, World world, C inv) {
+        public <C extends Container> Optional<ITableRecipe> tryMatch(Recipe<C> recipe, Level world, C inv) {
             return recipe.matches(inv, world) ? Optional.of((ITableRecipe) recipe) : Optional.empty();
         }
     };
-    public static final IRecipeType<ICompressorRecipe> COMPRESSOR = new IRecipeType<ICompressorRecipe>() {
+    public static final RecipeType<ICompressorRecipe> COMPRESSOR = new RecipeType<ICompressorRecipe>() {
         @Override
-        public <C extends IInventory> Optional<ICompressorRecipe> tryMatch(IRecipe<C> recipe, World world, C inv) {
+        public <C extends Container> Optional<ICompressorRecipe> tryMatch(Recipe<C> recipe, Level world, C inv) {
             return recipe.matches(inv, world) ? Optional.of((ICompressorRecipe) recipe) : Optional.empty();
         }
     };
-    public static final IRecipeType<IEnderCrafterRecipe> ENDER_CRAFTER = new IRecipeType<IEnderCrafterRecipe>() {
+    public static final RecipeType<IEnderCrafterRecipe> ENDER_CRAFTER = new RecipeType<IEnderCrafterRecipe>() {
         @Override
-        public <C extends IInventory> Optional<IEnderCrafterRecipe> tryMatch(IRecipe<C> recipe, World world, C inv) {
+        public <C extends Container> Optional<IEnderCrafterRecipe> tryMatch(Recipe<C> recipe, Level world, C inv) {
             return recipe.matches(inv, world) ? Optional.of((IEnderCrafterRecipe) recipe) : Optional.empty();
         }
     };

@@ -7,15 +7,15 @@ import com.blakebr0.extendedcrafting.init.ModRecipeSerializers;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.IRecipeSerializer;
-import net.minecraft.item.crafting.IRecipeType;
-import net.minecraft.item.crafting.Ingredient;
-import net.minecraft.item.crafting.ShapedRecipe;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.JSONUtils;
-import net.minecraft.util.NonNullList;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.core.NonNullList;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.GsonHelper;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.item.crafting.ShapedRecipe;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.registries.ForgeRegistryEntry;
 
@@ -84,12 +84,12 @@ public class ShapedTableRecipe implements ISpecialRecipe, ITableRecipe {
 	}
 
 	@Override
-	public IRecipeSerializer<?> getSerializer() {
+	public RecipeSerializer<?> getSerializer() {
 		return ModRecipeSerializers.SHAPED_TABLE;
 	}
 
 	@Override
-	public IRecipeType<?> getType() {
+	public RecipeType<?> getType() {
 		return RecipeTypes.TABLE;
 	}
 
@@ -156,7 +156,7 @@ public class ShapedTableRecipe implements ISpecialRecipe, ITableRecipe {
 	private static String[] patternFromJson(JsonArray jsonArr) {
 		String[] astring = new String[jsonArr.size()];
 		for (int i = 0; i < astring.length; ++i) {
-			String s = JSONUtils.convertToString(jsonArr.get(i), "pattern[" + i + "]");
+			String s = GsonHelper.convertToString(jsonArr.get(i), "pattern[" + i + "]");
 
 			if (i > 0 && astring[0].length() != s.length()) {
 				throw new JsonSyntaxException("Invalid pattern: each row must be the same width");
@@ -168,16 +168,16 @@ public class ShapedTableRecipe implements ISpecialRecipe, ITableRecipe {
 		return astring;
 	}
 
-	public static class Serializer extends ForgeRegistryEntry<IRecipeSerializer<?>> implements IRecipeSerializer<ShapedTableRecipe> {
+	public static class Serializer extends ForgeRegistryEntry<RecipeSerializer<?>> implements RecipeSerializer<ShapedTableRecipe> {
 		@Override
 		public ShapedTableRecipe fromJson(ResourceLocation recipeId, JsonObject json) {
-			Map<String, Ingredient> map = ShapedRecipe.keyFromJson(JSONUtils.getAsJsonObject(json, "key"));
-			String[] pattern = ShapedRecipe.shrink(ShapedTableRecipe.patternFromJson(JSONUtils.getAsJsonArray(json, "pattern")));
+			Map<String, Ingredient> map = ShapedRecipe.keyFromJson(GsonHelper.getAsJsonObject(json, "key"));
+			String[] pattern = ShapedRecipe.shrink(ShapedTableRecipe.patternFromJson(GsonHelper.getAsJsonArray(json, "pattern")));
 			int width = pattern[0].length();
 			int height = pattern.length;
 			NonNullList<Ingredient> inputs = ShapedRecipe.dissolvePattern(pattern, map, width, height);
-			ItemStack output = ShapedRecipe.itemFromJson(JSONUtils.getAsJsonObject(json, "result"));
-			int tier = JSONUtils.getAsInt(json, "tier", 0);
+			ItemStack output = ShapedRecipe.itemFromJson(GsonHelper.getAsJsonObject(json, "result"));
+			int tier = GsonHelper.getAsInt(json, "tier", 0);
 			int size = tier * 2 + 1;
 			if (tier != 0 && (width > size || height > size))
 				throw new JsonSyntaxException("The pattern size is larger than the specified tier can support");
@@ -186,7 +186,7 @@ public class ShapedTableRecipe implements ISpecialRecipe, ITableRecipe {
 		}
 
 		@Override
-		public ShapedTableRecipe fromNetwork(ResourceLocation recipeId, PacketBuffer buffer) {
+		public ShapedTableRecipe fromNetwork(ResourceLocation recipeId, FriendlyByteBuf buffer) {
 			int width = buffer.readVarInt();
 			int height = buffer.readVarInt();
 			NonNullList<Ingredient> inputs = NonNullList.withSize(width * height, Ingredient.EMPTY);
@@ -202,7 +202,7 @@ public class ShapedTableRecipe implements ISpecialRecipe, ITableRecipe {
 		}
 
 		@Override
-		public void toNetwork(PacketBuffer buffer, ShapedTableRecipe recipe) {
+		public void toNetwork(FriendlyByteBuf buffer, ShapedTableRecipe recipe) {
 			buffer.writeVarInt(recipe.width);
 			buffer.writeVarInt(recipe.height);
 

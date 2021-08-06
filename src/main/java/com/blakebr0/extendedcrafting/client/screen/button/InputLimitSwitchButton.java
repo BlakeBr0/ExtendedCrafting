@@ -4,7 +4,7 @@ import com.blakebr0.cucumber.client.screen.button.IconButton;
 import com.blakebr0.extendedcrafting.client.screen.CompressorScreen;
 import com.blakebr0.extendedcrafting.network.NetworkHandler;
 import com.blakebr0.extendedcrafting.network.message.InputLimitSwitchMessage;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.core.BlockPos;
 
 import java.util.function.Supplier;
 

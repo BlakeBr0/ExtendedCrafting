@@ -5,12 +5,12 @@ import com.blakebr0.extendedcrafting.init.ModRecipeSerializers;
 import com.blakebr0.extendedcrafting.singularity.SingularityRegistry;
 import com.blakebr0.extendedcrafting.singularity.SingularityUtils;
 import com.google.gson.JsonObject;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.IRecipeSerializer;
-import net.minecraft.item.crafting.Ingredient;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.NonNullList;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.core.NonNullList;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraftforge.registries.ForgeRegistryEntry;
 
 import java.util.stream.Collectors;
@@ -23,18 +23,18 @@ public class UltimateSingularityRecipe extends ShapelessTableRecipe {
     }
 
     @Override
-    public IRecipeSerializer<?> getSerializer() {
+    public RecipeSerializer<?> getSerializer() {
         return ModRecipeSerializers.ULTIMATE_SINGULARITY;
     }
 
-    public static class Serializer extends ForgeRegistryEntry<IRecipeSerializer<?>> implements IRecipeSerializer<UltimateSingularityRecipe> {
+    public static class Serializer extends ForgeRegistryEntry<RecipeSerializer<?>> implements RecipeSerializer<UltimateSingularityRecipe> {
         @Override
         public UltimateSingularityRecipe fromJson(ResourceLocation recipeId, JsonObject json) {
             return new UltimateSingularityRecipe(recipeId, SINGULARITIES, new ItemStack(ModItems.ULTIMATE_SINGULARITY.get()));
         }
 
         @Override
-        public UltimateSingularityRecipe fromNetwork(ResourceLocation recipeId, PacketBuffer buffer) {
+        public UltimateSingularityRecipe fromNetwork(ResourceLocation recipeId, FriendlyByteBuf buffer) {
             NonNullList<Ingredient> singularities = SingularityRegistry.getInstance().getSingularities()
                     .stream()
                     .filter(singularity -> singularity.isInUltimateSingularity() && singularity.getIngredient() != Ingredient.EMPTY)
@@ -47,6 +47,6 @@ public class UltimateSingularityRecipe extends ShapelessTableRecipe {
         }
 
         @Override
-        public void toNetwork(PacketBuffer buffer, UltimateSingularityRecipe recipe) { }
+        public void toNetwork(FriendlyByteBuf buffer, UltimateSingularityRecipe recipe) { }
     }
 }

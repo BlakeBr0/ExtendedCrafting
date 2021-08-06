@@ -4,18 +4,18 @@ import com.blakebr0.cucumber.client.screen.BaseContainerScreen;
 import com.blakebr0.extendedcrafting.ExtendedCrafting;
 import com.blakebr0.extendedcrafting.container.EnderCrafterContainer;
 import com.blakebr0.extendedcrafting.tileentity.EnderCrafterTileEntity;
-import com.mojang.blaze3d.matrix.MatrixStack;
-import net.minecraft.client.world.ClientWorld;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.ITextComponent;
+import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.level.block.entity.BlockEntity;
 
 public class EnderCrafterScreen extends BaseContainerScreen<EnderCrafterContainer> {
 	private static final ResourceLocation BACKGROUND = new ResourceLocation(ExtendedCrafting.MOD_ID, "textures/gui/ender_crafter.png");
 	private EnderCrafterTileEntity tile;
 
-	public EnderCrafterScreen(EnderCrafterContainer container, PlayerInventory inventory, ITextComponent title) {
+	public EnderCrafterScreen(EnderCrafterContainer container, Inventory inventory, Component title) {
 		super(container, inventory, title, BACKGROUND, 176, 170);
 	}
 
@@ -27,7 +27,7 @@ public class EnderCrafterScreen extends BaseContainerScreen<EnderCrafterContaine
 	}
 
 	@Override
-	protected void renderLabels(MatrixStack stack, int mouseX, int mouseY) {
+	protected void renderLabels(PoseStack stack, int mouseX, int mouseY) {
 		String title = this.getTitle().getString();
 		this.font.draw(stack, title, 30.0F, 6.0F, 4210752);
 		String inventory = this.inventory.getDisplayName().getString();
@@ -35,7 +35,7 @@ public class EnderCrafterScreen extends BaseContainerScreen<EnderCrafterContaine
 	}
 
 	@Override
-	protected void renderBg(MatrixStack stack, float partialTicks, int mouseX, int mouseY) {
+	protected void renderBg(PoseStack stack, float partialTicks, int mouseX, int mouseY) {
 		super.renderBg(stack, partialTicks, mouseX, mouseY);
 
 		int x = this.getGuiLeft();
@@ -48,10 +48,10 @@ public class EnderCrafterScreen extends BaseContainerScreen<EnderCrafterContaine
 	}
 
 	private EnderCrafterTileEntity getTileEntity() {
-		ClientWorld world = this.getMinecraft().level;
+		ClientLevel world = this.getMinecraft().level;
 
 		if (world != null) {
-			TileEntity tile = world.getBlockEntity(this.getMenu().getPos());
+			BlockEntity tile = world.getBlockEntity(this.getMenu().getPos());
 
 			if (tile instanceof EnderCrafterTileEntity) {
 				return (EnderCrafterTileEntity) tile;

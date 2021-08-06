@@ -1,10 +1,10 @@
 package com.blakebr0.extendedcrafting;
 
 import com.blakebr0.extendedcrafting.init.ModItems;
-import net.minecraft.item.ItemGroup;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.ItemStack;
 
-public class ECItemGroup extends ItemGroup {
+public class ECItemGroup extends CreativeModeTab {
 	public ECItemGroup() {
 		super(ExtendedCrafting.MOD_ID);
 	}

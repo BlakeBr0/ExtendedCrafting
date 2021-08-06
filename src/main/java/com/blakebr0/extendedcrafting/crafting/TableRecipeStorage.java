@@ -1,9 +1,9 @@
 package com.blakebr0.extendedcrafting.crafting;
 
 import com.blakebr0.cucumber.inventory.BaseItemStackHandler;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.ListNBT;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.common.util.Constants;
 
 public class TableRecipeStorage {
@@ -80,21 +80,21 @@ public class TableRecipeStorage {
         return this.recipes[this.selected];
     }
 
-    public CompoundNBT serializeNBT() {
-        ListNBT recipes = new ListNBT();
+    public CompoundTag serializeNBT() {
+        ListTag recipes = new ListTag();
         for (int i = 0; i < this.recipes.length; i++) {
             recipes.add(i, this.recipes[i].serializeNBT());
         }
 
-        CompoundNBT tag = new CompoundNBT();
+        CompoundTag tag = new CompoundTag();
         tag.put("Recipes", recipes);
         tag.putInt("Selected", this.selected);
 
         return tag;
     }
 
-    public void deserializeNBT(CompoundNBT tag) {
-        ListNBT recipes = tag.getList("Recipes", Constants.NBT.TAG_COMPOUND);
+    public void deserializeNBT(CompoundTag tag) {
+        ListTag recipes = tag.getList("Recipes", Constants.NBT.TAG_COMPOUND);
         for (int i = 0; i < recipes.size(); i++) {
             this.recipes[i].deserializeNBT(recipes.getCompound(i));
         }

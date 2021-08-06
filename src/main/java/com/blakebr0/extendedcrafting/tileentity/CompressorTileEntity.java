@@ -10,24 +10,24 @@ import com.blakebr0.extendedcrafting.config.ModConfigs;
 import com.blakebr0.extendedcrafting.container.CompressorContainer;
 import com.blakebr0.extendedcrafting.crafting.recipe.CompressorRecipe;
 import com.blakebr0.extendedcrafting.init.ModTileEntities;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.inventory.container.INamedContainerProvider;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.tileentity.ITickableTileEntity;
-import net.minecraft.util.Direction;
-import net.minecraft.util.IntArray;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.world.World;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.MenuProvider;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.SimpleContainerData;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.TickableBlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.IEnergyStorage;
 
-public class CompressorTileEntity extends BaseInventoryTileEntity implements ITickableTileEntity, INamedContainerProvider {
+public class CompressorTileEntity extends BaseInventoryTileEntity implements TickableBlockEntity, MenuProvider {
 	private final BaseItemStackHandler inventory;
 	private final BaseItemStackHandler recipeInventory;
 	private final BaseEnergyStorage energy;
@@ -56,7 +56,7 @@ public class CompressorTileEntity extends BaseInventoryTileEntity implements ITi
 	}
 
 	@Override
-	public void load(BlockState state, CompoundNBT tag) {
+	public void load(BlockState state, CompoundTag tag) {
 		super.load(state, tag);
 		this.materialCount = tag.getInt("MaterialCount");
 		this.materialStack = ItemStack.of(tag.getCompound("MaterialStack"));
@@ -67,7 +67,7 @@ public class CompressorTileEntity extends BaseInventoryTileEntity implements ITi
 	}
 
 	@Override
-	public CompoundNBT save(CompoundNBT tag) {
+	public CompoundTag save(CompoundTag tag) {
 		tag = super.save(tag);
 		tag.putInt("MaterialCount", this.materialCount);
 		tag.put("MaterialStack", this.materialStack.serializeNBT());
@@ -83,7 +83,7 @@ public class CompressorTileEntity extends BaseInventoryTileEntity implements ITi
 	public void tick() {
 		boolean mark = false;
 
-		World world = this.getLevel();
+		Level world = this.getLevel();
 		if (world != null) {
 			ItemStack output = this.inventory.getStackInSlot(0);
 			ItemStack input = this.inventory.getStackInSlot(1);
@@ -184,13 +184,13 @@ public class CompressorTileEntity extends BaseInventoryTileEntity implements ITi
 	}
 
 	@Override
-	public ITextComponent getDisplayName() {
+	public Component getDisplayName() {
 		return Localizable.of("container.extendedcrafting.compressor").build();
 	}
 
 	@Override
-	public Container createMenu(int windowId, PlayerInventory playerInventory, PlayerEntity playerEntity) {
-		return CompressorContainer.create(windowId, playerInventory, this::isUsableByPlayer, this.inventory, new IntArray(0), this.getBlockPos());
+	public AbstractContainerMenu createMenu(int windowId, Inventory playerInventory, Player playerEntity) {
+		return CompressorContainer.create(windowId, playerInventory, this::isUsableByPlayer, this.inventory, new SimpleContainerData(0), this.getBlockPos());
 	}
 
 	public BaseEnergyStorage getEnergy() {

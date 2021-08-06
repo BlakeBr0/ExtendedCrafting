@@ -6,15 +6,15 @@ import com.blakebr0.extendedcrafting.api.crafting.RecipeTypes;
 import com.blakebr0.extendedcrafting.config.ModConfigs;
 import com.blakebr0.extendedcrafting.init.ModRecipeSerializers;
 import com.google.gson.JsonObject;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.IRecipeSerializer;
-import net.minecraft.item.crafting.IRecipeType;
-import net.minecraft.item.crafting.Ingredient;
-import net.minecraft.item.crafting.ShapedRecipe;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.JSONUtils;
-import net.minecraft.util.NonNullList;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.core.NonNullList;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.GsonHelper;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.item.crafting.ShapedRecipe;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.registries.ForgeRegistryEntry;
 
@@ -62,12 +62,12 @@ public class CompressorRecipe implements ISpecialRecipe, ICompressorRecipe {
 	}
 
 	@Override
-	public IRecipeSerializer<?> getSerializer() {
+	public RecipeSerializer<?> getSerializer() {
 		return ModRecipeSerializers.COMPRESSOR;
 	}
 
 	@Override
-	public IRecipeType<?> getType() {
+	public RecipeType<?> getType() {
 		return RecipeTypes.COMPRESSOR;
 	}
 
@@ -103,21 +103,21 @@ public class CompressorRecipe implements ISpecialRecipe, ICompressorRecipe {
 		return this.powerRate;
 	}
 
-	public static class Serializer extends ForgeRegistryEntry<IRecipeSerializer<?>> implements IRecipeSerializer<CompressorRecipe> {
+	public static class Serializer extends ForgeRegistryEntry<RecipeSerializer<?>> implements RecipeSerializer<CompressorRecipe> {
 		@Override
 		public CompressorRecipe fromJson(ResourceLocation recipeId, JsonObject json) {
 			Ingredient input = Ingredient.fromJson(json.getAsJsonObject("ingredient"));
-			ItemStack output = ShapedRecipe.itemFromJson(JSONUtils.getAsJsonObject(json, "result"));
-			int inputCount = JSONUtils.getAsInt(json, "inputCount", 10000);
-			Ingredient catalyst = Ingredient.fromJson(JSONUtils.getAsJsonObject(json, "catalyst"));
-			int powerCost = JSONUtils.getAsInt(json, "powerCost");
-			int powerRate = JSONUtils.getAsInt(json, "powerRate", ModConfigs.COMPRESSOR_POWER_RATE.get());
+			ItemStack output = ShapedRecipe.itemFromJson(GsonHelper.getAsJsonObject(json, "result"));
+			int inputCount = GsonHelper.getAsInt(json, "inputCount", 10000);
+			Ingredient catalyst = Ingredient.fromJson(GsonHelper.getAsJsonObject(json, "catalyst"));
+			int powerCost = GsonHelper.getAsInt(json, "powerCost");
+			int powerRate = GsonHelper.getAsInt(json, "powerRate", ModConfigs.COMPRESSOR_POWER_RATE.get());
 
 			return new CompressorRecipe(recipeId, input, output, inputCount, catalyst, powerCost, powerRate);
 		}
 
 		@Override
-		public CompressorRecipe fromNetwork(ResourceLocation recipeId, PacketBuffer buffer) {
+		public CompressorRecipe fromNetwork(ResourceLocation recipeId, FriendlyByteBuf buffer) {
 			Ingredient input = Ingredient.fromNetwork(buffer);
 			ItemStack output = buffer.readItem();
 			int inputCount = buffer.readInt();
@@ -129,7 +129,7 @@ public class CompressorRecipe implements ISpecialRecipe, ICompressorRecipe {
 		}
 
 		@Override
-		public void toNetwork(PacketBuffer buffer, CompressorRecipe recipe) {
+		public void toNetwork(FriendlyByteBuf buffer, CompressorRecipe recipe) {
 			recipe.inputs.get(0).toNetwork(buffer);
 			buffer.writeItem(recipe.output);
 			buffer.writeInt(recipe.inputCount);

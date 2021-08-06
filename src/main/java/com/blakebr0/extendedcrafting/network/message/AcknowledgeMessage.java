@@ -1,7 +1,7 @@
 package com.blakebr0.extendedcrafting.network.message;
 
 import com.blakebr0.extendedcrafting.network.NetworkHandler;
-import net.minecraft.network.PacketBuffer;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.fml.network.NetworkEvent;
 
 import java.util.function.IntSupplier;
@@ -25,11 +25,11 @@ public class AcknowledgeMessage implements IntSupplier {
         this.loginIndex = loginIndex;
     }
 
-    public static AcknowledgeMessage read(PacketBuffer buffer) {
+    public static AcknowledgeMessage read(FriendlyByteBuf buffer) {
         return new AcknowledgeMessage();
     }
 
-    public static void write(AcknowledgeMessage message, PacketBuffer buffer) { }
+    public static void write(AcknowledgeMessage message, FriendlyByteBuf buffer) { }
 
     public static void onMessage(AcknowledgeMessage message, Supplier<NetworkEvent.Context> context) {
         if (context.get().getDirection().getReceptionSide().isClient()) {

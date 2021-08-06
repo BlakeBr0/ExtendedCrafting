@@ -1,13 +1,13 @@
 package com.blakebr0.extendedcrafting.singularity;
 
 import com.blakebr0.cucumber.util.Localizable;
-import net.minecraft.item.Item;
-import net.minecraft.item.crafting.Ingredient;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.tags.ITag;
-import net.minecraft.tags.TagCollectionManager;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.ITextComponent;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.SerializationTags;
+import net.minecraft.tags.Tag;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.crafting.Ingredient;
 
 public class Singularity {
     private final ResourceLocation id;
@@ -60,7 +60,7 @@ public class Singularity {
 
     public Ingredient getIngredient() {
         if (this.tag != null && this.ingredient == Ingredient.EMPTY) {
-            ITag<Item> tag = TagCollectionManager.getInstance().getItems().getTag(new ResourceLocation(this.tag));
+            Tag<Item> tag = SerializationTags.getInstance().getItems().getTag(new ResourceLocation(this.tag));
             if (tag != null) {
                 this.ingredient = Ingredient.of(tag);
             }
@@ -73,7 +73,7 @@ public class Singularity {
         return this.ingredientCount;
     }
 
-    public ITextComponent getDisplayName() {
+    public Component getDisplayName() {
         return Localizable.of(this.name).build();
     }
 
@@ -81,7 +81,7 @@ public class Singularity {
         return this.inUltimateSingularity;
     }
 
-    public void write(PacketBuffer buffer) {
+    public void write(FriendlyByteBuf buffer) {
         buffer.writeResourceLocation(this.id);
         buffer.writeUtf(this.name);
         buffer.writeVarIntArray(this.colors);
@@ -97,7 +97,7 @@ public class Singularity {
         buffer.writeBoolean(this.inUltimateSingularity);
     }
 
-    public static Singularity read(PacketBuffer buffer) {
+    public static Singularity read(FriendlyByteBuf buffer) {
         ResourceLocation id = buffer.readResourceLocation();
         String name = buffer.readUtf();
         int[] colors = buffer.readVarIntArray();

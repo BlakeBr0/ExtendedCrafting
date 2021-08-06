@@ -9,10 +9,10 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import net.minecraft.item.Items;
-import net.minecraft.item.crafting.Ingredient;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraftforge.fml.loading.FMLPaths;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.filefilter.FileFilterUtils;
@@ -75,7 +75,7 @@ public final class SingularityRegistry {
         return this.singularities.get(id);
     }
 
-    public void writeToBuffer(PacketBuffer buffer) {
+    public void writeToBuffer(FriendlyByteBuf buffer) {
         buffer.writeVarInt(this.singularities.size());
 
         this.singularities.forEach((id, singularity) -> {
@@ -83,7 +83,7 @@ public final class SingularityRegistry {
         });
     }
 
-    public List<Singularity> readFromBuffer(PacketBuffer buffer) {
+    public List<Singularity> readFromBuffer(FriendlyByteBuf buffer) {
         List<Singularity> singularities = new ArrayList<>();
 
         int size = buffer.readVarInt();

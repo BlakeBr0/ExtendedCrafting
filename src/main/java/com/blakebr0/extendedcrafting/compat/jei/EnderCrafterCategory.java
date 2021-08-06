@@ -7,7 +7,7 @@ import com.blakebr0.extendedcrafting.crafting.recipe.ShapedEnderCrafterRecipe;
 import com.blakebr0.extendedcrafting.crafting.recipe.ShapelessEnderCrafterRecipe;
 import com.blakebr0.extendedcrafting.init.ModBlocks;
 import com.blakebr0.extendedcrafting.lib.ModTooltips;
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.IRecipeLayout;
 import mezz.jei.api.gui.drawable.IDrawable;
@@ -17,10 +17,10 @@ import mezz.jei.api.gui.ingredient.IGuiItemStackGroup;
 import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.ingredients.IIngredients;
 import mezz.jei.api.recipe.category.IRecipeCategory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextFormatting;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.ItemStack;
 
 import java.util.Collections;
 import java.util.List;
@@ -67,14 +67,14 @@ public class EnderCrafterCategory implements IRecipeCategory<IEnderCrafterRecipe
 	}
 
 	@Override
-	public void draw(IEnderCrafterRecipe recipe, MatrixStack stack, double mouseX, double mouseY) {
+	public void draw(IEnderCrafterRecipe recipe, PoseStack stack, double mouseX, double mouseY) {
 		this.arrow.draw(stack, 61, 19);
 	}
 
 	@Override
-	public List<ITextComponent> getTooltipStrings(IEnderCrafterRecipe recipe, double mouseX, double mouseY) {
+	public List<Component> getTooltipStrings(IEnderCrafterRecipe recipe, double mouseX, double mouseY) {
 		if (mouseX > 60 && mouseX < 83 && mouseY > 19 && mouseY < 34) {
-			return Collections.singletonList(ModTooltips.SECONDS.args(recipe.getCraftingTime()).color(TextFormatting.WHITE).build());
+			return Collections.singletonList(ModTooltips.SECONDS.args(recipe.getCraftingTime()).color(ChatFormatting.WHITE).build());
 		}
 
 		return Collections.emptyList();

@@ -3,20 +3,20 @@ package com.blakebr0.extendedcrafting.container.slot;
 import com.blakebr0.extendedcrafting.api.crafting.RecipeTypes;
 import com.blakebr0.extendedcrafting.container.BasicAutoTableContainer;
 import com.blakebr0.extendedcrafting.container.BasicTableContainer;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.CraftingInventory;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.inventory.container.Slot;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.IRecipeType;
-import net.minecraft.util.NonNullList;
+import net.minecraft.core.NonNullList;
+import net.minecraft.world.Container;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.CraftingContainer;
+import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.RecipeType;
 
 public class TableOutputSlot extends Slot {
-    private final Container container;
-    private final IInventory matrix;
+    private final AbstractContainerMenu container;
+    private final Container matrix;
 
-    public TableOutputSlot(Container container, IInventory matrix, IInventory inventory, int index, int xPosition, int yPosition) {
+    public TableOutputSlot(AbstractContainerMenu container, Container matrix, Container inventory, int index, int xPosition, int yPosition) {
         super(inventory, index, xPosition, yPosition);
         this.container = container;
         this.matrix = matrix;
@@ -28,7 +28,7 @@ public class TableOutputSlot extends Slot {
     }
 
     @Override
-    public ItemStack onTake(PlayerEntity player, ItemStack stack) {
+    public ItemStack onTake(Player player, ItemStack stack) {
         boolean isVanilla = false;
 
         if (this.container instanceof BasicTableContainer) {
@@ -40,7 +40,7 @@ public class TableOutputSlot extends Slot {
         NonNullList<ItemStack> remaining;
 
         if (isVanilla) {
-            remaining = player.level.getRecipeManager().getRemainingItemsFor(IRecipeType.CRAFTING, (CraftingInventory) this.matrix, player.level);
+            remaining = player.level.getRecipeManager().getRemainingItemsFor(RecipeType.CRAFTING, (CraftingContainer) this.matrix, player.level);
         } else {
             remaining = player.level.getRecipeManager().getRemainingItemsFor(RecipeTypes.TABLE, this.matrix, player.level);
         }

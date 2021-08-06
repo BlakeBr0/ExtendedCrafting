@@ -5,8 +5,8 @@ import com.blakebr0.extendedcrafting.client.screen.BasicAutoTableScreen;
 import com.blakebr0.extendedcrafting.network.NetworkHandler;
 import com.blakebr0.extendedcrafting.network.message.SaveRecipeMessage;
 import com.blakebr0.extendedcrafting.network.message.SelectRecipeMessage;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.core.BlockPos;
 
 import java.util.function.Function;
 

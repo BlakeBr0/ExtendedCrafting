@@ -5,23 +5,23 @@ import com.blakebr0.extendedcrafting.ExtendedCrafting;
 import com.blakebr0.extendedcrafting.container.CraftingCoreContainer;
 import com.blakebr0.extendedcrafting.crafting.recipe.CombinationRecipe;
 import com.blakebr0.extendedcrafting.tileentity.CraftingCoreTileEntity;
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.systems.RenderSystem;
-import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.renderer.RenderHelper;
-import net.minecraft.client.world.ClientWorld;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
+import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.gui.Font;
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.entity.BlockEntity;
 
 public class CraftingCoreScreen extends BaseContainerScreen<CraftingCoreContainer> {
 	private static final ResourceLocation BACKGROUND = new ResourceLocation(ExtendedCrafting.MOD_ID, "textures/gui/crafting_core.png");
 	private CraftingCoreTileEntity tile;
 
-	public CraftingCoreScreen(CraftingCoreContainer container, PlayerInventory inventory, ITextComponent title) {
+	public CraftingCoreScreen(CraftingCoreContainer container, Inventory inventory, Component title) {
 		super(container, inventory, title, BACKGROUND, 176, 194);
 	}
 
@@ -33,7 +33,7 @@ public class CraftingCoreScreen extends BaseContainerScreen<CraftingCoreContaine
 	}
 
 	@Override
-	public void render(MatrixStack stack, int mouseX, int mouseY, float partialTicks) {
+	public void render(PoseStack stack, int mouseX, int mouseY, float partialTicks) {
 		int x = this.getGuiLeft();
 		int y = this.getGuiTop();
 
@@ -49,13 +49,13 @@ public class CraftingCoreScreen extends BaseContainerScreen<CraftingCoreContaine
 		}
 
 		if (mouseX > x + 7 && mouseX < x + 20 && mouseY > y + 17 && mouseY < y + 94) {
-			StringTextComponent text = new StringTextComponent(number(this.getEnergyStored()) + " / " + number(this.getMaxEnergyStored()) + " FE");
+			TextComponent text = new TextComponent(number(this.getEnergyStored()) + " / " + number(this.getMaxEnergyStored()) + " FE");
 			this.renderTooltip(stack, text, mouseX, mouseY);
 		}
 	}
 
 	@Override
-	protected void renderLabels(MatrixStack stack, int mouseX, int mouseY) {
+	protected void renderLabels(PoseStack stack, int mouseX, int mouseY) {
 		String title = this.getTitle().getString();
 		this.font.draw(stack, title, (float) (this.imageWidth / 2 - this.font.width(title) / 2), 6.0F, 4210752);
 		String inventory = this.inventory.getDisplayName().getString();
@@ -79,7 +79,7 @@ public class CraftingCoreScreen extends BaseContainerScreen<CraftingCoreContaine
 	}
 
 	@Override
-	protected void renderBg(MatrixStack stack, float partialTicks, int mouseX, int mouseY) {
+	protected void renderBg(PoseStack stack, float partialTicks, int mouseX, int mouseY) {
 		super.renderBg(stack, partialTicks, mouseX, mouseY);
 
 		int x = this.getGuiLeft();
@@ -106,20 +106,20 @@ public class CraftingCoreScreen extends BaseContainerScreen<CraftingCoreContaine
 	
 	private void drawItemStack(ItemStack stack, int x, int y) {
     	RenderSystem.pushMatrix();
-    	RenderHelper.turnBackOn();
+    	Lighting.turnBackOn();
         RenderSystem.translatef(0.0F, 0.0F, -32.0F);
 //        this.itemRenderer.zLevel = 200.0F;
-        FontRenderer font = stack.getItem().getFontRenderer(stack);
+        Font font = stack.getItem().getFontRenderer(stack);
         if (font == null) font = this.font;
         RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
         this.itemRenderer.renderAndDecorateItem(stack, x, y);
         this.itemRenderer.renderGuiItemDecorations(font, stack, x, y, null);
 //        this.itemRenderer.zLevel = 0.0F;
-        RenderHelper.turnOff();
+        Lighting.turnOff();
         RenderSystem.popMatrix();
 	}
 
-	private void drawItemHoverOverlay(MatrixStack stack, int x, int y) {
+	private void drawItemHoverOverlay(PoseStack stack, int x, int y) {
 		RenderSystem.pushMatrix();
 		RenderSystem.disableLighting();
 		RenderSystem.disableDepthTest();
@@ -132,10 +132,10 @@ public class CraftingCoreScreen extends BaseContainerScreen<CraftingCoreContaine
 	}
 
 	private CraftingCoreTileEntity getTileEntity() {
-		ClientWorld world = this.getMinecraft().level;
+		ClientLevel world = this.getMinecraft().level;
 
 		if (world != null) {
-			TileEntity tile = world.getBlockEntity(this.getMenu().getPos());
+			BlockEntity tile = world.getBlockEntity(this.getMenu().getPos());
 
 			if (tile instanceof CraftingCoreTileEntity) {
 				return (CraftingCoreTileEntity) tile;

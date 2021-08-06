@@ -11,10 +11,10 @@ import mezz.jei.api.gui.ingredient.IGuiItemStackGroup;
 import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.ingredients.IIngredients;
 import mezz.jei.api.recipe.category.IRecipeCategory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.ItemStack;
 
 import java.awt.*;
 import java.text.NumberFormat;
@@ -60,11 +60,11 @@ public class CombinationCraftingCategory implements IRecipeCategory<ICombination
 	}
 
 	@Override
-	public List<ITextComponent> getTooltipStrings(ICombinationRecipe recipe, double mouseX, double mouseY) {
+	public List<Component> getTooltipStrings(ICombinationRecipe recipe, double mouseX, double mouseY) {
 		if (mouseX > 1 && mouseX < 14 && mouseY > 9 && mouseY < 86) {
 			return Arrays.asList(
-					new StringTextComponent(NumberFormat.getInstance().format(recipe.getPowerCost()) + " FE"),
-					new StringTextComponent(NumberFormat.getInstance().format(recipe.getPowerRate()) + " FE/t")
+					new TextComponent(NumberFormat.getInstance().format(recipe.getPowerCost()) + " FE"),
+					new TextComponent(NumberFormat.getInstance().format(recipe.getPowerRate()) + " FE/t")
 			);
 		}
 

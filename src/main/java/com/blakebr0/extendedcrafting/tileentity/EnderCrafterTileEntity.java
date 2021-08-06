@@ -10,28 +10,28 @@ import com.blakebr0.extendedcrafting.block.EnderAlternatorBlock;
 import com.blakebr0.extendedcrafting.config.ModConfigs;
 import com.blakebr0.extendedcrafting.container.EnderCrafterContainer;
 import com.blakebr0.extendedcrafting.init.ModTileEntities;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.inventory.container.INamedContainerProvider;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.particles.IParticleData;
-import net.minecraft.particles.ParticleTypes;
-import net.minecraft.tileentity.ITickableTileEntity;
-import net.minecraft.util.IntArray;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.world.World;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.particles.ParticleOptions;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.Container;
+import net.minecraft.world.MenuProvider;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.SimpleContainerData;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.entity.TickableBlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class EnderCrafterTileEntity extends BaseInventoryTileEntity implements ITickableTileEntity, INamedContainerProvider {
+public class EnderCrafterTileEntity extends BaseInventoryTileEntity implements TickableBlockEntity, MenuProvider {
 	private final BaseItemStackHandler inventory;
 	private final BaseItemStackHandler recipeInventory;
 	private IEnderCrafterRecipe recipe;
@@ -50,14 +50,14 @@ public class EnderCrafterTileEntity extends BaseInventoryTileEntity implements I
 	}
 
 	@Override
-	public void load(BlockState state, CompoundNBT tag) {
+	public void load(BlockState state, CompoundTag tag) {
 		super.load(state, tag);
 		this.progress = tag.getInt("Progress");
 		this.progressReq = tag.getInt("ProgressReq");
 	}
 
 	@Override
-	public CompoundNBT save(CompoundNBT tag) {
+	public CompoundTag save(CompoundTag tag) {
 		tag = super.save(tag);
 		tag.putInt("Progress", this.progress);
 		tag.putInt("ProgressReq", this.progressReq);
@@ -68,11 +68,11 @@ public class EnderCrafterTileEntity extends BaseInventoryTileEntity implements I
 	@Override
 	public void tick() {
 		boolean mark = false;
-		World world = this.getLevel();
+		Level world = this.getLevel();
 
 		if (world != null) {
 			this.updateRecipeInventory();
-			IInventory recipeInventory = this.recipeInventory.toIInventory();
+			Container recipeInventory = this.recipeInventory.toIInventory();
 			if (this.recipe == null || !this.recipe.matches(recipeInventory, world)) {
 				this.recipe = world.getRecipeManager().getRecipeFor(RecipeTypes.ENDER_CRAFTER, recipeInventory, world).orElse(null);
 			}
@@ -130,13 +130,13 @@ public class EnderCrafterTileEntity extends BaseInventoryTileEntity implements I
 	}
 
 	@Override
-	public ITextComponent getDisplayName() {
+	public Component getDisplayName() {
 		return Localizable.of("container.extendedcrafting.ender_crafter").build();
 	}
 
 	@Override
-	public Container createMenu(int windowId, PlayerInventory playerInventory, PlayerEntity player) {
-		return EnderCrafterContainer.create(windowId, playerInventory, this::isUsableByPlayer, this.inventory, new IntArray(0), this.getBlockPos());
+	public AbstractContainerMenu createMenu(int windowId, Inventory playerInventory, Player player) {
+		return EnderCrafterContainer.create(windowId, playerInventory, this::isUsableByPlayer, this.inventory, new SimpleContainerData(0), this.getBlockPos());
 	}
 
 	private void updateResult(ItemStack stack) {
@@ -157,7 +157,7 @@ public class EnderCrafterTileEntity extends BaseInventoryTileEntity implements I
 
 	private List<BlockPos> getAlternatorPositions() {
 		List<BlockPos> alternators = new ArrayList<>();
-		World world = this.getLevel();
+		Level world = this.getLevel();
 		if (world != null) {
 			BlockPos pos = this.getBlockPos();
 			BlockPos.betweenClosedStream(pos.offset(-3, -3, -3), pos.offset(3, 3, 3)).forEach(aoePos -> {
@@ -178,9 +178,9 @@ public class EnderCrafterTileEntity extends BaseInventoryTileEntity implements I
 		this.progressReq = (int) Math.max(timeReq - (timeReq * (effectiveness * alternators)), 20);
 	}
 
-	private <T extends IParticleData> void spawnParticles(T particle, BlockPos pos, double yOffset, int count) {
+	private <T extends ParticleOptions> void spawnParticles(T particle, BlockPos pos, double yOffset, int count) {
 		if (this.getLevel() == null || this.getLevel().isClientSide()) return;
-		ServerWorld world = (ServerWorld) this.getLevel();
+		ServerLevel world = (ServerLevel) this.getLevel();
 
 		double x = pos.getX() + 0.5D;
 		double y = pos.getY() + yOffset;

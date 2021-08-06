@@ -7,39 +7,39 @@ import com.blakebr0.extendedcrafting.config.ModConfigs;
 import com.blakebr0.extendedcrafting.container.inventory.ExtendedCraftingInventory;
 import com.blakebr0.extendedcrafting.container.slot.TableOutputSlot;
 import com.blakebr0.extendedcrafting.init.ModContainerTypes;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.CraftingInventory;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.Inventory;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.inventory.container.ContainerType;
-import net.minecraft.inventory.container.Slot;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.ICraftingRecipe;
-import net.minecraft.item.crafting.IRecipeType;
-import net.minecraft.world.World;
+import net.minecraft.world.Container;
+import net.minecraft.world.SimpleContainer;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.CraftingContainer;
+import net.minecraft.world.inventory.MenuType;
+import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.CraftingRecipe;
+import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.level.Level;
 
 import java.util.Optional;
 import java.util.function.Function;
 
-public class BasicTableContainer extends Container {
-	private final Function<PlayerEntity, Boolean> isUsableByPlayer;
-	private final World world;
-	private final IInventory result;
+public class BasicTableContainer extends AbstractContainerMenu {
+	private final Function<Player, Boolean> isUsableByPlayer;
+	private final Level world;
+	private final Container result;
 	private boolean isVanillaRecipe = false;
 
-	private BasicTableContainer(ContainerType<?> type, int id, PlayerInventory playerInventory) {
+	private BasicTableContainer(MenuType<?> type, int id, Inventory playerInventory) {
 		this(type, id, playerInventory, p -> false, new BaseItemStackHandler(9));
 	}
 
-	private BasicTableContainer(ContainerType<?> type, int id, PlayerInventory playerInventory, Function<PlayerEntity, Boolean> isUsableByPlayer, BaseItemStackHandler inventory) {
+	private BasicTableContainer(MenuType<?> type, int id, Inventory playerInventory, Function<Player, Boolean> isUsableByPlayer, BaseItemStackHandler inventory) {
 		super(type, id);
 		this.isUsableByPlayer = isUsableByPlayer;
 		this.world = playerInventory.player.level;
-		this.result = new Inventory(1);
+		this.result = new SimpleContainer(1);
 
-		IInventory matrix = new ExtendedCraftingInventory(this, inventory, 3);
+		Container matrix = new ExtendedCraftingInventory(this, inventory, 3);
 
 		this.addSlot(new TableOutputSlot(this, matrix, this.result, 0, 124, 36));
 		
@@ -64,7 +64,7 @@ public class BasicTableContainer extends Container {
 	}
 
 	@Override
-	public void slotsChanged(IInventory matrix) {
+	public void slotsChanged(Container matrix) {
 		Optional<ITableRecipe> recipe = this.world.getRecipeManager().getRecipeFor(RecipeTypes.TABLE, matrix, this.world);
 
 		this.isVanillaRecipe = false;
@@ -74,10 +74,10 @@ public class BasicTableContainer extends Container {
 
 			this.result.setItem(0, result);
 		} else if (ModConfigs.TABLE_USE_VANILLA_RECIPES.get()) {
-			Optional<ICraftingRecipe> vanilla = this.world.getRecipeManager().getRecipeFor(IRecipeType.CRAFTING, (CraftingInventory) matrix, this.world);
+			Optional<CraftingRecipe> vanilla = this.world.getRecipeManager().getRecipeFor(RecipeType.CRAFTING, (CraftingContainer) matrix, this.world);
 
 			if (vanilla.isPresent()) {
-				ItemStack result = vanilla.get().assemble((CraftingInventory) matrix);
+				ItemStack result = vanilla.get().assemble((CraftingContainer) matrix);
 
 				this.isVanillaRecipe = true;
 				this.result.setItem(0, result);
@@ -92,12 +92,12 @@ public class BasicTableContainer extends Container {
 	}
 
 	@Override
-	public boolean stillValid(PlayerEntity player) {
+	public boolean stillValid(Player player) {
 		return this.isUsableByPlayer.apply(player);
 	}
 
 	@Override
-	public ItemStack quickMoveStack(PlayerEntity player, int slotNumber) {
+	public ItemStack quickMoveStack(Player player, int slotNumber) {
 		ItemStack itemstack = ItemStack.EMPTY;
 		Slot slot = this.slots.get(slotNumber);
 
@@ -139,11 +139,11 @@ public class BasicTableContainer extends Container {
 		return this.isVanillaRecipe;
 	}
 
-	public static BasicTableContainer create(int windowId, PlayerInventory playerInventory) {
+	public static BasicTableContainer create(int windowId, Inventory playerInventory) {
 		return new BasicTableContainer(ModContainerTypes.BASIC_TABLE.get(), windowId, playerInventory);
 	}
 
-	public static BasicTableContainer create(int windowId, PlayerInventory playerInventory, Function<PlayerEntity, Boolean> isUsableByPlayer, BaseItemStackHandler inventory) {
+	public static BasicTableContainer create(int windowId, Inventory playerInventory, Function<Player, Boolean> isUsableByPlayer, BaseItemStackHandler inventory) {
 		return new BasicTableContainer(ModContainerTypes.BASIC_TABLE.get(), windowId, playerInventory, isUsableByPlayer, inventory);
 	}
 }

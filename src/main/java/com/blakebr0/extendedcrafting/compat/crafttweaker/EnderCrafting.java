@@ -11,11 +11,11 @@ import com.blamejared.crafttweaker.api.annotations.ZenRegister;
 import com.blamejared.crafttweaker.api.item.IIngredient;
 import com.blamejared.crafttweaker.api.item.IItemStack;
 import com.blamejared.crafttweaker.api.managers.IRecipeManager;
-import net.minecraft.item.crafting.IRecipe;
-import net.minecraft.item.crafting.IRecipeType;
-import net.minecraft.item.crafting.Ingredient;
-import net.minecraft.util.NonNullList;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.core.NonNullList;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeType;
 import org.openzen.zencode.java.ZenCodeType;
 
 import java.util.Arrays;
@@ -95,7 +95,7 @@ public final class EnderCrafting implements IRecipeManager {
 						.getOrDefault(RecipeTypes.ENDER_CRAFTER, new HashMap<>())
 						.values().stream()
 						.filter(r -> r.getResultItem().sameItem(stack.getInternal()))
-						.map(IRecipe::getId)
+						.map(Recipe::getId)
 						.collect(Collectors.toList());
 
 				recipes.forEach(r -> {
@@ -111,7 +111,7 @@ public final class EnderCrafting implements IRecipeManager {
 	}
 
 	@Override
-	public IRecipeType<?> getRecipeType() {
+	public RecipeType<?> getRecipeType() {
 		return RecipeTypes.ENDER_CRAFTER;
 	}
 

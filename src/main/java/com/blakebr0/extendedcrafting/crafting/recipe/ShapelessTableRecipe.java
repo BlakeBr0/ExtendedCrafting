@@ -6,15 +6,15 @@ import com.blakebr0.extendedcrafting.api.crafting.RecipeTypes;
 import com.blakebr0.extendedcrafting.init.ModRecipeSerializers;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.IRecipeSerializer;
-import net.minecraft.item.crafting.IRecipeType;
-import net.minecraft.item.crafting.Ingredient;
-import net.minecraft.item.crafting.ShapedRecipe;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.JSONUtils;
-import net.minecraft.util.NonNullList;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.core.NonNullList;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.GsonHelper;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.item.crafting.ShapedRecipe;
 import net.minecraftforge.common.util.RecipeMatcher;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.registries.ForgeRegistryEntry;
@@ -55,12 +55,12 @@ public class ShapelessTableRecipe implements ISpecialRecipe, ITableRecipe {
 	}
 
 	@Override
-	public IRecipeSerializer<?> getSerializer() {
+	public RecipeSerializer<?> getSerializer() {
 		return ModRecipeSerializers.SHAPELESS_TABLE;
 	}
 
 	@Override
-	public IRecipeType<?> getType() {
+	public RecipeType<?> getType() {
 		return RecipeTypes.TABLE;
 	}
 
@@ -113,23 +113,23 @@ public class ShapelessTableRecipe implements ISpecialRecipe, ITableRecipe {
 				: 4;
 	}
 
-	public static class Serializer extends ForgeRegistryEntry<IRecipeSerializer<?>> implements IRecipeSerializer<ShapelessTableRecipe> {
+	public static class Serializer extends ForgeRegistryEntry<RecipeSerializer<?>> implements RecipeSerializer<ShapelessTableRecipe> {
 		@Override
 		public ShapelessTableRecipe fromJson(ResourceLocation recipeId, JsonObject json) {
 			NonNullList<Ingredient> inputs = NonNullList.create();
-			JsonArray ingredients = JSONUtils.getAsJsonArray(json, "ingredients");
+			JsonArray ingredients = GsonHelper.getAsJsonArray(json, "ingredients");
 			for (int i = 0; i < ingredients.size(); i++) {
 				inputs.add(Ingredient.fromJson(ingredients.get(i)));
 			}
 
-			ItemStack output = ShapedRecipe.itemFromJson(JSONUtils.getAsJsonObject(json, "result"));
-			int tier = JSONUtils.getAsInt(json, "tier", 0);
+			ItemStack output = ShapedRecipe.itemFromJson(GsonHelper.getAsJsonObject(json, "result"));
+			int tier = GsonHelper.getAsInt(json, "tier", 0);
 
 			return new ShapelessTableRecipe(recipeId, inputs, output, tier);
 		}
 
 		@Override
-		public ShapelessTableRecipe fromNetwork(ResourceLocation recipeId, PacketBuffer buffer) {
+		public ShapelessTableRecipe fromNetwork(ResourceLocation recipeId, FriendlyByteBuf buffer) {
 			int size = buffer.readVarInt();
 			NonNullList<Ingredient> inputs = NonNullList.withSize(size, Ingredient.EMPTY);
 
@@ -144,7 +144,7 @@ public class ShapelessTableRecipe implements ISpecialRecipe, ITableRecipe {
 		}
 
 		@Override
-		public void toNetwork(PacketBuffer buffer, ShapelessTableRecipe recipe) {
+		public void toNetwork(FriendlyByteBuf buffer, ShapelessTableRecipe recipe) {
 			buffer.writeVarInt(recipe.inputs.size());
 
 			for (Ingredient ingredient : recipe.inputs) {

@@ -7,43 +7,43 @@ import com.blakebr0.extendedcrafting.api.crafting.RecipeTypes;
 import com.blakebr0.extendedcrafting.container.inventory.ExtendedCraftingInventory;
 import com.blakebr0.extendedcrafting.container.slot.TableOutputSlot;
 import com.blakebr0.extendedcrafting.init.ModContainerTypes;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.Inventory;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.inventory.container.ContainerType;
-import net.minecraft.inventory.container.Slot;
-import net.minecraft.item.ItemStack;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.IIntArray;
-import net.minecraft.util.IntArray;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.Container;
+import net.minecraft.world.SimpleContainer;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.ContainerData;
+import net.minecraft.world.inventory.MenuType;
+import net.minecraft.world.inventory.SimpleContainerData;
+import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 
 import java.util.Optional;
 import java.util.function.Function;
 
-public class AdvancedAutoTableContainer extends Container {
-	private final Function<PlayerEntity, Boolean> isUsableByPlayer;
-	private final IIntArray data;
+public class AdvancedAutoTableContainer extends AbstractContainerMenu {
+	private final Function<Player, Boolean> isUsableByPlayer;
+	private final ContainerData data;
 	private final BlockPos pos;
-	private final World world;
-	private final IInventory result;
+	private final Level world;
+	private final Container result;
 
-	private AdvancedAutoTableContainer(ContainerType<?> type, int id, PlayerInventory playerInventory, PacketBuffer buffer) {
-		this(type, id, playerInventory, p -> false, new BaseItemStackHandler(26), new IntArray(6), buffer.readBlockPos());
+	private AdvancedAutoTableContainer(MenuType<?> type, int id, Inventory playerInventory, FriendlyByteBuf buffer) {
+		this(type, id, playerInventory, p -> false, new BaseItemStackHandler(26), new SimpleContainerData(6), buffer.readBlockPos());
 	}
 
-	private AdvancedAutoTableContainer(ContainerType<?> type, int id, PlayerInventory playerInventory, Function<PlayerEntity, Boolean> isUsableByPlayer, BaseItemStackHandler inventory, IIntArray data, BlockPos pos) {
+	private AdvancedAutoTableContainer(MenuType<?> type, int id, Inventory playerInventory, Function<Player, Boolean> isUsableByPlayer, BaseItemStackHandler inventory, ContainerData data, BlockPos pos) {
 		super(type, id);
 		this.isUsableByPlayer = isUsableByPlayer;
 		this.data = data;
 		this.pos = pos;
 		this.world = playerInventory.player.level;
-		this.result = new Inventory(1);
+		this.result = new SimpleContainer(1);
 
-		IInventory matrix = new ExtendedCraftingInventory(this, inventory, 5, true);
+		Container matrix = new ExtendedCraftingInventory(this, inventory, 5, true);
 
 		this.addSlot(new TableOutputSlot(this, matrix, this.result, 0, 154, 37));
 		
@@ -71,7 +71,7 @@ public class AdvancedAutoTableContainer extends Container {
 	}
 
 	@Override
-	public void slotsChanged(IInventory matrix) {
+	public void slotsChanged(Container matrix) {
 		Optional<ITableRecipe> recipe = this.world.getRecipeManager().getRecipeFor(RecipeTypes.TABLE, matrix, this.world);
 		if (recipe.isPresent()) {
 			ItemStack result = recipe.get().assemble(matrix);
@@ -84,12 +84,12 @@ public class AdvancedAutoTableContainer extends Container {
 	}
 
 	@Override
-	public boolean stillValid(PlayerEntity player) {
+	public boolean stillValid(Player player) {
 		return this.isUsableByPlayer.apply(player);
 	}
 
 	@Override
-	public ItemStack quickMoveStack(PlayerEntity player, int slotNumber) {
+	public ItemStack quickMoveStack(Player player, int slotNumber) {
 		ItemStack itemstack = ItemStack.EMPTY;
 		Slot slot = this.slots.get(slotNumber);
 
@@ -131,11 +131,11 @@ public class AdvancedAutoTableContainer extends Container {
 		return this.pos;
 	}
 
-	public static AdvancedAutoTableContainer create(int windowId, PlayerInventory playerInventory, PacketBuffer buffer) {
+	public static AdvancedAutoTableContainer create(int windowId, Inventory playerInventory, FriendlyByteBuf buffer) {
 		return new AdvancedAutoTableContainer(ModContainerTypes.ADVANCED_AUTO_TABLE.get(), windowId, playerInventory, buffer);
 	}
 
-	public static AdvancedAutoTableContainer create(int windowId, PlayerInventory playerInventory, Function<PlayerEntity, Boolean> isUsableByPlayer, BaseItemStackHandler inventory, IIntArray data, BlockPos pos) {
+	public static AdvancedAutoTableContainer create(int windowId, Inventory playerInventory, Function<Player, Boolean> isUsableByPlayer, BaseItemStackHandler inventory, ContainerData data, BlockPos pos) {
 		return new AdvancedAutoTableContainer(ModContainerTypes.ADVANCED_AUTO_TABLE.get(), windowId, playerInventory, isUsableByPlayer, inventory, data, pos);
 	}
 }

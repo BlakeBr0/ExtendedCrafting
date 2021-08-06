@@ -12,13 +12,13 @@ import mezz.jei.api.gui.ingredient.IGuiItemStackGroup;
 import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.ingredients.IIngredients;
 import mezz.jei.api.recipe.category.IRecipeCategory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.Ingredient;
-import net.minecraft.util.NonNullList;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TextFormatting;
+import net.minecraft.ChatFormatting;
+import net.minecraft.core.NonNullList;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Ingredient;
 
 import java.text.NumberFormat;
 import java.util.Arrays;
@@ -63,16 +63,16 @@ public class CompressorCraftingCategory implements IRecipeCategory<ICompressorRe
 	}
 
 	@Override
-	public List<ITextComponent> getTooltipStrings(ICompressorRecipe recipe, double mouseX, double mouseY) {
+	public List<Component> getTooltipStrings(ICompressorRecipe recipe, double mouseX, double mouseY) {
 		if (mouseX > 1 && mouseX < 14 && mouseY > 1 && mouseY < 78) {
 			return Arrays.asList(
-					new StringTextComponent(NumberFormat.getInstance().format(recipe.getPowerCost()) + " FE"),
-					new StringTextComponent(NumberFormat.getInstance().format(recipe.getPowerRate()) + " FE/t")
+					new TextComponent(NumberFormat.getInstance().format(recipe.getPowerCost()) + " FE"),
+					new TextComponent(NumberFormat.getInstance().format(recipe.getPowerRate()) + " FE/t")
 			);
 		}
 
 		if (mouseX > 54 && mouseX < 78 && mouseY > 58 && mouseY < 68) {
-			return Collections.singletonList(ModTooltips.NUM_ITEMS.args(recipe.getInputCount()).color(TextFormatting.WHITE).build());
+			return Collections.singletonList(ModTooltips.NUM_ITEMS.args(recipe.getInputCount()).color(ChatFormatting.WHITE).build());
 		}
 
 		return Collections.emptyList();

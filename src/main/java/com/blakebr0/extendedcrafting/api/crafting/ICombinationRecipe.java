@@ -1,16 +1,16 @@
 package com.blakebr0.extendedcrafting.api.crafting;
 
-import net.minecraft.inventory.IInventory;
-import net.minecraft.item.crafting.IRecipe;
-import net.minecraft.util.text.ITextComponent;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.Container;
+import net.minecraft.world.item.crafting.Recipe;
 
 import java.util.List;
 
 /**
  * Used to represent a Combination recipe for the recipe type
  */
-public interface ICombinationRecipe extends IRecipe<IInventory> {
+public interface ICombinationRecipe extends Recipe<Container> {
     int getPowerCost();
     int getPowerRate();
-    List<ITextComponent> getInputsList();
+    List<Component> getInputsList();
 }

@@ -4,7 +4,7 @@ import com.blakebr0.cucumber.client.screen.button.IconButton;
 import com.blakebr0.extendedcrafting.client.screen.CompressorScreen;
 import com.blakebr0.extendedcrafting.network.NetworkHandler;
 import com.blakebr0.extendedcrafting.network.message.EjectModeSwitchMessage;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.core.BlockPos;
 
 public class EjectModeSwitchButton extends IconButton {
     public EjectModeSwitchButton(int x, int y, BlockPos pos) {

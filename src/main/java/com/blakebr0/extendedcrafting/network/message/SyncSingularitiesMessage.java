@@ -3,7 +3,7 @@ package com.blakebr0.extendedcrafting.network.message;
 import com.blakebr0.extendedcrafting.network.NetworkHandler;
 import com.blakebr0.extendedcrafting.singularity.Singularity;
 import com.blakebr0.extendedcrafting.singularity.SingularityRegistry;
-import net.minecraft.network.PacketBuffer;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.fml.network.NetworkEvent;
 
 import java.util.ArrayList;
@@ -34,7 +34,7 @@ public class SyncSingularitiesMessage implements IntSupplier {
         return this.singularities;
     }
 
-    public static SyncSingularitiesMessage read(PacketBuffer buffer) {
+    public static SyncSingularitiesMessage read(FriendlyByteBuf buffer) {
         SyncSingularitiesMessage message = new SyncSingularitiesMessage();
 
         message.singularities = SingularityRegistry.getInstance().readFromBuffer(buffer);
@@ -42,7 +42,7 @@ public class SyncSingularitiesMessage implements IntSupplier {
         return message;
     }
 
-    public static void write(SyncSingularitiesMessage message, PacketBuffer buffer) {
+    public static void write(SyncSingularitiesMessage message, FriendlyByteBuf buffer) {
         SingularityRegistry.getInstance().writeToBuffer(buffer);
     }
 

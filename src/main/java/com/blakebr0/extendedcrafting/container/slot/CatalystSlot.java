@@ -2,8 +2,8 @@ package com.blakebr0.extendedcrafting.container.slot;
 
 import com.blakebr0.cucumber.inventory.BaseItemStackHandler;
 import com.blakebr0.cucumber.inventory.slot.SingleSlot;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 
 public class CatalystSlot extends SingleSlot {
     private final BaseItemStackHandler inventory;
@@ -16,7 +16,7 @@ public class CatalystSlot extends SingleSlot {
     }
 
     @Override
-    public boolean mayPickup(PlayerEntity playerIn) {
+    public boolean mayPickup(Player playerIn) {
         return true;
     }
 

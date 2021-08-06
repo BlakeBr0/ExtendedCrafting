@@ -8,16 +8,16 @@ import com.blakebr0.extendedcrafting.init.ModRecipeSerializers;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.IRecipeSerializer;
-import net.minecraft.item.crafting.IRecipeType;
-import net.minecraft.item.crafting.Ingredient;
-import net.minecraft.item.crafting.ShapedRecipe;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.JSONUtils;
-import net.minecraft.util.NonNullList;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.ITextComponent;
+import net.minecraft.core.NonNullList;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.GsonHelper;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.item.crafting.ShapedRecipe;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.registries.ForgeRegistryEntry;
 
@@ -30,7 +30,7 @@ public class CombinationRecipe implements ISpecialRecipe, ICombinationRecipe {
 	private final NonNullList<Ingredient> ingredients;
 	private final int powerCost;
 	private final int powerRate;
-	private final List<ITextComponent> inputsList;
+	private final List<Component> inputsList;
 	
 	public CombinationRecipe(ResourceLocation recipeId, NonNullList<Ingredient> ingredients, ItemStack output, int powerCost) {
 		this(recipeId, ingredients, output, powerCost, ModConfigs.CRAFTING_CORE_POWER_RATE.get());
@@ -66,12 +66,12 @@ public class CombinationRecipe implements ISpecialRecipe, ICombinationRecipe {
 	}
 
 	@Override
-	public IRecipeSerializer<?> getSerializer() {
+	public RecipeSerializer<?> getSerializer() {
 		return ModRecipeSerializers.COMBINATION;
 	}
 
 	@Override
-	public IRecipeType<?> getType() {
+	public RecipeType<?> getType() {
 		return RecipeTypes.COMBINATION;
 	}
 
@@ -97,34 +97,34 @@ public class CombinationRecipe implements ISpecialRecipe, ICombinationRecipe {
 	}
 
 	@Override
-	public List<ITextComponent> getInputsList() {
+	public List<Component> getInputsList() {
 		return this.inputsList;
 	}
 
-	public static class Serializer extends ForgeRegistryEntry<IRecipeSerializer<?>> implements IRecipeSerializer<CombinationRecipe> {
+	public static class Serializer extends ForgeRegistryEntry<RecipeSerializer<?>> implements RecipeSerializer<CombinationRecipe> {
 		@Override
 		public CombinationRecipe fromJson(ResourceLocation recipeId, JsonObject json) {
 			NonNullList<Ingredient> inputs = NonNullList.create();
-			Ingredient input = Ingredient.fromJson(JSONUtils.getAsJsonObject(json, "input"));
+			Ingredient input = Ingredient.fromJson(GsonHelper.getAsJsonObject(json, "input"));
 			inputs.add(input);
 
-			JsonArray ingredients = JSONUtils.getAsJsonArray(json, "ingredients");
+			JsonArray ingredients = GsonHelper.getAsJsonArray(json, "ingredients");
 			for (int i = 0; i < ingredients.size(); i++) {
 				Ingredient ingredient = Ingredient.fromJson(ingredients.get(i));
 				inputs.add(ingredient);
 			}
 
-			ItemStack output = ShapedRecipe.itemFromJson(JSONUtils.getAsJsonObject(json, "result"));
+			ItemStack output = ShapedRecipe.itemFromJson(GsonHelper.getAsJsonObject(json, "result"));
 			if (!json.has("powerCost"))
 				throw new JsonSyntaxException("Missing powerCost for combination crafting recipe");
-			int powerCost = JSONUtils.getAsInt(json, "powerCost");
-			int powerRate = JSONUtils.getAsInt(json, "powerRate", ModConfigs.CRAFTING_CORE_POWER_RATE.get());
+			int powerCost = GsonHelper.getAsInt(json, "powerCost");
+			int powerRate = GsonHelper.getAsInt(json, "powerRate", ModConfigs.CRAFTING_CORE_POWER_RATE.get());
 
 			return new CombinationRecipe(recipeId, inputs, output, powerCost, powerRate);
 		}
 
 		@Override
-		public CombinationRecipe fromNetwork(ResourceLocation recipeId, PacketBuffer buffer) {
+		public CombinationRecipe fromNetwork(ResourceLocation recipeId, FriendlyByteBuf buffer) {
 			int size = buffer.readVarInt();
 
 			NonNullList<Ingredient> inputs = NonNullList.withSize(size, Ingredient.EMPTY);
@@ -140,7 +140,7 @@ public class CombinationRecipe implements ISpecialRecipe, ICombinationRecipe {
 		}
 
 		@Override
-		public void toNetwork(PacketBuffer buffer, CombinationRecipe recipe) {
+		public void toNetwork(FriendlyByteBuf buffer, CombinationRecipe recipe) {
 			buffer.writeVarInt(recipe.ingredients.size());
 
 			for (Ingredient ingredient : recipe.ingredients) {

@@ -10,16 +10,16 @@ import com.blakebr0.extendedcrafting.container.EliteAutoTableContainer;
 import com.blakebr0.extendedcrafting.lib.ModTooltips;
 import com.blakebr0.extendedcrafting.tileentity.AutoTableTileEntity;
 import com.google.common.collect.Lists;
-import com.mojang.blaze3d.matrix.MatrixStack;
-import net.minecraft.client.world.ClientWorld;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TextFormatting;
+import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.ChatFormatting;
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.entity.BlockEntity;
 
 import java.util.List;
 
@@ -28,7 +28,7 @@ public class EliteAutoTableScreen extends BaseContainerScreen<EliteAutoTableCont
 	private final RecipeSelectButton[] recipeSelectButtons = new RecipeSelectButton[3];
 	private AutoTableTileEntity tile;
 
-	public EliteAutoTableScreen(EliteAutoTableContainer container, PlayerInventory inventory, ITextComponent title) {
+	public EliteAutoTableScreen(EliteAutoTableContainer container, Inventory inventory, Component title) {
 		super(container, inventory, title, BACKGROUND, 220, 242);
 	}
 
@@ -50,37 +50,37 @@ public class EliteAutoTableScreen extends BaseContainerScreen<EliteAutoTableCont
 	}
 
 	@Override
-	protected void renderTooltip(MatrixStack stack, int mouseX, int mouseY) {
+	protected void renderTooltip(PoseStack stack, int mouseX, int mouseY) {
 		int x = this.getGuiLeft();
 		int y = this.getGuiTop();
 
 		super.renderTooltip(stack, mouseX, mouseY);
 
 		if (mouseX > x + 7 && mouseX < x + 20 && mouseY > y + 41 && mouseY < y + 118) {
-			StringTextComponent text = new StringTextComponent(number(this.getEnergyStored()) + " / " + number(this.getMaxEnergyStored()) + " FE");
+			TextComponent text = new TextComponent(number(this.getEnergyStored()) + " / " + number(this.getMaxEnergyStored()) + " FE");
 			this.renderTooltip(stack, text, mouseX, mouseY);
 		}
 
 		if (mouseX > x + 192 && mouseX < x + 205 && mouseY > y + 95 && mouseY < y + 111) {
-			this.renderTooltip(stack, ModTooltips.TOGGLE_AUTO_CRAFTING.color(TextFormatting.WHITE).build(), mouseX, mouseY);
+			this.renderTooltip(stack, ModTooltips.TOGGLE_AUTO_CRAFTING.color(ChatFormatting.WHITE).build(), mouseX, mouseY);
 		}
 
 		for (RecipeSelectButton button : this.recipeSelectButtons) {
 			if (button.isHovered()) {
 				BaseItemStackHandler recipe = this.getRecipeInfo(button.getIndex());
 				if (recipe != null) {
-					List<ITextComponent> tooltip;
+					List<Component> tooltip;
 					boolean hasRecipe = !recipe.getStacks().stream().allMatch(ItemStack::isEmpty);
 					if (hasRecipe) {
 						ItemStack output = recipe.getStackInSlot(recipe.getSlots() - 1);
 						tooltip = Lists.newArrayList(
-								new StringTextComponent(output.getCount() + "x " + output.getHoverName().getString()),
-								new StringTextComponent(""),
-								ModTooltips.AUTO_TABLE_DELETE_RECIPE.color(TextFormatting.WHITE).build()
+								new TextComponent(output.getCount() + "x " + output.getHoverName().getString()),
+								new TextComponent(""),
+								ModTooltips.AUTO_TABLE_DELETE_RECIPE.color(ChatFormatting.WHITE).build()
 						);
 					} else {
 						tooltip = Lists.newArrayList(
-								ModTooltips.AUTO_TABLE_SAVE_RECIPE.color(TextFormatting.WHITE).build()
+								ModTooltips.AUTO_TABLE_SAVE_RECIPE.color(ChatFormatting.WHITE).build()
 						);
 					}
 
@@ -91,7 +91,7 @@ public class EliteAutoTableScreen extends BaseContainerScreen<EliteAutoTableCont
 	}
 
 	@Override
-	protected void renderLabels(MatrixStack stack, int mouseX, int mouseY) {
+	protected void renderLabels(PoseStack stack, int mouseX, int mouseY) {
 		String title = this.getTitle().getString();
 		this.font.draw(stack, title, 26.0F, 6.0F, 4210752);
 		String inventory = this.inventory.getDisplayName().getString();
@@ -99,7 +99,7 @@ public class EliteAutoTableScreen extends BaseContainerScreen<EliteAutoTableCont
 	}
 
 	@Override
-	protected void renderBg(MatrixStack stack, float partialTicks, int mouseX, int mouseY) {
+	protected void renderBg(PoseStack stack, float partialTicks, int mouseX, int mouseY) {
 		super.renderBg(stack, partialTicks, mouseX, mouseY);
 
 		int x = this.getGuiLeft();
@@ -133,10 +133,10 @@ public class EliteAutoTableScreen extends BaseContainerScreen<EliteAutoTableCont
 	}
 
 	private AutoTableTileEntity getTileEntity() {
-		ClientWorld world = this.getMinecraft().level;
+		ClientLevel world = this.getMinecraft().level;
 
 		if (world != null) {
-			TileEntity tile = world.getBlockEntity(this.getMenu().getPos());
+			BlockEntity tile = world.getBlockEntity(this.getMenu().getPos());
 
 			if (tile instanceof AutoTableTileEntity) {
 				return (AutoTableTileEntity) tile;

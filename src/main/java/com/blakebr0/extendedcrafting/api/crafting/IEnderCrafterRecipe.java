@@ -1,8 +1,8 @@
 package com.blakebr0.extendedcrafting.api.crafting;
 
-import net.minecraft.inventory.IInventory;
-import net.minecraft.item.crafting.IRecipe;
+import net.minecraft.world.Container;
+import net.minecraft.world.item.crafting.Recipe;
 
-public interface IEnderCrafterRecipe extends IRecipe<IInventory> {
+public interface IEnderCrafterRecipe extends Recipe<Container> {
     int getCraftingTime();
 }

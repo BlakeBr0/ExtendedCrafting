@@ -1,4 +1,4 @@
-package com.blakebr0.extendedcrafting.compat.jei;
+package com.blakebr0.extendedcrafting.compat.jei.category;
 
 import com.blakebr0.cucumber.util.Localizable;
 import com.blakebr0.extendedcrafting.ExtendedCrafting;
@@ -12,8 +12,6 @@ import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.IRecipeLayout;
 import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.gui.drawable.IDrawableAnimated;
-import mezz.jei.api.gui.drawable.IDrawableStatic;
-import mezz.jei.api.gui.ingredient.IGuiItemStackGroup;
 import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.ingredients.IIngredients;
 import mezz.jei.api.recipe.category.IRecipeCategory;
@@ -36,7 +34,8 @@ public class EnderCrafterCategory implements IRecipeCategory<IEnderCrafterRecipe
 	public EnderCrafterCategory(IGuiHelper helper) {
 		this.background = helper.createDrawable(TEXTURE, 0, 0, 116, 54);
 
-		IDrawableStatic arrowDrawable = helper.createDrawable(TEXTURE, 195, 0, 24, 17);
+		var arrowDrawable = helper.createDrawable(TEXTURE, 195, 0, 24, 17);
+
 		this.arrow = helper.createAnimatedDrawable(arrowDrawable, 200, IDrawableAnimated.StartDirection.LEFT, false);
 		this.icon = helper.createDrawableIngredient(new ItemStack(ModBlocks.ENDER_CRAFTER.get()));
 	}
@@ -52,8 +51,8 @@ public class EnderCrafterCategory implements IRecipeCategory<IEnderCrafterRecipe
 	}
 
 	@Override
-	public String getTitle() {
-		return Localizable.of("jei.category.extendedcrafting.ender_crafting").buildString();
+	public Component getTitle() {
+		return Localizable.of("jei.category.extendedcrafting.ender_crafting").build();
 	}
 
 	@Override
@@ -88,10 +87,9 @@ public class EnderCrafterCategory implements IRecipeCategory<IEnderCrafterRecipe
 
 	@Override
 	public void setRecipe(IRecipeLayout layout, IEnderCrafterRecipe recipe, IIngredients ingredients) {
-		IGuiItemStackGroup stacks = layout.getItemStacks();
-
-		List<List<ItemStack>> inputs = ingredients.getInputs(VanillaTypes.ITEM);
-		List<ItemStack> outputs = ingredients.getOutputs(VanillaTypes.ITEM).get(0);
+		var stacks = layout.getItemStacks();
+		var inputs = ingredients.getInputs(VanillaTypes.ITEM);
+		var outputs = ingredients.getOutputs(VanillaTypes.ITEM).get(0);
 
 		stacks.init(0, false, 94, 18);
 		stacks.set(0, outputs);
@@ -103,9 +101,9 @@ public class EnderCrafterCategory implements IRecipeCategory<IEnderCrafterRecipe
 			}
 		}
 
-		if (recipe instanceof ShapedEnderCrafterRecipe) {
-			ShapedEnderCrafterRecipe shaped = (ShapedEnderCrafterRecipe) recipe;
+		if (recipe instanceof ShapedEnderCrafterRecipe shaped) {
 			int stackIndex = 0;
+
 			for (int i = 0; i < shaped.getHeight(); i++) {
 				for (int j = 0; j < shaped.getWidth(); j++) {
 					int index = 1 + (i * 3) + j;

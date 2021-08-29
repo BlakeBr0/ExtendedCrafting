@@ -1,4 +1,4 @@
-package com.blakebr0.extendedcrafting.compat.jei;
+package com.blakebr0.extendedcrafting.compat.jei.category;
 
 import com.blakebr0.cucumber.util.Localizable;
 import com.blakebr0.extendedcrafting.ExtendedCrafting;
@@ -8,7 +8,6 @@ import com.blakebr0.extendedcrafting.lib.ModTooltips;
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.IRecipeLayout;
 import mezz.jei.api.gui.drawable.IDrawable;
-import mezz.jei.api.gui.ingredient.IGuiItemStackGroup;
 import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.ingredients.IIngredients;
 import mezz.jei.api.recipe.category.IRecipeCategory;
@@ -48,8 +47,8 @@ public class CompressorCraftingCategory implements IRecipeCategory<ICompressorRe
 	}
 
 	@Override
-	public String getTitle() {
-		return Localizable.of("jei.category.extendedcrafting.compressor").buildString();
+	public Component getTitle() {
+		return Localizable.of("jei.category.extendedcrafting.compressor").build();
 	}
 
 	@Override
@@ -83,6 +82,7 @@ public class CompressorCraftingCategory implements IRecipeCategory<ICompressorRe
 		ingredients.setOutput(VanillaTypes.ITEM, recipe.getResultItem());
 
 		NonNullList<Ingredient> inputs = NonNullList.create();
+
 		inputs.addAll(recipe.getIngredients());
 		inputs.add(recipe.getCatalyst());
 
@@ -91,10 +91,9 @@ public class CompressorCraftingCategory implements IRecipeCategory<ICompressorRe
 
 	@Override
 	public void setRecipe(IRecipeLayout layout, ICompressorRecipe recipe, IIngredients ingredients) {
-		IGuiItemStackGroup stacks = layout.getItemStacks();
-
-		List<List<ItemStack>> inputs = ingredients.getInputs(VanillaTypes.ITEM);
-		List<ItemStack> outputs = ingredients.getOutputs(VanillaTypes.ITEM).get(0);
+		var stacks = layout.getItemStacks();
+		var inputs = ingredients.getInputs(VanillaTypes.ITEM);
+		var outputs = ingredients.getOutputs(VanillaTypes.ITEM).get(0);
 
 		stacks.init(0, true, 57, 30);
 		stacks.init(1, true, 30, 30);

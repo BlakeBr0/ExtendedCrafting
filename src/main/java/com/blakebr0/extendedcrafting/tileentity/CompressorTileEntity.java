@@ -1,6 +1,5 @@
 package com.blakebr0.extendedcrafting.tileentity;
 
-import com.blakebr0.cucumber.energy.BaseEnergyStorage;
 import com.blakebr0.cucumber.helper.StackHelper;
 import com.blakebr0.cucumber.inventory.BaseItemStackHandler;
 import com.blakebr0.cucumber.tileentity.BaseInventoryTileEntity;
@@ -10,6 +9,7 @@ import com.blakebr0.extendedcrafting.config.ModConfigs;
 import com.blakebr0.extendedcrafting.container.CompressorContainer;
 import com.blakebr0.extendedcrafting.crafting.recipe.CompressorRecipe;
 import com.blakebr0.extendedcrafting.init.ModTileEntities;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -19,18 +19,17 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.SimpleContainerData;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.entity.TickableBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.energy.CapabilityEnergy;
+import net.minecraftforge.energy.EnergyStorage;
 import net.minecraftforge.energy.IEnergyStorage;
 
-public class CompressorTileEntity extends BaseInventoryTileEntity implements TickableBlockEntity, MenuProvider {
+public class CompressorTileEntity extends BaseInventoryTileEntity implements MenuProvider {
 	private final BaseItemStackHandler inventory;
 	private final BaseItemStackHandler recipeInventory;
-	private final BaseEnergyStorage energy;
+	private final EnergyStorage energy;
 	private final LazyOptional<IEnergyStorage> capability = LazyOptional.of(this::getEnergy);
 	private CompressorRecipe recipe;
 	private ItemStack materialStack = ItemStack.EMPTY;
@@ -40,11 +39,11 @@ public class CompressorTileEntity extends BaseInventoryTileEntity implements Tic
 	private int oldEnergy;
 	private boolean inputLimit = true;
 
-	public CompressorTileEntity() {
-		super(ModTileEntities.COMPRESSOR.get());
+	public CompressorTileEntity(BlockPos pos, BlockState state) {
+		super(ModTileEntities.COMPRESSOR.get(), pos, state);
 		this.inventory = new BaseItemStackHandler(3);
 		this.recipeInventory = new BaseItemStackHandler(2);
-		this.energy = new BaseEnergyStorage(ModConfigs.COMPRESSOR_POWER_CAPACITY.get());
+		this.energy = new EnergyStorage(ModConfigs.COMPRESSOR_POWER_CAPACITY.get());
 
 		this.inventory.setSlotValidator(this::canInsertStack);
 		this.inventory.setOutputSlots(0);
@@ -56,13 +55,13 @@ public class CompressorTileEntity extends BaseInventoryTileEntity implements Tic
 	}
 
 	@Override
-	public void load(BlockState state, CompoundTag tag) {
-		super.load(state, tag);
+	public void load(CompoundTag tag) {
+		super.load(tag);
 		this.materialCount = tag.getInt("MaterialCount");
 		this.materialStack = ItemStack.of(tag.getCompound("MaterialStack"));
 		this.progress = tag.getInt("Progress");
 		this.ejecting = tag.getBoolean("Ejecting");
-		this.energy.setEnergy(tag.getInt("Energy"));
+		this.energy.deserializeNBT(tag.get("Energy"));
 		this.inputLimit = tag.getBoolean("InputLimit");
 	}
 
@@ -81,22 +80,22 @@ public class CompressorTileEntity extends BaseInventoryTileEntity implements Tic
 
 	@Override
 	public void tick() {
-		boolean mark = false;
+		var mark = false;
+		var level = this.getLevel();
 
-		Level world = this.getLevel();
-		if (world != null) {
-			ItemStack output = this.inventory.getStackInSlot(0);
-			ItemStack input = this.inventory.getStackInSlot(1);
-			ItemStack catalyst = this.inventory.getStackInSlot(2);
+		if (level != null) {
+			var output = this.inventory.getStackInSlot(0);
+			var input = this.inventory.getStackInSlot(1);
+			var catalyst = this.inventory.getStackInSlot(2);
 
 			this.recipeInventory.setStackInSlot(0, this.materialStack);
 			this.recipeInventory.setStackInSlot(1, catalyst);
 
 			if (this.recipe == null || !this.recipe.matches(this.recipeInventory)) {
-				this.recipe = (CompressorRecipe) world.getRecipeManager().getRecipeFor(RecipeTypes.COMPRESSOR, this.recipeInventory.toIInventory(), world).orElse(null);
+				this.recipe = (CompressorRecipe) level.getRecipeManager().getRecipeFor(RecipeTypes.COMPRESSOR, this.recipeInventory.toIInventory(), level).orElse(null);
 			}
 
-			if (!world.isClientSide()) {
+			if (!level.isClientSide()) {
 				if (!input.isEmpty()) {
 					if (this.materialStack.isEmpty() || this.materialCount <= 0) {
 						this.materialStack = input.copy();
@@ -122,7 +121,8 @@ public class CompressorTileEntity extends BaseInventoryTileEntity implements Tic
 				if (this.recipe != null && this.getEnergy().getEnergyStored() > 0) {
 					if (this.materialCount >= this.recipe.getInputCount()) {
 						if (this.progress >= this.recipe.getPowerCost()) {
-							ItemStack result = this.recipe.getCraftingResult(this.inventory);
+							var result = this.recipe.getCraftingResult(this.inventory);
+
 							if (StackHelper.canCombineStacks(result, output)) {
 								this.updateResult(result);
 								this.progress = 0;
@@ -142,7 +142,7 @@ public class CompressorTileEntity extends BaseInventoryTileEntity implements Tic
 					if (this.materialCount > 0 && !this.materialStack.isEmpty() && (output.isEmpty() || StackHelper.areStacksEqual(this.materialStack, output))) {
 						int addCount = Math.min(this.materialCount, this.materialStack.getMaxStackSize() - output.getCount());
 						if (addCount > 0) {
-							ItemStack toAdd = StackHelper.withSize(this.materialStack, addCount, false);
+							var toAdd = StackHelper.withSize(this.materialStack, addCount, false);
 
 							this.updateResult(toAdd);
 							this.materialCount -= addCount;
@@ -193,7 +193,7 @@ public class CompressorTileEntity extends BaseInventoryTileEntity implements Tic
 		return CompressorContainer.create(windowId, playerInventory, this::isUsableByPlayer, this.inventory, new SimpleContainerData(0), this.getBlockPos());
 	}
 
-	public BaseEnergyStorage getEnergy() {
+	public EnergyStorage getEnergy() {
 		return this.energy;
 	}
 
@@ -266,7 +266,8 @@ public class CompressorTileEntity extends BaseInventoryTileEntity implements Tic
 	}
 
 	private void updateResult(ItemStack stack) {
-		ItemStack result = this.inventory.getStackInSlot(0);
+		var result = this.inventory.getStackInSlot(0);
+
 		if (result.isEmpty()) {
 			this.inventory.setStackInSlot(0, stack);
 		} else {

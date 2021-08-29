@@ -19,8 +19,6 @@ import net.minecraft.world.item.crafting.ShapedRecipe;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.registries.ForgeRegistryEntry;
 
-import java.util.Map;
-
 public class ShapedTableRecipe implements ISpecialRecipe, ITableRecipe {
 	private final ResourceLocation recipeId;
 	private final NonNullList<Ingredient> inputs;
@@ -48,7 +46,7 @@ public class ShapedTableRecipe implements ISpecialRecipe, ITableRecipe {
 	}
 
 	@Override
-	public ItemStack getCraftingResult(IItemHandler inventory) {
+	public ItemStack assemble(IItemHandler inventory) {
 		return this.output.copy();
 	}
 
@@ -135,7 +133,8 @@ public class ShapedTableRecipe implements ISpecialRecipe, ITableRecipe {
 			for (int j = 0; j < size; j++) {
 				int k = i - x;
 				int l = j - y;
-				Ingredient ingredient = Ingredient.EMPTY;
+				var ingredient = Ingredient.EMPTY;
+
 				if (k >= 0 && l >= 0 && k < this.width && l < this.height) {
 					if (mirror) {
 						ingredient = this.inputs.get(this.width - k - 1 + l * this.width);
@@ -171,14 +170,15 @@ public class ShapedTableRecipe implements ISpecialRecipe, ITableRecipe {
 	public static class Serializer extends ForgeRegistryEntry<RecipeSerializer<?>> implements RecipeSerializer<ShapedTableRecipe> {
 		@Override
 		public ShapedTableRecipe fromJson(ResourceLocation recipeId, JsonObject json) {
-			Map<String, Ingredient> map = ShapedRecipe.keyFromJson(GsonHelper.getAsJsonObject(json, "key"));
-			String[] pattern = ShapedRecipe.shrink(ShapedTableRecipe.patternFromJson(GsonHelper.getAsJsonArray(json, "pattern")));
+			var map = ShapedRecipe.keyFromJson(GsonHelper.getAsJsonObject(json, "key"));
+			var pattern = ShapedRecipe.shrink(ShapedTableRecipe.patternFromJson(GsonHelper.getAsJsonArray(json, "pattern")));
 			int width = pattern[0].length();
 			int height = pattern.length;
-			NonNullList<Ingredient> inputs = ShapedRecipe.dissolvePattern(pattern, map, width, height);
-			ItemStack output = ShapedRecipe.itemFromJson(GsonHelper.getAsJsonObject(json, "result"));
+			var inputs = ShapedRecipe.dissolvePattern(pattern, map, width, height);
+			var output = ShapedRecipe.itemStackFromJson(GsonHelper.getAsJsonObject(json, "result"));
 			int tier = GsonHelper.getAsInt(json, "tier", 0);
 			int size = tier * 2 + 1;
+
 			if (tier != 0 && (width > size || height > size))
 				throw new JsonSyntaxException("The pattern size is larger than the specified tier can support");
 
@@ -189,13 +189,13 @@ public class ShapedTableRecipe implements ISpecialRecipe, ITableRecipe {
 		public ShapedTableRecipe fromNetwork(ResourceLocation recipeId, FriendlyByteBuf buffer) {
 			int width = buffer.readVarInt();
 			int height = buffer.readVarInt();
-			NonNullList<Ingredient> inputs = NonNullList.withSize(width * height, Ingredient.EMPTY);
+			var inputs = NonNullList.withSize(width * height, Ingredient.EMPTY);
 
 			for (int i = 0; i < inputs.size(); i++) {
 				inputs.set(i, Ingredient.fromNetwork(buffer));
 			}
 
-			ItemStack output = buffer.readItem();
+			var output = buffer.readItem();
 			int tier = buffer.readVarInt();
 
 			return new ShapedTableRecipe(recipeId, width, height, inputs, output, tier);

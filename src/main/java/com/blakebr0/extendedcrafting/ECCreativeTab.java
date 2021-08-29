@@ -4,8 +4,8 @@ import com.blakebr0.extendedcrafting.init.ModItems;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
 
-public class ECItemGroup extends CreativeModeTab {
-	public ECItemGroup() {
+public class ECCreativeTab extends CreativeModeTab {
+	public ECCreativeTab() {
 		super(ExtendedCrafting.MOD_ID);
 	}
 

@@ -11,20 +11,16 @@ import com.blakebr0.extendedcrafting.singularity.SingularityUtils;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.server.packs.resources.ResourceManagerReloadListener;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraftforge.event.AddReloadListenerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.registries.ForgeRegistries;
 
-import java.util.List;
-
 public final class DynamicRecipeManager implements ResourceManagerReloadListener {
     @Override
     public void onResourceManagerReload(ResourceManager resourceManager) {
         SingularityRegistry.getInstance().getSingularities().forEach(singularity -> {
-            CompressorRecipe compressorRecipe = makeSingularityRecipe(singularity);
+            var compressorRecipe = makeSingularityRecipe(singularity);
             if (compressorRecipe != null)
                 RecipeHelper.addRecipe(compressorRecipe);
         });
@@ -41,17 +37,17 @@ public final class DynamicRecipeManager implements ResourceManagerReloadListener
         if (!ModConfigs.SINGULARITY_DEFAULT_RECIPES.get())
             return null;
 
-        Ingredient ingredient = singularity.getIngredient();
+        var ingredient = singularity.getIngredient();
         if (ingredient == Ingredient.EMPTY)
             return null;
 
-        ResourceLocation id = singularity.getId();
-        ResourceLocation recipeId = new ResourceLocation(ExtendedCrafting.MOD_ID, id.getPath() + "_singularity");
-        ItemStack output = SingularityUtils.getItemForSingularity(singularity);
+        var id = singularity.getId();
+        var recipeId = new ResourceLocation(ExtendedCrafting.MOD_ID, id.getPath() + "_singularity");
+        var output = SingularityUtils.getItemForSingularity(singularity);
         int ingredientCount = singularity.getIngredientCount();
-        String catalystId = ModConfigs.SINGULARITY_DEFAULT_CATALYST.get();
-        Item catalystItem = ForgeRegistries.ITEMS.getValue(new ResourceLocation(catalystId));
-        Ingredient catalyst = Ingredient.of(catalystItem);
+        var catalystId = ModConfigs.SINGULARITY_DEFAULT_CATALYST.get();
+        var catalystItem = ForgeRegistries.ITEMS.getValue(new ResourceLocation(catalystId));
+        var catalyst = Ingredient.of(catalystItem);
         int powerRequired = ModConfigs.SINGULARITY_POWER_REQUIRED.get();
 
         return new CompressorRecipe(recipeId, ingredient, output, ingredientCount, catalyst, powerRequired);
@@ -63,12 +59,15 @@ public final class DynamicRecipeManager implements ResourceManagerReloadListener
 
         UltimateSingularityRecipe.SINGULARITIES.clear();
 
-        List<Singularity> singularities = SingularityRegistry.getInstance().getSingularities();
+        var singularities = SingularityRegistry.getInstance().getSingularities();
         int added = 0;
+
         for (int i = 0; i < singularities.size() && added < 81; i++) {
-            Singularity singularity = singularities.get(i);
+            var singularity = singularities.get(i);
+
             if (singularity.getIngredient() != Ingredient.EMPTY && singularity.isInUltimateSingularity()) {
-                ItemStack stack = SingularityUtils.getItemForSingularity(singularity);
+                var stack = SingularityUtils.getItemForSingularity(singularity);
+
                 UltimateSingularityRecipe.SINGULARITIES.add(Ingredient.of(stack));
 
                 added++;

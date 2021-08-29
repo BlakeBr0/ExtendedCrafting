@@ -9,15 +9,11 @@ import com.blakebr0.extendedcrafting.lib.ModTooltips;
 import com.blakebr0.extendedcrafting.tileentity.CompressorTileEntity;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.multiplayer.ClientLevel;
-import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.block.entity.BlockEntity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,10 +32,10 @@ public class CompressorScreen extends BaseContainerScreen<CompressorContainer> {
 
 		int x = this.getGuiLeft();
 		int y = this.getGuiTop();
-		BlockPos pos = this.getMenu().getPos();
+		var pos = this.getMenu().getPos();
 
-		this.addButton(new EjectModeSwitchButton(x + 69, y + 30, pos));
-		this.addButton(new InputLimitSwitchButton(x + 91, y + 74, pos, this::isLimitingInput));
+		this.addWidget(new EjectModeSwitchButton(x + 69, y + 30, pos));
+		this.addWidget(new InputLimitSwitchButton(x + 91, y + 74, pos, this::isLimitingInput));
 
 		this.tile = this.getTileEntity();
 	}
@@ -52,12 +48,13 @@ public class CompressorScreen extends BaseContainerScreen<CompressorContainer> {
 		super.render(stack, mouseX, mouseY, partialTicks);
 
 		if (mouseX > x + 7 && mouseX < x + 20 && mouseY > y + 17 && mouseY < y + 94) {
-			TextComponent text = new TextComponent(number(this.getEnergyStored()) + " / " + number(this.getMaxEnergyStored()) + " FE");
+			var text = new TextComponent(number(this.getEnergyStored()) + " / " + number(this.getMaxEnergyStored()) + " FE");
 			this.renderTooltip(stack, text, mouseX, mouseY);
 		}
 
 		if (mouseX > x + 60 && mouseX < x + 85 && mouseY > y + 74 && mouseY < y + 83) {
 			List<Component> tooltip = new ArrayList<>();
+
 			if (this.getMaterialCount() < 1) {
 				tooltip.add(ModTooltips.EMPTY.color(ChatFormatting.WHITE).build());
 			} else {
@@ -65,7 +62,8 @@ public class CompressorScreen extends BaseContainerScreen<CompressorContainer> {
 					tooltip.add(this.getMaterialStackDisplayName());
 				}
 
-				TextComponent text = new TextComponent(number(this.getMaterialCount()) + " / " + number(this.getMaterialsRequired()));
+				var text = new TextComponent(number(this.getMaterialCount()) + " / " + number(this.getMaterialsRequired()));
+
 				tooltip.add(text);
 			}
 
@@ -91,10 +89,10 @@ public class CompressorScreen extends BaseContainerScreen<CompressorContainer> {
 
 	@Override
 	protected void renderLabels(PoseStack stack, int mouseX, int mouseY) {
-		String title = this.getTitle().getString();
+		var title = this.getTitle().getString();
+
 		this.font.draw(stack, title, (float) (this.imageWidth / 2 - this.font.width(title) / 2), 6.0F, 4210752);
-		String inventory = this.inventory.getDisplayName().getString();
-		this.font.draw(stack, inventory, 8.0F, this.imageHeight - 94.0F, 4210752);
+		this.font.draw(stack, this.playerInventoryTitle, 8.0F, this.imageHeight - 94.0F, 4210752);
 	}
 
 	@Override
@@ -105,6 +103,7 @@ public class CompressorScreen extends BaseContainerScreen<CompressorContainer> {
 		int y = this.getGuiTop();
 
 		int i1 = this.getEnergyBarScaled(78);
+
 		this.blit(stack, x + 7, y + 95 - i1, 178, 78 - i1, 15, i1 + 1);
 
 		if (this.hasRecipe()) {
@@ -125,13 +124,14 @@ public class CompressorScreen extends BaseContainerScreen<CompressorContainer> {
 	}
 
 	private Component getMaterialStackDisplayName() {
-		ClientLevel world = this.getMinecraft().level;
-		if (world != null) {
-			CompressorContainer container = this.getMenu();
-			BlockEntity tile = world.getBlockEntity(container.getPos());
-			if (tile instanceof CompressorTileEntity) {
-				CompressorTileEntity compressor = (CompressorTileEntity) tile;
-				ItemStack materialStack = compressor.getMaterialStack();
+		var level = this.getMinecraft().level;
+
+		if (level != null) {
+			var container = this.getMenu();
+			var tile = level.getBlockEntity(container.getPos());
+
+			if (tile instanceof CompressorTileEntity compressor) {
+				var materialStack = compressor.getMaterialStack();
 
 				return materialStack.getHoverName();
 			}
@@ -141,14 +141,13 @@ public class CompressorScreen extends BaseContainerScreen<CompressorContainer> {
 	}
 
 	private CompressorTileEntity getTileEntity() {
-		ClientLevel world = this.getMinecraft().level;
+		var level = this.getMinecraft().level;
 
-		if (world != null) {
-			BlockEntity tile = world.getBlockEntity(this.getMenu().getPos());
+		if (level != null) {
+			var tile = level.getBlockEntity(this.getMenu().getPos());
 
-			if (tile instanceof CompressorTileEntity) {
-				return (CompressorTileEntity) tile;
-			}
+			if (tile instanceof CompressorTileEntity compressor)
+				return compressor;
 		}
 
 		return null;

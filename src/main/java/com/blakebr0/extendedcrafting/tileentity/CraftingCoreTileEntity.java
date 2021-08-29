@@ -1,6 +1,5 @@
 package com.blakebr0.extendedcrafting.tileentity;
 
-import com.blakebr0.cucumber.energy.BaseEnergyStorage;
 import com.blakebr0.cucumber.helper.StackHelper;
 import com.blakebr0.cucumber.inventory.BaseItemStackHandler;
 import com.blakebr0.cucumber.tileentity.BaseInventoryTileEntity;
@@ -25,31 +24,28 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.SimpleContainerData;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.entity.TickableBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.energy.CapabilityEnergy;
-import net.minecraftforge.items.IItemHandlerModifiable;
+import net.minecraftforge.energy.EnergyStorage;
 
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 
-public class CraftingCoreTileEntity extends BaseInventoryTileEntity implements TickableBlockEntity, MenuProvider {
+public class CraftingCoreTileEntity extends BaseInventoryTileEntity implements MenuProvider {
 	private final BaseItemStackHandler inventory;
-	private final BaseEnergyStorage energy;
+	private final EnergyStorage energy;
 	private final BaseItemStackHandler recipeInventory;
 	private CombinationRecipe recipe;
 	private int progress;
 	private int oldEnergy;
 	private int pedestalCount;
 
-	public CraftingCoreTileEntity() {
-		super(ModTileEntities.CRAFTING_CORE.get());
+	public CraftingCoreTileEntity(BlockPos pos, BlockState state) {
+		super(ModTileEntities.CRAFTING_CORE.get(), pos, state);
 		this.inventory = new BaseItemStackHandler(1, this::markDirtyAndDispatch);
-		this.energy = new BaseEnergyStorage(ModConfigs.CRAFTING_CORE_POWER_CAPACITY.get());
+		this.energy = new EnergyStorage(ModConfigs.CRAFTING_CORE_POWER_CAPACITY.get());
 		this.recipeInventory = new BaseItemStackHandler(49);
 
 		this.inventory.setDefaultSlotLimit(1);
@@ -61,10 +57,10 @@ public class CraftingCoreTileEntity extends BaseInventoryTileEntity implements T
 	}
 
 	@Override
-	public void load(BlockState state, CompoundTag tag) {
-		super.load(state, tag);
+	public void load(CompoundTag tag) {
+		super.load(tag);
 		this.progress = tag.getInt("Progress");
-		this.energy.setEnergy(tag.getInt("Energy"));
+		this.energy.deserializeNBT(tag.get("Energy"));
 	}
 
 	@Override
@@ -78,33 +74,35 @@ public class CraftingCoreTileEntity extends BaseInventoryTileEntity implements T
 
 	@Override
 	public void tick() {
-		boolean mark = false;
+		var mark = false;
 
-		Map<BlockPos, ItemStack> pedestalsWithItems = this.getPedestalsWithItems();
-		Level world = this.getLevel();
+		var pedestalsWithItems = this.getPedestalsWithItems();
+		var level = this.getLevel();
 
-		if (world != null) {
-			ItemStack[] stacks = pedestalsWithItems.values().toArray(new ItemStack[0]);
+		if (level != null) {
+			var stacks = pedestalsWithItems.values().toArray(new ItemStack[0]);
+
 			this.updateRecipeInventory(stacks);
 
 			if (this.recipe == null || !this.recipe.matches(this.recipeInventory)) {
-				this.recipe = (CombinationRecipe) world.getRecipeManager().getRecipeFor(RecipeTypes.COMBINATION, this.recipeInventory.toIInventory(), world).orElse(null);
+				this.recipe = (CombinationRecipe) level.getRecipeManager().getRecipeFor(RecipeTypes.COMBINATION, this.recipeInventory.toIInventory(), level).orElse(null);
 			}
 
-			if (!world.isClientSide()) {
+			if (!level.isClientSide()) {
 				if (this.recipe != null) {
 					if (this.energy.getEnergyStored() > 0) {
 						boolean done = this.process(this.recipe);
 
 						if (done) {
-							for (BlockPos pedestalPos : pedestalsWithItems.keySet()) {
-								BlockEntity tile = world.getBlockEntity(pedestalPos);
+							for (var pedestalPos : pedestalsWithItems.keySet()) {
+								var tile = level.getBlockEntity(pedestalPos);
 
-								if (tile instanceof PedestalTileEntity) {
-									PedestalTileEntity pedestal = (PedestalTileEntity) tile;
-									IItemHandlerModifiable inventory = pedestal.getInventory();
+								if (tile instanceof PedestalTileEntity pedestal) {
+									var inventory = pedestal.getInventory();
+
 									inventory.setStackInSlot(0, StackHelper.shrink(inventory.getStackInSlot(0), 1, true));
 									pedestal.markDirtyAndDispatch();
+
 									this.spawnParticles(ParticleTypes.SMOKE, pedestalPos, 1.1, 20);
 								}
 							}
@@ -118,13 +116,13 @@ public class CraftingCoreTileEntity extends BaseInventoryTileEntity implements T
 							this.spawnParticles(ParticleTypes.ENTITY_EFFECT, this.getBlockPos(), 1.15, 2);
 
 							if (this.shouldSpawnItemParticles()) {
-								for (BlockPos pedestalPos : pedestalsWithItems.keySet()) {
-									BlockEntity tile = world.getBlockEntity(pedestalPos);
+								for (var pedestalPos : pedestalsWithItems.keySet()) {
+									var tile = level.getBlockEntity(pedestalPos);
 
-									if (tile instanceof PedestalTileEntity) {
-										PedestalTileEntity pedestal = (PedestalTileEntity) tile;
-										IItemHandlerModifiable inventory = pedestal.getInventory();
-										ItemStack stack = inventory.getStackInSlot(0);
+									if (tile instanceof PedestalTileEntity pedestal) {
+										var inventory = pedestal.getInventory();
+										var stack = inventory.getStackInSlot(0);
+
 										this.spawnItemParticles(pedestalPos, stack);
 									}
 								}
@@ -167,7 +165,7 @@ public class CraftingCoreTileEntity extends BaseInventoryTileEntity implements T
 		return CraftingCoreContainer.create(windowId, playerInventory, this::isUsableByPlayer, new SimpleContainerData(0), this.getBlockPos());
 	}
 
-	public BaseEnergyStorage getEnergy() {
+	public EnergyStorage getEnergy() {
 		return this.energy;
 	}
 
@@ -222,16 +220,15 @@ public class CraftingCoreTileEntity extends BaseInventoryTileEntity implements T
 
 		int pedestalCount = 0;
 		if (world != null) {
-			BlockPos pos = this.getBlockPos();
-			Iterator<BlockPos> positions = BlockPos.betweenClosedStream(pos.offset(-3, 0, -3), pos.offset(3, 0, 3)).iterator();
+			var pos = this.getBlockPos();
+			var positions = BlockPos.betweenClosedStream(pos.offset(-3, 0, -3), pos.offset(3, 0, 3)).iterator();
 
 			while (positions.hasNext()) {
-				BlockPos aoePos = positions.next();
-				BlockEntity tile = world.getBlockEntity(aoePos);
+				var aoePos = positions.next();
+				var tile = world.getBlockEntity(aoePos);
 
-				if (tile instanceof PedestalTileEntity) {
-					PedestalTileEntity pedestal = (PedestalTileEntity) tile;
-					ItemStack stack = pedestal.getInventory().getStackInSlot(0);
+				if (tile instanceof PedestalTileEntity pedestal) {
+					var stack = pedestal.getInventory().getStackInSlot(0);
 
 					pedestalCount++;
 
@@ -251,31 +248,31 @@ public class CraftingCoreTileEntity extends BaseInventoryTileEntity implements T
 		if (this.getLevel() == null || this.getLevel().isClientSide())
 			return;
 
-		ServerLevel world = (ServerLevel) this.getLevel();
+		var level = (ServerLevel) this.getLevel();
 
 		double x = pos.getX() + 0.5D;
 		double y = pos.getY() + yOffset;
 		double z = pos.getZ() + 0.5D;
 
-		world.sendParticles(particle, x, y, z, count, 0, 0, 0, 0.1D);
+		level.sendParticles(particle, x, y, z, count, 0, 0, 0, 0.1D);
 	}
 
 	private void spawnItemParticles(BlockPos pedestalPos, ItemStack stack) {
 		if (this.getLevel() == null || this.getLevel().isClientSide())
 			return;
 
-		ServerLevel world = (ServerLevel) this.getLevel();
-		BlockPos pos = this.getBlockPos();
+		var level = (ServerLevel) this.getLevel();
+		var pos = this.getBlockPos();
 
-		double x = pedestalPos.getX() + (world.getRandom().nextDouble() * 0.2D) + 0.4D;
-		double y = pedestalPos.getY() + (world.getRandom().nextDouble() * 0.2D) + 1.4D;
-		double z = pedestalPos.getZ() + (world.getRandom().nextDouble() * 0.2D) + 0.4D;
+		double x = pedestalPos.getX() + (level.getRandom().nextDouble() * 0.2D) + 0.4D;
+		double y = pedestalPos.getY() + (level.getRandom().nextDouble() * 0.2D) + 1.4D;
+		double z = pedestalPos.getZ() + (level.getRandom().nextDouble() * 0.2D) + 0.4D;
 
 		double velX = pos.getX() - pedestalPos.getX();
 		double velY = 0.25D;
 		double velZ = pos.getZ() - pedestalPos.getZ();
 
-		world.sendParticles(new ItemParticleOption(ParticleTypes.ITEM, stack), x, y, z, 0, velX, velY, velZ, 0.18D);
+		level.sendParticles(new ItemParticleOption(ParticleTypes.ITEM, stack), x, y, z, 0, velX, velY, velZ, 0.18D);
 	}
 
 	private boolean shouldSpawnItemParticles() {

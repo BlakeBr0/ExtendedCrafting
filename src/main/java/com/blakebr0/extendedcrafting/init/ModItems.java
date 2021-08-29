@@ -7,26 +7,18 @@ import com.blakebr0.extendedcrafting.item.HandheldTableItem;
 import com.blakebr0.extendedcrafting.item.RecipeMakerItem;
 import com.blakebr0.extendedcrafting.item.SingularityItem;
 import com.blakebr0.extendedcrafting.item.UltimateSingularityItem;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Rarity;
-import net.minecraftforge.event.RegistryEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.RegistryObject;
+import net.minecraftforge.fmllegacy.RegistryObject;
+import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraftforge.registries.IForgeRegistry;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
 import java.util.function.Supplier;
 
 import static com.blakebr0.extendedcrafting.ExtendedCrafting.ITEM_GROUP;
 
 public final class ModItems {
-	public static final List<Supplier<Item>> BLOCK_ENTRIES = new ArrayList<>();
-	public static final Map<RegistryObject<Item>, Supplier<Item>> ENTRIES = new LinkedHashMap<>();
+	public static final DeferredRegister<Item> REGISTRY = DeferredRegister.create(ForgeRegistries.ITEMS, ExtendedCrafting.MOD_ID);
 
 	public static final RegistryObject<Item> LUMINESSENCE = register("luminessence");
 	public static final RegistryObject<Item> BLACK_IRON_INGOT = register("black_iron_ingot");
@@ -66,25 +58,11 @@ public final class ModItems {
 	public static final RegistryObject<Item> SINGULARITY = register("singularity", () -> new SingularityItem(p -> p.tab(ITEM_GROUP)));
 	public static final RegistryObject<Item> ULTIMATE_SINGULARITY = register("ultimate_singularity", () -> new UltimateSingularityItem(p -> p.tab(ITEM_GROUP)));
 
-	@SubscribeEvent
-	public void onRegisterItems(RegistryEvent.Register<Item> event) {
-		IForgeRegistry<Item> registry = event.getRegistry();
-
-		BLOCK_ENTRIES.stream().map(Supplier::get).forEach(registry::register);
-		ENTRIES.forEach((reg, item) -> {
-			registry.register(item.get());
-			reg.updateReference(registry);
-		});
-	}
-
 	private static RegistryObject<Item> register(String name) {
 		return register(name, () -> new BaseItem(p -> p.tab(ITEM_GROUP)));
 	}
 
 	private static RegistryObject<Item> register(String name, Supplier<Item> item) {
-		ResourceLocation loc = new ResourceLocation(ExtendedCrafting.MOD_ID, name);
-		RegistryObject<Item> reg = RegistryObject.of(loc, ForgeRegistries.ITEMS);
-		ENTRIES.put(reg, () -> item.get().setRegistryName(loc));
-		return reg;
+		return REGISTRY.register(name, item);
 	}
 }

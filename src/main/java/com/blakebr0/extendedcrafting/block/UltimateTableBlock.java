@@ -44,41 +44,43 @@ public class UltimateTableBlock extends BaseTileEntityBlock implements IEnableab
 	}
 
 	@Override
-	public BlockEntity createTileEntity(BlockState state, BlockGetter world) {
+	public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
 		return new UltimateTableTileEntity();
 	}
 
 	@Override
-	public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult trace) {
-		if (!world.isClientSide()) {
-			BlockEntity tile = world.getBlockEntity(pos);
+	public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult trace) {
+		if (!level.isClientSide()) {
+			var tile = level.getBlockEntity(pos);
 
-			if (tile instanceof UltimateTableTileEntity)
-				player.openMenu((UltimateTableTileEntity) tile);
+			if (tile instanceof UltimateTableTileEntity table)
+				player.openMenu(table);
 		}
 
 		return InteractionResult.SUCCESS;
 	}
 
 	@Override
-	public void onRemove(BlockState state, Level world, BlockPos pos, BlockState newState, boolean isMoving) {
-		BlockEntity tile = world.getBlockEntity(pos);
-		if (tile instanceof UltimateTableTileEntity) {
-			UltimateTableTileEntity table = (UltimateTableTileEntity) tile;
-			Containers.dropContents(world, pos, table.getInventory().getStacks());
+	public void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean isMoving) {
+		if (state.getBlock() != newState.getBlock()) {
+			var tile = level.getBlockEntity(pos);
+
+			if (tile instanceof UltimateTableTileEntity table) {
+				Containers.dropContents(level, pos, table.getInventory().getStacks());
+			}
 		}
 
-		super.onRemove(state, world, pos, newState, isMoving);
+		super.onRemove(state, level, pos, newState, isMoving);
 	}
 
 	@Override
-	public VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
+	public VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
 		return ULTIMATE_TABLE_SHAPE;
 	}
 
 	@OnlyIn(Dist.CLIENT)
 	@Override
-	public void appendHoverText(ItemStack stack, BlockGetter world, List<Component> tooltip, TooltipFlag flag) {
+	public void appendHoverText(ItemStack stack, BlockGetter level, List<Component> tooltip, TooltipFlag flag) {
 		tooltip.add(ModTooltips.TIER.args(4).build());
 	}
 

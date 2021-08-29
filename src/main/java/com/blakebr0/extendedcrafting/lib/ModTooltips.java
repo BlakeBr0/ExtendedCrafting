@@ -26,7 +26,7 @@ public final class ModTooltips {
     public static final Tooltip AUTO_TABLE_DELETE_RECIPE = new Tooltip("tooltip.extendedcrafting.auto_table_delete_recipe");
 
     public static Component getAddedByTooltip(String modid) {
-        String name = ModList.get().getModFileById(modid).getMods().get(0).getDisplayName();
+        var name = ModList.get().getModFileById(modid).getMods().get(0).getDisplayName();
         return ADDED_BY.args(name).build();
     }
 }

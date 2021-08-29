@@ -10,7 +10,8 @@ public final class ModConfigs {
 
 	// Client
 	static {
-		final ForgeConfigSpec.Builder client = new ForgeConfigSpec.Builder();
+		final var client = new ForgeConfigSpec.Builder();
+
 		client.comment("Client settings.").push("General");
 		ENABLE_COMPRESSOR_RENDERER = client
 				.comment("Should the Quantum Compressor render the result item above it?")
@@ -55,7 +56,8 @@ public final class ModConfigs {
 
 	// Common
 	static {
-		final ForgeConfigSpec.Builder common = new ForgeConfigSpec.Builder();
+		final var common = new ForgeConfigSpec.Builder();
+
 		common.comment("Settings for general things.").push("General");
 		ENABLE_HANDHELD_WORKBENCH = common
 				.comment("Should the Handheld Crafting Table be enabled?")

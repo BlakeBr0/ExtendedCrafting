@@ -1,4 +1,4 @@
-package com.blakebr0.extendedcrafting.compat.jei.table;
+package com.blakebr0.extendedcrafting.compat.jei.category.table;
 
 import com.blakebr0.cucumber.util.Localizable;
 import com.blakebr0.extendedcrafting.ExtendedCrafting;
@@ -12,7 +12,6 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.IRecipeLayout;
 import mezz.jei.api.gui.drawable.IDrawable;
-import mezz.jei.api.gui.ingredient.IGuiItemStackGroup;
 import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.ingredients.IIngredients;
 import mezz.jei.api.recipe.category.IRecipeCategory;
@@ -24,22 +23,22 @@ import net.minecraft.world.item.ItemStack;
 import java.util.Collections;
 import java.util.List;
 
-public class UltimateTableCategory implements IRecipeCategory<ITableRecipe> {
-	public static final ResourceLocation UID = new ResourceLocation(ExtendedCrafting.MOD_ID, "ultimate_crafting");
-	private static final ResourceLocation TEXTURE = new ResourceLocation(ExtendedCrafting.MOD_ID, "textures/gui/jei/ultimate_crafting.png");
-	
-    private final IDrawable background;
-    private final IDrawable icon;
-    private final IDrawable required;
-    private final IDrawable shapeless;
-	
-    public UltimateTableCategory(IGuiHelper helper) {
-        this.background = helper.createDrawable(TEXTURE, 0, 0, 162, 195);
-        this.icon = helper.createDrawableIngredient(new ItemStack(ModBlocks.ULTIMATE_TABLE.get()));
+public class EliteTableCategory implements IRecipeCategory<ITableRecipe> {
+	public static final ResourceLocation UID = new ResourceLocation(ExtendedCrafting.MOD_ID, "elite_crafting");
+	private static final ResourceLocation TEXTURE = new ResourceLocation(ExtendedCrafting.MOD_ID, "textures/gui/jei/elite_crafting.png");
+
+	private final IDrawable background;
+	private final IDrawable icon;
+	private final IDrawable required;
+	private final IDrawable shapeless;
+
+	public EliteTableCategory(IGuiHelper helper) {
+		this.background = helper.createDrawable(TEXTURE, 0, 0, 126, 159);
+		this.icon = helper.createDrawableIngredient(new ItemStack(ModBlocks.ELITE_TABLE.get()));
 		this.required = helper.createDrawable(JeiCompat.ICONS, 0, 0, 15, 15);
 		this.shapeless = helper.createDrawable(JeiCompat.ICONS, 17, 0, 19, 15);
-    }
-    
+	}
+
 	@Override
 	public ResourceLocation getUid() {
 		return UID;
@@ -51,12 +50,12 @@ public class UltimateTableCategory implements IRecipeCategory<ITableRecipe> {
 	}
 
 	@Override
-	public String getTitle() {
-		return Localizable.of("jei.category.extendedcrafting.ultimate_crafting").buildString();
+	public Component getTitle() {
+		return Localizable.of("jei.category.extendedcrafting.elite_crafting").build();
 	}
 
 	@Override
-	public IDrawable getBackground(){
+	public IDrawable getBackground() {
 		return this.background;
 	}
 
@@ -69,18 +68,21 @@ public class UltimateTableCategory implements IRecipeCategory<ITableRecipe> {
 	public void draw(ITableRecipe recipe, PoseStack stack, double mouseX, double mouseY) {
 		stack.pushPose();
 		stack.scale(0.5F, 0.5F, 0.5F);
-		boolean shapeless = recipe instanceof ShapelessTableRecipe;
+
+		var shapeless = recipe instanceof ShapelessTableRecipe;
+
 		if (recipe.hasRequiredTier())
-			this.required.draw(stack, shapeless ? 286 : 306, 329);
+			this.required.draw(stack, shapeless ? 217 : 237, 257);
 		if (shapeless)
-			this.shapeless.draw(stack, 306, 329);
+			this.shapeless.draw(stack, 237, 257);
+
 		stack.popPose();
 	}
 
 	@Override
 	public List<Component> getTooltipStrings(ITableRecipe recipe, double mouseX, double mouseY) {
-		boolean shapeless = recipe instanceof ShapelessTableRecipe;
-		int sX = (shapeless ? 286 : 306) / 2, sY = 329 / 2;
+		var shapeless = recipe instanceof ShapelessTableRecipe;
+		int sX = (shapeless ? 217 : 237) / 2, sY = 257 / 2;
 
 		if (recipe.hasRequiredTier() && mouseX > sX - 1 && mouseX < sX + 8 && mouseY > sY - 1 && mouseY < sY + 8) {
 			return Collections.singletonList(ModTooltips.REQUIRES_TABLE.args(recipe.getTier()).color(ChatFormatting.WHITE).build());
@@ -95,33 +97,32 @@ public class UltimateTableCategory implements IRecipeCategory<ITableRecipe> {
 
 	@Override
 	public void setIngredients(ITableRecipe recipe, IIngredients ingredients) {
-    	ingredients.setOutput(VanillaTypes.ITEM, recipe.getResultItem());
-    	ingredients.setInputIngredients(recipe.getIngredients());
+		ingredients.setOutput(VanillaTypes.ITEM, recipe.getResultItem());
+		ingredients.setInputIngredients(recipe.getIngredients());
 	}
 
 	@Override
 	public void setRecipe(IRecipeLayout layout, ITableRecipe recipe, IIngredients ingredients) {
-		IGuiItemStackGroup stacks = layout.getItemStacks();
+		var stacks = layout.getItemStacks();
+		var inputs = ingredients.getInputs(VanillaTypes.ITEM);
+		var outputs = ingredients.getOutputs(VanillaTypes.ITEM).get(0);
 
-		List<List<ItemStack>> inputs = ingredients.getInputs(VanillaTypes.ITEM);
-		List<ItemStack> outputs = ingredients.getOutputs(VanillaTypes.ITEM).get(0);
-
-		stacks.init(0, false, 84, 173);
+		stacks.init(0, false, 65, 137);
 		stacks.set(0, outputs);
 
-		for (int i = 0; i < 9; i++) {
-			for (int j = 0; j < 9; j++) {
-				int index = 1 + j + (i * 9);
+		for (int i = 0; i < 7; i++) {
+			for (int j = 0; j < 7; j++) {
+				int index = 1 + j + (i * 7);
 				stacks.init(index, true, j * 18, i * 18);
 			}
 		}
 
-		if (recipe instanceof ShapedTableRecipe) {
-			ShapedTableRecipe shaped = (ShapedTableRecipe) recipe;
+		if (recipe instanceof ShapedTableRecipe shaped) {
 			int stackIndex = 0;
+
 			for (int i = 0; i < shaped.getHeight(); i++) {
 				for (int j = 0; j < shaped.getWidth(); j++) {
-					int index = 1 + (i * 9) + j;
+					int index = 1 + (i * 7) + j;
 
 					stacks.set(index, inputs.get(stackIndex));
 
@@ -134,6 +135,6 @@ public class UltimateTableCategory implements IRecipeCategory<ITableRecipe> {
 			}
 		}
 
-		layout.moveRecipeTransferButton(149, 182);
+		layout.moveRecipeTransferButton(113, 146);
 	}
 }

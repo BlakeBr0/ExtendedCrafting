@@ -72,14 +72,15 @@ public class CompressorRecipe implements ISpecialRecipe, ICompressorRecipe {
 	}
 
 	@Override
-	public ItemStack getCraftingResult(IItemHandler inventory) {
+	public ItemStack assemble(IItemHandler inventory) {
 		return this.output.copy();
 	}
 
 	@Override
 	public boolean matches(IItemHandler inventory, int startIndex, int endIndex) {
-		ItemStack input = inventory.getStackInSlot(0);
-		ItemStack catalyst = inventory.getStackInSlot(1);
+		var input = inventory.getStackInSlot(0);
+		var catalyst = inventory.getStackInSlot(1);
+
 		return this.inputs.get(0).test(input) && this.catalyst.test(catalyst);
 	}
 
@@ -106,10 +107,10 @@ public class CompressorRecipe implements ISpecialRecipe, ICompressorRecipe {
 	public static class Serializer extends ForgeRegistryEntry<RecipeSerializer<?>> implements RecipeSerializer<CompressorRecipe> {
 		@Override
 		public CompressorRecipe fromJson(ResourceLocation recipeId, JsonObject json) {
-			Ingredient input = Ingredient.fromJson(json.getAsJsonObject("ingredient"));
-			ItemStack output = ShapedRecipe.itemFromJson(GsonHelper.getAsJsonObject(json, "result"));
+			var input = Ingredient.fromJson(json.getAsJsonObject("ingredient"));
+			var output = ShapedRecipe.itemStackFromJson(GsonHelper.getAsJsonObject(json, "result"));
 			int inputCount = GsonHelper.getAsInt(json, "inputCount", 10000);
-			Ingredient catalyst = Ingredient.fromJson(GsonHelper.getAsJsonObject(json, "catalyst"));
+			var catalyst = Ingredient.fromJson(GsonHelper.getAsJsonObject(json, "catalyst"));
 			int powerCost = GsonHelper.getAsInt(json, "powerCost");
 			int powerRate = GsonHelper.getAsInt(json, "powerRate", ModConfigs.COMPRESSOR_POWER_RATE.get());
 
@@ -118,10 +119,10 @@ public class CompressorRecipe implements ISpecialRecipe, ICompressorRecipe {
 
 		@Override
 		public CompressorRecipe fromNetwork(ResourceLocation recipeId, FriendlyByteBuf buffer) {
-			Ingredient input = Ingredient.fromNetwork(buffer);
-			ItemStack output = buffer.readItem();
+			var input = Ingredient.fromNetwork(buffer);
+			var output = buffer.readItem();
 			int inputCount = buffer.readInt();
-			Ingredient catalyst = Ingredient.fromNetwork(buffer);
+			var catalyst = Ingredient.fromNetwork(buffer);
 			int powerCost = buffer.readInt();
 			int powerRate = buffer.readInt();
 

@@ -1,43 +1,49 @@
 package com.blakebr0.extendedcrafting.network.message;
 
+import com.blakebr0.cucumber.network.message.Message;
 import com.blakebr0.extendedcrafting.tileentity.AutoTableTileEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraftforge.fml.network.NetworkEvent;
+import net.minecraftforge.fmllegacy.network.NetworkEvent;
 
 import java.util.function.Supplier;
 
-public class SelectRecipeMessage {
+public class SelectRecipeMessage extends Message<SelectRecipeMessage> {
     private final BlockPos pos;
     private final int selected;
+
+    public SelectRecipeMessage() {
+        this.pos = BlockPos.ZERO;
+        this.selected = -1;
+    }
 
     public SelectRecipeMessage(BlockPos pos, int selected) {
         this.pos = pos;
         this.selected = selected;
     }
 
-    public static SelectRecipeMessage read(FriendlyByteBuf buffer) {
+    @Override
+    public SelectRecipeMessage read(FriendlyByteBuf buffer) {
         return new SelectRecipeMessage(buffer.readBlockPos(), buffer.readVarInt());
     }
 
-    public static void write(SelectRecipeMessage message, FriendlyByteBuf buffer) {
+    @Override
+    public void write(SelectRecipeMessage message, FriendlyByteBuf buffer) {
         buffer.writeBlockPos(message.pos);
         buffer.writeVarInt(message.selected);
     }
 
-    public static void onMessage(SelectRecipeMessage message, Supplier<NetworkEvent.Context> context) {
+    @Override
+    public void onMessage(SelectRecipeMessage message, Supplier<NetworkEvent.Context> context) {
         context.get().enqueueWork(() -> {
-            ServerPlayer player = context.get().getSender();
+            var player = context.get().getSender();
+
             if (player != null) {
-                Level world = player.getCommandSenderWorld();
-                BlockEntity tile = world.getBlockEntity(message.pos);
-                if (tile instanceof AutoTableTileEntity) {
-                    AutoTableTileEntity table = (AutoTableTileEntity) tile;
+                var level = player.getCommandSenderWorld();
+                var tile = level.getBlockEntity(message.pos);
+
+                if (tile instanceof AutoTableTileEntity table)
                     table.selectRecipe(message.selected);
-                }
             }
         });
 

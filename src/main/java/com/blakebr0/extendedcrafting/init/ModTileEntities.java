@@ -13,25 +13,20 @@ import com.blakebr0.extendedcrafting.tileentity.EliteTableTileEntity;
 import com.blakebr0.extendedcrafting.tileentity.EnderCrafterTileEntity;
 import com.blakebr0.extendedcrafting.tileentity.PedestalTileEntity;
 import com.blakebr0.extendedcrafting.tileentity.UltimateTableTileEntity;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.event.RegistryEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.RegistryObject;
-import net.minecraftforge.fml.client.registry.ClientRegistry;
+import net.minecraftforge.fmlclient.registry.ClientRegistry;
+import net.minecraftforge.fmllegacy.RegistryObject;
+import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraftforge.registries.IForgeRegistry;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.function.Supplier;
 
 public final class ModTileEntities {
-	public static final List<Supplier<? extends BlockEntityType<?>>> ENTRIES = new ArrayList<>();
+	public static final DeferredRegister<BlockEntityType<?>> REGISTRY = DeferredRegister.create(ForgeRegistries.BLOCK_ENTITIES, ExtendedCrafting.MOD_ID);
 
 	public static final RegistryObject<BlockEntityType<PedestalTileEntity>> PEDESTAL = register("pedestal", PedestalTileEntity::new, () -> new Block[] { ModBlocks.PEDESTAL.get() });
 	public static final RegistryObject<BlockEntityType<CraftingCoreTileEntity>> CRAFTING_CORE = register("crafting_core", CraftingCoreTileEntity::new, () -> new Block[] { ModBlocks.CRAFTING_CORE.get() });
@@ -46,13 +41,6 @@ public final class ModTileEntities {
 	public static final RegistryObject<BlockEntityType<CompressorTileEntity>> COMPRESSOR = register("compressor", CompressorTileEntity::new, () -> new Block[] { ModBlocks.COMPRESSOR.get() });
 	public static final RegistryObject<BlockEntityType<EnderCrafterTileEntity>> ENDER_CRAFTER = register("ender_crafter", EnderCrafterTileEntity::new, () -> new Block[] { ModBlocks.ENDER_CRAFTER.get() });
 
-	@SubscribeEvent
-	public void onRegisterTypes(RegistryEvent.Register<BlockEntityType<?>> event) {
-		IForgeRegistry<BlockEntityType<?>> registry = event.getRegistry();
-
-		ENTRIES.stream().map(Supplier::get).forEach(registry::register);
-	}
-
 	@OnlyIn(Dist.CLIENT)
 	public static void onClientSetup() {
 		ClientRegistry.bindTileEntityRenderer(PEDESTAL.get(), PedestalRenderer::new);
@@ -60,9 +48,7 @@ public final class ModTileEntities {
 		ClientRegistry.bindTileEntityRenderer(COMPRESSOR.get(), CompressorRenderer::new);
 	}
 
-	private static <T extends BlockEntityType<?>> RegistryObject<T> register(String name, Supplier<BlockEntity> tile, Supplier<Block[]> blocks) {
-		ResourceLocation loc = new ResourceLocation(ExtendedCrafting.MOD_ID, name);
-		ENTRIES.add(() -> BlockEntityType.Builder.of(tile, blocks.get()).build(null).setRegistryName(loc));
-		return RegistryObject.of(loc, ForgeRegistries.TILE_ENTITIES);
+	private static <T extends BlockEntity> RegistryObject<BlockEntityType<T>> register(String name, BlockEntityType.BlockEntitySupplier<T> tile, Supplier<Block[]> blocks) {
+		return REGISTRY.register(name, () -> BlockEntityType.Builder.of(tile, blocks.get()).build(null));
 	}
 }

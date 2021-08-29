@@ -5,7 +5,6 @@ import com.blakebr0.extendedcrafting.api.crafting.ICombinationRecipe;
 import com.blakebr0.extendedcrafting.api.crafting.RecipeTypes;
 import com.blakebr0.extendedcrafting.config.ModConfigs;
 import com.blakebr0.extendedcrafting.init.ModRecipeSerializers;
-import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
 import net.minecraft.core.NonNullList;
@@ -76,13 +75,13 @@ public class CombinationRecipe implements ISpecialRecipe, ICombinationRecipe {
 	}
 
 	@Override
-	public ItemStack getCraftingResult(IItemHandler inventory) {
+	public ItemStack assemble(IItemHandler inventory) {
 		return this.output.copy();
 	}
 
 	@Override
 	public boolean matches(IItemHandler inventory) {
-		ItemStack input = inventory.getStackInSlot(0);
+		var input = inventory.getStackInSlot(0);
 		return this.ingredients.get(0).test(input) && ISpecialRecipe.super.matches(inventory);
 	}
 
@@ -105,18 +104,21 @@ public class CombinationRecipe implements ISpecialRecipe, ICombinationRecipe {
 		@Override
 		public CombinationRecipe fromJson(ResourceLocation recipeId, JsonObject json) {
 			NonNullList<Ingredient> inputs = NonNullList.create();
-			Ingredient input = Ingredient.fromJson(GsonHelper.getAsJsonObject(json, "input"));
+			var input = Ingredient.fromJson(GsonHelper.getAsJsonObject(json, "input"));
+
 			inputs.add(input);
 
-			JsonArray ingredients = GsonHelper.getAsJsonArray(json, "ingredients");
+			var ingredients = GsonHelper.getAsJsonArray(json, "ingredients");
 			for (int i = 0; i < ingredients.size(); i++) {
-				Ingredient ingredient = Ingredient.fromJson(ingredients.get(i));
+				var ingredient = Ingredient.fromJson(ingredients.get(i));
 				inputs.add(ingredient);
 			}
 
-			ItemStack output = ShapedRecipe.itemFromJson(GsonHelper.getAsJsonObject(json, "result"));
+			var output = ShapedRecipe.itemStackFromJson(GsonHelper.getAsJsonObject(json, "result"));
+
 			if (!json.has("powerCost"))
 				throw new JsonSyntaxException("Missing powerCost for combination crafting recipe");
+
 			int powerCost = GsonHelper.getAsInt(json, "powerCost");
 			int powerRate = GsonHelper.getAsInt(json, "powerRate", ModConfigs.CRAFTING_CORE_POWER_RATE.get());
 
@@ -126,13 +128,13 @@ public class CombinationRecipe implements ISpecialRecipe, ICombinationRecipe {
 		@Override
 		public CombinationRecipe fromNetwork(ResourceLocation recipeId, FriendlyByteBuf buffer) {
 			int size = buffer.readVarInt();
+			var inputs = NonNullList.withSize(size, Ingredient.EMPTY);
 
-			NonNullList<Ingredient> inputs = NonNullList.withSize(size, Ingredient.EMPTY);
 			for (int i = 0; i < size; i++) {
 				inputs.set(i, Ingredient.fromNetwork(buffer));
 			}
 
-			ItemStack output = buffer.readItem();
+			var output = buffer.readItem();
 			int powerCost = buffer.readVarInt();
 			int powerRate = buffer.readVarInt();
 
@@ -143,7 +145,7 @@ public class CombinationRecipe implements ISpecialRecipe, ICombinationRecipe {
 		public void toNetwork(FriendlyByteBuf buffer, CombinationRecipe recipe) {
 			buffer.writeVarInt(recipe.ingredients.size());
 
-			for (Ingredient ingredient : recipe.ingredients) {
+			for (var ingredient : recipe.ingredients) {
 				ingredient.toNetwork(buffer);
 			}
 

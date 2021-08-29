@@ -24,23 +24,19 @@ import com.blakebr0.extendedcrafting.container.EnderCrafterContainer;
 import com.blakebr0.extendedcrafting.container.UltimateAutoTableContainer;
 import com.blakebr0.extendedcrafting.container.UltimateTableContainer;
 import net.minecraft.client.gui.screens.MenuScreens;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.event.RegistryEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.RegistryObject;
-import net.minecraftforge.fml.network.IContainerFactory;
+import net.minecraftforge.fmllegacy.RegistryObject;
+import net.minecraftforge.fmllegacy.network.IContainerFactory;
+import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraftforge.registries.IForgeRegistry;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.function.Supplier;
 
 public final class ModContainerTypes {
-    public static final List<Supplier<? extends MenuType<?>>> ENTRIES = new ArrayList<>();
+    public static final DeferredRegister<MenuType<?>> REGISTRY = DeferredRegister.create(ForgeRegistries.CONTAINERS, ExtendedCrafting.MOD_ID);
 
     public static final RegistryObject<MenuType<CraftingCoreContainer>> CRAFTING_CORE = register("crafting_core", () -> new MenuType<>((IContainerFactory<CraftingCoreContainer>) CraftingCoreContainer::create));
     public static final RegistryObject<MenuType<BasicTableContainer>> BASIC_TABLE = register("basic_table", () -> new MenuType<>(BasicTableContainer::create));
@@ -53,13 +49,6 @@ public final class ModContainerTypes {
     public static final RegistryObject<MenuType<UltimateAutoTableContainer>> ULTIMATE_AUTO_TABLE = register("ultimate_auto_table", () -> new MenuType<>((IContainerFactory<UltimateAutoTableContainer>) UltimateAutoTableContainer::create));
     public static final RegistryObject<MenuType<CompressorContainer>> COMPRESSOR = register("compressor", () -> new MenuType<>((IContainerFactory<CompressorContainer>) CompressorContainer::create));
     public static final RegistryObject<MenuType<EnderCrafterContainer>> ENDER_CRAFTER = register("ender_crafter", () -> new MenuType<>((IContainerFactory<EnderCrafterContainer>) EnderCrafterContainer::create));
-
-    @SubscribeEvent
-    public void onRegisterContainerTypes(RegistryEvent.Register<MenuType<?>> event) {
-        IForgeRegistry<MenuType<?>> registry = event.getRegistry();
-
-        ENTRIES.stream().map(Supplier::get).forEach(registry::register);
-    }
 
     @OnlyIn(Dist.CLIENT)
     public static void onClientSetup() {
@@ -76,9 +65,7 @@ public final class ModContainerTypes {
         ENDER_CRAFTER.ifPresent(container -> MenuScreens.register(container, EnderCrafterScreen::new));
     }
 
-    private static <T extends MenuType<?>> RegistryObject<T> register(String name, Supplier<? extends MenuType<?>> container) {
-        ResourceLocation loc = new ResourceLocation(ExtendedCrafting.MOD_ID, name);
-        ENTRIES.add(() -> container.get().setRegistryName(loc));
-        return RegistryObject.of(loc, ForgeRegistries.CONTAINERS);
+    private static <T extends AbstractContainerMenu> RegistryObject<MenuType<T>> register(String name, Supplier<? extends MenuType<T>> container) {
+        return REGISTRY.register(name, container);
     }
 }

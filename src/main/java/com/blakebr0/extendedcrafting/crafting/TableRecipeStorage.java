@@ -49,7 +49,8 @@ public class TableRecipeStorage {
     }
 
     public void setRecipe(int index, BaseItemStackHandler inventory, ItemStack output) {
-        BaseItemStackHandler recipe = new BaseItemStackHandler(this.slots);
+        var recipe = new BaseItemStackHandler(this.slots);
+
         for (int i = 0; i < this.slots - 1; i++) {
             recipe.setStackInSlot(i, inventory.getStackInSlot(i));
         }
@@ -81,12 +82,14 @@ public class TableRecipeStorage {
     }
 
     public CompoundTag serializeNBT() {
-        ListTag recipes = new ListTag();
+        var recipes = new ListTag();
+
         for (int i = 0; i < this.recipes.length; i++) {
             recipes.add(i, this.recipes[i].serializeNBT());
         }
 
-        CompoundTag tag = new CompoundTag();
+        var tag = new CompoundTag();
+
         tag.put("Recipes", recipes);
         tag.putInt("Selected", this.selected);
 
@@ -94,7 +97,8 @@ public class TableRecipeStorage {
     }
 
     public void deserializeNBT(CompoundTag tag) {
-        ListTag recipes = tag.getList("Recipes", Constants.NBT.TAG_COMPOUND);
+        var recipes = tag.getList("Recipes", Constants.NBT.TAG_COMPOUND);
+
         for (int i = 0; i < recipes.size(); i++) {
             this.recipes[i].deserializeNBT(recipes.getCompound(i));
         }

@@ -38,17 +38,18 @@ public final class SingularityRegistry {
     private final Map<ResourceLocation, Singularity> singularities = new LinkedHashMap<>();
 
     public void loadSingularities() {
-        Stopwatch stopwatch = Stopwatch.createStarted();
-        File dir = FMLPaths.CONFIGDIR.get().resolve("extendedcrafting/singularities/").toFile();
+        var stopwatch = Stopwatch.createStarted();
+        var dir = FMLPaths.CONFIGDIR.get().resolve("extendedcrafting/singularities/").toFile();
 
         if (!dir.exists() && dir.mkdirs()) {
-            for (Singularity singularity : defaults()) {
-                JsonObject json = SingularityUtils.writeToJson(singularity);
+            for (var singularity : defaults()) {
+                var json = SingularityUtils.writeToJson(singularity);
                 FileWriter writer = null;
 
                 try {
-                    File file = new File(dir, singularity.getId().getPath() + ".json");
+                    var file = new File(dir, singularity.getId().getPath() + ".json");
                     writer = new FileWriter(file);
+
                     GSON.toJson(json, writer);
                     writer.close();
                 } catch (Exception e) {
@@ -64,6 +65,7 @@ public final class SingularityRegistry {
         }
 
         stopwatch.stop();
+
         LOGGER.info("Loaded {} singularity type(s) in {} ms", this.singularities.size(), stopwatch.elapsed(TimeUnit.MILLISECONDS));
     }
 
@@ -89,7 +91,7 @@ public final class SingularityRegistry {
         int size = buffer.readVarInt();
 
         for (int i = 0; i < size; i++) {
-            Singularity singularity = Singularity.read(buffer);
+            var singularity = Singularity.read(buffer);
 
             singularities.add(singularity);
         }
@@ -98,7 +100,7 @@ public final class SingularityRegistry {
     }
 
     public void loadSingularities(SyncSingularitiesMessage message) {
-        Map<ResourceLocation, Singularity> singularities = message.getSingularities()
+        var singularities = message.getSingularities()
                 .stream()
                 .collect(Collectors.toMap(Singularity::getId, s -> s));
 
@@ -109,20 +111,22 @@ public final class SingularityRegistry {
     }
 
     private void loadFiles(File dir) {
-        File[] files = dir.listFiles((FileFilter) FileFilterUtils.suffixFileFilter(".json"));
+        var files = dir.listFiles((FileFilter) FileFilterUtils.suffixFileFilter(".json"));
         if (files == null)
             return;
 
-        for (File file : files) {
+        for (var file : files) {
             JsonObject json;
             FileReader reader = null;
             Singularity singularity = null;
 
             try {
-                JsonParser parser = new JsonParser();
+                var parser = new JsonParser();
                 reader = new FileReader(file);
+                var name = file.getName().replace(".json", "");
+
                 json = parser.parse(reader).getAsJsonObject();
-                String name = file.getName().replace(".json", "");
+
                 singularity = SingularityUtils.loadFromJson(new ResourceLocation(ExtendedCrafting.MOD_ID, name), json);
 
                 reader.close();
@@ -133,7 +137,7 @@ public final class SingularityRegistry {
             }
 
             if (singularity != null) {
-                ResourceLocation id = singularity.getId();
+                var id = singularity.getId();
 
                 this.singularities.put(id, singularity);
             }
@@ -147,7 +151,7 @@ public final class SingularityRegistry {
     private static List<Singularity> defaults() {
         int count = ModConfigs.SINGULARITY_MATERIALS_REQUIRED.get();
 
-        return Lists.newArrayList(
+        return List.of(
                 new Singularity(new ResourceLocation(ExtendedCrafting.MOD_ID, "coal"), "singularity.extendedcrafting.coal", new int[] { 3289650, 1052693 }, Ingredient.of(Items.COAL), count, true),
                 new Singularity(new ResourceLocation(ExtendedCrafting.MOD_ID, "iron"), "singularity.extendedcrafting.iron", new int[] { 14211288, 11053224 }, Ingredient.of(Items.IRON_INGOT), count, true),
                 new Singularity(new ResourceLocation(ExtendedCrafting.MOD_ID, "lapis_lazuli"), "singularity.extendedcrafting.lapis_lazuli", new int[] { 5931746, 3432131 }, Ingredient.of(Items.LAPIS_LAZULI), count, true),

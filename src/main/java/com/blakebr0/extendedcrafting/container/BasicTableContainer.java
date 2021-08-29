@@ -1,7 +1,6 @@
 package com.blakebr0.extendedcrafting.container;
 
 import com.blakebr0.cucumber.inventory.BaseItemStackHandler;
-import com.blakebr0.extendedcrafting.api.crafting.ITableRecipe;
 import com.blakebr0.extendedcrafting.api.crafting.RecipeTypes;
 import com.blakebr0.extendedcrafting.config.ModConfigs;
 import com.blakebr0.extendedcrafting.container.inventory.ExtendedCraftingInventory;
@@ -16,11 +15,9 @@ import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.CraftingRecipe;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
 
-import java.util.Optional;
 import java.util.function.Function;
 
 public class BasicTableContainer extends AbstractContainerMenu {
@@ -39,7 +36,7 @@ public class BasicTableContainer extends AbstractContainerMenu {
 		this.world = playerInventory.player.level;
 		this.result = new SimpleContainer(1);
 
-		Container matrix = new ExtendedCraftingInventory(this, inventory, 3);
+		var matrix = new ExtendedCraftingInventory(this, inventory, 3);
 
 		this.addSlot(new TableOutputSlot(this, matrix, this.result, 0, 124, 36));
 		
@@ -65,19 +62,19 @@ public class BasicTableContainer extends AbstractContainerMenu {
 
 	@Override
 	public void slotsChanged(Container matrix) {
-		Optional<ITableRecipe> recipe = this.world.getRecipeManager().getRecipeFor(RecipeTypes.TABLE, matrix, this.world);
+		var recipe = this.world.getRecipeManager().getRecipeFor(RecipeTypes.TABLE, matrix, this.world);
 
 		this.isVanillaRecipe = false;
 
 		if (recipe.isPresent()) {
-			ItemStack result = recipe.get().assemble(matrix);
+			var result = recipe.get().assemble(matrix);
 
 			this.result.setItem(0, result);
 		} else if (ModConfigs.TABLE_USE_VANILLA_RECIPES.get()) {
-			Optional<CraftingRecipe> vanilla = this.world.getRecipeManager().getRecipeFor(RecipeType.CRAFTING, (CraftingContainer) matrix, this.world);
+			var vanilla = this.world.getRecipeManager().getRecipeFor(RecipeType.CRAFTING, (CraftingContainer) matrix, this.world);
 
 			if (vanilla.isPresent()) {
-				ItemStack result = vanilla.get().assemble((CraftingContainer) matrix);
+				var result = vanilla.get().assemble((CraftingContainer) matrix);
 
 				this.isVanillaRecipe = true;
 				this.result.setItem(0, result);
@@ -98,11 +95,11 @@ public class BasicTableContainer extends AbstractContainerMenu {
 
 	@Override
 	public ItemStack quickMoveStack(Player player, int slotNumber) {
-		ItemStack itemstack = ItemStack.EMPTY;
-		Slot slot = this.slots.get(slotNumber);
+		var itemstack = ItemStack.EMPTY;
+		var slot = this.slots.get(slotNumber);
 
-		if (slot != null && slot.hasItem()) {
-			ItemStack itemstack1 = slot.getItem();
+		if (slot.hasItem()) {
+			var itemstack1 = slot.getItem();
 			itemstack = itemstack1.copy();
 
 			if (slotNumber == 0) {

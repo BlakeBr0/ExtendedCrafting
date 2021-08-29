@@ -44,7 +44,8 @@ public class ExtendedCraftingInventory extends CraftingContainer {
 
     @Override
     public ItemStack removeItem(int slot, int amount) {
-        ItemStack stack = this.inventory.extractItemSuper(slot, amount, false);
+        var stack = this.inventory.extractItemSuper(slot, amount, false);
+
         this.container.slotsChanged(this);
 
         return stack;
@@ -52,7 +53,8 @@ public class ExtendedCraftingInventory extends CraftingContainer {
 
     @Override
     public ItemStack removeItemNoUpdate(int slot) {
-        ItemStack stack = this.inventory.getStackInSlot(slot);
+        var stack = this.inventory.getStackInSlot(slot);
+
         this.inventory.setStackInSlot(slot, ItemStack.EMPTY);
 
         return stack;

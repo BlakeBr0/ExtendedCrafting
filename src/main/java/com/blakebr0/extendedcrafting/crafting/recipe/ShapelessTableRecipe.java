@@ -4,7 +4,6 @@ import com.blakebr0.cucumber.crafting.ISpecialRecipe;
 import com.blakebr0.extendedcrafting.api.crafting.ITableRecipe;
 import com.blakebr0.extendedcrafting.api.crafting.RecipeTypes;
 import com.blakebr0.extendedcrafting.init.ModRecipeSerializers;
-import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import net.minecraft.core.NonNullList;
 import net.minecraft.network.FriendlyByteBuf;
@@ -70,7 +69,7 @@ public class ShapelessTableRecipe implements ISpecialRecipe, ITableRecipe {
 	}
 
 	@Override
-	public ItemStack getCraftingResult(IItemHandler inventory) {
+	public ItemStack assemble(IItemHandler inventory) {
 		return this.output.copy();
 	}
 
@@ -83,7 +82,7 @@ public class ShapelessTableRecipe implements ISpecialRecipe, ITableRecipe {
 		int matched = 0;
 
 		for (int i = 0; i < inventory.getSlots(); i++) {
-			ItemStack stack = inventory.getStackInSlot(i);
+			var stack = inventory.getStackInSlot(i);
 
 			if (!stack.isEmpty()) {
 				inputs.add(stack);
@@ -117,12 +116,13 @@ public class ShapelessTableRecipe implements ISpecialRecipe, ITableRecipe {
 		@Override
 		public ShapelessTableRecipe fromJson(ResourceLocation recipeId, JsonObject json) {
 			NonNullList<Ingredient> inputs = NonNullList.create();
-			JsonArray ingredients = GsonHelper.getAsJsonArray(json, "ingredients");
+			var ingredients = GsonHelper.getAsJsonArray(json, "ingredients");
+
 			for (int i = 0; i < ingredients.size(); i++) {
 				inputs.add(Ingredient.fromJson(ingredients.get(i)));
 			}
 
-			ItemStack output = ShapedRecipe.itemFromJson(GsonHelper.getAsJsonObject(json, "result"));
+			var output = ShapedRecipe.itemStackFromJson(GsonHelper.getAsJsonObject(json, "result"));
 			int tier = GsonHelper.getAsInt(json, "tier", 0);
 
 			return new ShapelessTableRecipe(recipeId, inputs, output, tier);
@@ -131,13 +131,13 @@ public class ShapelessTableRecipe implements ISpecialRecipe, ITableRecipe {
 		@Override
 		public ShapelessTableRecipe fromNetwork(ResourceLocation recipeId, FriendlyByteBuf buffer) {
 			int size = buffer.readVarInt();
-			NonNullList<Ingredient> inputs = NonNullList.withSize(size, Ingredient.EMPTY);
+			var inputs = NonNullList.withSize(size, Ingredient.EMPTY);
 
 			for (int i = 0; i < size; ++i) {
 				inputs.set(i, Ingredient.fromNetwork(buffer));
 			}
 
-			ItemStack output = buffer.readItem();
+			var output = buffer.readItem();
 			int tier = buffer.readVarInt();
 
 			return new ShapelessTableRecipe(recipeId, inputs, output, tier);
@@ -147,7 +147,7 @@ public class ShapelessTableRecipe implements ISpecialRecipe, ITableRecipe {
 		public void toNetwork(FriendlyByteBuf buffer, ShapelessTableRecipe recipe) {
 			buffer.writeVarInt(recipe.inputs.size());
 
-			for (Ingredient ingredient : recipe.inputs) {
+			for (var ingredient : recipe.inputs) {
 				ingredient.toNetwork(buffer);
 			}
 

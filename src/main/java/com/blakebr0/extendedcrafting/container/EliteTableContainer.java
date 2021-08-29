@@ -1,7 +1,6 @@
 package com.blakebr0.extendedcrafting.container;
 
 import com.blakebr0.cucumber.inventory.BaseItemStackHandler;
-import com.blakebr0.extendedcrafting.api.crafting.ITableRecipe;
 import com.blakebr0.extendedcrafting.api.crafting.RecipeTypes;
 import com.blakebr0.extendedcrafting.container.inventory.ExtendedCraftingInventory;
 import com.blakebr0.extendedcrafting.container.slot.TableOutputSlot;
@@ -16,7 +15,6 @@ import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 
-import java.util.Optional;
 import java.util.function.Function;
 
 public class EliteTableContainer extends AbstractContainerMenu {
@@ -34,7 +32,7 @@ public class EliteTableContainer extends AbstractContainerMenu {
 		this.world = playerInventory.player.level;
 		this.result = new SimpleContainer(1);
 
-		Container matrix = new ExtendedCraftingInventory(this, inventory, 7);
+		var matrix = new ExtendedCraftingInventory(this, inventory, 7);
 
 		this.addSlot(new TableOutputSlot(this, matrix, this.result, 0, 172, 71));
 		
@@ -60,9 +58,10 @@ public class EliteTableContainer extends AbstractContainerMenu {
 
 	@Override
 	public void slotsChanged(Container matrix) {
-		Optional<ITableRecipe> recipe = this.world.getRecipeManager().getRecipeFor(RecipeTypes.TABLE, matrix, this.world);
+		var recipe = this.world.getRecipeManager().getRecipeFor(RecipeTypes.TABLE, matrix, this.world);
+
 		if (recipe.isPresent()) {
-			ItemStack result = recipe.get().assemble(matrix);
+			var result = recipe.get().assemble(matrix);
 			this.result.setItem(0, result);
 		} else {
 			this.result.setItem(0, ItemStack.EMPTY);
@@ -78,11 +77,11 @@ public class EliteTableContainer extends AbstractContainerMenu {
 
 	@Override
 	public ItemStack quickMoveStack(Player player, int slotNumber) {
-		ItemStack itemstack = ItemStack.EMPTY;
-		Slot slot = this.slots.get(slotNumber);
+		var itemstack = ItemStack.EMPTY;
+		var slot = this.slots.get(slotNumber);
 
-		if (slot != null && slot.hasItem()) {
-			ItemStack itemstack1 = slot.getItem();
+		if (slot.hasItem()) {
+			var itemstack1 = slot.getItem();
 			itemstack = itemstack1.copy();
 
 			if (slotNumber == 0) {

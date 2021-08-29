@@ -15,10 +15,13 @@ import com.blakebr0.extendedcrafting.client.screen.EliteTableScreen;
 import com.blakebr0.extendedcrafting.client.screen.EnderCrafterScreen;
 import com.blakebr0.extendedcrafting.client.screen.UltimateAutoTableScreen;
 import com.blakebr0.extendedcrafting.client.screen.UltimateTableScreen;
-import com.blakebr0.extendedcrafting.compat.jei.table.AdvancedTableCategory;
-import com.blakebr0.extendedcrafting.compat.jei.table.BasicTableCategory;
-import com.blakebr0.extendedcrafting.compat.jei.table.EliteTableCategory;
-import com.blakebr0.extendedcrafting.compat.jei.table.UltimateTableCategory;
+import com.blakebr0.extendedcrafting.compat.jei.category.CombinationCraftingCategory;
+import com.blakebr0.extendedcrafting.compat.jei.category.CompressorCraftingCategory;
+import com.blakebr0.extendedcrafting.compat.jei.category.EnderCrafterCategory;
+import com.blakebr0.extendedcrafting.compat.jei.category.table.AdvancedTableCategory;
+import com.blakebr0.extendedcrafting.compat.jei.category.table.BasicTableCategory;
+import com.blakebr0.extendedcrafting.compat.jei.category.table.EliteTableCategory;
+import com.blakebr0.extendedcrafting.compat.jei.category.table.UltimateTableCategory;
 import com.blakebr0.extendedcrafting.config.ModConfigs;
 import com.blakebr0.extendedcrafting.container.AdvancedAutoTableContainer;
 import com.blakebr0.extendedcrafting.container.AdvancedTableContainer;
@@ -31,12 +34,10 @@ import com.blakebr0.extendedcrafting.container.UltimateAutoTableContainer;
 import com.blakebr0.extendedcrafting.container.UltimateTableContainer;
 import com.blakebr0.extendedcrafting.init.ModBlocks;
 import com.blakebr0.extendedcrafting.init.ModItems;
-import com.blakebr0.extendedcrafting.singularity.Singularity;
 import com.blakebr0.extendedcrafting.singularity.SingularityUtils;
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
 import mezz.jei.api.constants.VanillaRecipeCategoryUid;
-import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.registration.IGuiHandlerRegistration;
 import mezz.jei.api.registration.IRecipeCatalystRegistration;
 import mezz.jei.api.registration.IRecipeCategoryRegistration;
@@ -44,14 +45,10 @@ import mezz.jei.api.registration.IRecipeRegistration;
 import mezz.jei.api.registration.IRecipeTransferRegistration;
 import mezz.jei.api.registration.ISubtypeRegistration;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.RecipeManager;
 
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 @JeiPlugin
@@ -66,7 +63,7 @@ public final class JeiCompat implements IModPlugin {
 
 	@Override
 	public void registerCategories(IRecipeCategoryRegistration registration) {
-		IGuiHelper helper = registration.getJeiHelpers().getGuiHelper();
+		var helper = registration.getJeiHelpers().getGuiHelper();
 
 		if (ModConfigs.ENABLE_CRAFTING_CORE.get()) {
 			registration.addRecipeCategories(new CombinationCraftingCategory(helper));
@@ -92,16 +89,17 @@ public final class JeiCompat implements IModPlugin {
 
 	@Override
 	public void registerRecipes(IRecipeRegistration registration) {
-		ClientLevel world = Minecraft.getInstance().level;
+		var world = Minecraft.getInstance().level;
+
 		if (world != null) {
-			RecipeManager manager = world.getRecipeManager();
+			var manager = world.getRecipeManager();
 
 			if (ModConfigs.ENABLE_CRAFTING_CORE.get()) {
 				registration.addRecipes(manager.byType(RecipeTypes.COMBINATION).values(), CombinationCraftingCategory.UID);
 			}
 
 			if (ModConfigs.ENABLE_TABLES.get()) {
-				Map<Integer, List<ITableRecipe>> recipes = manager.byType(RecipeTypes.TABLE).values()
+				var recipes = manager.byType(RecipeTypes.TABLE).values()
 						.stream()
 						.map(recipe -> (ITableRecipe) recipe)
 						.collect(Collectors.groupingBy(ITableRecipe::getTier));
@@ -226,14 +224,14 @@ public final class JeiCompat implements IModPlugin {
 	@Override
 	public void registerItemSubtypes(ISubtypeRegistration registration) {
 		ModItems.SINGULARITY.ifPresent(item -> {
-			registration.registerSubtypeInterpreter(item, stack -> {
-				Singularity singularity = SingularityUtils.getSingularity(stack);
+			registration.registerSubtypeInterpreter(item, (stack, context) -> {
+				var singularity = SingularityUtils.getSingularity(stack);
 				return singularity != null ? singularity.getId().toString() : "";
 			});
 		});
 
 		ModItems.RECIPE_MAKER.ifPresent(item -> {
-			registration.registerSubtypeInterpreter(item, stack -> NBTHelper.getString(stack, "Type"));
+			registration.registerSubtypeInterpreter(item, (stack, context) -> NBTHelper.getString(stack, "Type"));
 		});
 	}
 }

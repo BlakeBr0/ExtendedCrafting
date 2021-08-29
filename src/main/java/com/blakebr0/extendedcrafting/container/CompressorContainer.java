@@ -53,11 +53,11 @@ public class CompressorContainer extends AbstractContainerMenu {
 
 	@Override
 	public ItemStack quickMoveStack(Player player, int slotNumber) {
-		ItemStack itemstack = ItemStack.EMPTY;
-		Slot slot = this.slots.get(slotNumber);
+		var itemstack = ItemStack.EMPTY;
+		var slot = this.slots.get(slotNumber);
 
-		if (slot != null && slot.hasItem()) {
-			ItemStack itemstack1 = slot.getItem();
+		if (slot.hasItem()) {
+			var itemstack1 = slot.getItem();
 			itemstack = itemstack1.copy();
 
 			if (slotNumber < 3) {

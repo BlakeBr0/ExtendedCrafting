@@ -28,13 +28,13 @@ public class TableOutputSlot extends Slot {
     }
 
     @Override
-    public ItemStack onTake(Player player, ItemStack stack) {
+    public void onTake(Player player, ItemStack stack) {
         boolean isVanilla = false;
 
-        if (this.container instanceof BasicTableContainer) {
-            isVanilla = ((BasicTableContainer) this.container).isVanillaRecipe();
-        } else if (this.container instanceof BasicAutoTableContainer) {
-            isVanilla = ((BasicAutoTableContainer) this.container).isVanillaRecipe();
+        if (this.container instanceof BasicTableContainer table) {
+            isVanilla = table.isVanillaRecipe();
+        } else if (this.container instanceof BasicAutoTableContainer table) {
+            isVanilla = table.isVanillaRecipe();
         }
 
         NonNullList<ItemStack> remaining;
@@ -46,8 +46,8 @@ public class TableOutputSlot extends Slot {
         }
 
         for (int i = 0; i < remaining.size(); i++) {
-            ItemStack slotStack = this.matrix.getItem(i);
-            ItemStack remainingStack = remaining.get(i);
+            var slotStack = this.matrix.getItem(i);
+            var remainingStack = remaining.get(i);
 
             if (!slotStack.isEmpty()) {
                 this.matrix.removeItem(i, 1);
@@ -65,7 +65,5 @@ public class TableOutputSlot extends Slot {
         }
 
         this.container.slotsChanged(this.matrix);
-
-        return stack;
     }
 }

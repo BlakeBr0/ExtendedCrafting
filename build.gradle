@@ -79,6 +79,10 @@ dependencies {
     minecraft 'net.minecraftforge:forge:1.17.1-37.0.19'
 
     implementation project(':Cucumber')
+
+    runtimeOnly 'mezz.jei:jei-1.17.1:8.0.0.14'
+
+    compileOnly 'mezz.jei:jei-1.17.1:8.0.0.14:api'
 }
 
 jar {

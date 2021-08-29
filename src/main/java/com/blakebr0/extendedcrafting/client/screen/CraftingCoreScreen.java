@@ -3,19 +3,16 @@ package com.blakebr0.extendedcrafting.client.screen;
 import com.blakebr0.cucumber.client.screen.BaseContainerScreen;
 import com.blakebr0.extendedcrafting.ExtendedCrafting;
 import com.blakebr0.extendedcrafting.container.CraftingCoreContainer;
-import com.blakebr0.extendedcrafting.crafting.recipe.CombinationRecipe;
 import com.blakebr0.extendedcrafting.tileentity.CraftingCoreTileEntity;
 import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.block.entity.BlockEntity;
 
 public class CraftingCoreScreen extends BaseContainerScreen<CraftingCoreContainer> {
 	private static final ResourceLocation BACKGROUND = new ResourceLocation(ExtendedCrafting.MOD_ID, "textures/gui/crafting_core.png");
@@ -40,7 +37,8 @@ public class CraftingCoreScreen extends BaseContainerScreen<CraftingCoreContaine
 		super.render(stack, mouseX, mouseY, partialTicks);
 
 		if (this.hasRecipe()) {
-			ItemStack output = this.getRecipeOutput();
+			var output = this.getRecipeOutput();
+
 			this.drawItemStack(output, x + 148, y + 47);
 
 			if (isHoveringSlot(x + 148, y + 47, mouseX, mouseY)) {
@@ -49,20 +47,21 @@ public class CraftingCoreScreen extends BaseContainerScreen<CraftingCoreContaine
 		}
 
 		if (mouseX > x + 7 && mouseX < x + 20 && mouseY > y + 17 && mouseY < y + 94) {
-			TextComponent text = new TextComponent(number(this.getEnergyStored()) + " / " + number(this.getMaxEnergyStored()) + " FE");
+			var text = new TextComponent(number(this.getEnergyStored()) + " / " + number(this.getMaxEnergyStored()) + " FE");
 			this.renderTooltip(stack, text, mouseX, mouseY);
 		}
 	}
 
 	@Override
 	protected void renderLabels(PoseStack stack, int mouseX, int mouseY) {
-		String title = this.getTitle().getString();
-		this.font.draw(stack, title, (float) (this.imageWidth / 2 - this.font.width(title) / 2), 6.0F, 4210752);
-		String inventory = this.inventory.getDisplayName().getString();
-		this.font.draw(stack, inventory, 8.0F, this.imageHeight - 94.0F, 4210752);
+		var title = this.getTitle().getString();
 
-		RenderSystem.pushMatrix();
-		RenderSystem.scalef(0.75F, 0.75F, 0.75F);
+		this.font.draw(stack, title, (float) (this.imageWidth / 2 - this.font.width(title) / 2), 6.0F, 4210752);
+		this.font.draw(stack, this.playerInventoryTitle, 8.0F, this.imageHeight - 94.0F, 4210752);
+
+		stack.pushPose();
+		stack.scale(0.75F, 0.75F, 0.75F);
+
 		this.font.draw(stack, text("screen.extendedcrafting.crafting_core.pedestals", this.getPedestalCount()), 36, 36, -1);
 
 		if (!this.hasRecipe()) {
@@ -75,7 +74,7 @@ public class CraftingCoreScreen extends BaseContainerScreen<CraftingCoreContaine
 			}
 		}
 
-		RenderSystem.popMatrix();
+		stack.popPose();
 	}
 
 	@Override
@@ -95,7 +94,8 @@ public class CraftingCoreScreen extends BaseContainerScreen<CraftingCoreContaine
 				this.blit(stack, x + 116, y + 47, 194, 0, i2 + 1, 16);
 			}
 
-			ItemStack output = this.getRecipeOutput();
+			var output = this.getRecipeOutput();
+
 			this.drawItemStack(output, x + 148, y + 47);
 
 			if (isHoveringSlot(x + 148, y + 47, mouseX, mouseY)) {
@@ -132,14 +132,13 @@ public class CraftingCoreScreen extends BaseContainerScreen<CraftingCoreContaine
 	}
 
 	private CraftingCoreTileEntity getTileEntity() {
-		ClientLevel world = this.getMinecraft().level;
+		var level = this.getMinecraft().level;
 
-		if (world != null) {
-			BlockEntity tile = world.getBlockEntity(this.getMenu().getPos());
+		if (level != null) {
+			var tile = level.getBlockEntity(this.getMenu().getPos());
 
-			if (tile instanceof CraftingCoreTileEntity) {
-				return (CraftingCoreTileEntity) tile;
-			}
+			if (tile instanceof CraftingCoreTileEntity core)
+				return core;
 		}
 
 		return null;
@@ -156,7 +155,8 @@ public class CraftingCoreScreen extends BaseContainerScreen<CraftingCoreContaine
 		if (this.tile == null)
 			return ItemStack.EMPTY;
 
-		CombinationRecipe recipe = this.tile.getActiveRecipe();
+		var recipe = this.tile.getActiveRecipe();
+
 		if (recipe != null) {
 			return recipe.getResultItem();
 		}

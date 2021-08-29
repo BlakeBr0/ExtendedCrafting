@@ -7,7 +7,6 @@ import com.blakebr0.cucumber.util.Localizable;
 import com.blakebr0.extendedcrafting.ExtendedCrafting;
 import com.blakebr0.extendedcrafting.config.ModConfigs;
 import com.blakebr0.extendedcrafting.lib.ModTooltips;
-import com.blakebr0.extendedcrafting.singularity.Singularity;
 import com.blakebr0.extendedcrafting.singularity.SingularityRegistry;
 import com.blakebr0.extendedcrafting.singularity.SingularityUtils;
 import net.minecraft.ChatFormatting;
@@ -40,7 +39,8 @@ public class SingularityItem extends BaseItem implements IEnableable, IColored {
 
 	@Override
 	public Component getName(ItemStack stack) {
-		Singularity singularity = SingularityUtils.getSingularity(stack);
+		var singularity = SingularityUtils.getSingularity(stack);
+
 		if (singularity == null) {
 			return Localizable.of(this.getDescriptionId(stack)).args("NULL").build();
 		}
@@ -50,10 +50,12 @@ public class SingularityItem extends BaseItem implements IEnableable, IColored {
 
 	@OnlyIn(Dist.CLIENT)
 	@Override
-	public void appendHoverText(ItemStack stack, Level world, List<Component> tooltip, TooltipFlag flag) {
-		Singularity singularity = SingularityUtils.getSingularity(stack);
+	public void appendHoverText(ItemStack stack, Level level, List<Component> tooltip, TooltipFlag flag) {
+		var singularity = SingularityUtils.getSingularity(stack);
+
 		if (singularity != null) {
-			String modid = singularity.getId().getNamespace();
+			var modid = singularity.getId().getNamespace();
+
 			if (!modid.equals(ExtendedCrafting.MOD_ID))
 				tooltip.add(ModTooltips.getAddedByTooltip(modid));
 
@@ -116,7 +118,8 @@ public class SingularityItem extends BaseItem implements IEnableable, IColored {
 
 	@Override
 	public int getColor(int i, ItemStack stack) {
-		Singularity singularity = SingularityUtils.getSingularity(stack);
+		var singularity = SingularityUtils.getSingularity(stack);
+
 		if (singularity == null)
 			return -1;
 

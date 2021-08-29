@@ -2,7 +2,6 @@ package com.blakebr0.extendedcrafting.item;
 
 import com.blakebr0.cucumber.helper.NBTHelper;
 import com.blakebr0.cucumber.iface.IEnableable;
-import com.blakebr0.cucumber.inventory.BaseItemStackHandler;
 import com.blakebr0.cucumber.item.BaseItem;
 import com.blakebr0.cucumber.tileentity.BaseInventoryTileEntity;
 import com.blakebr0.cucumber.util.Localizable;
@@ -22,19 +21,14 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
-import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.CreativeModeTab;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.UseOnContext;
@@ -50,7 +44,6 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.UUID;
 import java.util.function.Function;
 
@@ -66,11 +59,12 @@ public class RecipeMakerItem extends BaseItem implements IEnableable {
 	@Override
 	public void fillItemCategory(CreativeModeTab group, NonNullList<ItemStack> items) {
 		if (this.isEnabled() && this.allowdedIn(group)) {
-			ItemStack stack1 = new ItemStack(this);
+			var stack1 = new ItemStack(this);
+			var stack2 = new ItemStack(this);
+
 			NBTHelper.setBoolean(stack1, "Shapeless", false);
 			NBTHelper.setString(stack1, "Type", "Datapack");
 
-			ItemStack stack2 = new ItemStack(this);
 			NBTHelper.setBoolean(stack2, "Shapeless", false);
 			NBTHelper.setString(stack2, "Type", "CraftTweaker");
 
@@ -81,29 +75,31 @@ public class RecipeMakerItem extends BaseItem implements IEnableable {
 
 	@Override
 	public InteractionResult onItemUseFirst(ItemStack stack, UseOnContext context) {
-		Player player = context.getPlayer();
-		BlockPos pos = context.getClickedPos();
-		Direction facing = context.getClickedFace();
-		Level world = context.getLevel();
-		if (player == null || !player.mayUseItemAt(pos.relative(facing), facing, stack)) {
-			return InteractionResult.PASS;
-		}
+		var player = context.getPlayer();
+		var pos = context.getClickedPos();
+		var facing = context.getClickedFace();
+		var level = context.getLevel();
 
-		BlockEntity tile = world.getBlockEntity(pos);
+		if (player == null || !player.mayUseItemAt(pos.relative(facing), facing, stack))
+			return InteractionResult.PASS;
+
+		var tile = level.getBlockEntity(pos);
+
 		if (isTable(tile)) {
-			if (world.isClientSide()) {
-				String type = NBTHelper.getString(stack, "Type");
-				BaseItemStackHandler inventory = ((BaseInventoryTileEntity) tile).getInventory();
+			if (level.isClientSide()) {
+				var type = NBTHelper.getString(stack, "Type");
+				var inventory = ((BaseInventoryTileEntity) tile).getInventory();
+
 				if ("CraftTweaker".equals(type)) {
 					type = tile instanceof EnderCrafterTileEntity ? "EnderCrafting" : "TableCrafting";
-					String string = isShapeless(stack)
+					var string = isShapeless(stack)
 							? makeShapelessCraftTweakerTableRecipe(inventory, type)
 							: makeShapedCraftTweakerTableRecipe(inventory, type);
 
 					setClipboard(string);
 				} else {
 					type = tile instanceof EnderCrafterTileEntity ? "EnderCrafting" : "TableCrafting";
-					String string = isShapeless(stack)
+					var string = isShapeless(stack)
 							? makeShapelessDatapackTableRecipe(inventory, type)
 							: makeShapedDatapackTableRecipe(inventory, type);
 
@@ -124,11 +120,10 @@ public class RecipeMakerItem extends BaseItem implements IEnableable {
 			}
 
 			return InteractionResult.SUCCESS;
-		} else if (tile instanceof CraftingCoreTileEntity) {
-			if (world.isClientSide()) {
-				String type = NBTHelper.getString(stack, "Type");
-				CraftingCoreTileEntity core = (CraftingCoreTileEntity) tile;
-				String string = "CraftTweaker".equals(type)
+		} else if (tile instanceof CraftingCoreTileEntity core) {
+			if (level.isClientSide()) {
+				var type = NBTHelper.getString(stack, "Type");
+				var string = "CraftTweaker".equals(type)
 						? makeCraftTweakerCombinationRecipe(core)
 						: makeDatapackCombinationRecipe(core);
 
@@ -144,22 +139,23 @@ public class RecipeMakerItem extends BaseItem implements IEnableable {
 	}
 
 	@Override
-	public InteractionResultHolder<ItemStack> use(Level world, Player player, InteractionHand hand) {
+	public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
 		if (player.isCrouching()) {
-			ItemStack stack = player.getItemInHand(hand);
+			var stack = player.getItemInHand(hand);
+
 			NBTHelper.flipBoolean(stack, "Shapeless");
 
-			if (world.isClientSide()) {
+			if (level.isClientSide()) {
 				player.sendMessage(Localizable.of("message.extendedcrafting.changed_mode").args(getModeString(stack)).build(), Util.NIL_UUID);
 			}
 		}
 
-		return super.use(world, player, hand);
+		return super.use(level, player, hand);
 	}
 
 	@OnlyIn(Dist.CLIENT)
 	@Override
-	public void appendHoverText(ItemStack stack, Level world, List<Component> tooltip, TooltipFlag flag) {
+	public void appendHoverText(ItemStack stack, Level level, List<Component> tooltip, TooltipFlag flag) {
 		tooltip.add(ModTooltips.TYPE.args(NBTHelper.getString(stack, "Type")).build());
 		tooltip.add(ModTooltips.MODE.args(getModeString(stack)).build());
 	}
@@ -175,8 +171,9 @@ public class RecipeMakerItem extends BaseItem implements IEnableable {
 
 	// Create a shaped CraftTweaker recipe for a Table or Ender Crafter
 	private static String makeShapedCraftTweakerTableRecipe(IItemHandler inventory, String type) {
-		StringBuilder string = new StringBuilder();
-		UUID uuid = UUID.randomUUID();
+		var string = new StringBuilder();
+		var uuid = UUID.randomUUID();
+
 		string.append("mods.extendedcrafting.").append(type).append(".addShaped(\"").append(uuid).append("\", ");
 		if ("TableCrafting".equals(type)) string.append("0, ");
 		string.append("<>, [").append(NEW_LINE);
@@ -189,26 +186,28 @@ public class RecipeMakerItem extends BaseItem implements IEnableable {
 				string.append("[");
 			}
 
-			ItemStack stack = inventory.getStackInSlot(i);
+			var stack = inventory.getStackInSlot(i);
+			var item = "";
 
-			String item = "";
 			if (!stack.isEmpty() && ModConfigs.RECIPE_MAKER_USE_TAGS.get()) {
-				ResourceLocation tagId = stack.getItem().getTags().stream().findFirst().orElse(null);
+				var tagId = stack.getItem().getTags().stream().findFirst().orElse(null);
+
 				if (tagId != null) {
 					item = "tag:" + tagId;
 				}
 			}
 
 			if (item.isEmpty()) {
-				ResourceLocation id = stack.getItem().getRegistryName();
+				var id = stack.getItem().getRegistryName();
 				item = id == null ? "item:minecraft:air" : "item:" + id.toString();
 			}
 
 			string.append("<").append(item).append(">");
 
 			if (ModConfigs.RECIPE_MAKER_USE_NBT.get() && !stack.isEmpty() && stack.hasTag() && !item.startsWith("tag") && ModList.get().isLoaded("crafttweaker")) {
-				Tag nbt = stack.serializeNBT().get("tag");
-				String tag = CraftTweakerUtils.writeTag(nbt);
+				var nbt = stack.serializeNBT().get("tag");
+				var tag = CraftTweakerUtils.writeTag(nbt);
+
 				string.append(".withTag(").append(tag).append(")");
 			}
 
@@ -234,8 +233,9 @@ public class RecipeMakerItem extends BaseItem implements IEnableable {
 
 	// Create a shapeless CraftTweaker recipe for a Table or Ender Crafter
 	private static String makeShapelessCraftTweakerTableRecipe(IItemHandler inventory, String type) {
-		StringBuilder string = new StringBuilder();
-		UUID uuid = UUID.randomUUID();
+		var string = new StringBuilder();
+		var uuid = UUID.randomUUID();
+
 		string.append("mods.extendedcrafting.").append(type).append(".addShapeless(\"").append(uuid).append("\", ");
 		if ("TableCrafting".equals(type)) string.append("0, ");
 		string.append("<>, [").append(NEW_LINE);
@@ -245,7 +245,7 @@ public class RecipeMakerItem extends BaseItem implements IEnableable {
 
 		int lastSlot = 0;
 		for (int i = 0; i < slots; i++) {
-			ItemStack stack = inventory.getStackInSlot(i);
+			var stack = inventory.getStackInSlot(i);
 			if (!stack.isEmpty()) {
 				slotsWithItems.add(i);
 				lastSlot = i;
@@ -253,21 +253,23 @@ public class RecipeMakerItem extends BaseItem implements IEnableable {
 		}
 
 		for (int i : slotsWithItems) {
-			ItemStack stack = inventory.getStackInSlot(i);
-			ResourceLocation tagId = stack.getItem().getTags().stream().findFirst().orElse(null);
+			var stack = inventory.getStackInSlot(i);
+			var tagId = stack.getItem().getTags().stream().findFirst().orElse(null);
+
 			String item;
 			if (ModConfigs.RECIPE_MAKER_USE_TAGS.get() && tagId != null) {
 				item = "tag:" + tagId;
 			} else {
-				ResourceLocation id = stack.getItem().getRegistryName();
+				var id = stack.getItem().getRegistryName();
 				item = id == null ? "item:minecraft:air" : "item:" + id.toString();
 			}
 
 			string.append("<").append(item).append(">");
 
 			if (ModConfigs.RECIPE_MAKER_USE_NBT.get() && !stack.isEmpty() && stack.hasTag() && !item.startsWith("tag") && ModList.get().isLoaded("crafttweaker")) {
-				Tag nbt = stack.serializeNBT().get("tag");
-				String tag = CraftTweakerUtils.writeTag(nbt);
+				var nbt = stack.serializeNBT().get("tag");
+				var tag = CraftTweakerUtils.writeTag(nbt);
+
 				string.append(".withTag(").append(tag).append(")");
 			}
 
@@ -284,32 +286,37 @@ public class RecipeMakerItem extends BaseItem implements IEnableable {
 
 	// Create a CraftTweaker recipe for a combination crafting recipe
 	private static String makeCraftTweakerCombinationRecipe(CraftingCoreTileEntity tile) {
-		StringBuilder string = new StringBuilder();
-		UUID uuid = UUID.randomUUID();
+		var string = new StringBuilder();
+		var uuid = UUID.randomUUID();
+
 		string.append("mods.extendedcrafting.CombinationCrafting.addRecipe(\"").append(uuid).append("\", <>, 100000, [").append(NEW_LINE);
 
-		ResourceLocation inputId = tile.getInventory().getStackInSlot(0).getItem().getRegistryName();
-		String input = "item:minecraft:air";
+		var inputId = tile.getInventory().getStackInSlot(0).getItem().getRegistryName();
+		var input = "item:minecraft:air";
+
 		if (inputId != null)
-			input = "item:" + inputId.toString();
+			input = "item:" + inputId;
 
 		string.append("<").append(input).append(">, ");
 
-		ItemStack[] stacks = tile.getPedestalsWithItems().values().stream().filter(s -> !s.isEmpty()).toArray(ItemStack[]::new);
+		var stacks = tile.getPedestalsWithItems().values().stream().filter(s -> !s.isEmpty()).toArray(ItemStack[]::new);
+
 		for (int i = 0; i < stacks.length; i++) {
-			ItemStack stack = stacks[i];
-			ResourceLocation tagId = stack.getItem().getTags().stream().findFirst().orElse(null);
+			var stack = stacks[i];
+			var tagId = stack.getItem().getTags().stream().findFirst().orElse(null);
+
 			String item;
 			if (ModConfigs.RECIPE_MAKER_USE_TAGS.get() && tagId != null) {
 				item = "tag:" + tagId;
 			} else {
-				ResourceLocation id = stack.getItem().getRegistryName();
+				var id = stack.getItem().getRegistryName();
 				item = id == null ? "item:minecraft:air" : "item:" + id.toString();
 			}
 
 			if (ModConfigs.RECIPE_MAKER_USE_NBT.get() && !stack.isEmpty() && stack.hasTag() && !item.startsWith("tag") && ModList.get().isLoaded("crafttweaker")) {
-				Tag nbt = stack.serializeNBT().get("tag");
-				String tag = CraftTweakerUtils.writeTag(nbt);
+				var nbt = stack.serializeNBT().get("tag");
+				var tag = CraftTweakerUtils.writeTag(nbt);
+
 				string.append(".withTag(").append(tag).append(")");
 			}
 
@@ -327,7 +334,7 @@ public class RecipeMakerItem extends BaseItem implements IEnableable {
 
 	// Create a shaped Datapack recipe for a Table or Ender Crafter
 	private static String makeShapedDatapackTableRecipe(IItemHandler inventory, String type) {
-		JsonObject object = new JsonObject();
+		var object = new JsonObject();
 
 		object.addProperty("type", "TableCrafting".equals(type)
 				? "extendedcrafting:shaped_table"
@@ -338,12 +345,13 @@ public class RecipeMakerItem extends BaseItem implements IEnableable {
 		int slots = getGridSlots(inventory);
 
 		for (int i = 0; i < slots; i++) {
-			ItemStack stack = inventory.getStackInSlot(i);
+			var stack = inventory.getStackInSlot(i);
+
 			if (stack.isEmpty() || keysMap.keySet().stream().anyMatch(ing -> ing.test(stack)))
 				continue;
 
-			ResourceLocation tagId = stack.getItem().getTags().stream().findFirst().orElse(null);
-			Tag<Item> tag = tagId == null ? null : ItemTags.getAllTags().getTag(tagId);
+			var tagId = stack.getItem().getTags().stream().findFirst().orElse(null);
+			var tag = tagId == null ? null : ItemTags.getAllTags().getTag(tagId);
 			char key = KEYS[keysMap.size()];
 			if (ModConfigs.RECIPE_MAKER_USE_TAGS.get() && tag != null) {
 				keysMap.put(Ingredient.of(tag), key);
@@ -359,15 +367,16 @@ public class RecipeMakerItem extends BaseItem implements IEnableable {
 				return "TOO MANY ITEMS";
 		}
 
-		JsonArray pattern = new JsonArray();
+		var pattern = new JsonArray();
 		int size = (int) Math.sqrt(slots);
-		Set<Map.Entry<Ingredient, Character>> keys = keysMap.entrySet();
+		var keys = keysMap.entrySet();
 
 		for (int i = 0; i < size; i++) {
-			StringBuilder line = new StringBuilder();
+			var line = new StringBuilder();
+
 			for (int j = 0; j < size; j++) {
-				ItemStack stack = inventory.getStackInSlot(i * size + j);
-				Map.Entry<Ingredient, Character> entry = keys.stream()
+				var stack = inventory.getStackInSlot(i * size + j);
+				var entry = keys.stream()
 						.filter(e -> e.getKey().test(stack)).findFirst().orElse(null);
 
 				if (entry == null) {
@@ -382,14 +391,16 @@ public class RecipeMakerItem extends BaseItem implements IEnableable {
 
 		object.add("pattern", pattern);
 
-		JsonObject key = new JsonObject();
-		for (Map.Entry<Ingredient, Character> entry : keys) {
+		var key = new JsonObject();
+
+		for (var entry : keys) {
 			key.add(entry.getValue().toString(), entry.getKey().toJson());
 		}
 
 		object.add("key", key);
 
-		JsonObject result = new JsonObject();
+		var result = new JsonObject();
+
 		result.addProperty("item", "");
 		object.add("result", result);
 
@@ -398,22 +409,25 @@ public class RecipeMakerItem extends BaseItem implements IEnableable {
 
 	// Create a shapeless Datapack recipe for a Table or Ender Crafter
 	private static String makeShapelessDatapackTableRecipe(IItemHandler inventory, String type) {
-		JsonObject object = new JsonObject();
+		var object = new JsonObject();
 
 		object.addProperty("type", "TableCrafting".equals(type)
 				? "extendedcrafting:shapeless_table"
 				: "extendedcrafting:shapeless_ender_crafter"
 		);
 
-		JsonArray ingredients = new JsonArray();
+		var ingredients = new JsonArray();
 		int slots = getGridSlots(inventory);
 
 		for (int i = 0; i < slots; i++) {
-			ItemStack stack = inventory.getStackInSlot(i);
+			var stack = inventory.getStackInSlot(i);
+
 			if (!stack.isEmpty()) {
-				ResourceLocation tagId = stack.getItem().getTags().stream().findFirst().orElse(null);
+				var tagId = stack.getItem().getTags().stream().findFirst().orElse(null);
+
 				if (ModConfigs.RECIPE_MAKER_USE_TAGS.get() && tagId != null) {
-					JsonObject tag = new JsonObject();
+					var tag = new JsonObject();
+
 					tag.addProperty("tag", tagId.toString());
 					ingredients.add(tag);
 				} else {
@@ -428,7 +442,8 @@ public class RecipeMakerItem extends BaseItem implements IEnableable {
 
 		object.add("ingredients", ingredients);
 
-		JsonObject result = new JsonObject();
+		var result = new JsonObject();
+
 		result.addProperty("item", "");
 		object.add("result", result);
 
@@ -437,20 +452,24 @@ public class RecipeMakerItem extends BaseItem implements IEnableable {
 
 	// Create a Datapack recipe for a combination crafting recipe
 	private static String makeDatapackCombinationRecipe(CraftingCoreTileEntity core) {
-		JsonObject object = new JsonObject();
+		var object = new JsonObject();
 
 		object.addProperty("type", "extendedcrafting:combination");
 		object.addProperty("powerCost", 100000);
 
-		ItemStack input = core.getInventory().getStackInSlot(0);
+		var input = core.getInventory().getStackInSlot(0);
+
 		object.add("input", Ingredient.of(input).toJson());
 
-		JsonArray ingredients = new JsonArray();
-		ItemStack[] stacks = core.getPedestalsWithItems().values().stream().filter(s -> !s.isEmpty()).toArray(ItemStack[]::new);
-		for (ItemStack stack : stacks) {
-			ResourceLocation tagId = stack.getItem().getTags().stream().findFirst().orElse(null);
+		var ingredients = new JsonArray();
+		var stacks = core.getPedestalsWithItems().values().stream().filter(s -> !s.isEmpty()).toArray(ItemStack[]::new);
+
+		for (var stack : stacks) {
+			var tagId = stack.getItem().getTags().stream().findFirst().orElse(null);
+
 			if (ModConfigs.RECIPE_MAKER_USE_TAGS.get() && tagId != null) {
-				JsonObject tag = new JsonObject();
+				var tag = new JsonObject();
+
 				tag.addProperty("tag", tagId.toString());
 				ingredients.add(tag);
 			} else {
@@ -464,7 +483,8 @@ public class RecipeMakerItem extends BaseItem implements IEnableable {
 
 		object.add("ingredients", ingredients);
 
-		JsonObject result = new JsonObject();
+		var result = new JsonObject();
+
 		result.addProperty("item", "");
 		object.add("result", result);
 

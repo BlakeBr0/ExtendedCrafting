@@ -1,12 +1,11 @@
 package com.blakebr0.extendedcrafting.singularity;
 
 import com.blakebr0.cucumber.util.Localizable;
+import net.minecraft.core.Registry;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.SerializationTags;
-import net.minecraft.tags.Tag;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.crafting.Ingredient;
 
 public class Singularity {
@@ -60,7 +59,8 @@ public class Singularity {
 
     public Ingredient getIngredient() {
         if (this.tag != null && this.ingredient == Ingredient.EMPTY) {
-            Tag<Item> tag = SerializationTags.getInstance().getItems().getTag(new ResourceLocation(this.tag));
+            var tag = SerializationTags.getInstance().getOrEmpty(Registry.ITEM_REGISTRY).getTag(new ResourceLocation(this.tag));
+
             if (tag != null) {
                 this.ingredient = Ingredient.of(tag);
             }
@@ -98,13 +98,13 @@ public class Singularity {
     }
 
     public static Singularity read(FriendlyByteBuf buffer) {
-        ResourceLocation id = buffer.readResourceLocation();
-        String name = buffer.readUtf();
+        var id = buffer.readResourceLocation();
+        var name = buffer.readUtf();
         int[] colors = buffer.readVarIntArray();
-        boolean isTagIngredient = buffer.readBoolean();
+        var isTagIngredient = buffer.readBoolean();
 
         String tag = null;
-        Ingredient ingredient = Ingredient.EMPTY;
+        var ingredient = Ingredient.EMPTY;
 
         if (isTagIngredient) {
             tag = buffer.readUtf();
@@ -113,7 +113,7 @@ public class Singularity {
         }
 
         int ingredientCount = buffer.readVarInt();
-        boolean isInUltimateSingularity = buffer.readBoolean();
+        var isInUltimateSingularity = buffer.readBoolean();
 
         if (isTagIngredient) {
             return new Singularity(id, name, colors, tag, ingredientCount, isInUltimateSingularity);

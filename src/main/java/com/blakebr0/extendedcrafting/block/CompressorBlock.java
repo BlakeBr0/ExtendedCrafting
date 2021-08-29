@@ -9,11 +9,9 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.Containers;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.context.BlockPlaceContext;
-import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.HorizontalDirectionalBlock;
@@ -27,7 +25,7 @@ import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.level.material.Material;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.common.ToolType;
-import net.minecraftforge.fml.network.NetworkHooks;
+import net.minecraftforge.fmllegacy.network.NetworkHooks;
 
 public class CompressorBlock extends BaseTileEntityBlock implements IEnableable {
 	private static final DirectionProperty FACING = HorizontalDirectionalBlock.FACING;
@@ -37,16 +35,17 @@ public class CompressorBlock extends BaseTileEntityBlock implements IEnableable 
 	}
 
 	@Override
-	public BlockEntity createTileEntity(BlockState state, BlockGetter world) {
+	public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
 		return new CompressorTileEntity();
 	}
 
 	@Override
-	public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult trace) {
-		if (!world.isClientSide()) {
-			BlockEntity tile = world.getBlockEntity(pos);
-			if (tile instanceof CompressorTileEntity) {
-				NetworkHooks.openGui((ServerPlayer) player, (MenuProvider) tile, pos);
+	public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult trace) {
+		if (!level.isClientSide()) {
+			var tile = level.getBlockEntity(pos);
+
+			if (tile instanceof CompressorTileEntity compressor) {
+				NetworkHooks.openGui((ServerPlayer) player, compressor, pos);
 			}
 		}
 
@@ -54,16 +53,16 @@ public class CompressorBlock extends BaseTileEntityBlock implements IEnableable 
 	}
 
 	@Override
-	public void onRemove(BlockState state, Level world, BlockPos pos, BlockState newState, boolean isMoving) {
+	public void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean isMoving) {
 		if (state.getBlock() != newState.getBlock()) {
-			BlockEntity tile = world.getBlockEntity(pos);
-			if (tile instanceof CompressorTileEntity) {
-				CompressorTileEntity compressor = (CompressorTileEntity) tile;
-				Containers.dropContents(world, pos, compressor.getInventory().getStacks());
+			var tile = level.getBlockEntity(pos);
+
+			if (tile instanceof CompressorTileEntity compressor) {
+				Containers.dropContents(level, pos, compressor.getInventory().getStacks());
 			}
 		}
 
-		super.onRemove(state, world, pos, newState, isMoving);
+		super.onRemove(state, level, pos, newState, isMoving);
 	}
 
 	@Override
@@ -77,8 +76,8 @@ public class CompressorBlock extends BaseTileEntityBlock implements IEnableable 
 	}
 
 	@Override
-	public int getAnalogOutputSignal(BlockState state, Level world, BlockPos pos) {
-		return AbstractContainerMenu.getRedstoneSignalFromBlockEntity(world.getBlockEntity(pos));
+	public int getAnalogOutputSignal(BlockState state, Level level, BlockPos pos) {
+		return AbstractContainerMenu.getRedstoneSignalFromBlockEntity(level.getBlockEntity(pos));
 	}
 
 	@Override

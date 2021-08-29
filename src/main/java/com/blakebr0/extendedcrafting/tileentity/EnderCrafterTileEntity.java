@@ -16,30 +16,26 @@ import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.Container;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.SimpleContainerData;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.entity.TickableBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class EnderCrafterTileEntity extends BaseInventoryTileEntity implements TickableBlockEntity, MenuProvider {
+public class EnderCrafterTileEntity extends BaseInventoryTileEntity implements MenuProvider {
 	private final BaseItemStackHandler inventory;
 	private final BaseItemStackHandler recipeInventory;
 	private IEnderCrafterRecipe recipe;
 	private int progress;
 	private int progressReq;
 
-	public EnderCrafterTileEntity() {
-		super(ModTileEntities.ENDER_CRAFTER.get());
+	public EnderCrafterTileEntity(BlockPos pos, BlockState state) {
+		super(ModTileEntities.ENDER_CRAFTER.get(), pos, state);
 		this.inventory = new BaseItemStackHandler(10, this::markDirtyAndDispatch);
 		this.recipeInventory = new BaseItemStackHandler(9);
 	}
@@ -50,8 +46,8 @@ public class EnderCrafterTileEntity extends BaseInventoryTileEntity implements T
 	}
 
 	@Override
-	public void load(BlockState state, CompoundTag tag) {
-		super.load(state, tag);
+	public void load(CompoundTag tag) {
+		super.load(tag);
 		this.progress = tag.getInt("Progress");
 		this.progressReq = tag.getInt("ProgressReq");
 	}
@@ -67,29 +63,32 @@ public class EnderCrafterTileEntity extends BaseInventoryTileEntity implements T
 
 	@Override
 	public void tick() {
-		boolean mark = false;
-		Level world = this.getLevel();
+		var mark = false;
+		var level = this.getLevel();
 
-		if (world != null) {
+		if (level != null) {
 			this.updateRecipeInventory();
-			Container recipeInventory = this.recipeInventory.toIInventory();
-			if (this.recipe == null || !this.recipe.matches(recipeInventory, world)) {
-				this.recipe = world.getRecipeManager().getRecipeFor(RecipeTypes.ENDER_CRAFTER, recipeInventory, world).orElse(null);
+
+			var recipeInventory = this.recipeInventory.toIInventory();
+
+			if (this.recipe == null || !this.recipe.matches(recipeInventory, level)) {
+				this.recipe = level.getRecipeManager().getRecipeFor(RecipeTypes.ENDER_CRAFTER, recipeInventory, level).orElse(null);
 			}
 
-			if (!world.isClientSide()) {
+			if (!level.isClientSide()) {
 				if (this.recipe != null) {
-					ItemStack result = this.recipe.assemble(recipeInventory);
-					ItemStack output = this.inventory.getStackInSlot(9);
+					var result = this.recipe.assemble(recipeInventory);
+					var output = this.inventory.getStackInSlot(9);
+
 					if (StackHelper.canCombineStacks(result, output)) {
-						List<BlockPos> alternators = this.getAlternatorPositions();
+						var alternators = this.getAlternatorPositions();
 						int alternatorCount = alternators.size();
 
 						if (alternatorCount > 0) {
 							this.progress(alternatorCount, this.recipe.getCraftingTime());
 
-							for (BlockPos pos : alternators) {
-								if (world.isEmptyBlock(pos.above())) {
+							for (var pos : alternators) {
+								if (level.isEmptyBlock(pos.above())) {
 									this.spawnParticles(ParticleTypes.PORTAL, pos, 1, 1);
 								}
 							}
@@ -140,7 +139,8 @@ public class EnderCrafterTileEntity extends BaseInventoryTileEntity implements T
 	}
 
 	private void updateResult(ItemStack stack) {
-		ItemStack result = this.inventory.getStackInSlot(9);
+		var result = this.inventory.getStackInSlot(9);
+
 		if (result.isEmpty()) {
 			this.inventory.setStackInSlot(9, stack);
 		} else {
@@ -157,11 +157,13 @@ public class EnderCrafterTileEntity extends BaseInventoryTileEntity implements T
 
 	private List<BlockPos> getAlternatorPositions() {
 		List<BlockPos> alternators = new ArrayList<>();
-		Level world = this.getLevel();
-		if (world != null) {
-			BlockPos pos = this.getBlockPos();
+		var level = this.getLevel();
+
+		if (level != null) {
+			var pos = this.getBlockPos();
+
 			BlockPos.betweenClosedStream(pos.offset(-3, -3, -3), pos.offset(3, 3, 3)).forEach(aoePos -> {
-				Block block = world.getBlockState(aoePos).getBlock();
+				var block = level.getBlockState(aoePos).getBlock();
 				if (block instanceof EnderAlternatorBlock)
 					alternators.add(aoePos.immutable());
 			});
@@ -179,14 +181,16 @@ public class EnderCrafterTileEntity extends BaseInventoryTileEntity implements T
 	}
 
 	private <T extends ParticleOptions> void spawnParticles(T particle, BlockPos pos, double yOffset, int count) {
-		if (this.getLevel() == null || this.getLevel().isClientSide()) return;
-		ServerLevel world = (ServerLevel) this.getLevel();
+		if (this.getLevel() == null || this.getLevel().isClientSide())
+			return;
+
+		var level = (ServerLevel) this.getLevel();
 
 		double x = pos.getX() + 0.5D;
 		double y = pos.getY() + yOffset;
 		double z = pos.getZ() + 0.5D;
 
-		world.sendParticles(particle, x, y, z, count, 0, 0, 0, 0.1D);
+		level.sendParticles(particle, x, y, z, count, 0, 0, 0, 0.1D);
 	}
 
 	public int getProgress() {

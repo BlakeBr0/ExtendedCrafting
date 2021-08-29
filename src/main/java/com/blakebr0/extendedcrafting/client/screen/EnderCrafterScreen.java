@@ -5,11 +5,9 @@ import com.blakebr0.extendedcrafting.ExtendedCrafting;
 import com.blakebr0.extendedcrafting.container.EnderCrafterContainer;
 import com.blakebr0.extendedcrafting.tileentity.EnderCrafterTileEntity;
 import com.mojang.blaze3d.vertex.PoseStack;
-import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.level.block.entity.BlockEntity;
 
 public class EnderCrafterScreen extends BaseContainerScreen<EnderCrafterContainer> {
 	private static final ResourceLocation BACKGROUND = new ResourceLocation(ExtendedCrafting.MOD_ID, "textures/gui/ender_crafter.png");
@@ -28,10 +26,10 @@ public class EnderCrafterScreen extends BaseContainerScreen<EnderCrafterContaine
 
 	@Override
 	protected void renderLabels(PoseStack stack, int mouseX, int mouseY) {
-		String title = this.getTitle().getString();
+		var title = this.getTitle().getString();
+
 		this.font.draw(stack, title, 30.0F, 6.0F, 4210752);
-		String inventory = this.inventory.getDisplayName().getString();
-		this.font.draw(stack, inventory, 8.0F, this.imageHeight - 94.0F, 4210752);
+		this.font.draw(stack, this.playerInventoryTitle, 8.0F, this.imageHeight - 94.0F, 4210752);
 	}
 
 	@Override
@@ -48,14 +46,13 @@ public class EnderCrafterScreen extends BaseContainerScreen<EnderCrafterContaine
 	}
 
 	private EnderCrafterTileEntity getTileEntity() {
-		ClientLevel world = this.getMinecraft().level;
+		var level = this.getMinecraft().level;
 
-		if (world != null) {
-			BlockEntity tile = world.getBlockEntity(this.getMenu().getPos());
+		if (level != null) {
+			var tile = level.getBlockEntity(this.getMenu().getPos());
 
-			if (tile instanceof EnderCrafterTileEntity) {
-				return (EnderCrafterTileEntity) tile;
-			}
+			if (tile instanceof EnderCrafterTileEntity table)
+				return table;
 		}
 
 		return null;

@@ -15,7 +15,6 @@ import com.blakebr0.extendedcrafting.singularity.SingularityRegistry;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.ModLoadingContext;
@@ -30,17 +29,18 @@ public final class ExtendedCrafting {
 	public static final String MOD_ID = "extendedcrafting";
 	public static final String NAME = "Extended Crafting";
 
-	public static final CreativeModeTab ITEM_GROUP = new ECItemGroup();
+	public static final CreativeModeTab ITEM_GROUP = new ECCreativeTab();
 
 	public ExtendedCrafting() {
-		IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
+		var bus = FMLJavaModLoadingContext.get().getModEventBus();
 
 		bus.register(this);
-		bus.register(new ModBlocks());
-		bus.register(new ModItems());
 		bus.register(new ModRecipeSerializers());
-		bus.register(new ModTileEntities());
-		bus.register(new ModContainerTypes());
+
+		ModBlocks.REGISTRY.register(bus);
+		ModItems.REGISTRY.register(bus);
+		ModTileEntities.REGISTRY.register(bus);
+		ModContainerTypes.REGISTRY.register(bus);
 
 		DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
 			bus.register(new ColorHandler());

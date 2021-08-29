@@ -1,41 +1,48 @@
 package com.blakebr0.extendedcrafting.network.message;
 
+import com.blakebr0.cucumber.network.message.Message;
 import com.blakebr0.extendedcrafting.tileentity.AutoTableTileEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraftforge.fml.network.NetworkEvent;
+import net.minecraftforge.fmllegacy.network.NetworkEvent;
 
 import java.util.function.Supplier;
 
-public class SaveRecipeMessage {
+public class SaveRecipeMessage extends Message<SaveRecipeMessage> {
     private final BlockPos pos;
     private final int selected;
+
+    public SaveRecipeMessage() {
+        this.pos = BlockPos.ZERO;
+        this.selected = -1;
+    }
 
     public SaveRecipeMessage(BlockPos pos, int selected) {
         this.pos = pos;
         this.selected = selected;
     }
 
-    public static SaveRecipeMessage read(FriendlyByteBuf buffer) {
+    @Override
+    public SaveRecipeMessage read(FriendlyByteBuf buffer) {
         return new SaveRecipeMessage(buffer.readBlockPos(), buffer.readVarInt());
     }
 
-    public static void write(SaveRecipeMessage message, FriendlyByteBuf buffer) {
+    @Override
+    public void write(SaveRecipeMessage message, FriendlyByteBuf buffer) {
         buffer.writeBlockPos(message.pos);
         buffer.writeVarInt(message.selected);
     }
 
-    public static void onMessage(SaveRecipeMessage message, Supplier<NetworkEvent.Context> context) {
+    @Override
+    public void onMessage(SaveRecipeMessage message, Supplier<NetworkEvent.Context> context) {
         context.get().enqueueWork(() -> {
-            ServerPlayer player = context.get().getSender();
+            var player = context.get().getSender();
+
             if (player != null) {
-                Level world = player.getCommandSenderWorld();
-                BlockEntity tile = world.getBlockEntity(message.pos);
-                if (tile instanceof AutoTableTileEntity) {
-                    AutoTableTileEntity table = (AutoTableTileEntity) tile;
+                var level = player.getCommandSenderWorld();
+                var tile = level.getBlockEntity(message.pos);
+
+                if (tile instanceof AutoTableTileEntity table) {
                     if (!table.getRecipeStorage().hasRecipe(message.selected)) {
                         table.saveRecipe(message.selected);
                     } else {

@@ -35,7 +35,7 @@ public class UltimateSingularityRecipe extends ShapelessTableRecipe {
 
         @Override
         public UltimateSingularityRecipe fromNetwork(ResourceLocation recipeId, FriendlyByteBuf buffer) {
-            NonNullList<Ingredient> singularities = SingularityRegistry.getInstance().getSingularities()
+            var singularities = SingularityRegistry.getInstance().getSingularities()
                     .stream()
                     .filter(singularity -> singularity.isInUltimateSingularity() && singularity.getIngredient() != Ingredient.EMPTY)
                     .limit(81)

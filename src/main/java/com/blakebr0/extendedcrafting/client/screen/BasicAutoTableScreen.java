@@ -12,14 +12,11 @@ import com.blakebr0.extendedcrafting.tileentity.AutoTableTileEntity;
 import com.google.common.collect.Lists;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.multiplayer.ClientLevel;
-import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.block.entity.BlockEntity;
 
 import java.util.List;
 
@@ -38,13 +35,13 @@ public class BasicAutoTableScreen extends BaseContainerScreen<BasicAutoTableCont
 
 		int x = this.getGuiLeft();
 		int y = this.getGuiTop();
-		BlockPos pos = this.getMenu().getPos();
+		var pos = this.getMenu().getPos();
 
-		this.addButton(new ToggleTableRunningButton(x + 130, y + 59, pos, this::isRunning));
+		this.addWidget(new ToggleTableRunningButton(x + 130, y + 59, pos, this::isRunning));
 
-		this.recipeSelectButtons[0] = this.addButton(new RecipeSelectButton(x + 132, y + 7, pos, 0, this::isRecipeSelected));
-		this.recipeSelectButtons[1] = this.addButton(new RecipeSelectButton(x + 145, y + 7, pos, 1, this::isRecipeSelected));
-		this.recipeSelectButtons[2] = this.addButton(new RecipeSelectButton(x + 158, y + 7, pos, 2, this::isRecipeSelected));
+		this.recipeSelectButtons[0] = this.addWidget(new RecipeSelectButton(x + 132, y + 7, pos, 0, this::isRecipeSelected));
+		this.recipeSelectButtons[1] = this.addWidget(new RecipeSelectButton(x + 145, y + 7, pos, 1, this::isRecipeSelected));
+		this.recipeSelectButtons[2] = this.addWidget(new RecipeSelectButton(x + 158, y + 7, pos, 2, this::isRecipeSelected));
 
 		this.tile = this.getTileEntity();
 	}
@@ -57,7 +54,7 @@ public class BasicAutoTableScreen extends BaseContainerScreen<BasicAutoTableCont
 		super.renderTooltip(stack, mouseX, mouseY);
 
 		if (mouseX > x + 7 && mouseX < x + 20 && mouseY > y + 17 && mouseY < y + 94) {
-			TextComponent text = new TextComponent(number(this.getEnergyStored()) + " / " + number(this.getMaxEnergyStored()) + " FE");
+			var text = new TextComponent(number(this.getEnergyStored()) + " / " + number(this.getMaxEnergyStored()) + " FE");
 			this.renderTooltip(stack, text, mouseX, mouseY);
 		}
 
@@ -65,14 +62,17 @@ public class BasicAutoTableScreen extends BaseContainerScreen<BasicAutoTableCont
 			this.renderTooltip(stack, ModTooltips.TOGGLE_AUTO_CRAFTING.color(ChatFormatting.WHITE).build(), mouseX, mouseY);
 		}
 
-		for (RecipeSelectButton button : this.recipeSelectButtons) {
+		for (var button : this.recipeSelectButtons) {
 			if (button.isHovered()) {
-				BaseItemStackHandler recipe = this.getRecipeInfo(button.getIndex());
+				var recipe = this.getRecipeInfo(button.getIndex());
+
 				if (recipe != null) {
 					List<Component> tooltip;
-					boolean hasRecipe = !recipe.getStacks().stream().allMatch(ItemStack::isEmpty);
+					var hasRecipe = !recipe.getStacks().stream().allMatch(ItemStack::isEmpty);
+
 					if (hasRecipe) {
-						ItemStack output = recipe.getStackInSlot(recipe.getSlots() - 1);
+						var output = recipe.getStackInSlot(recipe.getSlots() - 1);
+
 						tooltip = Lists.newArrayList(
 								new TextComponent(output.getCount() + "x " + output.getHoverName().getString()),
 								new TextComponent(""),
@@ -92,10 +92,10 @@ public class BasicAutoTableScreen extends BaseContainerScreen<BasicAutoTableCont
 
 	@Override
 	protected void renderLabels(PoseStack stack, int mouseX, int mouseY) {
-		String title = this.getTitle().getString();
+		var title = this.getTitle().getString();
+
 		this.font.draw(stack, title, 32.0F, 6.0F, 4210752);
-		String inventory = this.inventory.getDisplayName().getString();
-		this.font.draw(stack, inventory, 8.0F, this.imageHeight - 94.0F, 4210752);
+		this.font.draw(stack, this.playerInventoryTitle, 8.0F, this.imageHeight - 94.0F, 4210752);
 	}
 
 	@Override
@@ -113,17 +113,20 @@ public class BasicAutoTableScreen extends BaseContainerScreen<BasicAutoTableCont
 			this.blit(stack, x + 129, y + 58, 194, 0, 13, i2);
 		}
 
-		BaseItemStackHandler recipe = this.getSelectedRecipe();
+		var recipe = this.getSelectedRecipe();
+
 		if (recipe != null) {
 			for (int i = 0; i < 3; i++) {
 				for (int j = 0; j < 3; j++) {
 					int index = (i * 3) + j;
-					ItemStack item = recipe.getStackInSlot(index);
+					var item = recipe.getStackInSlot(index);
+
 					GhostItemRenderer.renderItemIntoGui(item, x + 33 + (j * 18), y + 30 + (i * 18), this.itemRenderer);
 				}
 			}
 
-			ItemStack output = recipe.getStackInSlot(recipe.getSlots() - 1);
+			var output = recipe.getStackInSlot(recipe.getSlots() - 1);
+
 			GhostItemRenderer.renderItemIntoGui(output, x + 129, y + 34, this.itemRenderer);
 		}
 	}
@@ -133,14 +136,13 @@ public class BasicAutoTableScreen extends BaseContainerScreen<BasicAutoTableCont
 	}
 
 	private AutoTableTileEntity getTileEntity() {
-		ClientLevel world = this.getMinecraft().level;
+		var level = this.getMinecraft().level;
 
-		if (world != null) {
-			BlockEntity tile = world.getBlockEntity(this.getMenu().getPos());
+		if (level != null) {
+			var tile = level.getBlockEntity(this.getMenu().getPos());
 
-			if (tile instanceof AutoTableTileEntity) {
-				return (AutoTableTileEntity) tile;
-			}
+			if (tile instanceof AutoTableTileEntity table)
+				return table;
 		}
 
 		return null;

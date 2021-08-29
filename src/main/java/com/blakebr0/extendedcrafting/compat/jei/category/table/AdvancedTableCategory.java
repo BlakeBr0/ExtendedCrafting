@@ -1,4 +1,4 @@
-package com.blakebr0.extendedcrafting.compat.jei.table;
+package com.blakebr0.extendedcrafting.compat.jei.category.table;
 
 import com.blakebr0.cucumber.util.Localizable;
 import com.blakebr0.extendedcrafting.ExtendedCrafting;
@@ -12,7 +12,6 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.IRecipeLayout;
 import mezz.jei.api.gui.drawable.IDrawable;
-import mezz.jei.api.gui.ingredient.IGuiItemStackGroup;
 import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.ingredients.IIngredients;
 import mezz.jei.api.recipe.category.IRecipeCategory;
@@ -24,18 +23,18 @@ import net.minecraft.world.item.ItemStack;
 import java.util.Collections;
 import java.util.List;
 
-public class BasicTableCategory implements IRecipeCategory<ITableRecipe> {
-	public static final ResourceLocation UID = new ResourceLocation(ExtendedCrafting.MOD_ID, "basic_crafting");
-	private static final ResourceLocation TEXTURE = new ResourceLocation(ExtendedCrafting.MOD_ID, "textures/gui/jei/basic_crafting.png");
-	
+public class AdvancedTableCategory implements IRecipeCategory<ITableRecipe> {
+	public static final ResourceLocation UID = new ResourceLocation(ExtendedCrafting.MOD_ID, "advanced_crafting");
+	private static final ResourceLocation TEXTURE = new ResourceLocation(ExtendedCrafting.MOD_ID, "textures/gui/jei/advanced_crafting.png");
+
 	private final IDrawable background;
 	private final IDrawable icon;
 	private final IDrawable required;
 	private final IDrawable shapeless;
 
-	public BasicTableCategory(IGuiHelper helper) {
-		this.background = helper.createDrawable(TEXTURE, 0, 0, 116, 54);
-		this.icon = helper.createDrawableIngredient(new ItemStack(ModBlocks.BASIC_TABLE.get()));
+	public AdvancedTableCategory(IGuiHelper helper) {
+		this.background = helper.createDrawable(TEXTURE, 0, 0, 150, 90);
+		this.icon = helper.createDrawableIngredient(new ItemStack(ModBlocks.ADVANCED_TABLE.get()));
 		this.required = helper.createDrawable(JeiCompat.ICONS, 0, 0, 15, 15);
 		this.shapeless = helper.createDrawable(JeiCompat.ICONS, 17, 0, 19, 15);
 	}
@@ -51,8 +50,8 @@ public class BasicTableCategory implements IRecipeCategory<ITableRecipe> {
 	}
 
 	@Override
-	public String getTitle() {
-		return Localizable.of("jei.category.extendedcrafting.basic_crafting").buildString();
+	public Component getTitle() {
+		return Localizable.of("jei.category.extendedcrafting.advanced_crafting").build();
 	}
 
 	@Override
@@ -69,18 +68,21 @@ public class BasicTableCategory implements IRecipeCategory<ITableRecipe> {
 	public void draw(ITableRecipe recipe, PoseStack stack, double mouseX, double mouseY) {
 		stack.pushPose();
 		stack.scale(0.5F, 0.5F, 0.5F);
-		boolean shapeless = recipe instanceof ShapelessTableRecipe;
+
+		var shapeless = recipe instanceof ShapelessTableRecipe;
+
 		if (recipe.hasRequiredTier())
-			this.required.draw(stack, shapeless ? 197 : 217, 0);
+			this.required.draw(stack, shapeless ? 265 : 285, 0);
 		if (shapeless)
-			this.shapeless.draw(stack, 217, 0);
+			this.shapeless.draw(stack, 285, 0);
+
 		stack.popPose();
 	}
 
 	@Override
 	public List<Component> getTooltipStrings(ITableRecipe recipe, double mouseX, double mouseY) {
-		boolean shapeless = recipe instanceof ShapelessTableRecipe;
-		int sX = (shapeless ? 197 : 217) / 2, sY = 0;
+		var shapeless = recipe instanceof ShapelessTableRecipe;
+		int sX = (shapeless ? 265 : 285) / 2, sY = 0;
 
 		if (recipe.hasRequiredTier() && mouseX > sX - 1 && mouseX < sX + 8 && mouseY > sY - 1 && mouseY < sY + 8) {
 			return Collections.singletonList(ModTooltips.REQUIRES_TABLE.args(recipe.getTier()).color(ChatFormatting.WHITE).build());
@@ -101,27 +103,26 @@ public class BasicTableCategory implements IRecipeCategory<ITableRecipe> {
 
 	@Override
 	public void setRecipe(IRecipeLayout layout, ITableRecipe recipe, IIngredients ingredients) {
-		IGuiItemStackGroup stacks = layout.getItemStacks();
+		var stacks = layout.getItemStacks();
+		var inputs = ingredients.getInputs(VanillaTypes.ITEM);
+		var outputs = ingredients.getOutputs(VanillaTypes.ITEM).get(0);
 
-		List<List<ItemStack>> inputs = ingredients.getInputs(VanillaTypes.ITEM);
-		List<ItemStack> outputs = ingredients.getOutputs(VanillaTypes.ITEM).get(0);
-
-		stacks.init(0, false, 94, 18);
+		stacks.init(0, false, 128, 35);
 		stacks.set(0, outputs);
 
-		for (int i = 0; i < 3; i++) {
-			for (int j = 0; j < 3; j++) {
-				int index = 1 + j + (i * 3);
+		for (int i = 0; i < 5; i++) {
+			for (int j = 0; j < 5; j++) {
+				int index = 1 + j + (i * 5);
 				stacks.init(index, true, j * 18, i * 18);
 			}
 		}
 
-		if (recipe instanceof ShapedTableRecipe) {
-			ShapedTableRecipe shaped = (ShapedTableRecipe) recipe;
+		if (recipe instanceof ShapedTableRecipe shaped) {
 			int stackIndex = 0;
+
 			for (int i = 0; i < shaped.getHeight(); i++) {
 				for (int j = 0; j < shaped.getWidth(); j++) {
-					int index = 1 + (i * 3) + j;
+					int index = 1 + (i * 5) + j;
 
 					stacks.set(index, inputs.get(stackIndex));
 
@@ -134,6 +135,6 @@ public class BasicTableCategory implements IRecipeCategory<ITableRecipe> {
 			}
 		}
 
-		layout.moveRecipeTransferButton(122, 41);
+		layout.moveRecipeTransferButton(137, 77);
 	}
 }

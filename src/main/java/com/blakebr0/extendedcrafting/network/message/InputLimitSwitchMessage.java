@@ -1,39 +1,45 @@
 package com.blakebr0.extendedcrafting.network.message;
 
+import com.blakebr0.cucumber.network.message.Message;
 import com.blakebr0.extendedcrafting.tileentity.CompressorTileEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraftforge.fml.network.NetworkEvent;
+import net.minecraftforge.fmllegacy.network.NetworkEvent;
 
 import java.util.function.Supplier;
 
-public class InputLimitSwitchMessage {
+public class InputLimitSwitchMessage extends Message<InputLimitSwitchMessage> {
     private final BlockPos pos;
+
+    public InputLimitSwitchMessage() {
+        this.pos = BlockPos.ZERO;
+    }
 
     public InputLimitSwitchMessage(BlockPos pos) {
         this.pos = pos;
     }
 
-    public static InputLimitSwitchMessage read(FriendlyByteBuf buffer) {
+    @Override
+    public InputLimitSwitchMessage read(FriendlyByteBuf buffer) {
         return new InputLimitSwitchMessage(buffer.readBlockPos());
     }
 
-    public static void write(InputLimitSwitchMessage message, FriendlyByteBuf buffer) {
+    @Override
+    public void write(InputLimitSwitchMessage message, FriendlyByteBuf buffer) {
         buffer.writeBlockPos(message.pos);
     }
 
-    public static void onMessage(InputLimitSwitchMessage message, Supplier<NetworkEvent.Context> context) {
+    @Override
+    public void onMessage(InputLimitSwitchMessage message, Supplier<NetworkEvent.Context> context) {
         context.get().enqueueWork(() -> {
-            ServerPlayer player = context.get().getSender();
+            var player = context.get().getSender();
+
             if (player != null) {
-                Level world = player.getCommandSenderWorld();
-                BlockEntity tile = world.getBlockEntity(message.pos);
-                if (tile instanceof CompressorTileEntity) {
-                    ((CompressorTileEntity) tile).toggleInputLimit();
-                }
+                var level = player.getCommandSenderWorld();
+                var tile = level.getBlockEntity(message.pos);
+
+                if (tile instanceof CompressorTileEntity compressor)
+                    compressor.toggleInputLimit();
             }
         });
 

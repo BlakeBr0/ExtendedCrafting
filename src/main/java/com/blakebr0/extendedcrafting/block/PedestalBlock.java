@@ -24,7 +24,6 @@ import net.minecraft.world.level.material.Material;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.minecraftforge.common.ToolType;
 
 public class PedestalBlock extends BaseTileEntityBlock implements IEnableable {
 	public static final VoxelShape PEDESTAL_SHAPE = new VoxelShapeBuilder()
@@ -34,12 +33,12 @@ public class PedestalBlock extends BaseTileEntityBlock implements IEnableable {
 			.build();
 
 	public PedestalBlock() {
-		super(Material.METAL, SoundType.METAL, 5.0F, 10.0F, ToolType.PICKAXE);
+		super(Material.METAL, SoundType.METAL, 5.0F, 10.0F, true);
 	}
 
 	@Override
 	public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
-		return new PedestalTileEntity();
+		return new PedestalTileEntity(pos, state);
 	}
 
 	@Override

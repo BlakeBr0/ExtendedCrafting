@@ -13,12 +13,12 @@ import com.blakebr0.extendedcrafting.tileentity.EliteTableTileEntity;
 import com.blakebr0.extendedcrafting.tileentity.EnderCrafterTileEntity;
 import com.blakebr0.extendedcrafting.tileentity.PedestalTileEntity;
 import com.blakebr0.extendedcrafting.tileentity.UltimateTableTileEntity;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.fmlclient.registry.ClientRegistry;
 import net.minecraftforge.fmllegacy.RegistryObject;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -43,9 +43,9 @@ public final class ModTileEntities {
 
 	@OnlyIn(Dist.CLIENT)
 	public static void onClientSetup() {
-		ClientRegistry.bindTileEntityRenderer(PEDESTAL.get(), PedestalRenderer::new);
-		ClientRegistry.bindTileEntityRenderer(CRAFTING_CORE.get(), CraftingCoreRenderer::new);
-		ClientRegistry.bindTileEntityRenderer(COMPRESSOR.get(), CompressorRenderer::new);
+		BlockEntityRenderers.register(PEDESTAL.get(), PedestalRenderer::new);
+		BlockEntityRenderers.register(CRAFTING_CORE.get(), CraftingCoreRenderer::new);
+		BlockEntityRenderers.register(COMPRESSOR.get(), CompressorRenderer::new);
 	}
 
 	private static <T extends BlockEntity> RegistryObject<BlockEntityType<T>> register(String name, BlockEntityType.BlockEntitySupplier<T> tile, Supplier<Block[]> blocks) {

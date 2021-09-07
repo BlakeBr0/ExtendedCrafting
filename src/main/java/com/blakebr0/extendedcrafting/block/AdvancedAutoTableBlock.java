@@ -26,7 +26,6 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.common.ToolType;
 import net.minecraftforge.fmllegacy.network.NetworkHooks;
 
 import java.util.List;
@@ -43,12 +42,12 @@ public class AdvancedAutoTableBlock extends BaseTileEntityBlock implements IEnab
             .build();
 
     public AdvancedAutoTableBlock() {
-        super(Material.METAL, SoundType.METAL, 5.0F, 10.0F, ToolType.PICKAXE);
+        super(Material.METAL, SoundType.METAL, 5.0F, 10.0F, true);
     }
 
     @Override
     public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
-        return new AutoTableTileEntity.Advanced();
+        return new AutoTableTileEntity.Advanced(pos, state);
     }
 
     @Override

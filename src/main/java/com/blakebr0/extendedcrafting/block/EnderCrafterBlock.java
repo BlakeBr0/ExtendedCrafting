@@ -16,17 +16,16 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Material;
 import net.minecraft.world.phys.BlockHitResult;
-import net.minecraftforge.common.ToolType;
 import net.minecraftforge.fmllegacy.network.NetworkHooks;
 
 public class EnderCrafterBlock extends BaseTileEntityBlock implements IEnableable {
 	public EnderCrafterBlock() {
-		super(Material.METAL, SoundType.METAL, 6.0F, 12.0F, ToolType.PICKAXE);
+		super(Material.METAL, SoundType.METAL, 6.0F, 12.0F, true);
 	}
 
 	@Override
 	public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
-		return null;
+		return new EnderCrafterTileEntity(pos, state);
 	}
 
 	@Override

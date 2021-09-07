@@ -24,19 +24,18 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.level.material.Material;
 import net.minecraft.world.phys.BlockHitResult;
-import net.minecraftforge.common.ToolType;
 import net.minecraftforge.fmllegacy.network.NetworkHooks;
 
 public class CompressorBlock extends BaseTileEntityBlock implements IEnableable {
 	private static final DirectionProperty FACING = HorizontalDirectionalBlock.FACING;
 
 	public CompressorBlock() {
-		super(Material.METAL, SoundType.METAL, 5.0F, 10.0F, ToolType.PICKAXE);
+		super(Material.METAL, SoundType.METAL, 5.0F, 10.0F, true);
 	}
 
 	@Override
 	public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
-		return new CompressorTileEntity();
+		return new CompressorTileEntity(pos, state);
 	}
 
 	@Override

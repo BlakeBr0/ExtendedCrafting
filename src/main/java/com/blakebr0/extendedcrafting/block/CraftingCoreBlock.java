@@ -26,7 +26,6 @@ import net.minecraft.world.level.material.Material;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.minecraftforge.common.ToolType;
 import net.minecraftforge.fmllegacy.network.NetworkHooks;
 
 public class CraftingCoreBlock extends BaseTileEntityBlock implements IEnableable {
@@ -40,12 +39,12 @@ public class CraftingCoreBlock extends BaseTileEntityBlock implements IEnableabl
 			.build();
 
 	public CraftingCoreBlock() {
-		super(Material.METAL, SoundType.METAL, 5.0F, 10.0F, ToolType.PICKAXE);
+		super(Material.METAL, SoundType.METAL, 5.0F, 10.0F, true);
 	}
 
 	@Override
 	public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
-		return new CraftingCoreTileEntity();
+		return new CraftingCoreTileEntity(pos, state);
 	}
 
 	@Override

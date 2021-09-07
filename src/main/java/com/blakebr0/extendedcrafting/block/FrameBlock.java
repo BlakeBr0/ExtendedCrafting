@@ -9,7 +9,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Material;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.minecraftforge.common.ToolType;
 
 public class FrameBlock extends BaseBlock {
     private static final VoxelShape FRAME_SHAPE = new VoxelShapeBuilder()
@@ -29,7 +28,7 @@ public class FrameBlock extends BaseBlock {
             .build();
 
     public FrameBlock() {
-        super(Material.STONE, SoundType.STONE, 5.0F, 10.0F, ToolType.PICKAXE);
+        super(Material.STONE, SoundType.STONE, 5.0F, 10.0F, true);
     }
 
     @Override

@@ -25,7 +25,6 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.common.ToolType;
 
 import java.util.List;
 
@@ -40,12 +39,12 @@ public class AdvancedTableBlock extends BaseTileEntityBlock implements IEnableab
 			.build();
 
 	public AdvancedTableBlock() {
-		super(Material.METAL, SoundType.METAL, 5.0F, 10.0F, ToolType.PICKAXE);
+		super(Material.METAL, SoundType.METAL, 5.0F, 10.0F, true);
 	}
 
 	@Override
 	public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
-		return new AdvancedTableTileEntity();
+		return new AdvancedTableTileEntity(pos, state);
 	}
 
 	@Override

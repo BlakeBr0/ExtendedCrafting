@@ -43,9 +43,7 @@ minecraft {
                 extendedcrafting {
                     source sourceSets.main
                 }
-            }
 
-            mods {
                 cucumber {
                     source project(':Cucumber').sourceSets.main
                 }
@@ -64,9 +62,7 @@ minecraft {
                 extendedcrafting {
                     source sourceSets.main
                 }
-            }
 
-            mods {
                 cucumber {
                     source project(':Cucumber').sourceSets.main
                 }
@@ -80,7 +76,7 @@ dependencies {
 
     implementation project(':Cucumber')
 
-    runtimeOnly 'mezz.jei:jei-1.17.1:8.0.0.14'
+    runtimeOnly fg.deobf('mezz.jei:jei-1.17.1:8.0.0.14')
 
     compileOnly 'mezz.jei:jei-1.17.1:8.0.0.14:api'
 }

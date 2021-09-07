@@ -29,7 +29,7 @@ public final class ExtendedCrafting {
 	public static final String MOD_ID = "extendedcrafting";
 	public static final String NAME = "Extended Crafting";
 
-	public static final CreativeModeTab ITEM_GROUP = new ECCreativeTab();
+	public static final CreativeModeTab CREATIVE_TAB = new ECCreativeTab();
 
 	public ExtendedCrafting() {
 		var bus = FMLJavaModLoadingContext.get().getModEventBus();

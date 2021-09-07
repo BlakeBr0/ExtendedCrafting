@@ -11,7 +11,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Material;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.minecraftforge.common.ToolType;
 
 public class EnderAlternatorBlock extends BaseBlock implements IEnableable {
 	private static final VoxelShape ENDER_ALTERNATOR_SHAPE = new VoxelShapeBuilder()
@@ -21,7 +20,7 @@ public class EnderAlternatorBlock extends BaseBlock implements IEnableable {
 			.build();
 
 	public EnderAlternatorBlock() {
-		super(Material.METAL, SoundType.METAL, 5.0F, 10.0F, ToolType.PICKAXE);
+		super(Material.METAL, SoundType.METAL, 5.0F, 10.0F, true);
 	}
 
 	@Override

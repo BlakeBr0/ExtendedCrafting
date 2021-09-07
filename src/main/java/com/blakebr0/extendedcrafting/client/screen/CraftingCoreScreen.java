@@ -105,18 +105,17 @@ public class CraftingCoreScreen extends BaseContainerScreen<CraftingCoreContaine
 	}
 	
 	private void drawItemStack(ItemStack stack, int x, int y) {
-    	RenderSystem.pushMatrix();
-    	Lighting.turnBackOn();
-        RenderSystem.translatef(0.0F, 0.0F, -32.0F);
-//        this.itemRenderer.zLevel = 200.0F;
-        Font font = stack.getItem().getFontRenderer(stack);
-        if (font == null) font = this.font;
-        RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
-        this.itemRenderer.renderAndDecorateItem(stack, x, y);
-        this.itemRenderer.renderGuiItemDecorations(font, stack, x, y, null);
-//        this.itemRenderer.zLevel = 0.0F;
-        Lighting.turnOff();
-        RenderSystem.popMatrix();
+		PoseStack posestack = RenderSystem.getModelViewStack();
+		posestack.translate(0.0D, 0.0D, 32.0D);
+		RenderSystem.applyModelViewMatrix();
+		this.setBlitOffset(200);
+		this.itemRenderer.blitOffset = 200.0F;
+		net.minecraft.client.gui.Font font = net.minecraftforge.client.RenderProperties.get(stack).getFont(stack);
+		if (font == null) font = this.font;
+		this.itemRenderer.renderAndDecorateItem(stack, x, y);
+		this.itemRenderer.renderGuiItemDecorations(font, stack, x, y - (this.draggingItem.isEmpty() ? 0 : 8), "");
+		this.setBlitOffset(0);
+		this.itemRenderer.blitOffset = 0.0F;
 	}
 
 	private void drawItemHoverOverlay(PoseStack stack, int x, int y) {

@@ -25,7 +25,7 @@ public class CompressorContainer extends AbstractContainerMenu {
 	private final BlockPos pos;
 
 	private CompressorContainer(MenuType<?> type, int id, Inventory playerInventory, FriendlyByteBuf buffer) {
-		this(type, id, playerInventory, p -> false, (new CompressorTileEntity()).getInventory(), new SimpleContainerData(10), buffer.readBlockPos());
+		this(type, id, playerInventory, p -> false, new BaseItemStackHandler(1), new SimpleContainerData(10), buffer.readBlockPos());
 	}
 
 	private CompressorContainer(MenuType<?> type, int id, Inventory playerInventory, Function<Player, Boolean> isUsableByPlayer, BaseItemStackHandler inventory, ContainerData data, BlockPos pos) {

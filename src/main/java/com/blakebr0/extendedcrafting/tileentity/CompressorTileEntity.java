@@ -19,6 +19,8 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.SimpleContainerData;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.AbstractFurnaceBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
@@ -79,102 +81,6 @@ public class CompressorTileEntity extends BaseInventoryTileEntity implements Men
 	}
 
 	@Override
-	public void tick() {
-		var mark = false;
-		var level = this.getLevel();
-
-		if (level != null) {
-			var output = this.inventory.getStackInSlot(0);
-			var input = this.inventory.getStackInSlot(1);
-			var catalyst = this.inventory.getStackInSlot(2);
-
-			this.recipeInventory.setStackInSlot(0, this.materialStack);
-			this.recipeInventory.setStackInSlot(1, catalyst);
-
-			if (this.recipe == null || !this.recipe.matches(this.recipeInventory)) {
-				this.recipe = (CompressorRecipe) level.getRecipeManager().getRecipeFor(RecipeTypes.COMPRESSOR, this.recipeInventory.toIInventory(), level).orElse(null);
-			}
-
-			if (!level.isClientSide()) {
-				if (!input.isEmpty()) {
-					if (this.materialStack.isEmpty() || this.materialCount <= 0) {
-						this.materialStack = input.copy();
-						mark = true;
-					}
-
-					if (!this.inputLimit || (this.recipe != null && this.materialCount < this.recipe.getInputCount())) {
-						if (StackHelper.areStacksEqual(input, this.materialStack)) {
-							int consumeAmount = input.getCount();
-							if (this.inputLimit) {
-								consumeAmount = Math.min(consumeAmount, this.recipe.getInputCount() - this.materialCount);
-							}
-
-							input.shrink(consumeAmount);
-							this.materialCount += consumeAmount;
-
-							if (!mark)
-								mark = true;
-						}
-					}
-				}
-
-				if (this.recipe != null && this.getEnergy().getEnergyStored() > 0) {
-					if (this.materialCount >= this.recipe.getInputCount()) {
-						if (this.progress >= this.recipe.getPowerCost()) {
-							var result = this.recipe.getCraftingResult(this.inventory);
-
-							if (StackHelper.canCombineStacks(result, output)) {
-								this.updateResult(result);
-								this.progress = 0;
-								this.materialCount -= this.recipe.getInputCount();
-
-								if (this.materialCount <= 0) {
-									this.materialStack = ItemStack.EMPTY;
-								}
-							}
-						} else {
-							this.process(this.recipe);
-						}
-					}
-				}
-
-				if (this.ejecting) {
-					if (this.materialCount > 0 && !this.materialStack.isEmpty() && (output.isEmpty() || StackHelper.areStacksEqual(this.materialStack, output))) {
-						int addCount = Math.min(this.materialCount, this.materialStack.getMaxStackSize() - output.getCount());
-						if (addCount > 0) {
-							var toAdd = StackHelper.withSize(this.materialStack, addCount, false);
-
-							this.updateResult(toAdd);
-							this.materialCount -= addCount;
-
-							if (this.materialCount < 1) {
-								this.materialStack = ItemStack.EMPTY;
-								this.ejecting = false;
-							}
-
-							if (this.progress > 0)
-								this.progress = 0;
-
-							if (!mark)
-								mark = true;
-						}
-					}
-				}
-			}
-
-			if (this.oldEnergy != this.energy.getEnergyStored()) {
-				this.oldEnergy = this.energy.getEnergyStored();
-				if (!mark)
-					mark = true;
-			}
-
-			if (mark) {
-				this.markDirtyAndDispatch();
-			}
-		}
-	}
-
-	@Override
 	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
 		if (!this.isRemoved() && cap == CapabilityEnergy.ENERGY) {
 			return CapabilityEnergy.ENERGY.orEmpty(cap, this.capability);
@@ -191,6 +97,97 @@ public class CompressorTileEntity extends BaseInventoryTileEntity implements Men
 	@Override
 	public AbstractContainerMenu createMenu(int windowId, Inventory playerInventory, Player playerEntity) {
 		return CompressorContainer.create(windowId, playerInventory, this::isUsableByPlayer, this.inventory, new SimpleContainerData(0), this.getBlockPos());
+	}
+
+	public static void tick(Level level, BlockPos pos, BlockState state, CompressorTileEntity tile) {
+		var mark = false;
+		var output = tile.inventory.getStackInSlot(0);
+		var input = tile.inventory.getStackInSlot(1);
+		var catalyst = tile.inventory.getStackInSlot(2);
+
+		tile.recipeInventory.setStackInSlot(0, tile.materialStack);
+		tile.recipeInventory.setStackInSlot(1, catalyst);
+
+		if (tile.recipe == null || !tile.recipe.matches(tile.recipeInventory)) {
+			tile.recipe = (CompressorRecipe) level.getRecipeManager().getRecipeFor(RecipeTypes.COMPRESSOR, tile.recipeInventory.toIInventory(), level).orElse(null);
+		}
+
+		if (!level.isClientSide()) {
+			if (!input.isEmpty()) {
+				if (tile.materialStack.isEmpty() || tile.materialCount <= 0) {
+					tile.materialStack = input.copy();
+					mark = true;
+				}
+
+				if (!tile.inputLimit || (tile.recipe != null && tile.materialCount < tile.recipe.getInputCount())) {
+					if (StackHelper.areStacksEqual(input, tile.materialStack)) {
+						int consumeAmount = input.getCount();
+						if (tile.inputLimit) {
+							consumeAmount = Math.min(consumeAmount, tile.recipe.getInputCount() - tile.materialCount);
+						}
+
+						input.shrink(consumeAmount);
+						tile.materialCount += consumeAmount;
+
+						if (!mark)
+							mark = true;
+					}
+				}
+			}
+
+			if (tile.recipe != null && tile.getEnergy().getEnergyStored() > 0) {
+				if (tile.materialCount >= tile.recipe.getInputCount()) {
+					if (tile.progress >= tile.recipe.getPowerCost()) {
+						var result = tile.recipe.assemble(tile.inventory);
+
+						if (StackHelper.canCombineStacks(result, output)) {
+							tile.updateResult(result);
+							tile.progress = 0;
+							tile.materialCount -= tile.recipe.getInputCount();
+
+							if (tile.materialCount <= 0) {
+								tile.materialStack = ItemStack.EMPTY;
+							}
+						}
+					} else {
+						tile.process(tile.recipe);
+					}
+				}
+			}
+
+			if (tile.ejecting) {
+				if (tile.materialCount > 0 && !tile.materialStack.isEmpty() && (output.isEmpty() || StackHelper.areStacksEqual(tile.materialStack, output))) {
+					int addCount = Math.min(tile.materialCount, tile.materialStack.getMaxStackSize() - output.getCount());
+					if (addCount > 0) {
+						var toAdd = StackHelper.withSize(tile.materialStack, addCount, false);
+
+						tile.updateResult(toAdd);
+						tile.materialCount -= addCount;
+
+						if (tile.materialCount < 1) {
+							tile.materialStack = ItemStack.EMPTY;
+							tile.ejecting = false;
+						}
+
+						if (tile.progress > 0)
+							tile.progress = 0;
+
+						if (!mark)
+							mark = true;
+					}
+				}
+			}
+		}
+
+		if (tile.oldEnergy != tile.energy.getEnergyStored()) {
+			tile.oldEnergy = tile.energy.getEnergyStored();
+			if (!mark)
+				mark = true;
+		}
+
+		if (mark) {
+			tile.markDirtyAndDispatch();
+		}
 	}
 
 	public EnergyStorage getEnergy() {

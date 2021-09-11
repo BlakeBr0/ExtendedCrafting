@@ -12,12 +12,15 @@ import net.minecraft.core.NonNullList;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
+import net.minecraft.world.Container;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.item.crafting.ShapedRecipe;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.items.IItemHandler;
+import net.minecraftforge.items.wrapper.InvWrapper;
 import net.minecraftforge.registries.ForgeRegistryEntry;
 
 public class ShapedEnderCrafterRecipe implements ISpecialRecipe, IEnderCrafterRecipe {
@@ -52,6 +55,11 @@ public class ShapedEnderCrafterRecipe implements ISpecialRecipe, IEnderCrafterRe
 	}
 
 	@Override
+	public ItemStack assemble(Container inv) {
+		return this.output.copy();
+	}
+
+	@Override
 	public boolean matches(IItemHandler inventory) {
 		int size = (int) Math.sqrt(inventory.getSlots());
 		for (int i = 0; i <= size - this.width; i++) {
@@ -67,6 +75,11 @@ public class ShapedEnderCrafterRecipe implements ISpecialRecipe, IEnderCrafterRe
 		}
 
 		return false;
+	}
+
+	@Override
+	public boolean matches(Container inv, Level level) {
+		return this.matches(new InvWrapper(inv));
 	}
 
 	@Override

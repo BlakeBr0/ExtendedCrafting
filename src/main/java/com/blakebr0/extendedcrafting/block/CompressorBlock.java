@@ -3,6 +3,7 @@ package com.blakebr0.extendedcrafting.block;
 import com.blakebr0.cucumber.block.BaseTileEntityBlock;
 import com.blakebr0.cucumber.iface.IEnableable;
 import com.blakebr0.extendedcrafting.config.ModConfigs;
+import com.blakebr0.extendedcrafting.init.ModTileEntities;
 import com.blakebr0.extendedcrafting.tileentity.CompressorTileEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerPlayer;
@@ -19,6 +20,8 @@ import net.minecraft.world.level.block.Mirror;
 import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityTicker;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
@@ -97,5 +100,10 @@ public class CompressorBlock extends BaseTileEntityBlock implements IEnableable 
 	@Override
 	public boolean isEnabled() {
 		return ModConfigs.ENABLE_COMPRESSOR.get();
+	}
+
+	@Override
+	protected <T extends BlockEntity> BlockEntityTicker<T> getServerTicker(Level level, BlockState state, BlockEntityType<T> type) {
+		return createTicker(type, ModTileEntities.COMPRESSOR.get(), CompressorTileEntity::tick);
 	}
 }

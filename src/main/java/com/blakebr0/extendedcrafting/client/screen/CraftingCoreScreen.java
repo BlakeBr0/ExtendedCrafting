@@ -79,7 +79,7 @@ public class CraftingCoreScreen extends BaseContainerScreen<CraftingCoreContaine
 
 	@Override
 	protected void renderBg(PoseStack stack, float partialTicks, int mouseX, int mouseY) {
-		super.renderBg(stack, partialTicks, mouseX, mouseY);
+//		super.renderBg(stack, partialTicks, mouseX, mouseY);
 
 		int x = this.getGuiLeft();
 		int y = this.getGuiTop();
@@ -113,21 +113,21 @@ public class CraftingCoreScreen extends BaseContainerScreen<CraftingCoreContaine
 		net.minecraft.client.gui.Font font = net.minecraftforge.client.RenderProperties.get(stack).getFont(stack);
 		if (font == null) font = this.font;
 		this.itemRenderer.renderAndDecorateItem(stack, x, y);
-		this.itemRenderer.renderGuiItemDecorations(font, stack, x, y - (this.draggingItem.isEmpty() ? 0 : 8), "");
+//		this.itemRenderer.renderGuiItemDecorations(font, stack, x, y - (this.draggingItem.isEmpty() ? 0 : 8), "");
 		this.setBlitOffset(0);
 		this.itemRenderer.blitOffset = 0.0F;
 	}
 
 	private void drawItemHoverOverlay(PoseStack stack, int x, int y) {
-		RenderSystem.pushMatrix();
-		RenderSystem.disableLighting();
-		RenderSystem.disableDepthTest();
-		RenderSystem.colorMask(true, true, true, false);
-		this.fillGradient(stack, x, y, x + 16, y + 16, -2130706433, -2130706433);
-		RenderSystem.colorMask(true, true, true, true);
-		RenderSystem.enableLighting();
-		RenderSystem.enableDepthTest();
-		RenderSystem.popMatrix();
+//		RenderSystem.pushMatrix();
+//		RenderSystem.disableLighting();
+//		RenderSystem.disableDepthTest();
+//		RenderSystem.colorMask(true, true, true, false);
+//		this.fillGradient(stack, x, y, x + 16, y + 16, -2130706433, -2130706433);
+//		RenderSystem.colorMask(true, true, true, true);
+//		RenderSystem.enableLighting();
+//		RenderSystem.enableDepthTest();
+//		RenderSystem.popMatrix();
 	}
 
 	private CraftingCoreTileEntity getTileEntity() {

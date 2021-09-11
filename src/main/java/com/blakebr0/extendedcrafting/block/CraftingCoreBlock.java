@@ -5,6 +5,7 @@ import com.blakebr0.cucumber.helper.StackHelper;
 import com.blakebr0.cucumber.iface.IEnableable;
 import com.blakebr0.cucumber.util.VoxelShapeBuilder;
 import com.blakebr0.extendedcrafting.config.ModConfigs;
+import com.blakebr0.extendedcrafting.init.ModTileEntities;
 import com.blakebr0.extendedcrafting.tileentity.CraftingCoreTileEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -21,6 +22,8 @@ import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityTicker;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Material;
 import net.minecraft.world.phys.BlockHitResult;
@@ -102,5 +105,10 @@ public class CraftingCoreBlock extends BaseTileEntityBlock implements IEnableabl
 	@Override
 	public boolean isEnabled() {
 		return ModConfigs.ENABLE_CRAFTING_CORE.get();
+	}
+
+	@Override
+	protected <T extends BlockEntity> BlockEntityTicker<T> getServerTicker(Level level, BlockState state, BlockEntityType<T> type) {
+		return createTicker(type, ModTileEntities.CRAFTING_CORE.get(), CraftingCoreTileEntity::tick);
 	}
 }

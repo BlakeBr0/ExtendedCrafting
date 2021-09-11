@@ -97,7 +97,7 @@ public class CompressorScreen extends BaseContainerScreen<CompressorContainer> {
 
 	@Override
 	protected void renderBg(PoseStack stack, float partialTicks, int mouseX, int mouseY) {
-		super.renderBg(stack, partialTicks, mouseX, mouseY);
+//		super.renderBg(stack, partialTicks, mouseX, mouseY);
 
 		int x = this.getGuiLeft();
 		int y = this.getGuiTop();

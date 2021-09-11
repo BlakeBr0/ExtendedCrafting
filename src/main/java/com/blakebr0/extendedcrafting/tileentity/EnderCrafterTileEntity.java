@@ -22,6 +22,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.SimpleContainerData;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 
 import java.util.ArrayList;
@@ -62,73 +63,6 @@ public class EnderCrafterTileEntity extends BaseInventoryTileEntity implements M
 	}
 
 	@Override
-	public void tick() {
-		var mark = false;
-		var level = this.getLevel();
-
-		if (level != null) {
-			this.updateRecipeInventory();
-
-			var recipeInventory = this.recipeInventory.toIInventory();
-
-			if (this.recipe == null || !this.recipe.matches(recipeInventory, level)) {
-				this.recipe = level.getRecipeManager().getRecipeFor(RecipeTypes.ENDER_CRAFTER, recipeInventory, level).orElse(null);
-			}
-
-			if (!level.isClientSide()) {
-				if (this.recipe != null) {
-					var result = this.recipe.assemble(recipeInventory);
-					var output = this.inventory.getStackInSlot(9);
-
-					if (StackHelper.canCombineStacks(result, output)) {
-						var alternators = this.getAlternatorPositions();
-						int alternatorCount = alternators.size();
-
-						if (alternatorCount > 0) {
-							this.progress(alternatorCount, this.recipe.getCraftingTime());
-
-							for (var pos : alternators) {
-								if (level.isEmptyBlock(pos.above())) {
-									this.spawnParticles(ParticleTypes.PORTAL, pos, 1, 1);
-								}
-							}
-
-							if (this.progress >= this.progressReq) {
-								for (int i = 0; i < this.inventory.getSlots() - 1; i++) {
-									this.inventory.extractItem(i, 1, false);
-								}
-
-								this.updateResult(result);
-								this.progress = 0;
-							}
-
-							mark = true;
-						}
-					} else {
-						if (this.progress > 0 || this.progressReq > 0) {
-							this.progress = 0;
-							this.progressReq = 0;
-
-							mark = true;
-						}
-					}
-				} else {
-					if (this.progress > 0 || this.progressReq > 0) {
-						this.progress = 0;
-						this.progressReq = 0;
-
-						mark = true;
-					}
-				}
-			}
-
-			if (mark) {
-				this.markDirtyAndDispatch();
-			}
-		}
-	}
-
-	@Override
 	public Component getDisplayName() {
 		return Localizable.of("container.extendedcrafting.ender_crafter").build();
 	}
@@ -136,6 +70,69 @@ public class EnderCrafterTileEntity extends BaseInventoryTileEntity implements M
 	@Override
 	public AbstractContainerMenu createMenu(int windowId, Inventory playerInventory, Player player) {
 		return EnderCrafterContainer.create(windowId, playerInventory, this::isUsableByPlayer, this.inventory, new SimpleContainerData(0), this.getBlockPos());
+	}
+
+	public static void tick(Level level, BlockPos pos, BlockState state, EnderCrafterTileEntity tile) {
+		var mark = false;
+
+		tile.updateRecipeInventory();
+
+		var recipeInventory = tile.recipeInventory.toIInventory();
+
+		if (tile.recipe == null || !tile.recipe.matches(recipeInventory, level)) {
+			tile.recipe = level.getRecipeManager().getRecipeFor(RecipeTypes.ENDER_CRAFTER, recipeInventory, level).orElse(null);
+		}
+
+		if (!level.isClientSide()) {
+			if (tile.recipe != null) {
+				var result = tile.recipe.assemble(recipeInventory);
+				var output = tile.inventory.getStackInSlot(9);
+
+				if (StackHelper.canCombineStacks(result, output)) {
+					var alternators = tile.getAlternatorPositions();
+					int alternatorCount = alternators.size();
+
+					if (alternatorCount > 0) {
+						tile.progress(alternatorCount, tile.recipe.getCraftingTime());
+
+						for (var alternatorPos : alternators) {
+							if (level.isEmptyBlock(alternatorPos.above())) {
+								tile.spawnParticles(ParticleTypes.PORTAL, alternatorPos, 1, 1);
+							}
+						}
+
+						if (tile.progress >= tile.progressReq) {
+							for (int i = 0; i < tile.inventory.getSlots() - 1; i++) {
+								tile.inventory.extractItem(i, 1, false);
+							}
+
+							tile.updateResult(result);
+							tile.progress = 0;
+						}
+
+						mark = true;
+					}
+				} else {
+					if (tile.progress > 0 || tile.progressReq > 0) {
+						tile.progress = 0;
+						tile.progressReq = 0;
+
+						mark = true;
+					}
+				}
+			} else {
+				if (tile.progress > 0 || tile.progressReq > 0) {
+					tile.progress = 0;
+					tile.progressReq = 0;
+
+					mark = true;
+				}
+			}
+
+			if (mark) {
+				tile.markDirtyAndDispatch();
+			}
+		}
 	}
 
 	private void updateResult(ItemStack stack) {

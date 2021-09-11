@@ -4,6 +4,7 @@ import com.blakebr0.cucumber.block.BaseTileEntityBlock;
 import com.blakebr0.cucumber.iface.IEnableable;
 import com.blakebr0.cucumber.util.VoxelShapeBuilder;
 import com.blakebr0.extendedcrafting.config.ModConfigs;
+import com.blakebr0.extendedcrafting.init.ModTileEntities;
 import com.blakebr0.extendedcrafting.lib.ModTooltips;
 import com.blakebr0.extendedcrafting.tileentity.AutoTableTileEntity;
 import net.minecraft.core.BlockPos;
@@ -19,6 +20,8 @@ import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityTicker;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Material;
 import net.minecraft.world.phys.BlockHitResult;
@@ -90,5 +93,10 @@ public class EliteAutoTableBlock extends BaseTileEntityBlock implements IEnablea
     @Override
     public boolean isEnabled() {
         return ModConfigs.ENABLE_TABLES.get() && ModConfigs.ENABLE_AUTO_TABLES.get();
+    }
+
+    @Override
+    protected <T extends BlockEntity> BlockEntityTicker<T> getServerTicker(Level level, BlockState state, BlockEntityType<T> type) {
+        return createTicker(type, ModTileEntities.ELITE_AUTO_TABLE.get(), AutoTableTileEntity::tick);
     }
 }

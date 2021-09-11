@@ -29,6 +29,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.CraftingRecipe;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.Capability;
@@ -79,107 +80,103 @@ public abstract class AutoTableTileEntity extends BaseInventoryTileEntity implem
     }
 
     @Override
-    public void tick() {
-        var mark = false;
-        var level = this.getLevel();
-        var energy = this.getEnergy();
-
-        if (level != null) {
-            if (this.running) {
-                this.updateRecipeInventory();
-
-                var recipeInventory = this.getRecipeInventory().toIInventory();
-
-                if (this.recipe == null || !this.recipe.matches(recipeInventory, level)) {
-                    var recipe = level.getRecipeManager().getRecipeFor(RecipeTypes.TABLE, recipeInventory, level).orElse(null);
-
-                    this.recipe = recipe != null ? new WrappedRecipe(recipe) : null;
-
-                    if (this.recipe == null && ModConfigs.TABLE_USE_VANILLA_RECIPES.get() && this instanceof Basic) {
-                        var craftingInventory = new ExtendedCraftingInventory(EMPTY_CONTAINER, this.getRecipeInventory(), 3);
-                        var vanilla = level.getRecipeManager().getRecipeFor(RecipeType.CRAFTING, craftingInventory, level).orElse(null);
-
-                        this.recipe = vanilla != null ? new WrappedRecipe(vanilla, craftingInventory) : null;
-                    }
-                }
-
-                if (!level.isClientSide()) {
-                    if (this.recipe != null) {
-                        var inventory = this.getInventory();
-                        var result = this.recipe.getCraftingResult(recipeInventory);
-                        int outputSlot = inventory.getSlots() - 1;
-                        var output = inventory.getStackInSlot(outputSlot);
-                        int powerRate = ModConfigs.AUTO_TABLE_POWER_RATE.get();
-
-                        if (StackHelper.canCombineStacks(result, output) && energy.getEnergyStored() >= powerRate) {
-                            this.progress++;
-                            energy.extractEnergy(powerRate, false);
-
-                            if (this.progress >= this.getProgressRequired()) {
-                                for (int i = 0; i < recipeInventory.getContainerSize(); i++) {
-                                    inventory.extractItemSuper(i, 1, false);
-                                }
-
-                                this.updateResult(result, outputSlot);
-                                this.progress = 0;
-                            }
-
-                            mark = true;
-                        }
-                    } else {
-                        if (this.progress > 0) {
-                            this.progress = 0;
-                            mark = true;
-                        }
-                    }
-                }
-            } else {
-                if (this.progress > 0) {
-                    this.progress = 0;
-                    mark = true;
-                }
-            }
-
-            int insertPowerRate = ModConfigs.AUTO_TABLE_INSERT_POWER_RATE.get();
-            if (!level.isClientSide() && this.getEnergy().getEnergyStored() >= insertPowerRate) {
-                int selected = this.getRecipeStorage().getSelected();
-                if (selected != -1) {
-                    this.getAboveInventory().ifPresent(handler -> {
-                        for (int i = 0; i < handler.getSlots(); i++) {
-                            var stack = handler.getStackInSlot(i);
-
-                            if (!stack.isEmpty() && !handler.extractItem(i, 1, true).isEmpty()) {
-                                var inserted = this.tryInsertItemIntoGrid(stack);
-
-                                if (inserted) {
-                                    handler.extractItem(i, 1, false);
-                                    break;
-                                }
-                            }
-                        }
-                    });
-                }
-            }
-        }
-
-        if (this.oldEnergy != energy.getEnergyStored()) {
-            this.oldEnergy = energy.getEnergyStored();
-            if (!mark)
-                mark = true;
-        }
-
-        if (mark) {
-            this.markDirtyAndDispatch();
-        }
-    }
-
-    @Override
     public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
         if (!this.isRemoved() && cap == CapabilityEnergy.ENERGY) {
             return CapabilityEnergy.ENERGY.orEmpty(cap, LazyOptional.of(this::getEnergy));
         }
 
         return super.getCapability(cap, side);
+    }
+
+    public static void tick(Level level, BlockPos pos, BlockState state, AutoTableTileEntity tile) {
+        var mark = false;
+        var energy = tile.getEnergy();
+
+        if (tile.running) {
+            tile.updateRecipeInventory();
+
+            var recipeInventory = tile.getRecipeInventory().toIInventory();
+
+            if (tile.recipe == null || !tile.recipe.matches(recipeInventory, level)) {
+                var recipe = level.getRecipeManager().getRecipeFor(RecipeTypes.TABLE, recipeInventory, level).orElse(null);
+
+                tile.recipe = recipe != null ? new WrappedRecipe(recipe) : null;
+
+                if (tile.recipe == null && ModConfigs.TABLE_USE_VANILLA_RECIPES.get() && tile instanceof Basic) {
+                    var craftingInventory = new ExtendedCraftingInventory(EMPTY_CONTAINER, tile.getRecipeInventory(), 3);
+                    var vanilla = level.getRecipeManager().getRecipeFor(RecipeType.CRAFTING, craftingInventory, level).orElse(null);
+
+                    tile.recipe = vanilla != null ? new WrappedRecipe(vanilla, craftingInventory) : null;
+                }
+            }
+
+            if (!level.isClientSide()) {
+                if (tile.recipe != null) {
+                    var inventory = tile.getInventory();
+                    var result = tile.recipe.getCraftingResult(recipeInventory);
+                    int outputSlot = inventory.getSlots() - 1;
+                    var output = inventory.getStackInSlot(outputSlot);
+                    int powerRate = ModConfigs.AUTO_TABLE_POWER_RATE.get();
+
+                    if (StackHelper.canCombineStacks(result, output) && energy.getEnergyStored() >= powerRate) {
+                        tile.progress++;
+                        energy.extractEnergy(powerRate, false);
+
+                        if (tile.progress >= tile.getProgressRequired()) {
+                            for (int i = 0; i < recipeInventory.getContainerSize(); i++) {
+                                inventory.extractItemSuper(i, 1, false);
+                            }
+
+                            tile.updateResult(result, outputSlot);
+                            tile.progress = 0;
+                        }
+
+                        mark = true;
+                    }
+                } else {
+                    if (tile.progress > 0) {
+                        tile.progress = 0;
+                        mark = true;
+                    }
+                }
+            }
+        } else {
+            if (tile.progress > 0) {
+                tile.progress = 0;
+                mark = true;
+            }
+        }
+
+        int insertPowerRate = ModConfigs.AUTO_TABLE_INSERT_POWER_RATE.get();
+        if (!level.isClientSide() && tile.getEnergy().getEnergyStored() >= insertPowerRate) {
+            int selected = tile.getRecipeStorage().getSelected();
+            if (selected != -1) {
+                tile.getAboveInventory().ifPresent(handler -> {
+                    for (int i = 0; i < handler.getSlots(); i++) {
+                        var stack = handler.getStackInSlot(i);
+
+                        if (!stack.isEmpty() && !handler.extractItem(i, 1, true).isEmpty()) {
+                            var inserted = tile.tryInsertItemIntoGrid(stack);
+
+                            if (inserted) {
+                                handler.extractItem(i, 1, false);
+                                break;
+                            }
+                        }
+                    }
+                });
+            }
+        }
+
+        if (tile.oldEnergy != energy.getEnergyStored()) {
+            tile.oldEnergy = energy.getEnergyStored();
+            if (!mark)
+                mark = true;
+        }
+
+        if (mark) {
+            tile.markDirtyAndDispatch();
+        }
     }
 
     public int getProgress() {
@@ -334,7 +331,7 @@ public abstract class AutoTableTileEntity extends BaseInventoryTileEntity implem
 		return false;
 	}
 
-	public static class WrappedRecipe {
+    public static class WrappedRecipe {
         private final Function<Container, ItemStack> resultFunc;
         private final BiFunction<Container, Level, Boolean> matchesFunc;
 

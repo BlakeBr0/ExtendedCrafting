@@ -10,12 +10,15 @@ import net.minecraft.core.NonNullList;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
+import net.minecraft.world.Container;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.item.crafting.ShapedRecipe;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.items.IItemHandler;
+import net.minecraftforge.items.wrapper.InvWrapper;
 import net.minecraftforge.registries.ForgeRegistryEntry;
 
 public class CompressorRecipe implements ISpecialRecipe, ICompressorRecipe {
@@ -77,11 +80,21 @@ public class CompressorRecipe implements ISpecialRecipe, ICompressorRecipe {
 	}
 
 	@Override
-	public boolean matches(IItemHandler inventory, int startIndex, int endIndex) {
+	public ItemStack assemble(Container inv) {
+		return this.output.copy();
+	}
+
+	@Override
+	public boolean matches(IItemHandler inventory) {
 		var input = inventory.getStackInSlot(0);
 		var catalyst = inventory.getStackInSlot(1);
 
 		return this.inputs.get(0).test(input) && this.catalyst.test(catalyst);
+	}
+
+	@Override
+	public boolean matches(Container inv, Level level) {
+		return this.matches(new InvWrapper(inv));
 	}
 
 	@Override

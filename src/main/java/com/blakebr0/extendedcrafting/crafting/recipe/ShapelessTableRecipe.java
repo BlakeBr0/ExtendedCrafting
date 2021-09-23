@@ -6,6 +6,7 @@ import com.blakebr0.extendedcrafting.api.crafting.RecipeTypes;
 import com.blakebr0.extendedcrafting.init.ModRecipeSerializers;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipeSerializer;
 import net.minecraft.item.crafting.IRecipeType;
@@ -21,12 +22,15 @@ import net.minecraftforge.registries.ForgeRegistryEntry;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
 
 public class ShapelessTableRecipe implements ISpecialRecipe, ITableRecipe {
 	private final ResourceLocation recipeId;
 	private final NonNullList<Ingredient> inputs;
 	private final ItemStack output;
 	private final int tier;
+	private Map<Integer, Function<ItemStack, ItemStack>> transformers;
 
 	public ShapelessTableRecipe(ResourceLocation recipeId, NonNullList<Ingredient> inputs, ItemStack output) {
 		this(recipeId, inputs, output, 0);
@@ -96,6 +100,21 @@ public class ShapelessTableRecipe implements ISpecialRecipe, ITableRecipe {
 	}
 
 	@Override
+	public NonNullList<ItemStack> getRemainingItems(IInventory inv) {
+		if (this.transformers != null) {
+			NonNullList<ItemStack> remaining = NonNullList.withSize(inv.getContainerSize(), ItemStack.EMPTY);
+
+			this.transformers.forEach((i, stack) -> {
+				remaining.set(i, stack.apply(inv.getItem(i)));
+			});
+
+			return remaining;
+		}
+
+		return ISpecialRecipe.super.getRemainingItems(inv);
+	}
+
+	@Override
 	public int getTier() {
 		if (this.tier > 0) return this.tier;
 		return getTierFromSize(this.inputs.size());
@@ -113,7 +132,11 @@ public class ShapelessTableRecipe implements ISpecialRecipe, ITableRecipe {
 				: 4;
 	}
 
-	public static class Serializer extends ForgeRegistryEntry<IRecipeSerializer<?>> implements IRecipeSerializer<ShapelessTableRecipe> {
+	public void setTransformers(Map<Integer, Function<ItemStack, ItemStack>> transformers) {
+		this.transformers = transformers;
+	}
+
+    public static class Serializer extends ForgeRegistryEntry<IRecipeSerializer<?>> implements IRecipeSerializer<ShapelessTableRecipe> {
 		@Override
 		public ShapelessTableRecipe fromJson(ResourceLocation recipeId, JsonObject json) {
 			NonNullList<Ingredient> inputs = NonNullList.create();

@@ -31,6 +31,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.IntArray;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.World;
@@ -117,8 +118,14 @@ public abstract class AutoTableTileEntity extends BaseInventoryTileEntity implem
                             energy.extractEnergy(powerRate, false);
 
                             if (this.progress >= this.getProgressRequired()) {
+                                NonNullList<ItemStack> remaining = this.recipe.getRemainingItems(recipeInventory);
+
                                 for (int i = 0; i < recipeInventory.getContainerSize(); i++) {
-                                    inventory.extractItemSuper(i, 1, false);
+                                    if (!remaining.get(i).isEmpty()) {
+                                        inventory.setStackInSlot(i, remaining.get(i));
+                                    } else {
+                                        inventory.extractItemSuper(i, 1, false);
+                                    }
                                 }
 
                                 this.updateResult(result, outputSlot);
@@ -332,15 +339,18 @@ public abstract class AutoTableTileEntity extends BaseInventoryTileEntity implem
 	public static class WrappedRecipe {
         private final Function<IInventory, ItemStack> resultFunc;
         private final BiFunction<IInventory, World, Boolean> matchesFunc;
+        private final Function<IInventory, NonNullList<ItemStack>> remainingItemsFunc;
 
         public WrappedRecipe(ICraftingRecipe recipe, CraftingInventory craftingInventory) {
             this.resultFunc = inventory -> recipe.assemble(craftingInventory);
             this.matchesFunc = (inventory, world) -> recipe.matches(craftingInventory, world);
+            this.remainingItemsFunc = inventory -> recipe.getRemainingItems(craftingInventory);
         }
 
         public WrappedRecipe(ITableRecipe recipe) {
             this.resultFunc = recipe::assemble;
             this.matchesFunc = recipe::matches;
+            this.remainingItemsFunc = recipe::getRemainingItems;
         }
 
         public ItemStack getCraftingResult(IInventory inventory) {
@@ -349,6 +359,10 @@ public abstract class AutoTableTileEntity extends BaseInventoryTileEntity implem
 
         public boolean matches(IInventory inventory, World world) {
             return this.matchesFunc.apply(inventory, world);
+        }
+
+        public NonNullList<ItemStack> getRemainingItems(IInventory inventory) {
+            return this.remainingItemsFunc.apply(inventory);
         }
     }
 

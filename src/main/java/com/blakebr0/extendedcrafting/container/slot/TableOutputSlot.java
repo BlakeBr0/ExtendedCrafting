@@ -51,16 +51,10 @@ public class TableOutputSlot extends Slot {
 
             if (!slotStack.isEmpty()) {
                 this.matrix.removeItem(i, 1);
-                slotStack = this.matrix.getItem(i);
             }
 
             if (!remainingStack.isEmpty()) {
-                if (slotStack.isEmpty()) {
-                    this.matrix.setItem(i, remainingStack);
-                } else if (ItemStack.isSame(slotStack, remainingStack) && ItemStack.tagMatches(slotStack, remainingStack)) {
-                    remainingStack.grow(slotStack.getCount());
-                    this.matrix.setItem(i, remainingStack);
-                }
+                this.matrix.setItem(i, remainingStack);
             }
         }
 

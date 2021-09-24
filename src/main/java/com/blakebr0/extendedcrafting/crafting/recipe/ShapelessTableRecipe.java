@@ -23,12 +23,15 @@ import net.minecraftforge.registries.ForgeRegistryEntry;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
 
 public class ShapelessTableRecipe implements ISpecialRecipe, ITableRecipe {
 	private final ResourceLocation recipeId;
 	private final NonNullList<Ingredient> inputs;
 	private final ItemStack output;
 	private final int tier;
+	private Map<Integer, Function<ItemStack, ItemStack>> transformers;
 
 	public ShapelessTableRecipe(ResourceLocation recipeId, NonNullList<Ingredient> inputs, ItemStack output) {
 		this(recipeId, inputs, output, 0);
@@ -108,6 +111,21 @@ public class ShapelessTableRecipe implements ISpecialRecipe, ITableRecipe {
 	}
 
 	@Override
+	public NonNullList<ItemStack> getRemainingItems(Container inv) {
+		if (this.transformers != null) {
+			NonNullList<ItemStack> remaining = NonNullList.withSize(inv.getContainerSize(), ItemStack.EMPTY);
+
+			this.transformers.forEach((i, stack) -> {
+				remaining.set(i, stack.apply(inv.getItem(i)));
+			});
+
+			return remaining;
+		}
+
+		return ISpecialRecipe.super.getRemainingItems(inv);
+	}
+
+	@Override
 	public int getTier() {
 		if (this.tier > 0) return this.tier;
 		return getTierFromSize(this.inputs.size());
@@ -123,6 +141,10 @@ public class ShapelessTableRecipe implements ISpecialRecipe, ITableRecipe {
 				: size < 26 ? 2
 				: size < 50 ? 3
 				: 4;
+	}
+
+	public void setTransformers(Map<Integer, Function<ItemStack, ItemStack>> transformers) {
+		this.transformers = transformers;
 	}
 
 	public static class Serializer extends ForgeRegistryEntry<RecipeSerializer<?>> implements RecipeSerializer<ShapelessTableRecipe> {

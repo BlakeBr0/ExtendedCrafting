@@ -18,6 +18,8 @@
 //import java.util.Arrays;
 //import java.util.HashMap;
 //import java.util.List;
+//import java.util.Map;
+//import java.util.function.Function;
 //import java.util.stream.Collectors;
 //
 //@ZenCodeType.Name("mods.extendedcrafting.TableCrafting")
@@ -46,25 +48,28 @@
 //				}
 //
 //				NonNullList<Ingredient> ingredients = NonNullList.withSize(height * width, Ingredient.EMPTY);
-////				Map<Integer, Function<ItemStack, ItemStack>> transformers = new HashMap<>();
+//				Map<Integer, Function<ItemStack, ItemStack>> transformers = new HashMap<>();
 //
 //				for (int a = 0; a < height; a++) {
 //					for (int b = 0; b < inputs[a].length; b++) {
-//						Ingredient ing = inputs[a][b].asVanillaIngredient();
+//						IIngredient iing = inputs[a][b];
+//						Ingredient ing = iing.asVanillaIngredient();
 //						int i = a * width + b;
 //						ingredients.set(i, ing);
 //
-////						if (ing != Ingredient.EMPTY && iing.hasNewTransformers()) {
-////							transformers.put(i, stack -> {
-////								IItemStack istack = iing.applyNewTransform(CraftTweakerMC.getIItemStack(stack));
-////								ItemStack transformed = CraftTweakerMC.getItemStack(istack);
-////								return transformed;
-////							});
-////						}
+//						if (ing != Ingredient.EMPTY) {
+//							transformers.put(i, stack -> {
+//								IItemStack istack = iing.getRemainingItem(new MCItemStack(stack));
+//								return istack.getInternal();
+//							});
+//						}
 //					}
 //				}
 //
 //				ShapedTableRecipe recipe = new ShapedTableRecipe(new ResourceLocation("crafttweaker", id), width, height, ingredients, output.getInternal(), clampTier(tier));
+//
+//				recipe.setTransformers(transformers);
+//
 //				RecipeHelper.addRecipe(recipe);
 //			}
 //
@@ -86,24 +91,26 @@
 //			CraftTweakerAPI.logError("Unable to assign a tier to the Table Recipe for stack " + output.getCommandString() + ". Tier cannot be greater than 4 or less than 0.");
 //		}
 //
-////		Map<Integer, Function<ItemStack, ItemStack>> transformers = new HashMap<>();
-//
-////		for (int i = 0; i < inputs.length; i++) {
-////			IIngredient iing = inputs[i];
-////			Ingredient ing = CraftingHelper.getIngredient(toObject(iing));
-////			if (ing != Ingredient.EMPTY && iing.hasNewTransformers()) {
-////				transformers.put(i, stack -> {
-////					IItemStack istack = iing.applyNewTransform(CraftTweakerMC.getIItemStack(stack));
-////					ItemStack transformed = CraftTweakerMC.getItemStack(istack);
-////					return transformed;
-////				});
-////			}
-////		}
-//
 //		CraftTweakerAPI.apply(new IRuntimeAction() {
 //			@Override
 //			public void apply() {
+//				Map<Integer, Function<ItemStack, ItemStack>> transformers = new HashMap<>();
+//
+//				for (int i = 0; i < inputs.length; i++) {
+//					IIngredient iing = inputs[i];
+//					Ingredient ing = iing.asVanillaIngredient();
+//					if (ing != Ingredient.EMPTY) {
+//						transformers.put(i, stack -> {
+//							IItemStack istack = iing.getRemainingItem(new MCItemStack(stack));
+//							return istack.getInternal();
+//						});
+//					}
+//				}
+//
 //				ShapelessTableRecipe recipe = new ShapelessTableRecipe(new ResourceLocation("crafttweaker", id), toIngredientsList(inputs), output.getInternal(), clampTier(tier));
+//
+//				recipe.setTransformers(transformers);
+//
 //				RecipeHelper.addRecipe(recipe);
 //			}
 //

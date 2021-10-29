@@ -198,13 +198,13 @@ public class RecipeMakerItem extends BaseItem implements IEnableable {
 			if (!stack.isEmpty() && ModConfigs.RECIPE_MAKER_USE_TAGS.get()) {
 				ResourceLocation tagId = stack.getItem().getTags().stream().findFirst().orElse(null);
 				if (tagId != null) {
-					item = "tag:" + tagId;
+					item = "tag:items:" + tagId;
 				}
 			}
 
 			if (item.isEmpty()) {
 				ResourceLocation id = stack.getItem().getRegistryName();
-				item = id == null ? "item:minecraft:air" : "item:" + id.toString();
+				item = id == null ? "item:minecraft:air" : "item:" + id;
 			}
 
 			string.append("<").append(item).append(">");
@@ -260,10 +260,10 @@ public class RecipeMakerItem extends BaseItem implements IEnableable {
 			ResourceLocation tagId = stack.getItem().getTags().stream().findFirst().orElse(null);
 			String item;
 			if (ModConfigs.RECIPE_MAKER_USE_TAGS.get() && tagId != null) {
-				item = "tag:" + tagId;
+				item = "tag:items:" + tagId;
 			} else {
 				ResourceLocation id = stack.getItem().getRegistryName();
-				item = id == null ? "item:minecraft:air" : "item:" + id.toString();
+				item = id == null ? "item:minecraft:air" : "item:" + id;
 			}
 
 			string.append("<").append(item).append(">");
@@ -294,7 +294,7 @@ public class RecipeMakerItem extends BaseItem implements IEnableable {
 		ResourceLocation inputId = tile.getInventory().getStackInSlot(0).getItem().getRegistryName();
 		String input = "item:minecraft:air";
 		if (inputId != null)
-			input = "item:" + inputId.toString();
+			input = "item:" + inputId;
 
 		string.append("<").append(input).append(">, ");
 
@@ -304,10 +304,10 @@ public class RecipeMakerItem extends BaseItem implements IEnableable {
 			ResourceLocation tagId = stack.getItem().getTags().stream().findFirst().orElse(null);
 			String item;
 			if (ModConfigs.RECIPE_MAKER_USE_TAGS.get() && tagId != null) {
-				item = "tag:" + tagId;
+				item = "tag:items:" + tagId;
 			} else {
 				ResourceLocation id = stack.getItem().getRegistryName();
-				item = id == null ? "item:minecraft:air" : "item:" + id.toString();
+				item = id == null ? "item:minecraft:air" : "item:" + id;
 			}
 
 			if (ModConfigs.RECIPE_MAKER_USE_NBT.get() && !stack.isEmpty() && stack.hasTag() && !item.startsWith("tag") && ModList.get().isLoaded("crafttweaker")) {

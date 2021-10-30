@@ -56,6 +56,7 @@ public abstract class AutoTableTileEntity extends BaseInventoryTileEntity implem
     private int progress;
     private boolean running = true;
     private int oldEnergy;
+    private boolean isGridChanged = true;
 
     public AutoTableTileEntity(TileEntityType<?> type) {
         super(type);
@@ -92,7 +93,7 @@ public abstract class AutoTableTileEntity extends BaseInventoryTileEntity implem
                 this.updateRecipeInventory();
                 IInventory recipeInventory = this.getRecipeInventory().toIInventory();
 
-                if (this.recipe == null || !this.recipe.matches(recipeInventory, world)) {
+                if (this.isGridChanged && (this.recipe == null || !this.recipe.matches(recipeInventory, world))) {
                     ITableRecipe recipe = world.getRecipeManager().getRecipeFor(RecipeTypes.TABLE, recipeInventory, world).orElse(null);
 
                     this.recipe = recipe != null ? new WrappedRecipe(recipe) : null;
@@ -103,6 +104,8 @@ public abstract class AutoTableTileEntity extends BaseInventoryTileEntity implem
 
                         this.recipe = vanilla != null ? new WrappedRecipe(vanilla, craftingInventory) : null;
                     }
+
+                    this.isGridChanged = false;
                 }
 
                 if (!world.isClientSide()) {
@@ -130,6 +133,7 @@ public abstract class AutoTableTileEntity extends BaseInventoryTileEntity implem
 
                                 this.updateResult(result, outputSlot);
                                 this.progress = 0;
+                                this.isGridChanged = true;
                             }
 
                             mark = true;
@@ -257,6 +261,11 @@ public abstract class AutoTableTileEntity extends BaseInventoryTileEntity implem
         return false;
     }
 
+    protected void onContentsChanged() {
+        this.isGridChanged = true;
+        this.markDirtyAndDispatch();
+    }
+
     private void updateRecipeInventory() {
         BaseItemStackHandler inventory = this.getInventory();
         this.getRecipeInventory().setSize(inventory.getSlots() - 1);
@@ -305,6 +314,7 @@ public abstract class AutoTableTileEntity extends BaseInventoryTileEntity implem
         ItemStack stackToPut = ItemStack.EMPTY;
         BaseItemStackHandler recipe = this.getRecipeStorage().getSelectedRecipe();
         int slotToPut = -1;
+        boolean isGridChanged = false;
 
         for (int i = 0; i < inventory.getSlots(); i++) {
             ItemStack slot = inventory.getStackInSlot(i);
@@ -314,6 +324,7 @@ public abstract class AutoTableTileEntity extends BaseInventoryTileEntity implem
                 if (slot.isEmpty() || slot.getCount() < slot.getMaxStackSize()) {
                     if (slot.isEmpty()) {
                         slotToPut = i;
+                        isGridChanged = true;
                         break;
                     } else if (stackToPut.isEmpty() || slot.getCount() < stackToPut.getCount()) {
                         slotToPut = i;
@@ -322,6 +333,8 @@ public abstract class AutoTableTileEntity extends BaseInventoryTileEntity implem
                 }
             }
         }
+
+        this.isGridChanged = isGridChanged;
 
 		if (slotToPut > -1) {
 		    int insertPowerRate = ModConfigs.AUTO_TABLE_INSERT_POWER_RATE.get();
@@ -374,7 +387,7 @@ public abstract class AutoTableTileEntity extends BaseInventoryTileEntity implem
 
         public Basic() {
             super(ModTileEntities.BASIC_AUTO_TABLE.get());
-            this.inventory = new BaseItemStackHandler(10, this::markDirtyAndDispatch);
+            this.inventory = new BaseItemStackHandler(10, this::onContentsChanged);
             this.recipeInventory = new BaseItemStackHandler(9);
             this.recipeStorage = new TableRecipeStorage(10);
             this.energy = new BaseEnergyStorage(ModConfigs.AUTO_TABLE_POWER_CAPACITY.get());
@@ -427,7 +440,7 @@ public abstract class AutoTableTileEntity extends BaseInventoryTileEntity implem
 
         public Advanced() {
             super(ModTileEntities.ADVANCED_AUTO_TABLE.get());
-            this.inventory = new BaseItemStackHandler(26, this::markDirtyAndDispatch);
+            this.inventory = new BaseItemStackHandler(26, this::onContentsChanged);
             this.recipeInventory = new BaseItemStackHandler(25);
             this.recipeStorage = new TableRecipeStorage(26);
             this.energy = new BaseEnergyStorage(ModConfigs.AUTO_TABLE_POWER_CAPACITY.get() * 2);
@@ -480,7 +493,7 @@ public abstract class AutoTableTileEntity extends BaseInventoryTileEntity implem
 
         public Elite() {
             super(ModTileEntities.ELITE_AUTO_TABLE.get());
-            this.inventory = new BaseItemStackHandler(50, this::markDirtyAndDispatch);
+            this.inventory = new BaseItemStackHandler(50, this::onContentsChanged);
             this.recipeInventory = new BaseItemStackHandler(49);
             this.recipeStorage = new TableRecipeStorage(50);
             this.energy = new BaseEnergyStorage(ModConfigs.AUTO_TABLE_POWER_CAPACITY.get() * 4);
@@ -533,7 +546,7 @@ public abstract class AutoTableTileEntity extends BaseInventoryTileEntity implem
 
         public Ultimate() {
             super(ModTileEntities.ULTIMATE_AUTO_TABLE.get());
-            this.inventory = new BaseItemStackHandler(82, this::markDirtyAndDispatch);
+            this.inventory = new BaseItemStackHandler(82, this::onContentsChanged);
             this.recipeInventory = new BaseItemStackHandler(81);
             this.recipeStorage = new TableRecipeStorage(82);
             this.energy = new BaseEnergyStorage(ModConfigs.AUTO_TABLE_POWER_CAPACITY.get() * 8);

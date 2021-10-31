@@ -37,11 +37,11 @@ public class UltimateAutoTableScreen extends BaseContainerScreen<UltimateAutoTab
 		int y = this.getGuiTop();
 		var pos = this.getMenu().getPos();
 
-		this.addWidget(new ToggleTableRunningButton(x + 226, y + 114, pos, this::isRunning));
+		this.addRenderableWidget(new ToggleTableRunningButton(x + 226, y + 114, pos, this::isRunning));
 
-		this.recipeSelectButtons[0] = this.addWidget(new RecipeSelectButton(x + 210, y + 7, pos, 0, this::isRecipeSelected));
-		this.recipeSelectButtons[1] = this.addWidget(new RecipeSelectButton(x + 223, y + 7, pos, 1, this::isRecipeSelected));
-		this.recipeSelectButtons[2] = this.addWidget(new RecipeSelectButton(x + 236, y + 7, pos, 2, this::isRecipeSelected));
+		this.recipeSelectButtons[0] = this.addRenderableWidget(new RecipeSelectButton(x + 210, y + 7, pos, 0, this::isRecipeSelected));
+		this.recipeSelectButtons[1] = this.addRenderableWidget(new RecipeSelectButton(x + 223, y + 7, pos, 1, this::isRecipeSelected));
+		this.recipeSelectButtons[2] = this.addRenderableWidget(new RecipeSelectButton(x + 236, y + 7, pos, 2, this::isRecipeSelected));
 
 		this.tile = this.getTileEntity();
 	}
@@ -100,7 +100,7 @@ public class UltimateAutoTableScreen extends BaseContainerScreen<UltimateAutoTab
 
 	@Override
 	protected void renderBg(PoseStack stack, float partialTicks, int mouseX, int mouseY) {
-//		super.renderBg(stack, partialTicks, mouseX, mouseY);
+		super.renderDefaultBg(stack, partialTicks, mouseX, mouseY);
 
 		int x = this.getGuiLeft();
 		int y = this.getGuiTop();

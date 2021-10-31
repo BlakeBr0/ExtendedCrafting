@@ -34,22 +34,22 @@ public class CompressorScreen extends BaseContainerScreen<CompressorContainer> {
 		int y = this.getGuiTop();
 		var pos = this.getMenu().getPos();
 
-		this.addWidget(new EjectModeSwitchButton(x + 69, y + 30, pos));
-		this.addWidget(new InputLimitSwitchButton(x + 91, y + 74, pos, this::isLimitingInput));
+		this.addRenderableWidget(new EjectModeSwitchButton(x + 69, y + 30, pos));
+		this.addRenderableWidget(new InputLimitSwitchButton(x + 91, y + 74, pos, this::isLimitingInput));
 
 		this.tile = this.getTileEntity();
 	}
 
 	@Override
-	public void render(PoseStack stack, int mouseX, int mouseY, float partialTicks) {
+	public void render(PoseStack matrix, int mouseX, int mouseY, float partialTicks) {
 		int x = this.getGuiLeft();
 		int y = this.getGuiTop();
 
-		super.render(stack, mouseX, mouseY, partialTicks);
+		super.render(matrix, mouseX, mouseY, partialTicks);
 
 		if (mouseX > x + 7 && mouseX < x + 20 && mouseY > y + 17 && mouseY < y + 94) {
 			var text = new TextComponent(number(this.getEnergyStored()) + " / " + number(this.getMaxEnergyStored()) + " FE");
-			this.renderTooltip(stack, text, mouseX, mouseY);
+			this.renderTooltip(matrix, text, mouseX, mouseY);
 		}
 
 		if (mouseX > x + 60 && mouseX < x + 85 && mouseY > y + 74 && mouseY < y + 83) {
@@ -67,22 +67,22 @@ public class CompressorScreen extends BaseContainerScreen<CompressorContainer> {
 				tooltip.add(text);
 			}
 
-			this.renderComponentTooltip(stack, tooltip, mouseX, mouseY);
+			this.renderComponentTooltip(matrix, tooltip, mouseX, mouseY);
 		}
 
 		if (mouseX > x + 68 && mouseX < x + 79 && mouseY > y + 28 && mouseY < y + 39) {
 			if (this.isEjecting()) {
-				this.renderTooltip(stack, ModTooltips.EJECTING.color(ChatFormatting.WHITE).build(), mouseX, mouseY);
+				this.renderTooltip(matrix, ModTooltips.EJECTING.color(ChatFormatting.WHITE).build(), mouseX, mouseY);
 			} else {
-				this.renderTooltip(stack, ModTooltips.EJECT.color(ChatFormatting.WHITE).build(), mouseX, mouseY);
+				this.renderTooltip(matrix, ModTooltips.EJECT.color(ChatFormatting.WHITE).build(), mouseX, mouseY);
 			}
 		}
 
 		if (mouseX > x + 90 && mouseX < x + 98 && mouseY > y + 73 && mouseY < y + 84) {
 			if (this.isLimitingInput()) {
-				this.renderTooltip(stack, ModTooltips.LIMITED_INPUT.color(ChatFormatting.WHITE).build(), mouseX, mouseY);
+				this.renderTooltip(matrix, ModTooltips.LIMITED_INPUT.color(ChatFormatting.WHITE).build(), mouseX, mouseY);
 			} else {
-				this.renderTooltip(stack, ModTooltips.UNLIMITED_INPUT.color(ChatFormatting.WHITE).build(), mouseX, mouseY);
+				this.renderTooltip(matrix, ModTooltips.UNLIMITED_INPUT.color(ChatFormatting.WHITE).build(), mouseX, mouseY);
 			}
 		}
 	}
@@ -97,7 +97,7 @@ public class CompressorScreen extends BaseContainerScreen<CompressorContainer> {
 
 	@Override
 	protected void renderBg(PoseStack stack, float partialTicks, int mouseX, int mouseY) {
-//		super.renderBg(stack, partialTicks, mouseX, mouseY);
+		super.renderDefaultBg(stack, partialTicks, mouseX, mouseY);
 
 		int x = this.getGuiLeft();
 		int y = this.getGuiTop();

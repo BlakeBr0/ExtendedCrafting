@@ -4,10 +4,8 @@ import com.blakebr0.cucumber.client.screen.BaseContainerScreen;
 import com.blakebr0.extendedcrafting.ExtendedCrafting;
 import com.blakebr0.extendedcrafting.container.CraftingCoreContainer;
 import com.blakebr0.extendedcrafting.tileentity.CraftingCoreTileEntity;
-import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-import net.minecraft.client.gui.Font;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.resources.ResourceLocation;
@@ -30,11 +28,11 @@ public class CraftingCoreScreen extends BaseContainerScreen<CraftingCoreContaine
 	}
 
 	@Override
-	public void render(PoseStack stack, int mouseX, int mouseY, float partialTicks) {
+	public void render(PoseStack matrix, int mouseX, int mouseY, float partialTicks) {
 		int x = this.getGuiLeft();
 		int y = this.getGuiTop();
 
-		super.render(stack, mouseX, mouseY, partialTicks);
+		super.render(matrix, mouseX, mouseY, partialTicks);
 
 		if (this.hasRecipe()) {
 			var output = this.getRecipeOutput();
@@ -42,13 +40,13 @@ public class CraftingCoreScreen extends BaseContainerScreen<CraftingCoreContaine
 			this.drawItemStack(output, x + 148, y + 47);
 
 			if (isHoveringSlot(x + 148, y + 47, mouseX, mouseY)) {
-				this.renderTooltip(stack, output, mouseX, mouseY);
+				this.renderTooltip(matrix, output, mouseX, mouseY);
 			}
 		}
 
 		if (mouseX > x + 7 && mouseX < x + 20 && mouseY > y + 17 && mouseY < y + 94) {
 			var text = new TextComponent(number(this.getEnergyStored()) + " / " + number(this.getMaxEnergyStored()) + " FE");
-			this.renderTooltip(stack, text, mouseX, mouseY);
+			this.renderTooltip(matrix, text, mouseX, mouseY);
 		}
 	}
 
@@ -79,7 +77,7 @@ public class CraftingCoreScreen extends BaseContainerScreen<CraftingCoreContaine
 
 	@Override
 	protected void renderBg(PoseStack stack, float partialTicks, int mouseX, int mouseY) {
-//		super.renderBg(stack, partialTicks, mouseX, mouseY);
+		super.renderDefaultBg(stack, partialTicks, mouseX, mouseY);
 
 		int x = this.getGuiLeft();
 		int y = this.getGuiTop();

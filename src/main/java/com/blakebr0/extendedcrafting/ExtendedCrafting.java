@@ -23,12 +23,14 @@ import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 @Mod(ExtendedCrafting.MOD_ID)
 public final class ExtendedCrafting {
 	public static final String MOD_ID = "extendedcrafting";
 	public static final String NAME = "Extended Crafting";
-
+	public static final Logger LOGGER = LogManager.getLogger(NAME);
 	public static final CreativeModeTab CREATIVE_TAB = new ECCreativeTab();
 
 	public ExtendedCrafting() {

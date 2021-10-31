@@ -34,7 +34,7 @@ public class EnderCrafterScreen extends BaseContainerScreen<EnderCrafterContaine
 
 	@Override
 	protected void renderBg(PoseStack stack, float partialTicks, int mouseX, int mouseY) {
-//		super.renderBg(stack, partialTicks, mouseX, mouseY);
+		super.renderDefaultBg(stack, partialTicks, mouseX, mouseY);
 
 		int x = this.getGuiLeft();
 		int y = this.getGuiTop();

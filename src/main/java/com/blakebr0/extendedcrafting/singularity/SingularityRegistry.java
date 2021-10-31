@@ -16,8 +16,6 @@ import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraftforge.fml.loading.FMLPaths;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.filefilter.FileFilterUtils;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import java.io.File;
 import java.io.FileFilter;
@@ -31,7 +29,6 @@ import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 public final class SingularityRegistry {
-    private static final Logger LOGGER = LogManager.getLogger(ExtendedCrafting.NAME);
     private static final SingularityRegistry INSTANCE = new SingularityRegistry();
     private static final Gson GSON = (new GsonBuilder()).setPrettyPrinting().create();
 
@@ -53,7 +50,7 @@ public final class SingularityRegistry {
                     GSON.toJson(json, writer);
                     writer.close();
                 } catch (Exception e) {
-                    LOGGER.error("An error occurred while generating default singularities", e);
+                    ExtendedCrafting.LOGGER.error("An error occurred while generating default singularities", e);
                 } finally {
                     IOUtils.closeQuietly(writer);
                 }
@@ -66,7 +63,7 @@ public final class SingularityRegistry {
 
         stopwatch.stop();
 
-        LOGGER.info("Loaded {} singularity type(s) in {} ms", this.singularities.size(), stopwatch.elapsed(TimeUnit.MILLISECONDS));
+        ExtendedCrafting.LOGGER.info("Loaded {} singularity type(s) in {} ms", this.singularities.size(), stopwatch.elapsed(TimeUnit.MILLISECONDS));
     }
 
     public List<Singularity> getSingularities() {
@@ -107,7 +104,7 @@ public final class SingularityRegistry {
         this.singularities.clear();
         this.singularities.putAll(singularities);
 
-        LOGGER.info("Loaded {} singularities from the server", singularities.size());
+        ExtendedCrafting.LOGGER.info("Loaded {} singularities from the server", singularities.size());
     }
 
     private void loadFiles(File dir) {
@@ -131,7 +128,7 @@ public final class SingularityRegistry {
 
                 reader.close();
             } catch (Exception e) {
-                LOGGER.error("An error occurred while loading singularities", e);
+                ExtendedCrafting.LOGGER.error("An error occurred while loading singularities", e);
             } finally {
                 IOUtils.closeQuietly(reader);
             }

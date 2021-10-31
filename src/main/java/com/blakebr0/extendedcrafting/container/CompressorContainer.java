@@ -5,7 +5,6 @@ import com.blakebr0.cucumber.inventory.slot.BaseItemStackHandlerSlot;
 import com.blakebr0.cucumber.inventory.slot.OutputSlot;
 import com.blakebr0.extendedcrafting.container.slot.CatalystSlot;
 import com.blakebr0.extendedcrafting.init.ModContainerTypes;
-import com.blakebr0.extendedcrafting.tileentity.CompressorTileEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
@@ -25,7 +24,7 @@ public class CompressorContainer extends AbstractContainerMenu {
 	private final BlockPos pos;
 
 	private CompressorContainer(MenuType<?> type, int id, Inventory playerInventory, FriendlyByteBuf buffer) {
-		this(type, id, playerInventory, p -> false, new BaseItemStackHandler(1), new SimpleContainerData(10), buffer.readBlockPos());
+		this(type, id, playerInventory, p -> false, new BaseItemStackHandler(3), new SimpleContainerData(10), buffer.readBlockPos());
 	}
 
 	private CompressorContainer(MenuType<?> type, int id, Inventory playerInventory, Function<Player, Boolean> isUsableByPlayer, BaseItemStackHandler inventory, ContainerData data, BlockPos pos) {

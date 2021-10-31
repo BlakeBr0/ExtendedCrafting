@@ -12,19 +12,19 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 
 public class FrameBlock extends BaseBlock {
     private static final VoxelShape FRAME_SHAPE = new VoxelShapeBuilder()
-            .cuboid(14.0, 14.0, 14.0, 2.0, 2.0, 2.0)
-            .cuboid(16.0, 3.0, 3.0, 0.0, 0.0, 0.0)
-            .cuboid(16.0, 16.0, 3.0, 0.0, 13.0, 0.0)
-            .cuboid(16.0, 16.0, 16.0, 0.0, 13.0, 13.0)
-            .cuboid(16.0, 3.0, 16.0, 0.0, 0.0, 13.0)
-            .cuboid(3.0, 13.0, 3.0, 0.0, 3.0, 0.0)
-            .cuboid(3.0, 13.0, 16.0, 0.0, 3.0, 13.0)
-            .cuboid(16.0, 13.0, 16.0, 13.0, 3.0, 13.0)
-            .cuboid(16.0, 13.0, 3.0, 13.0, 3.0, 0.0)
-            .cuboid(3.0, 3.0, 13.0, 0.0, 0.0, 3.0)
-            .cuboid(3.0, 16.0, 13.0, 0.0, 13.0, 3.0)
-            .cuboid(16.0, 16.0, 13.0, 13.0, 13.0, 3.0)
-            .cuboid(16.0, 3.0, 13.0, 13.0, 0.0, 3.0)
+            .cuboid(2, 2, 2, 14, 14, 14)
+            .cuboid(0, 0, 0, 16, 3, 3)
+            .cuboid(0, 13, 0, 16, 16, 3)
+            .cuboid(0, 13, 13, 16, 16, 16)
+            .cuboid(0, 0, 13, 16, 3, 16)
+            .cuboid(0, 3, 0, 3, 13, 3)
+            .cuboid(0, 3, 13, 3, 13, 16)
+            .cuboid(13, 3, 13, 16, 13, 16)
+            .cuboid(13, 3, 0, 16, 13, 3)
+            .cuboid(0, 0, 3, 3, 3, 13)
+            .cuboid(0, 13, 3, 3, 16, 13)
+            .cuboid(13, 13, 3, 16, 16, 13)
+            .cuboid(13, 0, 3, 16, 3, 13)
             .build();
 
     public FrameBlock() {

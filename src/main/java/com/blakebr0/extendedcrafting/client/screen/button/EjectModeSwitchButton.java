@@ -8,7 +8,7 @@ import net.minecraft.core.BlockPos;
 
 public class EjectModeSwitchButton extends IconButton {
     public EjectModeSwitchButton(int x, int y, BlockPos pos) {
-        super(x, y, 11, 9, 184, 23, CompressorScreen.BACKGROUND, button -> {
+        super(x, y, 11, 9, 195, 32, CompressorScreen.BACKGROUND, button -> {
             NetworkHandler.INSTANCE.sendToServer(new EjectModeSwitchMessage(pos));
         });
     }

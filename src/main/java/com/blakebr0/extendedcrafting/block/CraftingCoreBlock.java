@@ -33,12 +33,12 @@ import net.minecraftforge.fmllegacy.network.NetworkHooks;
 
 public class CraftingCoreBlock extends BaseTileEntityBlock implements IEnableable {
 	public static final VoxelShape CRAFTING_CORE_SHAPE = new VoxelShapeBuilder()
-			.cuboid(14.0, 2.0, 14.0, 2.0, 0.0, 2.0)
-			.cuboid(16.0, 5.0, 16.0, 0.0, 2.0, 0.0)
-			.cuboid(15.0, 6.0, 15.0, 1.0, 5.0, 1.0)
-			.cuboid(16.0, 12.0, 16.0, 0.0, 6.0, 0.0)
-			.cuboid(15.0, 13.0, 15.0, 1.0, 12.0, 1.0)
-			.cuboid(16.0, 16.0, 16.0, 0.0, 13.0, 0.0)
+			.cuboid(2, 0, 2, 14, 2, 14)
+			.cuboid(0, 2, 0, 16, 5, 16)
+			.cuboid(1, 5, 1, 15, 6, 15)
+			.cuboid(0, 6, 0, 16, 12, 16)
+			.cuboid(1, 12, 1, 15, 13, 15)
+			.cuboid(0, 13, 0, 16, 16, 16)
 			.build();
 
 	public CraftingCoreBlock() {

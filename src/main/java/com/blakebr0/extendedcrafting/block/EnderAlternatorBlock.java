@@ -14,9 +14,9 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 
 public class EnderAlternatorBlock extends BaseBlock implements IEnableable {
 	private static final VoxelShape ENDER_ALTERNATOR_SHAPE = new VoxelShapeBuilder()
-			.cuboid(16.0, 6.0, 16.0, 0.0, 0.0, 0.0)
-			.cuboid(12.0, 15.0, 12.0, 4.0, 6.0, 4.0)
-			.cuboid(13.0, 16.0, 13.0, 3.0, 15.0, 3.0)
+			.cuboid(0, 0, 0, 16, 6, 16)
+			.cuboid(4, 6, 4, 12, 15, 12)
+			.cuboid(3, 15, 3, 13, 16, 13)
 			.build();
 
 	public EnderAlternatorBlock() {

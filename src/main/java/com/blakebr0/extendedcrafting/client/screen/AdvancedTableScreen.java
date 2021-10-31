@@ -22,4 +22,9 @@ public class AdvancedTableScreen extends BaseContainerScreen<AdvancedTableContai
 		this.font.draw(stack, title, 14.0F, 6.0F, 4210752);
 		this.font.draw(stack, this.playerInventoryTitle, 8.0F, this.imageHeight - 94.0F, 4210752);
 	}
+
+	@Override
+	protected void renderBg(PoseStack matrix, float partialTicks, int mouseX, int mouseY) {
+		this.renderDefaultBg(matrix, partialTicks, mouseX, mouseY);
+	}
 }

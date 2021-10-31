@@ -35,13 +35,13 @@ import java.util.List;
 
 public class AdvancedAutoTableBlock extends BaseTileEntityBlock implements IEnableable {
     public static final VoxelShape ADVANCED_AUTO_TABLE_SHAPE = new VoxelShapeBuilder()
-            .cuboid(14, 2, 14, 2, 0, 2)
-            .cuboid(5, 10, 5, 3, 2, 3)
-            .cuboid(13, 10, 13, 11, 2, 11)
-            .cuboid(13, 10, 5, 11, 2, 3)
-            .cuboid(5, 10, 13, 3, 2, 11)
-            .cuboid(16, 16, 16, 0, 10, 0)
-            .cuboid(12, 10, 12, 4, 2, 4)
+            .cuboid(2, 0, 2, 14, 2, 14)
+            .cuboid(3, 2, 3, 5, 10, 5)
+            .cuboid(11, 2, 11, 13, 10, 13)
+            .cuboid(11, 2, 3, 13, 10, 5)
+            .cuboid(3, 2, 11, 5, 10, 13)
+            .cuboid(0, 10, 0, 16, 16, 16)
+            .cuboid(4, 2, 4, 12, 10, 12)
             .build();
 
     public AdvancedAutoTableBlock() {

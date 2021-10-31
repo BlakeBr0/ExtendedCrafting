@@ -114,9 +114,9 @@ public class ShapedTableRecipe implements ISpecialRecipe, ITableRecipe {
 	}
 
 	@Override
-	public NonNullList<ItemStack> getRemainingItems(IInventory inv) {
+	public NonNullList<ItemStack> getRemainingItems(Container inv) {
 		if (this.transformers != null) {
-			NonNullList<ItemStack> remaining = NonNullList.withSize(inv.getContainerSize(), ItemStack.EMPTY);
+			var remaining = NonNullList.withSize(inv.getContainerSize(), ItemStack.EMPTY);
 
 			this.transformers.forEach((i, stack) -> {
 				remaining.set(i, stack.apply(inv.getItem(i)));
@@ -185,9 +185,9 @@ public class ShapedTableRecipe implements ISpecialRecipe, ITableRecipe {
 	}
 
 	private static String[] patternFromJson(JsonArray jsonArr) {
-		String[] astring = new String[jsonArr.size()];
+		var astring = new String[jsonArr.size()];
 		for (int i = 0; i < astring.length; ++i) {
-			String s = GsonHelper.convertToString(jsonArr.get(i), "pattern[" + i + "]");
+			var s = GsonHelper.convertToString(jsonArr.get(i), "pattern[" + i + "]");
 
 			if (i > 0 && astring[0].length() != s.length()) {
 				throw new JsonSyntaxException("Invalid pattern: each row must be the same width");
@@ -242,7 +242,7 @@ public class ShapedTableRecipe implements ISpecialRecipe, ITableRecipe {
 			buffer.writeVarInt(recipe.width);
 			buffer.writeVarInt(recipe.height);
 
-			for (Ingredient ingredient : recipe.inputs) {
+			for (var ingredient : recipe.inputs) {
 				ingredient.toNetwork(buffer);
 			}
 

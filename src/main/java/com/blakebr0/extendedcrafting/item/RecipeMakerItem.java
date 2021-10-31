@@ -193,7 +193,7 @@ public class RecipeMakerItem extends BaseItem implements IEnableable {
 				var tagId = stack.getItem().getTags().stream().findFirst().orElse(null);
 
 				if (tagId != null) {
-					item = "tag:" + tagId;
+					item = "tag:items:" + tagId;
 				}
 			}
 
@@ -258,7 +258,7 @@ public class RecipeMakerItem extends BaseItem implements IEnableable {
 
 			String item;
 			if (ModConfigs.RECIPE_MAKER_USE_TAGS.get() && tagId != null) {
-				item = "tag:" + tagId;
+				item = "tag:items:" + tagId;
 			} else {
 				var id = stack.getItem().getRegistryName();
 				item = id == null ? "item:minecraft:air" : "item:" + id.toString();
@@ -307,7 +307,7 @@ public class RecipeMakerItem extends BaseItem implements IEnableable {
 
 			String item;
 			if (ModConfigs.RECIPE_MAKER_USE_TAGS.get() && tagId != null) {
-				item = "tag:" + tagId;
+				item = "tag:items:" + tagId;
 			} else {
 				var id = stack.getItem().getRegistryName();
 				item = id == null ? "item:minecraft:air" : "item:" + id.toString();

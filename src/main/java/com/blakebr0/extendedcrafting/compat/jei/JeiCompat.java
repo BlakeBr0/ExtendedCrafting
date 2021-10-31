@@ -33,6 +33,7 @@ import com.blakebr0.extendedcrafting.init.ModBlocks;
 import com.blakebr0.extendedcrafting.init.ModItems;
 import com.blakebr0.extendedcrafting.singularity.Singularity;
 import com.blakebr0.extendedcrafting.singularity.SingularityUtils;
+import com.google.common.collect.Lists;
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
 import mezz.jei.api.constants.VanillaRecipeCategoryUid;
@@ -46,13 +47,16 @@ import mezz.jei.api.registration.ISubtypeRegistration;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.IRecipeType;
 import net.minecraft.item.crafting.RecipeManager;
 import net.minecraft.util.ResourceLocation;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @JeiPlugin
 public final class JeiCompat implements IModPlugin {
@@ -101,10 +105,13 @@ public final class JeiCompat implements IModPlugin {
 			}
 
 			if (ModConfigs.ENABLE_TABLES.get()) {
-				Map<Integer, List<ITableRecipe>> recipes = manager.byType(RecipeTypes.TABLE).values()
+				Map<Integer, List<ITableRecipe>> recipes = Stream.of(1, 2, 3, 4).collect(Collectors.toMap(tier -> tier, tier ->
+					manager.byType(RecipeTypes.TABLE).values()
 						.stream()
 						.map(recipe -> (ITableRecipe) recipe)
-						.collect(Collectors.groupingBy(ITableRecipe::getTier));
+						.filter(recipe -> recipe.hasRequiredTier() ? tier == recipe.getTier() : tier >= recipe.getTier())
+						.collect(Collectors.toList())
+				));
 
 				registration.addRecipes(recipes.getOrDefault(1, new ArrayList<>()), BasicTableCategory.UID);
 				registration.addRecipes(recipes.getOrDefault(2, new ArrayList<>()), AdvancedTableCategory.UID);

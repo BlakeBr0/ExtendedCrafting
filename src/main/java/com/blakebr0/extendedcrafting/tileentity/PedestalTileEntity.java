@@ -11,13 +11,19 @@ public class PedestalTileEntity extends BaseInventoryTileEntity {
 
 	public PedestalTileEntity(BlockPos pos, BlockState state) {
 		super(ModTileEntities.PEDESTAL.get(), pos, state);
-		this.inventory = new BaseItemStackHandler(1, this::markDirtyAndDispatch);
-
-		this.inventory.setDefaultSlotLimit(1);
+		this.inventory = createInventoryHandler(this::markDirtyAndDispatch);
 	}
 
 	@Override
 	public BaseItemStackHandler getInventory() {
 		return this.inventory;
+	}
+
+	public static BaseItemStackHandler createInventoryHandler(Runnable onContentsChanged) {
+		var inventory = new BaseItemStackHandler(1, onContentsChanged);
+
+		inventory.setDefaultSlotLimit(1);
+
+		return inventory;
 	}
 }

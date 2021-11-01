@@ -22,7 +22,7 @@ public class AdvancedTableTileEntity extends BaseInventoryTileEntity implements 
 
     public AdvancedTableTileEntity(BlockPos pos, BlockState state) {
         super(ModTileEntities.ADVANCED_TABLE.get(), pos, state);
-        this.inventory = new BaseItemStackHandler(25, this::markDirtyAndDispatch);
+        this.inventory = createInventoryHandler(this::markDirtyAndDispatch);
     }
 
     @Override
@@ -43,5 +43,9 @@ public class AdvancedTableTileEntity extends BaseInventoryTileEntity implements 
     @Override
     public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
         return !this.remove && cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY ? LazyOptional.empty() : super.getCapability(cap, side);
+    }
+
+    public static BaseItemStackHandler createInventoryHandler(Runnable onContentsChanged) {
+        return new BaseItemStackHandler(25, onContentsChanged);
     }
 }

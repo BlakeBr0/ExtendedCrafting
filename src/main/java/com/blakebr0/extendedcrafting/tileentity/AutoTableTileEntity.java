@@ -126,7 +126,7 @@ public abstract class AutoTableTileEntity extends BaseInventoryTileEntity implem
                         energy.extractEnergy(powerRate, false);
 
                         if (tile.progress >= tile.getProgressRequired()) {
-                            NonNullList<ItemStack> remaining = tile.recipe.getRemainingItems(recipeInventory);
+                            var remaining = tile.recipe.getRemainingItems(recipeInventory);
 
                             for (int i = 0; i < recipeInventory.getContainerSize(); i++) {
                                 if (!remaining.get(i).isEmpty()) {
@@ -252,10 +252,6 @@ public abstract class AutoTableTileEntity extends BaseInventoryTileEntity implem
     public abstract TableRecipeStorage getRecipeStorage();
 
     public abstract EnergyStorage getEnergy();
-
-    protected boolean canInsertStack(int slot, ItemStack stack) {
-        return false;
-    }
 
     protected void onContentsChanged() {
         this.isGridChanged = true;
@@ -388,13 +384,10 @@ public abstract class AutoTableTileEntity extends BaseInventoryTileEntity implem
 
         public Basic(BlockPos pos, BlockState state) {
             super(ModTileEntities.BASIC_AUTO_TABLE.get(), pos, state);
-            this.inventory = new BaseItemStackHandler(10, this::onContentsChanged);
+            this.inventory = createInventoryHandler(this::onContentsChanged);
             this.recipeInventory = new BaseItemStackHandler(9);
             this.recipeStorage = new TableRecipeStorage(10);
             this.energy = new EnergyStorage(ModConfigs.AUTO_TABLE_POWER_CAPACITY.get());
-
-            this.inventory.setOutputSlots(9);
-            this.inventory.setSlotValidator(super::canInsertStack);
         }
 
         @Override
@@ -431,6 +424,15 @@ public abstract class AutoTableTileEntity extends BaseInventoryTileEntity implem
         public EnergyStorage getEnergy() {
             return this.energy;
         }
+
+        public static BaseItemStackHandler createInventoryHandler(Runnable onContentsChanged) {
+            var inventory = new BaseItemStackHandler(10, onContentsChanged);
+
+            inventory.setOutputSlots(9);
+            inventory.setSlotValidator((slot, stack) -> false);
+
+            return inventory;
+        }
     }
 
     public static class Advanced extends AutoTableTileEntity {
@@ -441,13 +443,10 @@ public abstract class AutoTableTileEntity extends BaseInventoryTileEntity implem
 
         public Advanced(BlockPos pos, BlockState state) {
             super(ModTileEntities.ADVANCED_AUTO_TABLE.get(), pos, state);
-            this.inventory = new BaseItemStackHandler(26, this::onContentsChanged);
+            this.inventory = createInventoryHandler(this::onContentsChanged);
             this.recipeInventory = new BaseItemStackHandler(25);
             this.recipeStorage = new TableRecipeStorage(26);
             this.energy = new EnergyStorage(ModConfigs.AUTO_TABLE_POWER_CAPACITY.get() * 2);
-
-            this.inventory.setOutputSlots(25);
-            this.inventory.setSlotValidator(super::canInsertStack);
         }
 
         @Override
@@ -484,6 +483,15 @@ public abstract class AutoTableTileEntity extends BaseInventoryTileEntity implem
         public EnergyStorage getEnergy() {
             return this.energy;
         }
+
+        public static BaseItemStackHandler createInventoryHandler(Runnable onContentsChanged) {
+            var inventory = new BaseItemStackHandler(26, onContentsChanged);
+
+            inventory.setOutputSlots(25);
+            inventory.setSlotValidator((slot, stack) -> false);
+
+            return inventory;
+        }
     }
 
     public static class Elite extends AutoTableTileEntity {
@@ -494,13 +502,10 @@ public abstract class AutoTableTileEntity extends BaseInventoryTileEntity implem
 
         public Elite(BlockPos pos, BlockState state) {
             super(ModTileEntities.ELITE_AUTO_TABLE.get(), pos, state);
-            this.inventory = new BaseItemStackHandler(50, this::onContentsChanged);
+            this.inventory = createInventoryHandler(this::onContentsChanged);
             this.recipeInventory = new BaseItemStackHandler(49);
             this.recipeStorage = new TableRecipeStorage(50);
             this.energy = new EnergyStorage(ModConfigs.AUTO_TABLE_POWER_CAPACITY.get() * 4);
-
-            this.inventory.setOutputSlots(49);
-            this.inventory.setSlotValidator(super::canInsertStack);
         }
 
         @Override
@@ -537,6 +542,15 @@ public abstract class AutoTableTileEntity extends BaseInventoryTileEntity implem
         public EnergyStorage getEnergy() {
             return this.energy;
         }
+
+        public static BaseItemStackHandler createInventoryHandler(Runnable onContentsChanged) {
+            var inventory = new BaseItemStackHandler(50, onContentsChanged);
+
+            inventory.setOutputSlots(49);
+            inventory.setSlotValidator((slot, stack) -> false);
+
+            return inventory;
+        }
     }
 
     public static class Ultimate extends AutoTableTileEntity {
@@ -547,13 +561,10 @@ public abstract class AutoTableTileEntity extends BaseInventoryTileEntity implem
 
         public Ultimate(BlockPos pos, BlockState state) {
             super(ModTileEntities.ULTIMATE_AUTO_TABLE.get(), pos, state);
-            this.inventory = new BaseItemStackHandler(82, this::onContentsChanged);
+            this.inventory = createInventoryHandler(this::onContentsChanged);
             this.recipeInventory = new BaseItemStackHandler(81);
             this.recipeStorage = new TableRecipeStorage(82);
             this.energy = new EnergyStorage(ModConfigs.AUTO_TABLE_POWER_CAPACITY.get() * 8);
-
-            this.inventory.setOutputSlots(81);
-            this.inventory.setSlotValidator(super::canInsertStack);
         }
 
         @Override
@@ -589,6 +600,15 @@ public abstract class AutoTableTileEntity extends BaseInventoryTileEntity implem
         @Override
         public EnergyStorage getEnergy() {
             return this.energy;
+        }
+
+        public static BaseItemStackHandler createInventoryHandler(Runnable onContentsChanged) {
+            var inventory = new BaseItemStackHandler(82, onContentsChanged);
+
+            inventory.setOutputSlots(81);
+            inventory.setSlotValidator((slot, stack) -> false);
+
+            return inventory;
         }
     }
 }

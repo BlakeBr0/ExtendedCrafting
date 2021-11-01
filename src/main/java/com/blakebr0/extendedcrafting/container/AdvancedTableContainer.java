@@ -5,6 +5,7 @@ import com.blakebr0.extendedcrafting.api.crafting.RecipeTypes;
 import com.blakebr0.extendedcrafting.container.inventory.ExtendedCraftingInventory;
 import com.blakebr0.extendedcrafting.container.slot.TableOutputSlot;
 import com.blakebr0.extendedcrafting.init.ModContainerTypes;
+import com.blakebr0.extendedcrafting.tileentity.AdvancedTableTileEntity;
 import net.minecraft.world.Container;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
@@ -23,7 +24,7 @@ public class AdvancedTableContainer extends AbstractContainerMenu {
 	private final Container result;
 
 	private AdvancedTableContainer(MenuType<?> type, int id, Inventory playerInventory) {
-		this(type, id, playerInventory, p -> false, new BaseItemStackHandler(25));
+		this(type, id, playerInventory, p -> false, AdvancedTableTileEntity.createInventoryHandler(null));
 	}
 
 	private AdvancedTableContainer(MenuType<?> type, int id, Inventory playerInventory, Function<Player, Boolean> isUsableByPlayer, BaseItemStackHandler inventory) {

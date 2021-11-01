@@ -42,12 +42,9 @@ public class CompressorTileEntity extends BaseInventoryTileEntity implements Men
 
 	public CompressorTileEntity(BlockPos pos, BlockState state) {
 		super(ModTileEntities.COMPRESSOR.get(), pos, state);
-		this.inventory = new BaseItemStackHandler(3);
+		this.inventory = createInventoryHandler(null);
 		this.recipeInventory = new BaseItemStackHandler(2);
 		this.energy = new EnergyStorage(ModConfigs.COMPRESSOR_POWER_CAPACITY.get());
-
-		this.inventory.setSlotValidator(this::canInsertStack);
-		this.inventory.setOutputSlots(0);
 	}
 
 	@Override
@@ -189,6 +186,15 @@ public class CompressorTileEntity extends BaseInventoryTileEntity implements Men
 		}
 	}
 
+	public static BaseItemStackHandler createInventoryHandler(Runnable onContentsChanged) {
+		var inventory = new BaseItemStackHandler(3, onContentsChanged);
+
+		inventory.setOutputSlots(0);
+		inventory.setSlotValidator((slot, stack) -> slot == 1);
+
+		return inventory;
+	}
+
 	public EnergyStorage getEnergy() {
 		return this.energy;
 	}
@@ -269,9 +275,5 @@ public class CompressorTileEntity extends BaseInventoryTileEntity implements Men
 		} else {
 			this.inventory.setStackInSlot(0, StackHelper.grow(result, stack.getCount()));
 		}
-	}
-
-	private boolean canInsertStack(int slot, ItemStack stack) {
-		return slot == 1;
 	}
 }

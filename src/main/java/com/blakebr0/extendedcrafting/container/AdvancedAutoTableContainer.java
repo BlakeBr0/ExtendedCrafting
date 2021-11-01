@@ -6,6 +6,7 @@ import com.blakebr0.extendedcrafting.api.crafting.RecipeTypes;
 import com.blakebr0.extendedcrafting.container.inventory.ExtendedCraftingInventory;
 import com.blakebr0.extendedcrafting.container.slot.TableOutputSlot;
 import com.blakebr0.extendedcrafting.init.ModContainerTypes;
+import com.blakebr0.extendedcrafting.tileentity.AutoTableTileEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.Container;
@@ -30,7 +31,7 @@ public class AdvancedAutoTableContainer extends AbstractContainerMenu {
 	private final Container result;
 
 	private AdvancedAutoTableContainer(MenuType<?> type, int id, Inventory playerInventory, FriendlyByteBuf buffer) {
-		this(type, id, playerInventory, p -> false, new BaseItemStackHandler(26), new SimpleContainerData(6), buffer.readBlockPos());
+		this(type, id, playerInventory, p -> false, AutoTableTileEntity.Advanced.createInventoryHandler(null), new SimpleContainerData(6), buffer.readBlockPos());
 	}
 
 	private AdvancedAutoTableContainer(MenuType<?> type, int id, Inventory playerInventory, Function<Player, Boolean> isUsableByPlayer, BaseItemStackHandler inventory, ContainerData data, BlockPos pos) {

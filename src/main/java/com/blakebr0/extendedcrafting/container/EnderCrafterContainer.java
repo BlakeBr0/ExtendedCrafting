@@ -2,6 +2,7 @@ package com.blakebr0.extendedcrafting.container;
 
 import com.blakebr0.cucumber.inventory.slot.OutputSlot;
 import com.blakebr0.extendedcrafting.init.ModContainerTypes;
+import com.blakebr0.extendedcrafting.tileentity.EnderCrafterTileEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
@@ -24,7 +25,7 @@ public class EnderCrafterContainer extends AbstractContainerMenu {
 	private final BlockPos pos;
 
 	private EnderCrafterContainer(MenuType<?> type, int id, Inventory playerInventory, FriendlyByteBuf buffer) {
-		this(type, id, playerInventory, p -> false, new ItemStackHandler(10), new SimpleContainerData(2), buffer.readBlockPos());
+		this(type, id, playerInventory, p -> false, EnderCrafterTileEntity.createInventoryHandler(null), new SimpleContainerData(2), buffer.readBlockPos());
 	}
 
 	private EnderCrafterContainer(MenuType<?> type, int id, Inventory playerInventory, Function<Player, Boolean> isUsableByPlayer, IItemHandlerModifiable inventory, ContainerData data, BlockPos pos) {

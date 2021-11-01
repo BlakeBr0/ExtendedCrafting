@@ -37,7 +37,7 @@ public class EnderCrafterTileEntity extends BaseInventoryTileEntity implements M
 
 	public EnderCrafterTileEntity(BlockPos pos, BlockState state) {
 		super(ModTileEntities.ENDER_CRAFTER.get(), pos, state);
-		this.inventory = new BaseItemStackHandler(10, this::markDirtyAndDispatch);
+		this.inventory = createInventoryHandler(this::markDirtyAndDispatch);
 		this.recipeInventory = new BaseItemStackHandler(9);
 	}
 
@@ -133,6 +133,10 @@ public class EnderCrafterTileEntity extends BaseInventoryTileEntity implements M
 				tile.markDirtyAndDispatch();
 			}
 		}
+	}
+
+	public static BaseItemStackHandler createInventoryHandler(Runnable onContentsChanged) {
+		return new BaseItemStackHandler(10, onContentsChanged);
 	}
 
 	private void updateResult(ItemStack stack) {

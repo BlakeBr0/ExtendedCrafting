@@ -44,11 +44,9 @@ public class CraftingCoreTileEntity extends BaseInventoryTileEntity implements M
 
 	public CraftingCoreTileEntity(BlockPos pos, BlockState state) {
 		super(ModTileEntities.CRAFTING_CORE.get(), pos, state);
-		this.inventory = new BaseItemStackHandler(1, this::markDirtyAndDispatch);
+		this.inventory = createInventoryHandler(this::markDirtyAndDispatch);
 		this.energy = new EnergyStorage(ModConfigs.CRAFTING_CORE_POWER_CAPACITY.get());
 		this.recipeInventory = new BaseItemStackHandler(49);
-
-		this.inventory.setDefaultSlotLimit(1);
 	}
 
 	@Override
@@ -158,6 +156,14 @@ public class CraftingCoreTileEntity extends BaseInventoryTileEntity implements M
 		if (mark) {
 			tile.markDirtyAndDispatch();
 		}
+	}
+
+	public static BaseItemStackHandler createInventoryHandler(Runnable onContentsChanged) {
+		var inventory = new BaseItemStackHandler(1, onContentsChanged);
+
+		inventory.setDefaultSlotLimit(1);
+
+		return inventory;
 	}
 
 	public EnergyStorage getEnergy() {

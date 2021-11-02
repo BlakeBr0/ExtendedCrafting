@@ -1,9 +1,13 @@
 package com.blakebr0.extendedcrafting.container;
 
+import com.blakebr0.cucumber.inventory.BaseItemStackHandler;
 import com.blakebr0.cucumber.inventory.slot.OutputSlot;
+import com.blakebr0.extendedcrafting.container.inventory.ExtendedCraftingInventory;
 import com.blakebr0.extendedcrafting.init.ModContainerTypes;
+import com.blakebr0.extendedcrafting.tileentity.EnderCrafterTileEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.inventory.container.Slot;
@@ -12,9 +16,6 @@ import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.IIntArray;
 import net.minecraft.util.IntArray;
 import net.minecraft.util.math.BlockPos;
-import net.minecraftforge.items.IItemHandlerModifiable;
-import net.minecraftforge.items.ItemStackHandler;
-import net.minecraftforge.items.SlotItemHandler;
 
 import java.util.function.Function;
 
@@ -24,21 +25,23 @@ public class EnderCrafterContainer extends Container {
 	private final BlockPos pos;
 
 	private EnderCrafterContainer(ContainerType<?> type, int id, PlayerInventory playerInventory, PacketBuffer buffer) {
-		this(type, id, playerInventory, p -> false, new ItemStackHandler(10), new IntArray(2), buffer.readBlockPos());
+		this(type, id, playerInventory, p -> false, (new EnderCrafterTileEntity()).getInventory(), new IntArray(2), buffer.readBlockPos());
 	}
 
-	private EnderCrafterContainer(ContainerType<?> type, int id, PlayerInventory playerInventory, Function<PlayerEntity, Boolean> isUsableByPlayer, IItemHandlerModifiable inventory, IIntArray data, BlockPos pos) {
+	private EnderCrafterContainer(ContainerType<?> type, int id, PlayerInventory playerInventory, Function<PlayerEntity, Boolean> isUsableByPlayer, BaseItemStackHandler inventory, IIntArray data, BlockPos pos) {
 		super(type, id);
 		this.isUsableByPlayer = isUsableByPlayer;
 		this.data = data;
 		this.pos = pos;
+
+		IInventory matrix = new ExtendedCraftingInventory(this, inventory, 3);
 
 		this.addSlot(new OutputSlot(inventory, 9, 124, 36));
 		
 		int i, j;
 		for (i = 0; i < 3; i++) {
 			for (j = 0; j < 3; j++) {
-				this.addSlot(new SlotItemHandler(inventory, j + i * 3, 30 + j * 18, 18 + i * 18));
+				this.addSlot(new Slot(matrix, j + i * 3, 30 + j * 18, 18 + i * 18));
 			}
 		}
 
@@ -107,7 +110,7 @@ public class EnderCrafterContainer extends Container {
 		return new EnderCrafterContainer(ModContainerTypes.ENDER_CRAFTER.get(), windowId, playerInventory, buffer);
 	}
 
-	public static EnderCrafterContainer create(int windowId, PlayerInventory playerInventory, Function<PlayerEntity, Boolean> isUsableByPlayer, IItemHandlerModifiable inventory, IIntArray data, BlockPos pos) {
+	public static EnderCrafterContainer create(int windowId, PlayerInventory playerInventory, Function<PlayerEntity, Boolean> isUsableByPlayer, BaseItemStackHandler inventory, IIntArray data, BlockPos pos) {
 		return new EnderCrafterContainer(ModContainerTypes.ENDER_CRAFTER.get(), windowId, playerInventory, isUsableByPlayer, inventory, data, pos);
 	}
 }

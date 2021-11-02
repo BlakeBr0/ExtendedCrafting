@@ -42,6 +42,9 @@ public class EnderCrafterTileEntity extends BaseInventoryTileEntity implements I
 		super(ModTileEntities.ENDER_CRAFTER.get());
 		this.inventory = new BaseItemStackHandler(10, this::markDirtyAndDispatch);
 		this.recipeInventory = new BaseItemStackHandler(9);
+
+		this.inventory.setOutputSlots(9);
+		this.inventory.setSlotValidator(this::canInsertStack);
 	}
 
 	@Override
@@ -96,7 +99,7 @@ public class EnderCrafterTileEntity extends BaseInventoryTileEntity implements I
 
 							if (this.progress >= this.progressReq) {
 								for (int i = 0; i < this.inventory.getSlots() - 1; i++) {
-									this.inventory.extractItem(i, 1, false);
+									this.inventory.extractItemSuper(i, 1, false);
 								}
 
 								this.updateResult(result);
@@ -137,6 +140,10 @@ public class EnderCrafterTileEntity extends BaseInventoryTileEntity implements I
 	@Override
 	public Container createMenu(int windowId, PlayerInventory playerInventory, PlayerEntity player) {
 		return EnderCrafterContainer.create(windowId, playerInventory, this::isUsableByPlayer, this.inventory, new IntArray(0), this.getBlockPos());
+	}
+
+	protected boolean canInsertStack(int slot, ItemStack stack) {
+		return false;
 	}
 
 	private void updateResult(ItemStack stack) {

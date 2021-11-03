@@ -10,9 +10,9 @@ import com.blakebr0.extendedcrafting.container.slot.TableOutputSlot;
 import com.blakebr0.extendedcrafting.init.ModContainerTypes;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.inventory.CraftResultInventory;
 import net.minecraft.inventory.CraftingInventory;
 import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.Inventory;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.inventory.container.Slot;
@@ -46,7 +46,7 @@ public class BasicAutoTableContainer extends Container {
 		this.data = data;
 		this.pos = pos;
 		this.world = playerInventory.player.level;
-		this.result = new Inventory(1);
+		this.result = new CraftResultInventory();
 
 		IInventory matrix = new ExtendedCraftingInventory(this, inventory, 3, true);
 

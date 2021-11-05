@@ -60,7 +60,7 @@ public class TableOutputSlot extends Slot {
                 } else if (ItemStack.isSame(slotStack, remainingStack) && ItemStack.tagMatches(slotStack, remainingStack)) {
                     remainingStack.grow(slotStack.getCount());
                     this.matrix.setItem(i, remainingStack);
-                } else if (!player.inventory.add(remainingStack)) {
+                } else if (!player.getInventory().add(remainingStack)) {
                     player.drop(remainingStack, false);
                 }
             }

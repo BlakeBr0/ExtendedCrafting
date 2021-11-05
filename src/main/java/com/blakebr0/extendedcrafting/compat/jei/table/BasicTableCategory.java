@@ -120,7 +120,7 @@ public class BasicTableCategory implements IRecipeCategory<ITableRecipe> {
 			ShapedTableRecipe shaped = (ShapedTableRecipe) recipe;
 
 			int heightOffset = Math.floorDiv(3 - shaped.getHeight(), 2);
-			int widthOffset = Math.floorDiv(9 - shaped.getWidth(), 2);
+			int widthOffset = Math.floorDiv(3 - shaped.getWidth(), 2);
 			int stackIndex = 0;
 
 			for (int i = heightOffset; i < shaped.getHeight() + heightOffset; i++) {

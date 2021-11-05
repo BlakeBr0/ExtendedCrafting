@@ -119,9 +119,12 @@ public class EliteTableCategory implements IRecipeCategory<ITableRecipe> {
 		if (recipe instanceof ShapedTableRecipe) {
 			ShapedTableRecipe shaped = (ShapedTableRecipe) recipe;
 
+			int heightOffset = Math.floorDiv(7 - shaped.getHeight(), 2);
+			int widthOffset = Math.floorDiv(7 - shaped.getWidth(), 2);
 			int stackIndex = 0;
-			for (int i = 0; i < shaped.getHeight(); i++) {
-				for (int j = 0; j < shaped.getWidth(); j++) {
+
+			for (int i = heightOffset; i < shaped.getHeight() + heightOffset; i++) {
+				for (int j = widthOffset; j < shaped.getWidth() + widthOffset; j++) {
 					int index = 1 + (i * 7) + j;
 
 					stacks.set(index, inputs.get(stackIndex));

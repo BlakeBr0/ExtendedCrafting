@@ -51,10 +51,18 @@ public class TableOutputSlot extends Slot {
 
             if (!slotStack.isEmpty()) {
                 this.matrix.removeItem(i, 1);
+                slotStack = this.matrix.getItem(i);
             }
 
             if (!remainingStack.isEmpty()) {
-                this.matrix.setItem(i, remainingStack);
+                if (slotStack.isEmpty()) {
+                    this.matrix.setItem(i, remainingStack);
+                } else if (ItemStack.isSame(slotStack, remainingStack) && ItemStack.tagMatches(slotStack, remainingStack)) {
+                    remainingStack.grow(slotStack.getCount());
+                    this.matrix.setItem(i, remainingStack);
+                } else if (!player.inventory.add(remainingStack)) {
+                    player.drop(remainingStack, false);
+                }
             }
         }
 

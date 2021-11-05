@@ -1,6 +1,8 @@
 package com.blakebr0.extendedcrafting.container;
 
+import com.blakebr0.cucumber.inventory.BaseItemStackHandler;
 import com.blakebr0.cucumber.inventory.slot.OutputSlot;
+import com.blakebr0.extendedcrafting.container.inventory.ExtendedCraftingInventory;
 import com.blakebr0.extendedcrafting.init.ModContainerTypes;
 import com.blakebr0.extendedcrafting.tileentity.EnderCrafterTileEntity;
 import net.minecraft.core.BlockPos;
@@ -13,9 +15,6 @@ import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.inventory.SimpleContainerData;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.items.IItemHandlerModifiable;
-import net.minecraftforge.items.ItemStackHandler;
-import net.minecraftforge.items.SlotItemHandler;
 
 import java.util.function.Function;
 
@@ -28,18 +27,20 @@ public class EnderCrafterContainer extends AbstractContainerMenu {
 		this(type, id, playerInventory, p -> false, EnderCrafterTileEntity.createInventoryHandler(null), new SimpleContainerData(2), buffer.readBlockPos());
 	}
 
-	private EnderCrafterContainer(MenuType<?> type, int id, Inventory playerInventory, Function<Player, Boolean> isUsableByPlayer, IItemHandlerModifiable inventory, ContainerData data, BlockPos pos) {
+	private EnderCrafterContainer(MenuType<?> type, int id, Inventory playerInventory, Function<Player, Boolean> isUsableByPlayer, BaseItemStackHandler inventory, ContainerData data, BlockPos pos) {
 		super(type, id);
 		this.isUsableByPlayer = isUsableByPlayer;
 		this.data = data;
 		this.pos = pos;
+
+		var matrix = new ExtendedCraftingInventory(this, inventory, 3);
 
 		this.addSlot(new OutputSlot(inventory, 9, 124, 36));
 		
 		int i, j;
 		for (i = 0; i < 3; i++) {
 			for (j = 0; j < 3; j++) {
-				this.addSlot(new SlotItemHandler(inventory, j + i * 3, 30 + j * 18, 18 + i * 18));
+				this.addSlot(new Slot(matrix, j + i * 3, 30 + j * 18, 18 + i * 18));
 			}
 		}
 
@@ -108,7 +109,7 @@ public class EnderCrafterContainer extends AbstractContainerMenu {
 		return new EnderCrafterContainer(ModContainerTypes.ENDER_CRAFTER.get(), windowId, playerInventory, buffer);
 	}
 
-	public static EnderCrafterContainer create(int windowId, Inventory playerInventory, Function<Player, Boolean> isUsableByPlayer, IItemHandlerModifiable inventory, ContainerData data, BlockPos pos) {
+	public static EnderCrafterContainer create(int windowId, Inventory playerInventory, Function<Player, Boolean> isUsableByPlayer, BaseItemStackHandler inventory, ContainerData data, BlockPos pos) {
 		return new EnderCrafterContainer(ModContainerTypes.ENDER_CRAFTER.get(), windowId, playerInventory, isUsableByPlayer, inventory, data, pos);
 	}
 }

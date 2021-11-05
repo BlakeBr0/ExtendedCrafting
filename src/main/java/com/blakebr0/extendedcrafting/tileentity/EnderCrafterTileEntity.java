@@ -103,7 +103,7 @@ public class EnderCrafterTileEntity extends BaseInventoryTileEntity implements M
 
 						if (tile.progress >= tile.progressReq) {
 							for (int i = 0; i < tile.inventory.getSlots() - 1; i++) {
-								tile.inventory.extractItem(i, 1, false);
+								tile.inventory.extractItemSuper(i, 1, false);
 							}
 
 							tile.updateResult(result);
@@ -136,7 +136,12 @@ public class EnderCrafterTileEntity extends BaseInventoryTileEntity implements M
 	}
 
 	public static BaseItemStackHandler createInventoryHandler(Runnable onContentsChanged) {
-		return new BaseItemStackHandler(10, onContentsChanged);
+		var inventory = new BaseItemStackHandler(10, onContentsChanged);
+
+		inventory.setOutputSlots(9);
+		inventory.setSlotValidator((slot, stack) -> false);
+
+		return inventory;
 	}
 
 	private void updateResult(ItemStack stack) {

@@ -50,6 +50,7 @@ import net.minecraft.world.item.ItemStack;
 
 import java.util.ArrayList;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @JeiPlugin
 public final class JeiCompat implements IModPlugin {
@@ -99,10 +100,13 @@ public final class JeiCompat implements IModPlugin {
 			}
 
 			if (ModConfigs.ENABLE_TABLES.get()) {
-				var recipes = manager.byType(RecipeTypes.TABLE).values()
+				var recipes = Stream.of(1, 2, 3, 4).collect(Collectors.toMap(tier -> tier, tier ->
+					manager.byType(RecipeTypes.TABLE).values()
 						.stream()
 						.map(recipe -> (ITableRecipe) recipe)
-						.collect(Collectors.groupingBy(ITableRecipe::getTier));
+						.filter(recipe -> recipe.hasRequiredTier() ? tier == recipe.getTier() : tier >= recipe.getTier())
+						.collect(Collectors.toList())
+				));
 
 				registration.addRecipes(recipes.getOrDefault(1, new ArrayList<>()), BasicTableCategory.UID);
 				registration.addRecipes(recipes.getOrDefault(2, new ArrayList<>()), AdvancedTableCategory.UID);

@@ -11,13 +11,13 @@ import com.blakebr0.extendedcrafting.tileentity.AutoTableTileEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.Container;
-import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.inventory.MenuType;
+import net.minecraft.world.inventory.ResultContainer;
 import net.minecraft.world.inventory.SimpleContainerData;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
@@ -44,7 +44,7 @@ public class BasicAutoTableContainer extends AbstractContainerMenu {
 		this.data = data;
 		this.pos = pos;
 		this.world = playerInventory.player.level;
-		this.result = new SimpleContainer(1);
+		this.result = new ResultContainer();
 
 		var matrix = new ExtendedCraftingInventory(this, inventory, 3, true);
 

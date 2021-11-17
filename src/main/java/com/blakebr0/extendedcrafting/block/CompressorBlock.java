@@ -106,4 +106,9 @@ public class CompressorBlock extends BaseTileEntityBlock implements IEnableable 
 	protected <T extends BlockEntity> BlockEntityTicker<T> getServerTicker(Level level, BlockState state, BlockEntityType<T> type) {
 		return createTicker(type, ModTileEntities.COMPRESSOR.get(), CompressorTileEntity::tick);
 	}
+
+	@Override
+	protected <T extends BlockEntity> BlockEntityTicker<T> getClientTicker(Level level, BlockState state, BlockEntityType<T> type) {
+		return createTicker(type, ModTileEntities.COMPRESSOR.get(), CompressorTileEntity::tick);
+	}
 }

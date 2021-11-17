@@ -99,4 +99,9 @@ public class AdvancedAutoTableBlock extends BaseTileEntityBlock implements IEnab
     protected <T extends BlockEntity> BlockEntityTicker<T> getServerTicker(Level level, BlockState state, BlockEntityType<T> type) {
         return createTicker(type, ModTileEntities.ADVANCED_AUTO_TABLE.get(), AutoTableTileEntity::tick);
     }
+
+    @Override
+    protected <T extends BlockEntity> BlockEntityTicker<T> getClientTicker(Level level, BlockState state, BlockEntityType<T> type) {
+        return createTicker(type, ModTileEntities.ADVANCED_AUTO_TABLE.get(), AutoTableTileEntity::tick);
+    }
 }

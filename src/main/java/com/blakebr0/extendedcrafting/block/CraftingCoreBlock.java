@@ -111,4 +111,9 @@ public class CraftingCoreBlock extends BaseTileEntityBlock implements IEnableabl
 	protected <T extends BlockEntity> BlockEntityTicker<T> getServerTicker(Level level, BlockState state, BlockEntityType<T> type) {
 		return createTicker(type, ModTileEntities.CRAFTING_CORE.get(), CraftingCoreTileEntity::tick);
 	}
+
+	@Override
+	protected <T extends BlockEntity> BlockEntityTicker<T> getClientTicker(Level level, BlockState state, BlockEntityType<T> type) {
+		return createTicker(type, ModTileEntities.CRAFTING_CORE.get(), CraftingCoreTileEntity::tick);
+	}
 }

@@ -99,4 +99,9 @@ public class BasicAutoTableBlock extends BaseTileEntityBlock implements IEnablea
     protected <T extends BlockEntity> BlockEntityTicker<T> getServerTicker(Level level, BlockState state, BlockEntityType<T> type) {
         return createTicker(type, ModTileEntities.BASIC_AUTO_TABLE.get(), AutoTableTileEntity::tick);
     }
+
+    @Override
+    protected <T extends BlockEntity> BlockEntityTicker<T> getClientTicker(Level level, BlockState state, BlockEntityType<T> type) {
+        return createTicker(type, ModTileEntities.BASIC_AUTO_TABLE.get(), AutoTableTileEntity::tick);
+    }
 }

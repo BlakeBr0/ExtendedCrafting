@@ -35,7 +35,7 @@ public class CompressorRenderer extends TileEntityRenderer<CompressorTileEntity>
 				double tick = System.currentTimeMillis() / 800.0D;
 				matrix.translate(0.0D, Math.sin(tick % (2 * Math.PI)) * 0.065D, 0.0D);
 				matrix.mulPose(Vector3f.YP.rotationDegrees((float) ((tick * 40.0D) % 360)));
-				minecraft.getItemRenderer().renderStatic(stack, ItemCameraTransforms.TransformType.GROUND, i, i1, matrix, buffer);
+				minecraft.getItemRenderer().renderStatic(stack, ItemCameraTransforms.TransformType.GROUND, 234, i1, matrix, buffer);
 				matrix.popPose();
 			}
 		}

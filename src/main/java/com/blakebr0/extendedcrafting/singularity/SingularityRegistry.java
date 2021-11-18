@@ -21,8 +21,10 @@ import org.apache.logging.log4j.Logger;
 
 import java.io.File;
 import java.io.FileFilter;
-import java.io.FileReader;
+import java.io.FileInputStream;
 import java.io.FileWriter;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -115,12 +117,12 @@ public final class SingularityRegistry {
 
         for (File file : files) {
             JsonObject json;
-            FileReader reader = null;
+            InputStreamReader reader = null;
             Singularity singularity = null;
 
             try {
                 JsonParser parser = new JsonParser();
-                reader = new FileReader(file);
+                reader =  new InputStreamReader(new FileInputStream(file), StandardCharsets.UTF_8);
                 json = parser.parse(reader).getAsJsonObject();
                 String name = file.getName().replace(".json", "");
                 singularity = SingularityUtils.loadFromJson(new ResourceLocation(ExtendedCrafting.MOD_ID, name), json);

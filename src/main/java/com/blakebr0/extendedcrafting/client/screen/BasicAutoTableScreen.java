@@ -78,10 +78,19 @@ public class BasicAutoTableScreen extends BaseContainerScreen<BasicAutoTableCont
 								new StringTextComponent(""),
 								ModTooltips.AUTO_TABLE_DELETE_RECIPE.color(TextFormatting.WHITE).build()
 						);
+
+						if (this.getSelected() == button.getIndex()) {
+							tooltip.add(1, ModTooltips.SELECTED.color(TextFormatting.GREEN).build());
+						}
 					} else {
 						tooltip = Lists.newArrayList(
 								ModTooltips.AUTO_TABLE_SAVE_RECIPE.color(TextFormatting.WHITE).build()
 						);
+
+						if (this.getSelected() == button.getIndex()) {
+							tooltip.add(0, ModTooltips.SELECTED.color(TextFormatting.GREEN).build());
+							tooltip.add(1, new StringTextComponent(""));
+						}
 					}
 
 					this.renderComponentTooltip(stack, tooltip, mouseX, mouseY);

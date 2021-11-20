@@ -2,6 +2,7 @@ package com.blakebr0.extendedcrafting.singularity;
 
 import com.blakebr0.extendedcrafting.ExtendedCrafting;
 import com.blakebr0.extendedcrafting.config.ModConfigs;
+import com.blakebr0.extendedcrafting.network.NetworkHandler;
 import com.blakebr0.extendedcrafting.network.message.SyncSingularitiesMessage;
 import com.google.common.base.Stopwatch;
 import com.google.common.collect.Lists;
@@ -9,11 +10,19 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.Items;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.network.PacketBuffer;
+import net.minecraft.resources.IResourceManager;
+import net.minecraft.resources.IResourceManagerReloadListener;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.event.AddReloadListenerEvent;
+import net.minecraftforge.event.OnDatapackSyncEvent;
+import net.minecraftforge.eventbus.api.EventPriority;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.loading.FMLPaths;
+import net.minecraftforge.fml.network.PacketDistributor;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.filefilter.FileFilterUtils;
 import org.apache.logging.log4j.LogManager;
@@ -32,12 +41,34 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
-public final class SingularityRegistry {
+public final class SingularityRegistry implements IResourceManagerReloadListener {
     private static final Logger LOGGER = LogManager.getLogger(ExtendedCrafting.NAME);
     private static final SingularityRegistry INSTANCE = new SingularityRegistry();
     private static final Gson GSON = (new GsonBuilder()).setPrettyPrinting().create();
 
     private final Map<ResourceLocation, Singularity> singularities = new LinkedHashMap<>();
+
+    @Override
+    public void onResourceManagerReload(IResourceManager manager) {
+        this.loadSingularities();
+    }
+
+    @SubscribeEvent(priority = EventPriority.HIGH)
+    public void onAddResourceListeners(AddReloadListenerEvent event) {
+        event.addListener(this);
+    }
+
+    @SubscribeEvent
+    public void onDatapackSync(OnDatapackSyncEvent event) {
+        SyncSingularitiesMessage message = new SyncSingularitiesMessage(this.getSingularities());
+
+        ServerPlayerEntity player = event.getPlayer();
+        if (player != null) {
+            NetworkHandler.INSTANCE.send(PacketDistributor.PLAYER.with(() -> player), message);
+        } else {
+            NetworkHandler.INSTANCE.send(PacketDistributor.ALL.noArg(), message);
+        }
+    }
 
     public void loadSingularities() {
         Stopwatch stopwatch = Stopwatch.createStarted();
@@ -122,7 +153,7 @@ public final class SingularityRegistry {
 
             try {
                 JsonParser parser = new JsonParser();
-                reader =  new InputStreamReader(new FileInputStream(file), StandardCharsets.UTF_8);
+                reader = new InputStreamReader(new FileInputStream(file), StandardCharsets.UTF_8);
                 json = parser.parse(reader).getAsJsonObject();
                 String name = file.getName().replace(".json", "");
                 singularity = SingularityUtils.loadFromJson(new ResourceLocation(ExtendedCrafting.MOD_ID, name), json);

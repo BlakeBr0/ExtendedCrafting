@@ -59,7 +59,7 @@ minecraft {
 }
 
 dependencies {
-    minecraft 'net.minecraftforge:forge:1.16.5-36.1.0'
+    minecraft 'net.minecraftforge:forge:1.16.5-36.2.4'
 
     compile fg.deobf('ignored:Cucumber:1.16.5-4.1.12')
     compileOnly fg.deobf('mcp.mobius.waila:Hwyla:1.10.11-B78_1.16.2:api')

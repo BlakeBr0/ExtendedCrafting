@@ -56,10 +56,10 @@ public final class ExtendedCrafting {
 	public void onCommonSetup(FMLCommonSetupEvent event) {
 		MinecraftForge.EVENT_BUS.register(this);
 		MinecraftForge.EVENT_BUS.register(new DynamicRecipeManager());
+		MinecraftForge.EVENT_BUS.register(SingularityRegistry.getInstance());
 
 		event.enqueueWork(() -> {
 			NetworkHandler.onCommonSetup();
-			SingularityRegistry.getInstance().loadSingularities();
 		});
 	}
 

@@ -15,11 +15,8 @@ import net.minecraft.item.Items;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.resources.IResourceManager;
-import net.minecraft.resources.IResourceManagerReloadListener;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.event.AddReloadListenerEvent;
 import net.minecraftforge.event.OnDatapackSyncEvent;
-import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.loading.FMLPaths;
 import net.minecraftforge.fml.network.PacketDistributor;
@@ -41,22 +38,12 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
-public final class SingularityRegistry implements IResourceManagerReloadListener {
+public final class SingularityRegistry {
     private static final Logger LOGGER = LogManager.getLogger(ExtendedCrafting.NAME);
     private static final SingularityRegistry INSTANCE = new SingularityRegistry();
     private static final Gson GSON = (new GsonBuilder()).setPrettyPrinting().create();
 
     private final Map<ResourceLocation, Singularity> singularities = new LinkedHashMap<>();
-
-    @Override
-    public void onResourceManagerReload(IResourceManager manager) {
-        this.loadSingularities();
-    }
-
-    @SubscribeEvent(priority = EventPriority.HIGH)
-    public void onAddResourceListeners(AddReloadListenerEvent event) {
-        event.addListener(this);
-    }
 
     @SubscribeEvent
     public void onDatapackSync(OnDatapackSyncEvent event) {
@@ -68,6 +55,10 @@ public final class SingularityRegistry implements IResourceManagerReloadListener
         } else {
             NetworkHandler.INSTANCE.send(PacketDistributor.ALL.noArg(), message);
         }
+    }
+
+    public void onResourceManagerReload(IResourceManager manager) {
+        this.loadSingularities();
     }
 
     public void loadSingularities() {

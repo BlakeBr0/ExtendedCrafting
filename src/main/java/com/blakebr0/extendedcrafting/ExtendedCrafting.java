@@ -3,12 +3,12 @@ package com.blakebr0.extendedcrafting;
 import com.blakebr0.cucumber.helper.ConfigHelper;
 import com.blakebr0.extendedcrafting.client.ModelHandler;
 import com.blakebr0.extendedcrafting.config.ModConfigs;
-import com.blakebr0.extendedcrafting.crafting.DynamicRecipeManager;
 import com.blakebr0.extendedcrafting.handler.ColorHandler;
 import com.blakebr0.extendedcrafting.init.ModBlocks;
 import com.blakebr0.extendedcrafting.init.ModContainerTypes;
 import com.blakebr0.extendedcrafting.init.ModItems;
 import com.blakebr0.extendedcrafting.init.ModRecipeSerializers;
+import com.blakebr0.extendedcrafting.init.ModReloadListeners;
 import com.blakebr0.extendedcrafting.init.ModTileEntities;
 import com.blakebr0.extendedcrafting.network.NetworkHandler;
 import com.blakebr0.extendedcrafting.singularity.SingularityRegistry;
@@ -55,7 +55,7 @@ public final class ExtendedCrafting {
 	@SubscribeEvent
 	public void onCommonSetup(FMLCommonSetupEvent event) {
 		MinecraftForge.EVENT_BUS.register(this);
-		MinecraftForge.EVENT_BUS.register(new DynamicRecipeManager());
+		MinecraftForge.EVENT_BUS.register(new ModReloadListeners());
 		MinecraftForge.EVENT_BUS.register(SingularityRegistry.getInstance());
 
 		event.enqueueWork(() -> {

@@ -12,17 +12,15 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.resources.IResourceManager;
-import net.minecraft.resources.IResourceManagerReloadListener;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.event.AddReloadListenerEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.List;
 
-public final class DynamicRecipeManager implements IResourceManagerReloadListener {
-    @Override
-    public void onResourceManagerReload(IResourceManager resourceManager) {
+public final class DynamicRecipeManager {
+    private static final DynamicRecipeManager INSTANCE = new DynamicRecipeManager();
+
+    public void onResourceManagerReload(IResourceManager manager) {
         SingularityRegistry.getInstance().getSingularities().forEach(singularity -> {
             CompressorRecipe compressorRecipe = makeSingularityRecipe(singularity);
             if (compressorRecipe != null)
@@ -32,9 +30,8 @@ public final class DynamicRecipeManager implements IResourceManagerReloadListene
         initUltimateSingularityRecipe();
     }
 
-    @SubscribeEvent
-    public void onAddReloadListeners(AddReloadListenerEvent event) {
-        event.addListener(this);
+    public static DynamicRecipeManager getInstance() {
+        return INSTANCE;
     }
 
     private static CompressorRecipe makeSingularityRecipe(Singularity singularity) {

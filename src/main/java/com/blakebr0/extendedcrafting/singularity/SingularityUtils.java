@@ -74,7 +74,7 @@ public final class SingularityUtils {
     public static Singularity getSingularity(ItemStack stack) {
         String id = NBTHelper.getString(stack, "Id");
         if (!id.isEmpty()) {
-            return SingularityRegistry.getInstance().getSingularityById(new ResourceLocation(id));
+            return SingularityRegistry.getInstance().getSingularityById(ResourceLocation.tryParse(id));
         }
 
         return null;

@@ -4,7 +4,6 @@ import com.blakebr0.cucumber.helper.RecipeHelper;
 import com.blakebr0.extendedcrafting.ExtendedCrafting;
 import com.blakebr0.extendedcrafting.config.ModConfigs;
 import com.blakebr0.extendedcrafting.crafting.recipe.CompressorRecipe;
-import com.blakebr0.extendedcrafting.crafting.recipe.UltimateSingularityRecipe;
 import com.blakebr0.extendedcrafting.singularity.Singularity;
 import com.blakebr0.extendedcrafting.singularity.SingularityRegistry;
 import com.blakebr0.extendedcrafting.singularity.SingularityUtils;
@@ -15,8 +14,6 @@ import net.minecraft.resources.IResourceManager;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.registries.ForgeRegistries;
 
-import java.util.List;
-
 public final class DynamicRecipeManager {
     private static final DynamicRecipeManager INSTANCE = new DynamicRecipeManager();
 
@@ -26,8 +23,6 @@ public final class DynamicRecipeManager {
             if (compressorRecipe != null)
                 RecipeHelper.addRecipe(compressorRecipe);
         });
-
-        initUltimateSingularityRecipe();
     }
 
     public static DynamicRecipeManager getInstance() {
@@ -52,24 +47,5 @@ public final class DynamicRecipeManager {
         int powerRequired = ModConfigs.SINGULARITY_POWER_REQUIRED.get();
 
         return new CompressorRecipe(recipeId, ingredient, output, ingredientCount, catalyst, powerRequired);
-    }
-
-    private static void initUltimateSingularityRecipe() {
-        if (!ModConfigs.SINGULARITY_ULTIMATE_RECIPE.get())
-            return;
-
-        UltimateSingularityRecipe.SINGULARITIES.clear();
-
-        List<Singularity> singularities = SingularityRegistry.getInstance().getSingularities();
-        int added = 0;
-        for (int i = 0; i < singularities.size() && added < 81; i++) {
-            Singularity singularity = singularities.get(i);
-            if (singularity.getIngredient() != Ingredient.EMPTY && singularity.isInUltimateSingularity()) {
-                ItemStack stack = SingularityUtils.getItemForSingularity(singularity);
-                UltimateSingularityRecipe.SINGULARITIES.add(Ingredient.of(stack));
-
-                added++;
-            }
-        }
     }
 }

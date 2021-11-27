@@ -37,10 +37,11 @@ public class EnderCrafterTileEntity extends BaseInventoryTileEntity implements I
 	private IEnderCrafterRecipe recipe;
 	private int progress;
 	private int progressReq;
+	private boolean isGridChanged = true;
 
 	public EnderCrafterTileEntity() {
 		super(ModTileEntities.ENDER_CRAFTER.get());
-		this.inventory = new BaseItemStackHandler(10, this::markDirtyAndDispatch);
+		this.inventory = new BaseItemStackHandler(10, this::onContentsChanged);
 		this.recipeInventory = new BaseItemStackHandler(9);
 
 		this.inventory.setOutputSlots(9);
@@ -76,8 +77,9 @@ public class EnderCrafterTileEntity extends BaseInventoryTileEntity implements I
 		if (world != null) {
 			this.updateRecipeInventory();
 			IInventory recipeInventory = this.recipeInventory.toIInventory();
-			if (this.recipe == null || !this.recipe.matches(recipeInventory, world)) {
+			if (this.isGridChanged && (this.recipe == null || !this.recipe.matches(recipeInventory, world))) {
 				this.recipe = world.getRecipeManager().getRecipeFor(RecipeTypes.ENDER_CRAFTER, recipeInventory, world).orElse(null);
+				this.isGridChanged = false;
 			}
 
 			if (!world.isClientSide()) {
@@ -194,6 +196,11 @@ public class EnderCrafterTileEntity extends BaseInventoryTileEntity implements I
 		double z = pos.getZ() + 0.5D;
 
 		world.sendParticles(particle, x, y, z, count, 0, 0, 0, 0.1D);
+	}
+
+	private void onContentsChanged() {
+		this.isGridChanged = true;
+		this.markDirtyAndDispatch();
 	}
 
 	public int getProgress() {

@@ -45,6 +45,7 @@ public class CraftingCoreTileEntity extends BaseInventoryTileEntity implements I
 	private int progress;
 	private int oldEnergy;
 	private int pedestalCount;
+	private boolean haveItemsChanged = true;
 
 	public CraftingCoreTileEntity() {
 		super(ModTileEntities.CRAFTING_CORE.get());
@@ -87,7 +88,7 @@ public class CraftingCoreTileEntity extends BaseInventoryTileEntity implements I
 			ItemStack[] stacks = pedestalsWithItems.values().toArray(new ItemStack[0]);
 			this.updateRecipeInventory(stacks);
 
-			if (this.recipe == null || !this.recipe.matches(this.recipeInventory)) {
+			if (this.haveItemsChanged && (this.recipe == null || !this.recipe.matches(this.recipeInventory))) {
 				this.recipe = (CombinationRecipe) world.getRecipeManager().getRecipeFor(RecipeTypes.COMBINATION, this.recipeInventory.toIInventory(), world).orElse(null);
 			}
 
@@ -196,6 +197,23 @@ public class CraftingCoreTileEntity extends BaseInventoryTileEntity implements I
 	}
 
 	private void updateRecipeInventory(ItemStack[] items) {
+		boolean haveItemsChanged = this.recipeInventory.getSlots() != items.length + 1
+				|| !areStacksEqual(this.recipeInventory.getStackInSlot(0), this.inventory.getStackInSlot(0));
+
+		if (!haveItemsChanged) {
+			for (int i = 0; i < items.length; i++) {
+				if (!areStacksEqual(this.recipeInventory.getStackInSlot(i + 1), items[i])) {
+					haveItemsChanged = true;
+					break;
+				}
+			}
+		}
+
+		this.haveItemsChanged = haveItemsChanged;
+
+		if (!haveItemsChanged)
+			return;
+
 		this.recipeInventory.setSize(items.length + 1);
 		this.recipeInventory.setStackInSlot(0, this.inventory.getStackInSlot(0));
 
@@ -284,5 +302,13 @@ public class CraftingCoreTileEntity extends BaseInventoryTileEntity implements I
 		int endingPower = powerRate * 40;
 
 		return this.progress > (powerCost - endingPower);
+	}
+
+	// TODO: 1.17: fix in cucumber StackHelper.areStacksEqual
+	private static boolean areStacksEqual(ItemStack stack1, ItemStack stack2) {
+		if (stack1.isEmpty() && stack2.isEmpty())
+			return true;
+
+		return !stack1.isEmpty() && stack1.sameItem(stack2) && ItemStack.tagMatches(stack1, stack2);
 	}
 }

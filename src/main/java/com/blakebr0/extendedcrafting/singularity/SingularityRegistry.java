@@ -2,6 +2,7 @@ package com.blakebr0.extendedcrafting.singularity;
 
 import com.blakebr0.extendedcrafting.ExtendedCrafting;
 import com.blakebr0.extendedcrafting.config.ModConfigs;
+import com.blakebr0.extendedcrafting.network.NetworkHandler;
 import com.blakebr0.extendedcrafting.network.message.SyncSingularitiesMessage;
 import com.google.common.base.Stopwatch;
 import com.google.common.collect.Lists;
@@ -11,16 +12,22 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraftforge.event.OnDatapackSyncEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.loading.FMLPaths;
+import net.minecraftforge.fmllegacy.network.PacketDistributor;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.filefilter.FileFilterUtils;
 
 import java.io.File;
 import java.io.FileFilter;
-import java.io.FileReader;
+import java.io.FileInputStream;
 import java.io.FileWriter;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -33,6 +40,22 @@ public final class SingularityRegistry {
     private static final Gson GSON = (new GsonBuilder()).setPrettyPrinting().create();
 
     private final Map<ResourceLocation, Singularity> singularities = new LinkedHashMap<>();
+
+    @SubscribeEvent
+    public void onDatapackSync(OnDatapackSyncEvent event) {
+        var message = new SyncSingularitiesMessage(this.getSingularities());
+        var player = event.getPlayer();
+
+        if (player != null) {
+            NetworkHandler.INSTANCE.send(PacketDistributor.PLAYER.with(() -> player), message);
+        } else {
+            NetworkHandler.INSTANCE.send(PacketDistributor.ALL.noArg(), message);
+        }
+    }
+
+    public void onResourceManagerReload(ResourceManager manager) {
+        this.loadSingularities();
+    }
 
     public void loadSingularities() {
         var stopwatch = Stopwatch.createStarted();
@@ -114,14 +137,13 @@ public final class SingularityRegistry {
 
         for (var file : files) {
             JsonObject json;
-            FileReader reader = null;
+            InputStreamReader reader = null;
             Singularity singularity = null;
 
             try {
                 var parser = new JsonParser();
-                reader = new FileReader(file);
+                reader = new InputStreamReader(new FileInputStream(file), StandardCharsets.UTF_8);
                 var name = file.getName().replace(".json", "");
-
                 json = parser.parse(reader).getAsJsonObject();
 
                 singularity = SingularityUtils.loadFromJson(new ResourceLocation(ExtendedCrafting.MOD_ID, name), json);

@@ -2,7 +2,6 @@ package com.blakebr0.extendedcrafting.network;
 
 import com.blakebr0.cucumber.network.BaseNetworkHandler;
 import com.blakebr0.extendedcrafting.ExtendedCrafting;
-import com.blakebr0.extendedcrafting.network.message.AcknowledgeMessage;
 import com.blakebr0.extendedcrafting.network.message.EjectModeSwitchMessage;
 import com.blakebr0.extendedcrafting.network.message.InputLimitSwitchMessage;
 import com.blakebr0.extendedcrafting.network.message.RunningSwitchMessage;
@@ -20,8 +19,6 @@ public class NetworkHandler {
 		INSTANCE.register(RunningSwitchMessage.class, new RunningSwitchMessage());
 		INSTANCE.register(SelectRecipeMessage.class, new SelectRecipeMessage());
 		INSTANCE.register(SaveRecipeMessage.class, new SaveRecipeMessage());
-
 		INSTANCE.register(SyncSingularitiesMessage.class, new SyncSingularitiesMessage());
-		INSTANCE.register(AcknowledgeMessage.class, new AcknowledgeMessage());
 	}
 }

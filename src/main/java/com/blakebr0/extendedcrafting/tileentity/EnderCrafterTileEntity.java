@@ -34,10 +34,11 @@ public class EnderCrafterTileEntity extends BaseInventoryTileEntity implements M
 	private IEnderCrafterRecipe recipe;
 	private int progress;
 	private int progressReq;
+	private boolean isGridChanged = true;
 
 	public EnderCrafterTileEntity(BlockPos pos, BlockState state) {
 		super(ModTileEntities.ENDER_CRAFTER.get(), pos, state);
-		this.inventory = createInventoryHandler(this::markDirtyAndDispatch);
+		this.inventory = createInventoryHandler(this::onContentsChanged);
 		this.recipeInventory = new BaseItemStackHandler(9);
 	}
 
@@ -79,7 +80,7 @@ public class EnderCrafterTileEntity extends BaseInventoryTileEntity implements M
 
 		var recipeInventory = tile.recipeInventory.toIInventory();
 
-		if (tile.recipe == null || !tile.recipe.matches(recipeInventory, level)) {
+		if (tile.isGridChanged && (tile.recipe == null || !tile.recipe.matches(recipeInventory, level))) {
 			tile.recipe = level.getRecipeManager().getRecipeFor(RecipeTypes.ENDER_CRAFTER, recipeInventory, level).orElse(null);
 		}
 
@@ -197,6 +198,11 @@ public class EnderCrafterTileEntity extends BaseInventoryTileEntity implements M
 		double z = pos.getZ() + 0.5D;
 
 		level.sendParticles(particle, x, y, z, count, 0, 0, 0, 0.1D);
+	}
+
+	private void onContentsChanged() {
+		this.isGridChanged = true;
+		this.markDirtyAndDispatch();
 	}
 
 	public int getProgress() {

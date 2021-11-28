@@ -13,13 +13,28 @@ import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraftforge.registries.ForgeRegistryEntry;
 
-import java.util.stream.Collectors;
-
 public class UltimateSingularityRecipe extends ShapelessTableRecipe {
-    public static final NonNullList<Ingredient> SINGULARITIES = NonNullList.create();
+    private boolean ingredientsLoaded = false;
 
-    public UltimateSingularityRecipe(ResourceLocation recipeId, NonNullList<Ingredient> inputs, ItemStack output) {
-        super(recipeId, inputs, output, 4);
+    public UltimateSingularityRecipe(ResourceLocation recipeId, ItemStack output) {
+        super(recipeId, NonNullList.create(), output, 4);
+    }
+
+    @Override
+    public NonNullList<Ingredient> getIngredients() {
+        if (!this.ingredientsLoaded) {
+            SingularityRegistry.getInstance().getSingularities()
+                    .stream()
+                    .filter(singularity -> singularity.isInUltimateSingularity() && singularity.getIngredient() != Ingredient.EMPTY)
+                    .limit(81)
+                    .map(SingularityUtils::getItemForSingularity)
+                    .map(Ingredient::of)
+                    .forEach(super.getIngredients()::add);
+
+            this.ingredientsLoaded = true;
+        }
+
+        return super.getIngredients();
     }
 
     @Override
@@ -30,20 +45,12 @@ public class UltimateSingularityRecipe extends ShapelessTableRecipe {
     public static class Serializer extends ForgeRegistryEntry<RecipeSerializer<?>> implements RecipeSerializer<UltimateSingularityRecipe> {
         @Override
         public UltimateSingularityRecipe fromJson(ResourceLocation recipeId, JsonObject json) {
-            return new UltimateSingularityRecipe(recipeId, SINGULARITIES, new ItemStack(ModItems.ULTIMATE_SINGULARITY.get()));
+            return new UltimateSingularityRecipe(recipeId, new ItemStack(ModItems.ULTIMATE_SINGULARITY.get()));
         }
 
         @Override
         public UltimateSingularityRecipe fromNetwork(ResourceLocation recipeId, FriendlyByteBuf buffer) {
-            var singularities = SingularityRegistry.getInstance().getSingularities()
-                    .stream()
-                    .filter(singularity -> singularity.isInUltimateSingularity() && singularity.getIngredient() != Ingredient.EMPTY)
-                    .limit(81)
-                    .map(SingularityUtils::getItemForSingularity)
-                    .map(Ingredient::of)
-                    .collect(Collectors.toCollection(NonNullList::create));
-
-            return new UltimateSingularityRecipe(recipeId, singularities, new ItemStack(ModItems.ULTIMATE_SINGULARITY.get()));
+            return new UltimateSingularityRecipe(recipeId, new ItemStack(ModItems.ULTIMATE_SINGULARITY.get()));
         }
 
         @Override

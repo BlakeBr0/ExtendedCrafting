@@ -15,7 +15,7 @@ version = '1.16.5-3.1.10'
 group = 'com.blakebr0.extendedcrafting'
 archivesBaseName = 'ExtendedCrafting'
 
-java.toolchain.languageVersion = JavaLanguageVersion.of(16)
+java.toolchain.languageVersion = JavaLanguageVersion.of(17)
 
 println('Java: ' + System.getProperty('java.version') + ' JVM: ' + System.getProperty('java.vm.version') + '(' + System.getProperty('java.vendor') + ') Arch: ' + System.getProperty('os.arch'))
 
@@ -31,7 +31,7 @@ repositories {
 }
 
 minecraft {
-    mappings channel: 'official', version: '1.17.1'
+    mappings channel: 'official', version: '1.18'
 
     accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
 
@@ -77,7 +77,7 @@ minecraft {
 }
 
 dependencies {
-    minecraft 'net.minecraftforge:forge:1.17.1-37.0.102'
+    minecraft 'net.minecraftforge:forge:1.18-38.0.4'
 
     implementation project(':Cucumber')
     implementation fg.deobf('curse.maven:jade-324717:3447700')

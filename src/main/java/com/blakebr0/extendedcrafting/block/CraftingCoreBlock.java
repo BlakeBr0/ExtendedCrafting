@@ -29,7 +29,7 @@ import net.minecraft.world.level.material.Material;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.minecraftforge.fmllegacy.network.NetworkHooks;
+import net.minecraftforge.network.NetworkHooks;
 
 public class CraftingCoreBlock extends BaseTileEntityBlock implements IEnableable {
 	public static final VoxelShape CRAFTING_CORE_SHAPE = new VoxelShapeBuilder()

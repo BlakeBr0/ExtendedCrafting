@@ -9,9 +9,9 @@ import com.blakebr0.extendedcrafting.item.SingularityItem;
 import com.blakebr0.extendedcrafting.item.UltimateSingularityItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Rarity;
-import net.minecraftforge.fmllegacy.RegistryObject;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraftforge.registries.RegistryObject;
 
 import java.util.function.Supplier;
 

@@ -3,8 +3,8 @@ package com.blakebr0.extendedcrafting.crafting;
 import com.blakebr0.cucumber.inventory.BaseItemStackHandler;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.Tag;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.common.util.Constants;
 
 public class TableRecipeStorage {
     private final BaseItemStackHandler[] recipes = new BaseItemStackHandler[3];
@@ -97,7 +97,7 @@ public class TableRecipeStorage {
     }
 
     public void deserializeNBT(CompoundTag tag) {
-        var recipes = tag.getList("Recipes", Constants.NBT.TAG_COMPOUND);
+        var recipes = tag.getList("Recipes", Tag.TAG_COMPOUND);
 
         for (int i = 0; i < recipes.size(); i++) {
             this.recipes[i].deserializeNBT(recipes.getCompound(i));

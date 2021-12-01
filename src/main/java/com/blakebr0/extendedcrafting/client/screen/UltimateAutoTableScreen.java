@@ -63,7 +63,7 @@ public class UltimateAutoTableScreen extends BaseContainerScreen<UltimateAutoTab
 		}
 
 		for (var button : this.recipeSelectButtons) {
-			if (button.isHovered()) {
+			if (button.isHoveredOrFocused()) {
 				var recipe = this.getRecipeInfo(button.getIndex());
 
 				if (recipe != null) {

@@ -63,7 +63,7 @@ public class AdvancedAutoTableScreen extends BaseContainerScreen<AdvancedAutoTab
 		}
 
 		for (RecipeSelectButton button : this.recipeSelectButtons) {
-			if (button.isHovered()) {
+			if (button.isHoveredOrFocused()) {
 				var recipe = this.getRecipeInfo(button.getIndex());
 
 				if (recipe != null) {

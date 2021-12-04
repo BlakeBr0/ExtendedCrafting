@@ -197,11 +197,11 @@ public class CraftingCoreTileEntity extends BaseInventoryTileEntity implements M
 
 	private void updateRecipeInventory(ItemStack[] items) {
 		boolean haveItemsChanged = this.recipeInventory.getSlots() != items.length + 1
-				|| !areStacksEqual(this.recipeInventory.getStackInSlot(0), this.inventory.getStackInSlot(0));
+				|| !StackHelper.areStacksEqual(this.recipeInventory.getStackInSlot(0), this.inventory.getStackInSlot(0));
 
 		if (!haveItemsChanged) {
 			for (int i = 0; i < items.length; i++) {
-				if (!areStacksEqual(this.recipeInventory.getStackInSlot(i + 1), items[i])) {
+				if (!StackHelper.areStacksEqual(this.recipeInventory.getStackInSlot(i + 1), items[i])) {
 					haveItemsChanged = true;
 					break;
 				}
@@ -300,13 +300,5 @@ public class CraftingCoreTileEntity extends BaseInventoryTileEntity implements M
 		int endingPower = powerRate * 40;
 
 		return this.progress > (powerCost - endingPower);
-	}
-
-	// TODO: 1.17: fix in cucumber StackHelper.areStacksEqual
-	private static boolean areStacksEqual(ItemStack stack1, ItemStack stack2) {
-		if (stack1.isEmpty() && stack2.isEmpty())
-			return true;
-
-		return !stack1.isEmpty() && stack1.sameItem(stack2) && ItemStack.tagMatches(stack1, stack2);
 	}
 }

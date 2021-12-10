@@ -64,16 +64,14 @@ public class CompressorTileEntity extends BaseInventoryTileEntity implements Men
 	}
 
 	@Override
-	public CompoundTag save(CompoundTag tag) {
-		tag = super.save(tag);
+	public void saveAdditional(CompoundTag tag) {
+		super.saveAdditional(tag);
 		tag.putInt("MaterialCount", this.materialCount);
 		tag.put("MaterialStack", this.materialStack.serializeNBT());
 		tag.putInt("Progress", this.progress);
 		tag.putBoolean("Ejecting", this.ejecting);
 		tag.putInt("Energy", this.energy.getEnergyStored());
 		tag.putBoolean("InputLimit", this.inputLimit);
-
-		return tag;
 	}
 
 	@Override

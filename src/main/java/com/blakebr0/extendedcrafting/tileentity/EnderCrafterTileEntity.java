@@ -55,12 +55,10 @@ public class EnderCrafterTileEntity extends BaseInventoryTileEntity implements M
 	}
 
 	@Override
-	public CompoundTag save(CompoundTag tag) {
-		tag = super.save(tag);
+	public void saveAdditional(CompoundTag tag) {
+		super.saveAdditional(tag);
 		tag.putInt("Progress", this.progress);
 		tag.putInt("ProgressReq", this.progressReq);
-
-		return tag;
 	}
 
 	@Override

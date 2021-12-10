@@ -63,12 +63,10 @@ public class CraftingCoreTileEntity extends BaseInventoryTileEntity implements M
 	}
 
 	@Override
-	public CompoundTag save(CompoundTag tag) {
-		tag = super.save(tag);
+	public void saveAdditional(CompoundTag tag) {
+		super.saveAdditional(tag);
 		tag.putInt("Progress", this.progress);
 		tag.putInt("Energy", this.energy.getEnergyStored());
-
-		return tag;
 	}
 
 	@Override

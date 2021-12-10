@@ -61,14 +61,12 @@ public abstract class AutoTableTileEntity extends BaseInventoryTileEntity implem
     }
 
     @Override
-    public CompoundTag save(CompoundTag tag) {
-        tag = super.save(tag);
+    public void saveAdditional(CompoundTag tag) {
+        super.saveAdditional(tag);
         tag.putInt("Progress", this.progress);
         tag.putBoolean("Running", this.running);
         tag.put("Energy", this.getEnergy().serializeNBT());
         tag.merge(this.getRecipeStorage().serializeNBT());
-
-        return tag;
     }
 
     @Override

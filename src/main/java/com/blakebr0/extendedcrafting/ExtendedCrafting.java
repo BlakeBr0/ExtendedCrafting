@@ -63,6 +63,8 @@ public final class ExtendedCrafting {
 		event.enqueueWork(() -> {
 			NetworkHandler.onCommonSetup();
 		});
+
+		SingularityRegistry.getInstance().writeDefaultSingularityFiles();
 	}
 
 	@SubscribeEvent

@@ -59,6 +59,22 @@ public final class SingularityRegistry {
         var stopwatch = Stopwatch.createStarted();
         var dir = FMLPaths.CONFIGDIR.get().resolve("extendedcrafting/singularities/").toFile();
 
+        this.writeDefaultSingularityFiles();
+
+        this.singularities.clear();
+
+        if (!dir.mkdirs() && dir.isDirectory()) {
+            this.loadFiles(dir);
+        }
+
+        stopwatch.stop();
+
+        ExtendedCrafting.LOGGER.info("Loaded {} singularity type(s) in {} ms", this.singularities.size(), stopwatch.elapsed(TimeUnit.MILLISECONDS));
+    }
+
+    public void writeDefaultSingularityFiles() {
+        var dir = FMLPaths.CONFIGDIR.get().resolve("extendedcrafting/singularities/").toFile();
+
         if (!dir.exists() && dir.mkdirs()) {
             for (var singularity : ModSingularities.getDefaults()) {
                 var json = SingularityUtils.writeToJson(singularity);
@@ -77,14 +93,6 @@ public final class SingularityRegistry {
                 }
             }
         }
-
-        if (!dir.mkdirs() && dir.isDirectory()) {
-            this.loadFiles(dir);
-        }
-
-        stopwatch.stop();
-
-        ExtendedCrafting.LOGGER.info("Loaded {} singularity type(s) in {} ms", this.singularities.size(), stopwatch.elapsed(TimeUnit.MILLISECONDS));
     }
 
     public List<Singularity> getSingularities() {

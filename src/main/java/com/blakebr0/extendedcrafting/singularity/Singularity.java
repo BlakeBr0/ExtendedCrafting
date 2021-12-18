@@ -1,6 +1,7 @@
 package com.blakebr0.extendedcrafting.singularity;
 
 import com.blakebr0.cucumber.util.Localizable;
+import com.blakebr0.extendedcrafting.config.ModConfigs;
 import net.minecraft.core.Registry;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
@@ -27,6 +28,10 @@ public class Singularity {
         this.inUltimateSingularity = inUltimateSingularity;
     }
 
+    public Singularity(ResourceLocation id, String name, int[] colors, Ingredient ingredient) {
+        this(id, name, colors, ingredient, -1, true);
+    }
+
     public Singularity(ResourceLocation id, String name, int[] colors, String tag, int ingredientCount, boolean inUltimateSingularity) {
         this.id = id;
         this.name = name;
@@ -35,6 +40,10 @@ public class Singularity {
         this.tag = tag;
         this.ingredientCount = ingredientCount;
         this.inUltimateSingularity = inUltimateSingularity;
+    }
+
+    public Singularity(ResourceLocation id, String name, int[] colors, String tag) {
+        this(id, name, colors, tag, -1, true);
     }
 
     public ResourceLocation getId() {
@@ -70,6 +79,10 @@ public class Singularity {
     }
 
     public int getIngredientCount() {
+        if (this.ingredientCount == -1) {
+            return ModConfigs.SINGULARITY_MATERIALS_REQUIRED.get();
+        }
+
         return this.ingredientCount;
     }
 
@@ -93,7 +106,7 @@ public class Singularity {
             this.ingredient.toNetwork(buffer);
         }
 
-        buffer.writeVarInt(this.ingredientCount);
+        buffer.writeVarInt(this.getIngredientCount());
         buffer.writeBoolean(this.inUltimateSingularity);
     }
 

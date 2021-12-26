@@ -1,6 +1,6 @@
 {
   "name": "book.extendedcrafting.entry.handheld_table",
-  "category": "utilities",
+  "category": "extendedcrafting:utilities",
   "icon": "extendedcrafting:handheld_table",
   "sortnum": 100,
   "pages": [

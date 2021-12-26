@@ -1,6 +1,6 @@
 {
   "name": "book.extendedcrafting.entry.tables",
-  "category": "crafting",
+  "category": "extendedcrafting:crafting",
   "icon": "extendedcrafting:ultimate_table",
   "sortnum": 1,
   "pages": [

@@ -1,6 +1,6 @@
 {
   "name": "book.extendedcrafting.entry.compression",
-  "category": "crafting",
+  "category": "extendedcrafting:crafting",
   "icon": "extendedcrafting:compressor",
   "sortnum": 2,
   "pages": [

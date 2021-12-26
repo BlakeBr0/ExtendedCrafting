@@ -1,6 +1,6 @@
 {
   "name": "book.extendedcrafting.entry.singularities",
-  "category": "components",
+  "category": "extendedcrafting:components",
   "icon": "extendedcrafting:singularity",
   "sortnum": 50,
   "pages": [

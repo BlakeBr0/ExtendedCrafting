@@ -5,6 +5,7 @@ import com.blakebr0.cucumber.inventory.slot.OutputSlot;
 import com.blakebr0.extendedcrafting.api.crafting.ITableRecipe;
 import com.blakebr0.extendedcrafting.api.crafting.RecipeTypes;
 import com.blakebr0.extendedcrafting.container.inventory.ExtendedCraftingInventory;
+import com.blakebr0.extendedcrafting.container.slot.AutoTableOutputSlot;
 import com.blakebr0.extendedcrafting.container.slot.TableOutputSlot;
 import com.blakebr0.extendedcrafting.init.ModContainerTypes;
 import net.minecraft.entity.player.PlayerEntity;
@@ -54,7 +55,7 @@ public class AdvancedAutoTableContainer extends Container {
 			}
 		}
 
-		this.addSlot(new OutputSlot(inventory, 25, 154, 81));
+		this.addSlot(new AutoTableOutputSlot(this, matrix, inventory, 25, 154, 81));
 
 		for (i = 0; i < 3; i++) {
 			for (j = 0; j < 9; j++) {

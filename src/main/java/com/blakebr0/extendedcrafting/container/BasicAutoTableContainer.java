@@ -5,6 +5,7 @@ import com.blakebr0.cucumber.inventory.slot.OutputSlot;
 import com.blakebr0.extendedcrafting.api.crafting.RecipeTypes;
 import com.blakebr0.extendedcrafting.config.ModConfigs;
 import com.blakebr0.extendedcrafting.container.inventory.ExtendedCraftingInventory;
+import com.blakebr0.extendedcrafting.container.slot.AutoTableOutputSlot;
 import com.blakebr0.extendedcrafting.container.slot.TableOutputSlot;
 import com.blakebr0.extendedcrafting.init.ModContainerTypes;
 import com.blakebr0.extendedcrafting.tileentity.AutoTableTileEntity;
@@ -57,7 +58,7 @@ public class BasicAutoTableContainer extends AbstractContainerMenu {
 			}
 		}
 
-		this.addSlot(new OutputSlot(inventory, 9, 129, 78));
+		this.addSlot(new AutoTableOutputSlot(this, matrix, inventory, 9, 129, 78));
 
 		for (i = 0; i < 3; i++) {
 			for (j = 0; j < 9; j++) {

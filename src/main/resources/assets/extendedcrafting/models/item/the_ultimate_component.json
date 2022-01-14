@@ -1,6 +1,7 @@
 {
   "parent": "item/generated",
   "textures": {
-    "layer0": "extendedcrafting:item/the_ultimate_component"
+    "layer0": "extendedcrafting:item/the_ultimate_component",
+    "layer1": "extendedcrafting:item/the_ultimate_component_overlay"
   }
 }

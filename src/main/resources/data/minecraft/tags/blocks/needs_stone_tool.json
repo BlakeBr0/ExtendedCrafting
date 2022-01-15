@@ -1,0 +1,24 @@
+{
+  "replace": false,
+  "values": [
+    "extendedcrafting:luminessence_block",
+    "extendedcrafting:black_iron_block",
+    "extendedcrafting:redstone_ingot_block",
+    "extendedcrafting:ender_ingot_block",
+    "extendedcrafting:enhanced_ender_ingot_block",
+    "extendedcrafting:frame",
+    "extendedcrafting:pedestal",
+    "extendedcrafting:crafting_core",
+    "extendedcrafting:basic_table",
+    "extendedcrafting:advanced_table",
+    "extendedcrafting:elite_table",
+    "extendedcrafting:ultimate_table",
+    "extendedcrafting:basic_auto_table",
+    "extendedcrafting:advanced_auto_table",
+    "extendedcrafting:elite_auto_table",
+    "extendedcrafting:ultimate_auto_table",
+    "extendedcrafting:compressor",
+    "extendedcrafting:ender_alternator",
+    "extendedcrafting:ender_crafter"
+  ]
+}

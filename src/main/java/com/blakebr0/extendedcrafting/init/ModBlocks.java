@@ -18,6 +18,7 @@ import com.blakebr0.extendedcrafting.block.PedestalBlock;
 import com.blakebr0.extendedcrafting.block.UltimateAutoTableBlock;
 import com.blakebr0.extendedcrafting.block.UltimateTableBlock;
 import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.Rarity;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.material.Material;
@@ -37,11 +38,11 @@ public final class ModBlocks {
 	public static final RegistryObject<Block> BLACK_IRON_BLOCK = register("black_iron_block", () -> new BaseBlock(Material.METAL, SoundType.METAL, 5.0F, 10.0F, true));
 	public static final RegistryObject<Block> REDSTONE_INGOT_BLOCK = register("redstone_ingot_block", () -> new BaseBlock(Material.METAL, SoundType.METAL, 5.0F, 10.0F, true));
 	public static final RegistryObject<Block> ENDER_INGOT_BLOCK = register("ender_ingot_block", () -> new BaseBlock(Material.METAL, SoundType.METAL, 5.0F, 10.0F, true));
-	public static final RegistryObject<Block> ENHANCED_ENDER_INGOT_BLOCK = register("enhanced_ender_ingot_block", () -> new BaseBlock(Material.METAL, SoundType.METAL, 5.0F, 10.0F, true));
-	public static final RegistryObject<Block> CRYSTALTINE_BLOCK = register("crystaltine_block", () -> new BaseBlock(Material.METAL, SoundType.METAL, 5.0F, 10.0F, true));
-	public static final RegistryObject<Block> THE_ULTIMATE_BLOCK = register("the_ultimate_block", () -> new BaseBlock(Material.METAL, SoundType.METAL, 5.0F, 10.0F, true));
-	public static final RegistryObject<Block> NETHER_STAR_BLOCK = register("nether_star_block", () -> new BaseBlock(Material.METAL, SoundType.METAL, 5.0F, 10.0F, true));
-	public static final RegistryObject<Block> ENDER_STAR_BLOCK = register("ender_star_block", () -> new BaseBlock(Material.METAL, SoundType.METAL, 5.0F, 10.0F, true));
+	public static final RegistryObject<Block> ENHANCED_ENDER_INGOT_BLOCK = register("enhanced_ender_ingot_block", () -> new BaseBlock(Material.METAL, SoundType.METAL, 5.0F, 10.0F, true), Rarity.UNCOMMON);
+	public static final RegistryObject<Block> CRYSTALTINE_BLOCK = register("crystaltine_block", () -> new BaseBlock(Material.METAL, SoundType.METAL, 5.0F, 10.0F, true), Rarity.UNCOMMON);
+	public static final RegistryObject<Block> THE_ULTIMATE_BLOCK = register("the_ultimate_block", () -> new BaseBlock(Material.METAL, SoundType.METAL, 5.0F, 10.0F, true), Rarity.EPIC);
+	public static final RegistryObject<Block> NETHER_STAR_BLOCK = register("nether_star_block", () -> new BaseBlock(Material.METAL, SoundType.METAL, 5.0F, 10.0F, true), Rarity.UNCOMMON);
+	public static final RegistryObject<Block> ENDER_STAR_BLOCK = register("ender_star_block", () -> new BaseBlock(Material.METAL, SoundType.METAL, 5.0F, 10.0F, true), Rarity.UNCOMMON);
 
 	public static final RegistryObject<Block> FRAME = register("frame", FrameBlock::new);
 	public static final RegistryObject<Block> PEDESTAL = register("pedestal", PedestalBlock::new);
@@ -60,6 +61,10 @@ public final class ModBlocks {
 
 	private static RegistryObject<Block> register(String name, Supplier<Block> block) {
 		return register(name, block, b -> () -> new BaseBlockItem(b.get(), p -> p.tab(CREATIVE_TAB)));
+	}
+
+	private static RegistryObject<Block> register(String name, Supplier<Block> block, Rarity rarity) {
+		return register(name, block, b -> () -> new BaseBlockItem(b.get(), p -> p.tab(CREATIVE_TAB).rarity(rarity)));
 	}
 
 	private static RegistryObject<Block> register(String name, Supplier<Block> block, Function<RegistryObject<Block>, Supplier<? extends BlockItem>> item) {

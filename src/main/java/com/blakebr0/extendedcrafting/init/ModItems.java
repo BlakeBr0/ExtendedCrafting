@@ -20,6 +20,11 @@ import static com.blakebr0.extendedcrafting.ExtendedCrafting.CREATIVE_TAB;
 public final class ModItems {
 	public static final DeferredRegister<Item> REGISTRY = DeferredRegister.create(ForgeRegistries.ITEMS, ExtendedCrafting.MOD_ID);
 
+	// register block items here for class load order purposes
+	static {
+		ModBlocks.BLOCK_ITEMS.forEach(REGISTRY::register);
+	}
+
 	public static final RegistryObject<Item> LUMINESSENCE = register("luminessence");
 	public static final RegistryObject<Item> BLACK_IRON_INGOT = register("black_iron_ingot");
 	public static final RegistryObject<Item> REDSTONE_INGOT = register("redstone_ingot");

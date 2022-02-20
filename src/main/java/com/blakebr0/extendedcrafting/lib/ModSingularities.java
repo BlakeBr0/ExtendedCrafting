@@ -15,6 +15,7 @@ public final class ModSingularities {
     public static final Singularity LAPIS_LAZULI = new Singularity(new ResourceLocation(ExtendedCrafting.MOD_ID, "lapis_lazuli"), "singularity.extendedcrafting.lapis_lazuli", new int[] { 0x678DEA, 0x1B53A7 }, Ingredient.of(Items.LAPIS_LAZULI));
     public static final Singularity REDSTONE = new Singularity(new ResourceLocation(ExtendedCrafting.MOD_ID, "redstone"), "singularity.extendedcrafting.redstone", new int[] { 0xFF0000, 0x8A0901 }, Ingredient.of(Items.REDSTONE));
     public static final Singularity GLOWSTONE = new Singularity(new ResourceLocation(ExtendedCrafting.MOD_ID, "glowstone"), "singularity.extendedcrafting.glowstone", new int[] { 0xFFD38F, 0xA06135 }, Ingredient.of(Items.GLOWSTONE_DUST));
+    public static final Singularity GOLD = new Singularity(new ResourceLocation(ExtendedCrafting.MOD_ID, "gold"), "singularity.extendedcrafting.gold", new int[] { 0xFDF55F, 0xD98E04 }, Ingredient.of(Items.GOLD_INGOT));
     public static final Singularity DIAMOND = new Singularity(new ResourceLocation(ExtendedCrafting.MOD_ID, "diamond"), "singularity.extendedcrafting.diamond", new int[] { 0xA6FCE9, 0x1AACA8 }, Ingredient.of(Items.DIAMOND));
     public static final Singularity EMERALD = new Singularity(new ResourceLocation(ExtendedCrafting.MOD_ID, "emerald"), "singularity.extendedcrafting.emerald", new int[] { 0x7DF8AC, 0x008E1A }, Ingredient.of(Items.EMERALD));
 
@@ -36,6 +37,7 @@ public final class ModSingularities {
                 LAPIS_LAZULI,
                 REDSTONE,
                 GLOWSTONE,
+                GOLD,
                 DIAMOND,
                 EMERALD,
 

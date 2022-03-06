@@ -2,11 +2,10 @@ package com.blakebr0.extendedcrafting.singularity;
 
 import com.blakebr0.cucumber.util.Localizable;
 import com.blakebr0.extendedcrafting.config.ModConfigs;
-import net.minecraft.core.Registry;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.tags.SerializationTags;
+import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.crafting.Ingredient;
 
 public class Singularity {
@@ -68,11 +67,8 @@ public class Singularity {
 
     public Ingredient getIngredient() {
         if (this.tag != null && this.ingredient == Ingredient.EMPTY) {
-            var tag = SerializationTags.getInstance().getOrEmpty(Registry.ITEM_REGISTRY).getTag(new ResourceLocation(this.tag));
-
-            if (tag != null) {
-                this.ingredient = Ingredient.of(tag);
-            }
+            var tag = ItemTags.create(new ResourceLocation(this.tag));
+            this.ingredient = Ingredient.of(tag);
         }
 
         return this.ingredient;

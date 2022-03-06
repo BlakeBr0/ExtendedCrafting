@@ -3,6 +3,7 @@ package com.blakebr0.extendedcrafting;
 import com.blakebr0.cucumber.helper.ConfigHelper;
 import com.blakebr0.extendedcrafting.client.ModelHandler;
 import com.blakebr0.extendedcrafting.config.ModConfigs;
+import com.blakebr0.extendedcrafting.crafting.DynamicRecipeManager;
 import com.blakebr0.extendedcrafting.handler.ColorHandler;
 import com.blakebr0.extendedcrafting.init.ModBlocks;
 import com.blakebr0.extendedcrafting.init.ModContainerTypes;
@@ -23,14 +24,14 @@ import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @Mod(ExtendedCrafting.MOD_ID)
 public final class ExtendedCrafting {
 	public static final String MOD_ID = "extendedcrafting";
 	public static final String NAME = "Extended Crafting";
-	public static final Logger LOGGER = LogManager.getLogger(NAME);
+	public static final Logger LOGGER = LoggerFactory.getLogger(NAME);
 	public static final CreativeModeTab CREATIVE_TAB = new ECCreativeTab();
 
 	public ExtendedCrafting() {
@@ -58,6 +59,7 @@ public final class ExtendedCrafting {
 	public void onCommonSetup(FMLCommonSetupEvent event) {
 		MinecraftForge.EVENT_BUS.register(this);
 		MinecraftForge.EVENT_BUS.register(new ModReloadListeners());
+		MinecraftForge.EVENT_BUS.register(DynamicRecipeManager.getInstance());
 		MinecraftForge.EVENT_BUS.register(SingularityRegistry.getInstance());
 
 		event.enqueueWork(() -> {

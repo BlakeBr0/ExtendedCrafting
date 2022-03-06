@@ -23,7 +23,6 @@ import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.NonNullList;
 import net.minecraft.network.chat.Component;
-import net.minecraft.tags.ItemTags;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
@@ -190,16 +189,16 @@ public class RecipeMakerItem extends BaseItem implements IEnableable {
 			var item = "";
 
 			if (!stack.isEmpty() && ModConfigs.RECIPE_MAKER_USE_TAGS.get()) {
-				var tagId = stack.getItem().getTags().stream().findFirst().orElse(null);
+				var tagId = stack.getTags().findFirst().orElse(null);
 
 				if (tagId != null) {
-					item = "tag:items:" + tagId;
+					item = "tag:items:" + tagId.location();
 				}
 			}
 
 			if (item.isEmpty()) {
 				var id = stack.getItem().getRegistryName();
-				item = id == null ? "item:minecraft:air" : "item:" + id.toString();
+				item = id == null ? "item:minecraft:air" : "item:" + id;
 			}
 
 			string.append("<").append(item).append(">");
@@ -254,14 +253,14 @@ public class RecipeMakerItem extends BaseItem implements IEnableable {
 
 		for (int i : slotsWithItems) {
 			var stack = inventory.getStackInSlot(i);
-			var tagId = stack.getItem().getTags().stream().findFirst().orElse(null);
+			var tagId = stack.getTags().findFirst().orElse(null);
 
 			String item;
 			if (ModConfigs.RECIPE_MAKER_USE_TAGS.get() && tagId != null) {
 				item = "tag:items:" + tagId;
 			} else {
 				var id = stack.getItem().getRegistryName();
-				item = id == null ? "item:minecraft:air" : "item:" + id.toString();
+				item = id == null ? "item:minecraft:air" : "item:" + id;
 			}
 
 			string.append("<").append(item).append(">");
@@ -303,14 +302,14 @@ public class RecipeMakerItem extends BaseItem implements IEnableable {
 
 		for (int i = 0; i < stacks.length; i++) {
 			var stack = stacks[i];
-			var tagId = stack.getItem().getTags().stream().findFirst().orElse(null);
+			var tagId = stack.getTags().findFirst().orElse(null);
 
 			String item;
 			if (ModConfigs.RECIPE_MAKER_USE_TAGS.get() && tagId != null) {
 				item = "tag:items:" + tagId;
 			} else {
 				var id = stack.getItem().getRegistryName();
-				item = id == null ? "item:minecraft:air" : "item:" + id.toString();
+				item = id == null ? "item:minecraft:air" : "item:" + id;
 			}
 
 			if (ModConfigs.RECIPE_MAKER_USE_NBT.get() && !stack.isEmpty() && stack.hasTag() && !item.startsWith("tag") && ModList.get().isLoaded("crafttweaker")) {
@@ -350,8 +349,7 @@ public class RecipeMakerItem extends BaseItem implements IEnableable {
 			if (stack.isEmpty() || keysMap.keySet().stream().anyMatch(ing -> ing.test(stack)))
 				continue;
 
-			var tagId = stack.getItem().getTags().stream().findFirst().orElse(null);
-			var tag = tagId == null ? null : ItemTags.getAllTags().getTag(tagId);
+			var tag = stack.getTags().findFirst().orElse(null);
 			char key = KEYS[keysMap.size()];
 			if (ModConfigs.RECIPE_MAKER_USE_TAGS.get() && tag != null) {
 				keysMap.put(Ingredient.of(tag), key);
@@ -423,7 +421,7 @@ public class RecipeMakerItem extends BaseItem implements IEnableable {
 			var stack = inventory.getStackInSlot(i);
 
 			if (!stack.isEmpty()) {
-				var tagId = stack.getItem().getTags().stream().findFirst().orElse(null);
+				var tagId = stack.getTags().findFirst().orElse(null);
 
 				if (ModConfigs.RECIPE_MAKER_USE_TAGS.get() && tagId != null) {
 					var tag = new JsonObject();
@@ -465,7 +463,7 @@ public class RecipeMakerItem extends BaseItem implements IEnableable {
 		var stacks = core.getPedestalsWithItems().values().stream().filter(s -> !s.isEmpty()).toArray(ItemStack[]::new);
 
 		for (var stack : stacks) {
-			var tagId = stack.getItem().getTags().stream().findFirst().orElse(null);
+			var tagId = stack.getTags().findFirst().orElse(null);
 
 			if (ModConfigs.RECIPE_MAKER_USE_TAGS.get() && tagId != null) {
 				var tag = new JsonObject();

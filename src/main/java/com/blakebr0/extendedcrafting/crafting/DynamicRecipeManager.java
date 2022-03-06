@@ -1,6 +1,6 @@
 package com.blakebr0.extendedcrafting.crafting;
 
-import com.blakebr0.cucumber.helper.RecipeHelper;
+import com.blakebr0.cucumber.event.RegisterRecipesEvent;
 import com.blakebr0.extendedcrafting.ExtendedCrafting;
 import com.blakebr0.extendedcrafting.config.ModConfigs;
 import com.blakebr0.extendedcrafting.crafting.recipe.CompressorRecipe;
@@ -8,19 +8,21 @@ import com.blakebr0.extendedcrafting.singularity.Singularity;
 import com.blakebr0.extendedcrafting.singularity.SingularityRegistry;
 import com.blakebr0.extendedcrafting.singularity.SingularityUtils;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.registries.ForgeRegistries;
 
 public final class DynamicRecipeManager {
     private static final DynamicRecipeManager INSTANCE = new DynamicRecipeManager();
 
-    public void onResourceManagerReload(ResourceManager manager) {
-        SingularityRegistry.getInstance().getSingularities().forEach(singularity -> {
+    @SubscribeEvent
+    public void onRegisterRecipes(RegisterRecipesEvent event) {
+        for (var singularity : SingularityRegistry.getInstance().getSingularities()) {
             var compressorRecipe = makeSingularityRecipe(singularity);
+
             if (compressorRecipe != null)
-                RecipeHelper.addRecipe(compressorRecipe);
-        });
+                event.register(compressorRecipe);
+        }
     }
 
     public static DynamicRecipeManager getInstance() {

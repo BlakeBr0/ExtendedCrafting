@@ -161,7 +161,7 @@ public final class SingularityRegistry {
                 IOUtils.closeQuietly(reader);
             }
 
-            if (singularity != null) {
+            if (singularity != null && singularity.isEnabled()) {
                 var id = singularity.getId();
 
                 this.singularities.put(id, singularity);

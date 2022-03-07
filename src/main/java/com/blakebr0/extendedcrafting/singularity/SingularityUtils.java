@@ -23,18 +23,24 @@ public final class SingularityUtils {
 
         var inUltimateSingularity = GsonHelper.getAsBoolean(json, "inUltimateSingularity", true);
 
-        if (!json.has("ingredient")) {
-            return new Singularity(id, name, new int[] { overlayColor, underlayColor }, Ingredient.EMPTY, materialCount, inUltimateSingularity);
-        }
+        Singularity singularity;
+        var ing = GsonHelper.getAsJsonObject(json, "ingredient", null);
 
-        var ing = GsonHelper.getAsJsonObject(json, "ingredient");
-        if (ing.has("tag")) {
+        if (ing == null) {
+            singularity = new Singularity(id, name, new int[] { overlayColor, underlayColor }, Ingredient.EMPTY, materialCount, inUltimateSingularity);
+        } else if (ing.has("tag")) {
             var tag = ing.get("tag").getAsString();
-            return new Singularity(id, name, new int[] { overlayColor, underlayColor }, tag, materialCount, inUltimateSingularity);
+            singularity = new Singularity(id, name, new int[] { overlayColor, underlayColor }, tag, materialCount, inUltimateSingularity);
         } else {
             var ingredient = Ingredient.fromJson(json.get("ingredient"));
-            return new Singularity(id, name, new int[] { overlayColor, underlayColor }, ingredient, materialCount, inUltimateSingularity);
+            singularity = new Singularity(id, name, new int[] { overlayColor, underlayColor }, ingredient, materialCount, inUltimateSingularity);
         }
+
+        var enabled = GsonHelper.getAsBoolean(json, "enabled", true);
+
+        singularity.setEnabled(enabled);
+
+        return singularity;
     }
 
     public static JsonObject writeToJson(Singularity singularity) {
@@ -59,6 +65,10 @@ public final class SingularityUtils {
         }
 
         json.add("ingredient", ingredient);
+
+        if (!singularity.isEnabled()) {
+            json.addProperty("enabled", false);
+        }
 
         return json;
     }

@@ -36,6 +36,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.common.crafting.NBTIngredient;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.items.IItemHandler;
 
@@ -88,32 +89,31 @@ public class RecipeMakerItem extends BaseItem implements IEnableable {
 			if (level.isClientSide()) {
 				var type = NBTHelper.getString(stack, "Type");
 				var inventory = ((BaseInventoryTileEntity) tile).getInventory();
+				var block = tile instanceof EnderCrafterTileEntity ? "EnderCrafting" : "TableCrafting";
 
+				String string;
 				if ("CraftTweaker".equals(type)) {
-					type = tile instanceof EnderCrafterTileEntity ? "EnderCrafting" : "TableCrafting";
-					var string = isShapeless(stack)
-							? makeShapelessCraftTweakerTableRecipe(inventory, type)
-							: makeShapedCraftTweakerTableRecipe(inventory, type);
+					string = isShapeless(stack)
+							? makeShapelessCraftTweakerTableRecipe(inventory, block)
+							: makeShapedCraftTweakerTableRecipe(inventory, block);
 
-					setClipboard(string);
 				} else {
-					type = tile instanceof EnderCrafterTileEntity ? "EnderCrafting" : "TableCrafting";
-					var string = isShapeless(stack)
-							? makeShapelessDatapackTableRecipe(inventory, type)
-							: makeShapedDatapackTableRecipe(inventory, type);
+					string = isShapeless(stack)
+							? makeShapelessDatapackTableRecipe(inventory, block)
+							: makeShapedDatapackTableRecipe(inventory, block);
 
 					if ("TOO MANY ITEMS".equals(string)) {
 						player.sendMessage(Localizable.of("message.extendedcrafting.max_unique_items_exceeded").args(KEYS.length).build(), Util.NIL_UUID);
 
 						return InteractionResult.SUCCESS;
 					}
-
-					setClipboard(string);
 				}
+
+				setClipboard(string);
 
 				player.sendMessage(Localizable.of("message.extendedcrafting.copied_recipe").build(), Util.NIL_UUID);
 
-				if (ModConfigs.RECIPE_MAKER_USE_NBT.get() && !ModList.get().isLoaded("crafttweaker")) {
+				if (ModConfigs.RECIPE_MAKER_USE_NBT.get() && "CraftTweaker".equals(type) && !ModList.get().isLoaded("crafttweaker")) {
 					player.sendMessage(Localizable.of("message.extendedcrafting.nbt_requires_crafttweaker").build(), Util.NIL_UUID);
 				}
 			}
@@ -355,7 +355,7 @@ public class RecipeMakerItem extends BaseItem implements IEnableable {
 				keysMap.put(Ingredient.of(tag), key);
 			} else {
 				if (ModConfigs.RECIPE_MAKER_USE_NBT.get() && stack.hasTag()) {
-					keysMap.put(new NBTIngredient(stack), key);
+					keysMap.put(new NBTIngredient(stack) { }, key);
 				} else {
 					keysMap.put(Ingredient.of(stack), key);
 				}
@@ -430,7 +430,7 @@ public class RecipeMakerItem extends BaseItem implements IEnableable {
 					ingredients.add(tag);
 				} else {
 					if (ModConfigs.RECIPE_MAKER_USE_NBT.get() && stack.hasTag()) {
-						ingredients.add(new NBTIngredient(stack).toJson());
+						ingredients.add(new NBTIngredient(stack) { }.toJson());
 					} else {
 						ingredients.add(Ingredient.of(stack).toJson());
 					}
@@ -472,7 +472,7 @@ public class RecipeMakerItem extends BaseItem implements IEnableable {
 				ingredients.add(tag);
 			} else {
 				if (ModConfigs.RECIPE_MAKER_USE_NBT.get() && stack.hasTag()) {
-					ingredients.add(new NBTIngredient(stack).toJson());
+					ingredients.add(new NBTIngredient(stack) { }.toJson());
 				} else {
 					ingredients.add(Ingredient.of(stack).toJson());
 				}
@@ -513,11 +513,5 @@ public class RecipeMakerItem extends BaseItem implements IEnableable {
 		else if (slots >= 49) return 49;
 		else if (slots >= 25) return 25;
 		else return 9;
-	}
-
-	private static class NBTIngredient extends net.minecraftforge.common.crafting.NBTIngredient {
-		public NBTIngredient(ItemStack stack) {
-			super(stack);
-		}
 	}
 }

@@ -1,11 +1,11 @@
 package com.blakebr0.extendedcrafting.compat.crafttweaker;
 
-import net.minecraft.nbt.Tag;
+import com.blamejared.crafttweaker.api.data.MapData;
+import com.blamejared.crafttweaker.api.data.base.visitor.DataToTextComponentVisitor;
+import net.minecraft.nbt.CompoundTag;
 
 public final class CraftTweakerUtils {
-	public static String writeTag(Tag nbt) {
-//        IData data = NBTConverter.convert(nbt);
-//        return data == null ? "" : data.asString();
-        return "";
+	public static String writeTag(CompoundTag tag) {
+        return (new MapData(tag).accept(new DataToTextComponentVisitor(" ", 0)).getString());
 	}
 }

@@ -204,7 +204,7 @@ public class RecipeMakerItem extends BaseItem implements IEnableable {
 			string.append("<").append(item).append(">");
 
 			if (ModConfigs.RECIPE_MAKER_USE_NBT.get() && !stack.isEmpty() && stack.hasTag() && !item.startsWith("tag") && ModList.get().isLoaded("crafttweaker")) {
-				var nbt = stack.serializeNBT().get("tag");
+				var nbt = stack.getTag();
 				var tag = CraftTweakerUtils.writeTag(nbt);
 
 				string.append(".withTag(").append(tag).append(")");
@@ -266,7 +266,7 @@ public class RecipeMakerItem extends BaseItem implements IEnableable {
 			string.append("<").append(item).append(">");
 
 			if (ModConfigs.RECIPE_MAKER_USE_NBT.get() && !stack.isEmpty() && stack.hasTag() && !item.startsWith("tag") && ModList.get().isLoaded("crafttweaker")) {
-				var nbt = stack.serializeNBT().get("tag");
+				var nbt = stack.getTag();
 				var tag = CraftTweakerUtils.writeTag(nbt);
 
 				string.append(".withTag(").append(tag).append(")");
@@ -313,7 +313,7 @@ public class RecipeMakerItem extends BaseItem implements IEnableable {
 			}
 
 			if (ModConfigs.RECIPE_MAKER_USE_NBT.get() && !stack.isEmpty() && stack.hasTag() && !item.startsWith("tag") && ModList.get().isLoaded("crafttweaker")) {
-				var nbt = stack.serializeNBT().get("tag");
+				var nbt = stack.getTag();
 				var tag = CraftTweakerUtils.writeTag(nbt);
 
 				string.append(".withTag(").append(tag).append(")");

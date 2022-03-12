@@ -50,7 +50,7 @@ import java.util.function.Function;
 public class RecipeMakerItem extends BaseItem implements IEnableable {
 	private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
 	private static final String NEW_LINE = System.lineSeparator() + "\t";
-	private static final char[] KEYS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ123456789".toCharArray();
+	private static final char[] KEYS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+-_*/".toCharArray();
 
 	public RecipeMakerItem(Function<Properties, Properties> properties) {
 		super(properties.compose(p -> p.stacksTo(1)));

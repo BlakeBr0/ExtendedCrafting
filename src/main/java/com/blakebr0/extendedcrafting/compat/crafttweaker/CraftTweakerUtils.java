@@ -6,6 +6,6 @@ import net.minecraft.nbt.CompoundTag;
 
 public final class CraftTweakerUtils {
 	public static String writeTag(CompoundTag tag) {
-        return (new MapData(tag).accept(new DataToTextComponentVisitor(" ", 0)).getString());
+        return (new MapData(tag).accept(new DataToTextComponentVisitor("", 0)).getString());
 	}
 }

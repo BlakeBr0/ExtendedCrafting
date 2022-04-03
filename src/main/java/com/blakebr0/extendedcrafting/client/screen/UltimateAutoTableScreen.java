@@ -78,10 +78,19 @@ public class UltimateAutoTableScreen extends BaseContainerScreen<UltimateAutoTab
 								new TextComponent(""),
 								ModTooltips.AUTO_TABLE_DELETE_RECIPE.color(ChatFormatting.WHITE).build()
 						);
+
+						if (this.getSelected() == button.getIndex()) {
+							tooltip.add(1, ModTooltips.SELECTED.color(ChatFormatting.GREEN).build());
+						}
 					} else {
 						tooltip = Lists.newArrayList(
 								ModTooltips.AUTO_TABLE_SAVE_RECIPE.color(ChatFormatting.WHITE).build()
 						);
+
+						if (this.getSelected() == button.getIndex()) {
+							tooltip.add(0, ModTooltips.SELECTED.color(ChatFormatting.GREEN).build());
+							tooltip.add(1, new TextComponent(""));
+						}
 					}
 
 					this.renderComponentTooltip(stack, tooltip, mouseX, mouseY);

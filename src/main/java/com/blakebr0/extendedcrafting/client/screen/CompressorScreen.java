@@ -10,7 +10,6 @@ import com.blakebr0.extendedcrafting.tileentity.CompressorTileEntity;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Inventory;
@@ -48,7 +47,7 @@ public class CompressorScreen extends BaseContainerScreen<CompressorContainer> {
 		super.render(matrix, mouseX, mouseY, partialTicks);
 
 		if (mouseX > x + 7 && mouseX < x + 20 && mouseY > y + 17 && mouseY < y + 94) {
-			var text = new TextComponent(number(this.getEnergyStored()) + " / " + number(this.getMaxEnergyStored()) + " FE");
+			var text = Component.literal(number(this.getEnergyStored()) + " / " + number(this.getMaxEnergyStored()) + " FE");
 			this.renderTooltip(matrix, text, mouseX, mouseY);
 		}
 
@@ -62,7 +61,7 @@ public class CompressorScreen extends BaseContainerScreen<CompressorContainer> {
 					tooltip.add(this.getMaterialStackDisplayName());
 				}
 
-				var text = new TextComponent(number(this.getMaterialCount()) + " / " + number(this.getMaterialsRequired()));
+				var text = Component.literal(number(this.getMaterialCount()) + " / " + number(this.getMaterialsRequired()));
 
 				tooltip.add(text);
 			}
@@ -137,7 +136,7 @@ public class CompressorScreen extends BaseContainerScreen<CompressorContainer> {
 			}
 		}
 
-		return new TextComponent("");
+		return Component.literal("");
 	}
 
 	private CompressorTileEntity getTileEntity() {

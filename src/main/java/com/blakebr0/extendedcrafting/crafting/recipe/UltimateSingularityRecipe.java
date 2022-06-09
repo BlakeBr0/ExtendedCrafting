@@ -11,7 +11,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeSerializer;
-import net.minecraftforge.registries.ForgeRegistryEntry;
 
 public class UltimateSingularityRecipe extends ShapelessTableRecipe {
     private boolean ingredientsLoaded = false;
@@ -42,7 +41,7 @@ public class UltimateSingularityRecipe extends ShapelessTableRecipe {
         return ModRecipeSerializers.ULTIMATE_SINGULARITY;
     }
 
-    public static class Serializer extends ForgeRegistryEntry<RecipeSerializer<?>> implements RecipeSerializer<UltimateSingularityRecipe> {
+    public static class Serializer implements RecipeSerializer<UltimateSingularityRecipe> {
         @Override
         public UltimateSingularityRecipe fromJson(ResourceLocation recipeId, JsonObject json) {
             return new UltimateSingularityRecipe(recipeId, new ItemStack(ModItems.ULTIMATE_SINGULARITY.get()));

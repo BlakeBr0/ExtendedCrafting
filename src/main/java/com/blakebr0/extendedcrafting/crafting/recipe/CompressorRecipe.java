@@ -19,7 +19,6 @@ import net.minecraft.world.item.crafting.ShapedRecipe;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.wrapper.InvWrapper;
-import net.minecraftforge.registries.ForgeRegistryEntry;
 
 public class CompressorRecipe implements ISpecialRecipe, ICompressorRecipe {
 	private final ResourceLocation recipeId;
@@ -117,7 +116,7 @@ public class CompressorRecipe implements ISpecialRecipe, ICompressorRecipe {
 		return this.powerRate;
 	}
 
-	public static class Serializer extends ForgeRegistryEntry<RecipeSerializer<?>> implements RecipeSerializer<CompressorRecipe> {
+	public static class Serializer implements RecipeSerializer<CompressorRecipe> {
 		@Override
 		public CompressorRecipe fromJson(ResourceLocation recipeId, JsonObject json) {
 			var input = Ingredient.fromJson(json.getAsJsonObject("ingredient"));

@@ -21,7 +21,6 @@ import net.minecraft.world.item.crafting.ShapedRecipe;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.wrapper.InvWrapper;
-import net.minecraftforge.registries.ForgeRegistryEntry;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -113,7 +112,7 @@ public class CombinationRecipe implements ISpecialRecipe, ICombinationRecipe {
 		return this.inputsList;
 	}
 
-	public static class Serializer extends ForgeRegistryEntry<RecipeSerializer<?>> implements RecipeSerializer<CombinationRecipe> {
+	public static class Serializer implements RecipeSerializer<CombinationRecipe> {
 		@Override
 		public CombinationRecipe fromJson(ResourceLocation recipeId, JsonObject json) {
 			NonNullList<Ingredient> inputs = NonNullList.create();

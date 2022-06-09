@@ -16,7 +16,7 @@ public class UltimateSingularityRecipeCondition implements ICondition {
     }
 
     @Override
-    public boolean test() {
+    public boolean test(IContext context) {
         return ModConfigs.SINGULARITY_ULTIMATE_RECIPE.get();
     }
 

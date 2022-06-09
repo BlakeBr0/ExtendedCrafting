@@ -20,7 +20,6 @@ import net.minecraft.world.item.crafting.ShapedRecipe;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.wrapper.InvWrapper;
-import net.minecraftforge.registries.ForgeRegistryEntry;
 
 import java.util.Map;
 import java.util.function.Function;
@@ -203,7 +202,7 @@ public class ShapedTableRecipe implements ISpecialRecipe, ITableRecipe {
 		this.transformers = transformers;
 	}
 
-	public static class Serializer extends ForgeRegistryEntry<RecipeSerializer<?>> implements RecipeSerializer<ShapedTableRecipe> {
+	public static class Serializer implements RecipeSerializer<ShapedTableRecipe> {
 		@Override
 		public ShapedTableRecipe fromJson(ResourceLocation recipeId, JsonObject json) {
 			var map = ShapedRecipe.keyFromJson(GsonHelper.getAsJsonObject(json, "key"));

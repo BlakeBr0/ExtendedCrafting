@@ -21,7 +21,6 @@ import net.minecraft.world.item.crafting.ShapedRecipe;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.wrapper.InvWrapper;
-import net.minecraftforge.registries.ForgeRegistryEntry;
 
 public class ShapedEnderCrafterRecipe implements ISpecialRecipe, IEnderCrafterRecipe {
 	private final ResourceLocation recipeId;
@@ -160,7 +159,7 @@ public class ShapedEnderCrafterRecipe implements ISpecialRecipe, IEnderCrafterRe
 		return astring;
 	}
 
-	public static class Serializer extends ForgeRegistryEntry<RecipeSerializer<?>> implements RecipeSerializer<ShapedEnderCrafterRecipe> {
+	public static class Serializer implements RecipeSerializer<ShapedEnderCrafterRecipe> {
 		@Override
 		public ShapedEnderCrafterRecipe fromJson(ResourceLocation recipeId, JsonObject json) {
 			var map = ShapedRecipe.keyFromJson(GsonHelper.getAsJsonObject(json, "key"));

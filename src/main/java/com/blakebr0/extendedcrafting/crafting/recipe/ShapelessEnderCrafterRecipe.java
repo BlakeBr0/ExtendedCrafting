@@ -20,7 +20,6 @@ import net.minecraft.world.level.Level;
 import net.minecraftforge.common.util.RecipeMatcher;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.wrapper.InvWrapper;
-import net.minecraftforge.registries.ForgeRegistryEntry;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -110,7 +109,7 @@ public class ShapelessEnderCrafterRecipe implements ISpecialRecipe, IEnderCrafte
 		return this.craftingTime;
 	}
 
-	public static class Serializer extends ForgeRegistryEntry<RecipeSerializer<?>> implements RecipeSerializer<ShapelessEnderCrafterRecipe> {
+	public static class Serializer implements RecipeSerializer<ShapelessEnderCrafterRecipe> {
 		@Override
 		public ShapelessEnderCrafterRecipe fromJson(ResourceLocation recipeId, JsonObject json) {
 			NonNullList<Ingredient> inputs = NonNullList.create();

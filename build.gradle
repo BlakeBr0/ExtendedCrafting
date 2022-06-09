@@ -31,7 +31,7 @@ repositories {
 }
 
 minecraft {
-    mappings channel: 'official', version: '1.18.2'
+    mappings channel: 'official', version: '1.19'
 
     accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
 
@@ -81,7 +81,7 @@ minecraft {
 }
 
 dependencies {
-    minecraft 'net.minecraftforge:forge:1.18.2-40.1.0'
+    minecraft 'net.minecraftforge:forge:1.19-41.0.1'
 
     implementation project(':Cucumber')
     implementation fg.deobf('curse.maven:jade-324717:3761542')

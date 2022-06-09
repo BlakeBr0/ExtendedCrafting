@@ -13,7 +13,6 @@ import com.google.common.collect.Lists;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
@@ -54,7 +53,7 @@ public class BasicAutoTableScreen extends BaseContainerScreen<BasicAutoTableCont
 		super.renderTooltip(stack, mouseX, mouseY);
 
 		if (mouseX > x + 7 && mouseX < x + 20 && mouseY > y + 17 && mouseY < y + 94) {
-			var text = new TextComponent(number(this.getEnergyStored()) + " / " + number(this.getMaxEnergyStored()) + " FE");
+			var text = Component.literal(number(this.getEnergyStored()) + " / " + number(this.getMaxEnergyStored()) + " FE");
 			this.renderTooltip(stack, text, mouseX, mouseY);
 		}
 
@@ -74,8 +73,8 @@ public class BasicAutoTableScreen extends BaseContainerScreen<BasicAutoTableCont
 						var output = recipe.getStackInSlot(recipe.getSlots() - 1);
 
 						tooltip = Lists.newArrayList(
-								new TextComponent(output.getCount() + "x " + output.getHoverName().getString()),
-								new TextComponent(""),
+								Component.literal(output.getCount() + "x " + output.getHoverName().getString()),
+								Component.literal(""),
 								ModTooltips.AUTO_TABLE_DELETE_RECIPE.color(ChatFormatting.WHITE).build()
 						);
 
@@ -89,7 +88,7 @@ public class BasicAutoTableScreen extends BaseContainerScreen<BasicAutoTableCont
 
 						if (this.getSelected() == button.getIndex()) {
 							tooltip.add(0, ModTooltips.SELECTED.color(ChatFormatting.GREEN).build());
-							tooltip.add(1, new TextComponent(""));
+							tooltip.add(1, Component.literal(""));
 						}
 					}
 

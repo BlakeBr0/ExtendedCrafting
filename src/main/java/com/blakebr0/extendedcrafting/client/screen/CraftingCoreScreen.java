@@ -7,7 +7,6 @@ import com.blakebr0.extendedcrafting.tileentity.CraftingCoreTileEntity;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
@@ -45,7 +44,7 @@ public class CraftingCoreScreen extends BaseContainerScreen<CraftingCoreContaine
 		}
 
 		if (mouseX > x + 7 && mouseX < x + 20 && mouseY > y + 17 && mouseY < y + 94) {
-			var text = new TextComponent(number(this.getEnergyStored()) + " / " + number(this.getMaxEnergyStored()) + " FE");
+			var text = Component.literal(number(this.getEnergyStored()) + " / " + number(this.getMaxEnergyStored()) + " FE");
 			this.renderTooltip(matrix, text, mouseX, mouseY);
 		}
 	}

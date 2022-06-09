@@ -19,7 +19,6 @@ import net.minecraft.world.level.Level;
 import net.minecraftforge.common.util.RecipeMatcher;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.wrapper.InvWrapper;
-import net.minecraftforge.registries.ForgeRegistryEntry;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -147,7 +146,7 @@ public class ShapelessTableRecipe implements ISpecialRecipe, ITableRecipe {
 		this.transformers = transformers;
 	}
 
-	public static class Serializer extends ForgeRegistryEntry<RecipeSerializer<?>> implements RecipeSerializer<ShapelessTableRecipe> {
+	public static class Serializer implements RecipeSerializer<ShapelessTableRecipe> {
 		@Override
 		public ShapelessTableRecipe fromJson(ResourceLocation recipeId, JsonObject json) {
 			NonNullList<Ingredient> inputs = NonNullList.create();

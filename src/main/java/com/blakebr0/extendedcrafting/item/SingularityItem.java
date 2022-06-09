@@ -30,7 +30,7 @@ public class SingularityItem extends BaseItem implements IEnableable, IColored {
 
 	@Override
 	public void fillItemCategory(CreativeModeTab group, NonNullList<ItemStack> items) {
-		if (this.isEnabled() && this.allowdedIn(group)) {
+		if (this.isEnabled() && this.allowedIn(group)) {
 			SingularityRegistry.getInstance().getSingularities().forEach(singularity -> {
 				items.add(SingularityUtils.getItemForSingularity(singularity));
 			});

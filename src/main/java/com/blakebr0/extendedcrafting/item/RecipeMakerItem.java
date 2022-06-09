@@ -19,7 +19,6 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.NonNullList;
 import net.minecraft.network.chat.Component;
@@ -39,6 +38,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.crafting.NBTIngredient;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.items.IItemHandler;
+import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -58,7 +58,7 @@ public class RecipeMakerItem extends BaseItem implements IEnableable {
 	
 	@Override
 	public void fillItemCategory(CreativeModeTab group, NonNullList<ItemStack> items) {
-		if (this.isEnabled() && this.allowdedIn(group)) {
+		if (this.isEnabled() && this.allowedIn(group)) {
 			var stack1 = new ItemStack(this);
 			var stack2 = new ItemStack(this);
 
@@ -103,7 +103,7 @@ public class RecipeMakerItem extends BaseItem implements IEnableable {
 							: makeShapedDatapackTableRecipe(inventory, block);
 
 					if ("TOO MANY ITEMS".equals(string)) {
-						player.sendMessage(Localizable.of("message.extendedcrafting.max_unique_items_exceeded").args(KEYS.length).build(), Util.NIL_UUID);
+						player.sendSystemMessage(Localizable.of("message.extendedcrafting.max_unique_items_exceeded").args(KEYS.length).build());
 
 						return InteractionResult.SUCCESS;
 					}
@@ -111,10 +111,10 @@ public class RecipeMakerItem extends BaseItem implements IEnableable {
 
 				setClipboard(string);
 
-				player.sendMessage(Localizable.of("message.extendedcrafting.copied_recipe").build(), Util.NIL_UUID);
+				player.sendSystemMessage(Localizable.of("message.extendedcrafting.copied_recipe").build());
 
 				if (ModConfigs.RECIPE_MAKER_USE_NBT.get() && "CraftTweaker".equals(type) && !ModList.get().isLoaded("crafttweaker")) {
-					player.sendMessage(Localizable.of("message.extendedcrafting.nbt_requires_crafttweaker").build(), Util.NIL_UUID);
+					player.sendSystemMessage(Localizable.of("message.extendedcrafting.nbt_requires_crafttweaker").build());
 				}
 			}
 
@@ -128,7 +128,7 @@ public class RecipeMakerItem extends BaseItem implements IEnableable {
 
 				setClipboard(string);
 
-				player.sendMessage(Localizable.of("message.extendedcrafting.copied_recipe").build(), Util.NIL_UUID);
+				player.sendSystemMessage(Localizable.of("message.extendedcrafting.copied_recipe").build());
 			}
 
 			return InteractionResult.SUCCESS;
@@ -145,7 +145,7 @@ public class RecipeMakerItem extends BaseItem implements IEnableable {
 			NBTHelper.flipBoolean(stack, "Shapeless");
 
 			if (level.isClientSide()) {
-				player.sendMessage(Localizable.of("message.extendedcrafting.changed_mode").args(getModeString(stack)).build(), Util.NIL_UUID);
+				player.sendSystemMessage(Localizable.of("message.extendedcrafting.changed_mode").args(getModeString(stack)).build());
 			}
 		}
 
@@ -197,7 +197,7 @@ public class RecipeMakerItem extends BaseItem implements IEnableable {
 			}
 
 			if (item.isEmpty()) {
-				var id = stack.getItem().getRegistryName();
+				var id = ForgeRegistries.ITEMS.getKey(stack.getItem());
 				item = id == null ? "item:minecraft:air" : "item:" + id;
 			}
 
@@ -259,7 +259,7 @@ public class RecipeMakerItem extends BaseItem implements IEnableable {
 			if (ModConfigs.RECIPE_MAKER_USE_TAGS.get() && tagId != null) {
 				item = "tag:items:" + tagId;
 			} else {
-				var id = stack.getItem().getRegistryName();
+				var id = ForgeRegistries.ITEMS.getKey(stack.getItem());
 				item = id == null ? "item:minecraft:air" : "item:" + id;
 			}
 
@@ -290,7 +290,7 @@ public class RecipeMakerItem extends BaseItem implements IEnableable {
 
 		string.append("mods.extendedcrafting.CombinationCrafting.addRecipe(\"").append(uuid).append("\", <>, 100000, [").append(NEW_LINE);
 
-		var inputId = tile.getInventory().getStackInSlot(0).getItem().getRegistryName();
+		var inputId = ForgeRegistries.ITEMS.getKey(tile.getInventory().getStackInSlot(0).getItem());
 		var input = "item:minecraft:air";
 
 		if (inputId != null)
@@ -308,7 +308,7 @@ public class RecipeMakerItem extends BaseItem implements IEnableable {
 			if (ModConfigs.RECIPE_MAKER_USE_TAGS.get() && tagId != null) {
 				item = "tag:items:" + tagId;
 			} else {
-				var id = stack.getItem().getRegistryName();
+				var id = ForgeRegistries.ITEMS.getKey(stack.getItem());
 				item = id == null ? "item:minecraft:air" : "item:" + id;
 			}
 

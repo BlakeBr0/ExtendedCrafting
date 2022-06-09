@@ -45,6 +45,11 @@ import java.util.function.Function;
 public abstract class AutoTableTileEntity extends BaseInventoryTileEntity implements MenuProvider {
     private static final AbstractContainerMenu EMPTY_CONTAINER = new AbstractContainerMenu(null, -1) {
         @Override
+        public ItemStack quickMoveStack(Player player, int slot) {
+            return ItemStack.EMPTY;
+        }
+
+        @Override
         public boolean stillValid(Player player) {
             return false;
         }

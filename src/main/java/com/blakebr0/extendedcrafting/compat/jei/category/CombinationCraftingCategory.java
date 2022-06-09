@@ -11,7 +11,6 @@ import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.ingredients.IIngredients;
 import mezz.jei.api.recipe.category.IRecipeCategory;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 
@@ -62,8 +61,8 @@ public class CombinationCraftingCategory implements IRecipeCategory<ICombination
 	public List<Component> getTooltipStrings(ICombinationRecipe recipe, double mouseX, double mouseY) {
 		if (mouseX > 1 && mouseX < 14 && mouseY > 9 && mouseY < 86) {
 			return Arrays.asList(
-					new TextComponent(NumberFormat.getInstance().format(recipe.getPowerCost()) + " FE"),
-					new TextComponent(NumberFormat.getInstance().format(recipe.getPowerRate()) + " FE/t")
+					Component.literal(NumberFormat.getInstance().format(recipe.getPowerCost()) + " FE"),
+					Component.literal(NumberFormat.getInstance().format(recipe.getPowerRate()) + " FE/t")
 			);
 		}
 

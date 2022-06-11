@@ -2,7 +2,6 @@ package com.blakebr0.extendedcrafting.compat.jei;
 
 import com.blakebr0.cucumber.helper.NBTHelper;
 import com.blakebr0.extendedcrafting.ExtendedCrafting;
-import com.blakebr0.extendedcrafting.api.crafting.ITableRecipe;
 import com.blakebr0.extendedcrafting.api.crafting.RecipeTypes;
 import com.blakebr0.extendedcrafting.client.screen.AdvancedAutoTableScreen;
 import com.blakebr0.extendedcrafting.client.screen.AdvancedTableScreen;
@@ -37,7 +36,7 @@ import com.blakebr0.extendedcrafting.init.ModItems;
 import com.blakebr0.extendedcrafting.singularity.SingularityUtils;
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
-import mezz.jei.api.constants.VanillaRecipeCategoryUid;
+import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.registration.IGuiHandlerRegistration;
 import mezz.jei.api.registration.IRecipeCatalystRegistration;
 import mezz.jei.api.registration.IRecipeCategoryRegistration;
@@ -90,36 +89,35 @@ public final class JeiCompat implements IModPlugin {
 
 	@Override
 	public void registerRecipes(IRecipeRegistration registration) {
-		var world = Minecraft.getInstance().level;
+		var level = Minecraft.getInstance().level;
 
-		if (world != null) {
-			var manager = world.getRecipeManager();
+		if (level != null) {
+			var manager = level.getRecipeManager();
 
 			if (ModConfigs.ENABLE_CRAFTING_CORE.get()) {
-				registration.addRecipes(manager.byType(RecipeTypes.COMBINATION).values(), CombinationCraftingCategory.UID);
+				registration.addRecipes(CombinationCraftingCategory.RECIPE_TYPE, manager.getAllRecipesFor(RecipeTypes.COMBINATION));
 			}
 
 			if (ModConfigs.ENABLE_TABLES.get()) {
 				var recipes = Stream.of(1, 2, 3, 4).collect(Collectors.toMap(tier -> tier, tier ->
 					manager.byType(RecipeTypes.TABLE).values()
 						.stream()
-						.map(recipe -> (ITableRecipe) recipe)
 						.filter(recipe -> recipe.hasRequiredTier() ? tier == recipe.getTier() : tier >= recipe.getTier())
-						.collect(Collectors.toList())
+						.toList()
 				));
 
-				registration.addRecipes(recipes.getOrDefault(1, new ArrayList<>()), BasicTableCategory.UID);
-				registration.addRecipes(recipes.getOrDefault(2, new ArrayList<>()), AdvancedTableCategory.UID);
-				registration.addRecipes(recipes.getOrDefault(3, new ArrayList<>()), EliteTableCategory.UID);
-				registration.addRecipes(recipes.getOrDefault(4, new ArrayList<>()), UltimateTableCategory.UID);
+				registration.addRecipes(BasicTableCategory.RECIPE_TYPE, recipes.getOrDefault(1, new ArrayList<>()));
+				registration.addRecipes(AdvancedTableCategory.RECIPE_TYPE, recipes.getOrDefault(2, new ArrayList<>()));
+				registration.addRecipes(EliteTableCategory.RECIPE_TYPE, recipes.getOrDefault(3, new ArrayList<>()));
+				registration.addRecipes(UltimateTableCategory.RECIPE_TYPE, recipes.getOrDefault(4, new ArrayList<>()));
 			}
 
 			if (ModConfigs.ENABLE_COMPRESSOR.get()) {
-				registration.addRecipes(manager.byType(RecipeTypes.COMPRESSOR).values(), CompressorCraftingCategory.UID);
+				registration.addRecipes(CompressorCraftingCategory.RECIPE_TYPE, manager.getAllRecipesFor(RecipeTypes.COMPRESSOR));
 			}
 
 			if (ModConfigs.ENABLE_ENDER_CRAFTER.get()) {
-				registration.addRecipes(manager.byType(RecipeTypes.ENDER_CRAFTER).values(), EnderCrafterCategory.UID);
+				registration.addRecipes(EnderCrafterCategory.RECIPE_TYPE, manager.getAllRecipesFor(RecipeTypes.ENDER_CRAFTER));
 			}
 		}
 	}
@@ -127,115 +125,115 @@ public final class JeiCompat implements IModPlugin {
 	@Override
 	public void registerRecipeCatalysts(IRecipeCatalystRegistration registration) {
 		if (ModConfigs.ENABLE_HANDHELD_WORKBENCH.get()) {
-			registration.addRecipeCatalyst(new ItemStack(ModItems.HANDHELD_TABLE.get()), VanillaRecipeCategoryUid.CRAFTING);
+			registration.addRecipeCatalyst(new ItemStack(ModItems.HANDHELD_TABLE.get()), mezz.jei.api.constants.RecipeTypes.CRAFTING);
 		}
 
 		if (ModConfigs.ENABLE_CRAFTING_CORE.get()) {
-			registration.addRecipeCatalyst(new ItemStack(ModBlocks.CRAFTING_CORE.get()), CombinationCraftingCategory.UID);
-			registration.addRecipeCatalyst(new ItemStack(ModBlocks.PEDESTAL.get()), CombinationCraftingCategory.UID);
+			registration.addRecipeCatalyst(new ItemStack(ModBlocks.CRAFTING_CORE.get()), CombinationCraftingCategory.RECIPE_TYPE);
+			registration.addRecipeCatalyst(new ItemStack(ModBlocks.PEDESTAL.get()), CombinationCraftingCategory.RECIPE_TYPE);
 		}
 
 		if (ModConfigs.ENABLE_TABLES.get()) {
-			registration.addRecipeCatalyst(new ItemStack(ModBlocks.BASIC_TABLE.get()), BasicTableCategory.UID);
-			registration.addRecipeCatalyst(new ItemStack(ModBlocks.ADVANCED_TABLE.get()), AdvancedTableCategory.UID);
-			registration.addRecipeCatalyst(new ItemStack(ModBlocks.ELITE_TABLE.get()), EliteTableCategory.UID);
-			registration.addRecipeCatalyst(new ItemStack(ModBlocks.ULTIMATE_TABLE.get()), UltimateTableCategory.UID);
+			registration.addRecipeCatalyst(new ItemStack(ModBlocks.BASIC_TABLE.get()), BasicTableCategory.RECIPE_TYPE);
+			registration.addRecipeCatalyst(new ItemStack(ModBlocks.ADVANCED_TABLE.get()), AdvancedTableCategory.RECIPE_TYPE);
+			registration.addRecipeCatalyst(new ItemStack(ModBlocks.ELITE_TABLE.get()), EliteTableCategory.RECIPE_TYPE);
+			registration.addRecipeCatalyst(new ItemStack(ModBlocks.ULTIMATE_TABLE.get()), UltimateTableCategory.RECIPE_TYPE);
 
 			if (ModConfigs.TABLE_USE_VANILLA_RECIPES.get()) {
-				registration.addRecipeCatalyst(new ItemStack(ModBlocks.BASIC_TABLE.get()), VanillaRecipeCategoryUid.CRAFTING);
+				registration.addRecipeCatalyst(new ItemStack(ModBlocks.BASIC_TABLE.get()), mezz.jei.api.constants.RecipeTypes.CRAFTING);
 			}
 
 			if (ModConfigs.ENABLE_AUTO_TABLES.get()) {
-				registration.addRecipeCatalyst(new ItemStack(ModBlocks.BASIC_AUTO_TABLE.get()), BasicTableCategory.UID);
-				registration.addRecipeCatalyst(new ItemStack(ModBlocks.ADVANCED_AUTO_TABLE.get()), AdvancedTableCategory.UID);
-				registration.addRecipeCatalyst(new ItemStack(ModBlocks.ELITE_AUTO_TABLE.get()), EliteTableCategory.UID);
-				registration.addRecipeCatalyst(new ItemStack(ModBlocks.ULTIMATE_AUTO_TABLE.get()), UltimateTableCategory.UID);
+				registration.addRecipeCatalyst(new ItemStack(ModBlocks.BASIC_AUTO_TABLE.get()), BasicTableCategory.RECIPE_TYPE);
+				registration.addRecipeCatalyst(new ItemStack(ModBlocks.ADVANCED_AUTO_TABLE.get()), AdvancedTableCategory.RECIPE_TYPE);
+				registration.addRecipeCatalyst(new ItemStack(ModBlocks.ELITE_AUTO_TABLE.get()), EliteTableCategory.RECIPE_TYPE);
+				registration.addRecipeCatalyst(new ItemStack(ModBlocks.ULTIMATE_AUTO_TABLE.get()), UltimateTableCategory.RECIPE_TYPE);
 
 				if (ModConfigs.TABLE_USE_VANILLA_RECIPES.get()) {
-					registration.addRecipeCatalyst(new ItemStack(ModBlocks.BASIC_AUTO_TABLE.get()), VanillaRecipeCategoryUid.CRAFTING);
+					registration.addRecipeCatalyst(new ItemStack(ModBlocks.BASIC_AUTO_TABLE.get()), mezz.jei.api.constants.RecipeTypes.CRAFTING);
 				}
 			}
 		}
 
 		if (ModConfigs.ENABLE_COMPRESSOR.get()) {
-			registration.addRecipeCatalyst(new ItemStack(ModBlocks.COMPRESSOR.get()), CompressorCraftingCategory.UID);
+			registration.addRecipeCatalyst(new ItemStack(ModBlocks.COMPRESSOR.get()), CompressorCraftingCategory.RECIPE_TYPE);
 		}
 
 		if (ModConfigs.ENABLE_ENDER_CRAFTER.get()) {
-			registration.addRecipeCatalyst(new ItemStack(ModBlocks.ENDER_CRAFTER.get()), EnderCrafterCategory.UID);
-			registration.addRecipeCatalyst(new ItemStack(ModBlocks.ENDER_ALTERNATOR.get()), EnderCrafterCategory.UID);
+			registration.addRecipeCatalyst(new ItemStack(ModBlocks.ENDER_CRAFTER.get()), EnderCrafterCategory.RECIPE_TYPE);
+			registration.addRecipeCatalyst(new ItemStack(ModBlocks.ENDER_ALTERNATOR.get()), EnderCrafterCategory.RECIPE_TYPE);
 		}
 	}
 
 	@Override
 	public void registerRecipeTransferHandlers(IRecipeTransferRegistration registration) {
 		if (ModConfigs.ENABLE_TABLES.get()) {
-			registration.addRecipeTransferHandler(BasicTableContainer.class, BasicTableCategory.UID, 1, 9, 10, 36);
-			registration.addRecipeTransferHandler(AdvancedTableContainer.class, AdvancedTableCategory.UID, 1, 25, 26, 36);
-			registration.addRecipeTransferHandler(EliteTableContainer.class, EliteTableCategory.UID, 1, 49, 50, 36);
-			registration.addRecipeTransferHandler(UltimateTableContainer.class, UltimateTableCategory.UID, 1, 81, 82, 36);
+			registration.addRecipeTransferHandler(BasicTableContainer.class, BasicTableCategory.RECIPE_TYPE, 1, 9, 10, 36);
+			registration.addRecipeTransferHandler(AdvancedTableContainer.class, AdvancedTableCategory.RECIPE_TYPE, 1, 25, 26, 36);
+			registration.addRecipeTransferHandler(EliteTableContainer.class, EliteTableCategory.RECIPE_TYPE, 1, 49, 50, 36);
+			registration.addRecipeTransferHandler(UltimateTableContainer.class, UltimateTableCategory.RECIPE_TYPE, 1, 81, 82, 36);
 
 			if (ModConfigs.TABLE_USE_VANILLA_RECIPES.get()) {
-				registration.addRecipeTransferHandler(BasicTableContainer.class, VanillaRecipeCategoryUid.CRAFTING, 1, 9, 10, 36);
+				registration.addRecipeTransferHandler(BasicTableContainer.class, mezz.jei.api.constants.RecipeTypes.CRAFTING, 1, 9, 10, 36);
 			}
 
 			if (ModConfigs.ENABLE_AUTO_TABLES.get()) {
-				registration.addRecipeTransferHandler(BasicAutoTableContainer.class, BasicTableCategory.UID, 1, 9, 11, 36);
-				registration.addRecipeTransferHandler(AdvancedAutoTableContainer.class, AdvancedTableCategory.UID, 1, 25, 27, 36);
-				registration.addRecipeTransferHandler(EliteAutoTableContainer.class, EliteTableCategory.UID, 1, 49, 51, 36);
-				registration.addRecipeTransferHandler(UltimateAutoTableContainer.class, UltimateTableCategory.UID, 1, 81, 83, 36);
+				registration.addRecipeTransferHandler(BasicAutoTableContainer.class, BasicTableCategory.RECIPE_TYPE, 1, 9, 11, 36);
+				registration.addRecipeTransferHandler(AdvancedAutoTableContainer.class, AdvancedTableCategory.RECIPE_TYPE, 1, 25, 27, 36);
+				registration.addRecipeTransferHandler(EliteAutoTableContainer.class, EliteTableCategory.RECIPE_TYPE, 1, 49, 51, 36);
+				registration.addRecipeTransferHandler(UltimateAutoTableContainer.class, UltimateTableCategory.RECIPE_TYPE, 1, 81, 83, 36);
 
 				if (ModConfigs.TABLE_USE_VANILLA_RECIPES.get()) {
-					registration.addRecipeTransferHandler(BasicAutoTableContainer.class, VanillaRecipeCategoryUid.CRAFTING, 1, 9, 11, 36);
+					registration.addRecipeTransferHandler(BasicAutoTableContainer.class, mezz.jei.api.constants.RecipeTypes.CRAFTING, 1, 9, 11, 36);
 				}
 			}
 		}
 
 		if (ModConfigs.ENABLE_ENDER_CRAFTER.get()) {
-			registration.addRecipeTransferHandler(EnderCrafterContainer.class, EnderCrafterCategory.UID, 1, 9, 10, 36);
+			registration.addRecipeTransferHandler(EnderCrafterContainer.class, EnderCrafterCategory.RECIPE_TYPE, 1, 9, 10, 36);
 		}
 	}
 
 	@Override
 	public void registerGuiHandlers(IGuiHandlerRegistration registration) {
 		if (ModConfigs.ENABLE_CRAFTING_CORE.get()) {
-			registration.addRecipeClickArea(CraftingCoreScreen.class, 117, 47, 21, 14, CombinationCraftingCategory.UID);
+			registration.addRecipeClickArea(CraftingCoreScreen.class, 117, 47, 21, 14, CombinationCraftingCategory.RECIPE_TYPE);
 		}
 
 		if (ModConfigs.ENABLE_TABLES.get()) {
-			registration.addRecipeClickArea(BasicTableScreen.class, 91, 37, 21, 14, BasicTableCategory.UID);
-			registration.addRecipeClickArea(AdvancedTableScreen.class, 109, 54, 21, 14, AdvancedTableCategory.UID);
-			registration.addRecipeClickArea(EliteTableScreen.class, 139, 72, 21, 14, EliteTableCategory.UID);
-			registration.addRecipeClickArea(UltimateTableScreen.class, 174, 90, 21, 14, UltimateTableCategory.UID);
+			registration.addRecipeClickArea(BasicTableScreen.class, 91, 37, 21, 14, BasicTableCategory.RECIPE_TYPE);
+			registration.addRecipeClickArea(AdvancedTableScreen.class, 109, 54, 21, 14, AdvancedTableCategory.RECIPE_TYPE);
+			registration.addRecipeClickArea(EliteTableScreen.class, 139, 72, 21, 14, EliteTableCategory.RECIPE_TYPE);
+			registration.addRecipeClickArea(UltimateTableScreen.class, 174, 90, 21, 14, UltimateTableCategory.RECIPE_TYPE);
 
 			if (ModConfigs.ENABLE_AUTO_TABLES.get()) {
-				registration.addRecipeClickArea(BasicAutoTableScreen.class, 97, 36, 21, 14, BasicTableCategory.UID);
-				registration.addRecipeClickArea(AdvancedAutoTableScreen.class, 121, 39, 21, 14, AdvancedTableCategory.UID);
-				registration.addRecipeClickArea(EliteAutoTableScreen.class, 158, 72, 21, 14, EliteTableCategory.UID);
-				registration.addRecipeClickArea(UltimateAutoTableScreen.class, 193, 90, 21, 14, UltimateTableCategory.UID);
+				registration.addRecipeClickArea(BasicAutoTableScreen.class, 97, 36, 21, 14, BasicTableCategory.RECIPE_TYPE);
+				registration.addRecipeClickArea(AdvancedAutoTableScreen.class, 121, 39, 21, 14, AdvancedTableCategory.RECIPE_TYPE);
+				registration.addRecipeClickArea(EliteAutoTableScreen.class, 158, 72, 21, 14, EliteTableCategory.RECIPE_TYPE);
+				registration.addRecipeClickArea(UltimateAutoTableScreen.class, 193, 90, 21, 14, UltimateTableCategory.RECIPE_TYPE);
 			}
 		}
 
 		if (ModConfigs.ENABLE_COMPRESSOR.get()) {
-			registration.addRecipeClickArea(CompressorScreen.class, 97, 47, 21, 14, CompressorCraftingCategory.UID);
+			registration.addRecipeClickArea(CompressorScreen.class, 97, 47, 21, 14, CompressorCraftingCategory.RECIPE_TYPE);
 		}
 
 		if (ModConfigs.ENABLE_ENDER_CRAFTER.get()) {
-			registration.addRecipeClickArea(EnderCrafterScreen.class, 90, 36, 21, 14, EnderCrafterCategory.UID);
+			registration.addRecipeClickArea(EnderCrafterScreen.class, 90, 36, 21, 14, EnderCrafterCategory.RECIPE_TYPE);
 		}
 	}
 
 	@Override
 	public void registerItemSubtypes(ISubtypeRegistration registration) {
 		ModItems.SINGULARITY.ifPresent(item -> {
-			registration.registerSubtypeInterpreter(item, (stack, context) -> {
+			registration.registerSubtypeInterpreter(VanillaTypes.ITEM_STACK, item, (stack, context) -> {
 				var singularity = SingularityUtils.getSingularity(stack);
 				return singularity != null ? singularity.getId().toString() : "";
 			});
 		});
 
 		ModItems.RECIPE_MAKER.ifPresent(item -> {
-			registration.registerSubtypeInterpreter(item, (stack, context) -> NBTHelper.getString(stack, "Type"));
+			registration.registerSubtypeInterpreter(VanillaTypes.ITEM_STACK, item, (stack, context) -> NBTHelper.getString(stack, "Type"));
 		});
 	}
 }

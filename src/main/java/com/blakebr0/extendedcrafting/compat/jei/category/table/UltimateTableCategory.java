@@ -10,43 +10,48 @@ import com.blakebr0.extendedcrafting.init.ModBlocks;
 import com.blakebr0.extendedcrafting.lib.ModTooltips;
 import com.mojang.blaze3d.vertex.PoseStack;
 import mezz.jei.api.constants.VanillaTypes;
-import mezz.jei.api.gui.IRecipeLayout;
+import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
+import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
 import mezz.jei.api.helpers.IGuiHelper;
-import mezz.jei.api.ingredients.IIngredients;
+import mezz.jei.api.recipe.IFocusGroup;
+import mezz.jei.api.recipe.RecipeIngredientRole;
+import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.recipe.category.IRecipeCategory;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 
-import java.util.Collections;
 import java.util.List;
 
 public class UltimateTableCategory implements IRecipeCategory<ITableRecipe> {
-	public static final ResourceLocation UID = new ResourceLocation(ExtendedCrafting.MOD_ID, "ultimate_crafting");
 	private static final ResourceLocation TEXTURE = new ResourceLocation(ExtendedCrafting.MOD_ID, "textures/gui/jei/ultimate_crafting.png");
-	
+	public static final RecipeType<ITableRecipe> RECIPE_TYPE = RecipeType.create(ExtendedCrafting.MOD_ID, "ultimate_crafting", ITableRecipe.class);
+
     private final IDrawable background;
     private final IDrawable icon;
     private final IDrawable required;
-    private final IDrawable shapeless;
 	
     public UltimateTableCategory(IGuiHelper helper) {
         this.background = helper.createDrawable(TEXTURE, 0, 0, 162, 195);
-        this.icon = helper.createDrawableIngredient(new ItemStack(ModBlocks.ULTIMATE_TABLE.get()));
+        this.icon = helper.createDrawableIngredient(VanillaTypes.ITEM_STACK, new ItemStack(ModBlocks.ULTIMATE_TABLE.get()));
 		this.required = helper.createDrawable(JeiCompat.ICONS, 0, 0, 15, 15);
-		this.shapeless = helper.createDrawable(JeiCompat.ICONS, 17, 0, 19, 15);
     }
     
 	@Override
 	public ResourceLocation getUid() {
-		return UID;
+		return RECIPE_TYPE.getUid();
 	}
 
 	@Override
 	public Class<? extends ITableRecipe> getRecipeClass() {
 		return ITableRecipe.class;
+	}
+
+	@Override
+	public RecipeType<ITableRecipe> getRecipeType() {
+		return RECIPE_TYPE;
 	}
 
 	@Override
@@ -65,7 +70,7 @@ public class UltimateTableCategory implements IRecipeCategory<ITableRecipe> {
 	}
 
 	@Override
-	public void draw(ITableRecipe recipe, PoseStack stack, double mouseX, double mouseY) {
+	public void draw(ITableRecipe recipe, IRecipeSlotsView slots, PoseStack stack, double mouseX, double mouseY) {
 		stack.pushPose();
 		stack.scale(0.5F, 0.5F, 0.5F);
 
@@ -73,49 +78,26 @@ public class UltimateTableCategory implements IRecipeCategory<ITableRecipe> {
 
 		if (recipe.hasRequiredTier())
 			this.required.draw(stack, shapeless ? 286 : 306, 329);
-		if (shapeless)
-			this.shapeless.draw(stack, 306, 329);
 
 		stack.popPose();
 	}
 
 	@Override
-	public List<Component> getTooltipStrings(ITableRecipe recipe, double mouseX, double mouseY) {
+	public List<Component> getTooltipStrings(ITableRecipe recipe, IRecipeSlotsView slots, double mouseX, double mouseY) {
 		var shapeless = recipe instanceof ShapelessTableRecipe;
 		int sX = (shapeless ? 286 : 306) / 2, sY = 329 / 2;
 
 		if (recipe.hasRequiredTier() && mouseX > sX - 1 && mouseX < sX + 8 && mouseY > sY - 1 && mouseY < sY + 8) {
-			return Collections.singletonList(ModTooltips.REQUIRES_TABLE.args(recipe.getTier()).color(ChatFormatting.WHITE).build());
+			return List.of(ModTooltips.REQUIRES_TABLE.args(recipe.getTier()).color(ChatFormatting.WHITE).build());
 		}
 
-		if (shapeless && mouseX > sX + 10 && mouseX < sX + 20 && mouseY > sY - 1 && mouseY < sY + 8) {
-			return Collections.singletonList(Localizable.of("jei.tooltip.shapeless.recipe").build());
-		}
-
-		return Collections.emptyList();
+		return List.of();
 	}
 
 	@Override
-	public void setIngredients(ITableRecipe recipe, IIngredients ingredients) {
-    	ingredients.setOutput(VanillaTypes.ITEM, recipe.getResultItem());
-    	ingredients.setInputIngredients(recipe.getIngredients());
-	}
-
-	@Override
-	public void setRecipe(IRecipeLayout layout, ITableRecipe recipe, IIngredients ingredients) {
-		var stacks = layout.getItemStacks();
-		var inputs = ingredients.getInputs(VanillaTypes.ITEM);
-		var outputs = ingredients.getOutputs(VanillaTypes.ITEM).get(0);
-
-		stacks.init(0, false, 84, 173);
-		stacks.set(0, outputs);
-
-		for (int i = 0; i < 9; i++) {
-			for (int j = 0; j < 9; j++) {
-				int index = 1 + j + (i * 9);
-				stacks.init(index, true, j * 18, i * 18);
-			}
-		}
+	public void setRecipe(IRecipeLayoutBuilder builder, ITableRecipe recipe, IFocusGroup focuses) {
+		var inputs = recipe.getIngredients();
+		var output = recipe.getResultItem();
 
 		if (recipe instanceof ShapedTableRecipe shaped) {
 			int heightOffset = Math.floorDiv(9 - shaped.getHeight(), 2);
@@ -124,19 +106,27 @@ public class UltimateTableCategory implements IRecipeCategory<ITableRecipe> {
 
 			for (int i = heightOffset; i < shaped.getHeight() + heightOffset; i++) {
 				for (int j = widthOffset; j < shaped.getWidth() + widthOffset; j++) {
-					int index = 1 + (i * 9) + j;
-
-					stacks.set(index, inputs.get(stackIndex));
+					builder.addSlot(RecipeIngredientRole.INPUT, j * 18, i * 18).addIngredients(inputs.get(stackIndex));
 
 					stackIndex++;
 				}
 			}
 		} else if (recipe instanceof ShapelessTableRecipe) {
-			for (int i = 0; i < inputs.size(); i++) {
-				stacks.set(i + 1, inputs.get(i));
+			for (int i = 0; i < 9; i++) {
+				for (int j = 0; j < 9; j++) {
+					int index = j + (i * 9);
+
+					if (index < inputs.size()) {
+						builder.addSlot(RecipeIngredientRole.INPUT, j * 18, i * 18).addIngredients(inputs.get(index));
+					}
+				}
 			}
+
+			builder.setShapeless(306, 329);
 		}
 
-		layout.moveRecipeTransferButton(149, 182);
+		builder.addSlot(RecipeIngredientRole.OUTPUT, 85, 174).addItemStack(output);
+
+		builder.moveRecipeTransferButton(149, 182);
 	}
 }

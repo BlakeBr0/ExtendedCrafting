@@ -34,16 +34,6 @@ public class CombinationCraftingCategory implements IRecipeCategory<ICombination
 	}
 
 	@Override
-	public ResourceLocation getUid() {
-		return RECIPE_TYPE.getUid();
-	}
-
-	@Override
-	public Class<? extends ICombinationRecipe> getRecipeClass() {
-		return ICombinationRecipe.class;
-	}
-
-	@Override
 	public RecipeType<ICombinationRecipe> getRecipeType() {
 		return RECIPE_TYPE;
 	}

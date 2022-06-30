@@ -32,6 +32,7 @@ import com.blakebr0.extendedcrafting.container.EnderCrafterContainer;
 import com.blakebr0.extendedcrafting.container.UltimateAutoTableContainer;
 import com.blakebr0.extendedcrafting.container.UltimateTableContainer;
 import com.blakebr0.extendedcrafting.init.ModBlocks;
+import com.blakebr0.extendedcrafting.init.ModContainerTypes;
 import com.blakebr0.extendedcrafting.init.ModItems;
 import com.blakebr0.extendedcrafting.singularity.SingularityUtils;
 import mezz.jei.api.IModPlugin;
@@ -168,29 +169,29 @@ public final class JeiCompat implements IModPlugin {
 	@Override
 	public void registerRecipeTransferHandlers(IRecipeTransferRegistration registration) {
 		if (ModConfigs.ENABLE_TABLES.get()) {
-			registration.addRecipeTransferHandler(BasicTableContainer.class, BasicTableCategory.RECIPE_TYPE, 1, 9, 10, 36);
-			registration.addRecipeTransferHandler(AdvancedTableContainer.class, AdvancedTableCategory.RECIPE_TYPE, 1, 25, 26, 36);
-			registration.addRecipeTransferHandler(EliteTableContainer.class, EliteTableCategory.RECIPE_TYPE, 1, 49, 50, 36);
-			registration.addRecipeTransferHandler(UltimateTableContainer.class, UltimateTableCategory.RECIPE_TYPE, 1, 81, 82, 36);
+			registration.addRecipeTransferHandler(BasicTableContainer.class, ModContainerTypes.BASIC_TABLE.get(), BasicTableCategory.RECIPE_TYPE, 1, 9, 10, 36);
+			registration.addRecipeTransferHandler(AdvancedTableContainer.class, ModContainerTypes.ADVANCED_TABLE.get(), AdvancedTableCategory.RECIPE_TYPE, 1, 25, 26, 36);
+			registration.addRecipeTransferHandler(EliteTableContainer.class, ModContainerTypes.ELITE_TABLE.get(), EliteTableCategory.RECIPE_TYPE, 1, 49, 50, 36);
+			registration.addRecipeTransferHandler(UltimateTableContainer.class, ModContainerTypes.ULTIMATE_TABLE.get(), UltimateTableCategory.RECIPE_TYPE, 1, 81, 82, 36);
 
 			if (ModConfigs.TABLE_USE_VANILLA_RECIPES.get()) {
-				registration.addRecipeTransferHandler(BasicTableContainer.class, mezz.jei.api.constants.RecipeTypes.CRAFTING, 1, 9, 10, 36);
+				registration.addRecipeTransferHandler(BasicTableContainer.class, ModContainerTypes.BASIC_TABLE.get(), mezz.jei.api.constants.RecipeTypes.CRAFTING, 1, 9, 10, 36);
 			}
 
 			if (ModConfigs.ENABLE_AUTO_TABLES.get()) {
-				registration.addRecipeTransferHandler(BasicAutoTableContainer.class, BasicTableCategory.RECIPE_TYPE, 1, 9, 11, 36);
-				registration.addRecipeTransferHandler(AdvancedAutoTableContainer.class, AdvancedTableCategory.RECIPE_TYPE, 1, 25, 27, 36);
-				registration.addRecipeTransferHandler(EliteAutoTableContainer.class, EliteTableCategory.RECIPE_TYPE, 1, 49, 51, 36);
-				registration.addRecipeTransferHandler(UltimateAutoTableContainer.class, UltimateTableCategory.RECIPE_TYPE, 1, 81, 83, 36);
+				registration.addRecipeTransferHandler(BasicAutoTableContainer.class, ModContainerTypes.BASIC_AUTO_TABLE.get(), BasicTableCategory.RECIPE_TYPE, 1, 9, 11, 36);
+				registration.addRecipeTransferHandler(AdvancedAutoTableContainer.class, ModContainerTypes.ADVANCED_AUTO_TABLE.get(), AdvancedTableCategory.RECIPE_TYPE, 1, 25, 27, 36);
+				registration.addRecipeTransferHandler(EliteAutoTableContainer.class, ModContainerTypes.ELITE_AUTO_TABLE.get(), EliteTableCategory.RECIPE_TYPE, 1, 49, 51, 36);
+				registration.addRecipeTransferHandler(UltimateAutoTableContainer.class, ModContainerTypes.ULTIMATE_AUTO_TABLE.get(), UltimateTableCategory.RECIPE_TYPE, 1, 81, 83, 36);
 
 				if (ModConfigs.TABLE_USE_VANILLA_RECIPES.get()) {
-					registration.addRecipeTransferHandler(BasicAutoTableContainer.class, mezz.jei.api.constants.RecipeTypes.CRAFTING, 1, 9, 11, 36);
+					registration.addRecipeTransferHandler(BasicAutoTableContainer.class, ModContainerTypes.BASIC_AUTO_TABLE.get(), mezz.jei.api.constants.RecipeTypes.CRAFTING, 1, 9, 11, 36);
 				}
 			}
 		}
 
 		if (ModConfigs.ENABLE_ENDER_CRAFTER.get()) {
-			registration.addRecipeTransferHandler(EnderCrafterContainer.class, EnderCrafterCategory.RECIPE_TYPE, 1, 9, 10, 36);
+			registration.addRecipeTransferHandler(EnderCrafterContainer.class, ModContainerTypes.ENDER_CRAFTER.get(), EnderCrafterCategory.RECIPE_TYPE, 1, 9, 10, 36);
 		}
 	}
 

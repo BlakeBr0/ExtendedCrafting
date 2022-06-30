@@ -38,16 +38,6 @@ public class UltimateTableCategory implements IRecipeCategory<ITableRecipe> {
         this.icon = helper.createDrawableIngredient(VanillaTypes.ITEM_STACK, new ItemStack(ModBlocks.ULTIMATE_TABLE.get()));
 		this.required = helper.createDrawable(JeiCompat.ICONS, 0, 0, 15, 15);
     }
-    
-	@Override
-	public ResourceLocation getUid() {
-		return RECIPE_TYPE.getUid();
-	}
-
-	@Override
-	public Class<? extends ITableRecipe> getRecipeClass() {
-		return ITableRecipe.class;
-	}
 
 	@Override
 	public RecipeType<ITableRecipe> getRecipeType() {

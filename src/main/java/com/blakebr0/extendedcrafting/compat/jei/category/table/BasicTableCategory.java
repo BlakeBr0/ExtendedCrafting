@@ -40,16 +40,6 @@ public class BasicTableCategory implements IRecipeCategory<ITableRecipe> {
 	}
 
 	@Override
-	public ResourceLocation getUid() {
-		return RECIPE_TYPE.getUid();
-	}
-
-	@Override
-	public Class<? extends ITableRecipe> getRecipeClass() {
-		return ITableRecipe.class;
-	}
-
-	@Override
 	public RecipeType<ITableRecipe> getRecipeType() {
 		return RECIPE_TYPE;
 	}

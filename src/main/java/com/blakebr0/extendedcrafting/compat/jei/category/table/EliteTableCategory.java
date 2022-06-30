@@ -10,12 +10,10 @@ import com.blakebr0.extendedcrafting.init.ModBlocks;
 import com.blakebr0.extendedcrafting.lib.ModTooltips;
 import com.mojang.blaze3d.vertex.PoseStack;
 import mezz.jei.api.constants.VanillaTypes;
-import mezz.jei.api.gui.IRecipeLayout;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
 import mezz.jei.api.helpers.IGuiHelper;
-import mezz.jei.api.ingredients.IIngredients;
 import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.RecipeIngredientRole;
 import mezz.jei.api.recipe.RecipeType;
@@ -39,16 +37,6 @@ public class EliteTableCategory implements IRecipeCategory<ITableRecipe> {
 		this.background = helper.createDrawable(TEXTURE, 0, 0, 126, 159);
 		this.icon = helper.createDrawableIngredient(VanillaTypes.ITEM_STACK, new ItemStack(ModBlocks.ELITE_TABLE.get()));
 		this.required = helper.createDrawable(JeiCompat.ICONS, 0, 0, 15, 15);
-	}
-
-	@Override
-	public ResourceLocation getUid() {
-		return RECIPE_TYPE.getUid();
-	}
-
-	@Override
-	public Class<? extends ITableRecipe> getRecipeClass() {
-		return ITableRecipe.class;
 	}
 
 	@Override
@@ -94,51 +82,6 @@ public class EliteTableCategory implements IRecipeCategory<ITableRecipe> {
 		}
 
 		return List.of();
-	}
-
-	@Override
-	public void setIngredients(ITableRecipe recipe, IIngredients ingredients) {
-		ingredients.setOutput(VanillaTypes.ITEM, recipe.getResultItem());
-		ingredients.setInputIngredients(recipe.getIngredients());
-	}
-
-	@Override
-	public void setRecipe(IRecipeLayout layout, ITableRecipe recipe, IIngredients ingredients) {
-		var stacks = layout.getItemStacks();
-		var inputs = ingredients.getInputs(VanillaTypes.ITEM);
-		var outputs = ingredients.getOutputs(VanillaTypes.ITEM).get(0);
-
-		stacks.init(0, false, 65, 137);
-		stacks.set(0, outputs);
-
-		for (int i = 0; i < 7; i++) {
-			for (int j = 0; j < 7; j++) {
-				int index = 1 + j + (i * 7);
-				stacks.init(index, true, j * 18, i * 18);
-			}
-		}
-
-		if (recipe instanceof ShapedTableRecipe shaped) {
-			int heightOffset = Math.floorDiv(7 - shaped.getHeight(), 2);
-			int widthOffset = Math.floorDiv(7 - shaped.getWidth(), 2);
-			int stackIndex = 0;
-
-			for (int i = heightOffset; i < shaped.getHeight() + heightOffset; i++) {
-				for (int j = widthOffset; j < shaped.getWidth() + widthOffset; j++) {
-					int index = 1 + (i * 7) + j;
-
-					stacks.set(index, inputs.get(stackIndex));
-
-					stackIndex++;
-				}
-			}
-		} else if (recipe instanceof ShapelessTableRecipe) {
-			for (int i = 0; i < inputs.size(); i++) {
-				stacks.set(i + 1, inputs.get(i));
-			}
-		}
-
-		layout.moveRecipeTransferButton(113, 146);
 	}
 
 	@Override

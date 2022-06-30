@@ -35,16 +35,6 @@ public class CompressorCraftingCategory implements IRecipeCategory<ICompressorRe
 	}
 
 	@Override
-	public ResourceLocation getUid() {
-		return RECIPE_TYPE.getUid();
-	}
-
-	@Override
-	public Class<? extends ICompressorRecipe> getRecipeClass() {
-		return ICompressorRecipe.class;
-	}
-
-	@Override
 	public RecipeType<ICompressorRecipe> getRecipeType() {
 		return RECIPE_TYPE;
 	}

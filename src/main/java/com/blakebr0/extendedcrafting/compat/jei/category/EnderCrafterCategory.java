@@ -43,16 +43,6 @@ public class EnderCrafterCategory implements IRecipeCategory<IEnderCrafterRecipe
 	}
 
 	@Override
-	public ResourceLocation getUid() {
-		return RECIPE_TYPE.getUid();
-	}
-
-	@Override
-	public Class<? extends IEnderCrafterRecipe> getRecipeClass() {
-		return IEnderCrafterRecipe.class;
-	}
-
-	@Override
 	public RecipeType<IEnderCrafterRecipe> getRecipeType() {
 		return RECIPE_TYPE;
 	}

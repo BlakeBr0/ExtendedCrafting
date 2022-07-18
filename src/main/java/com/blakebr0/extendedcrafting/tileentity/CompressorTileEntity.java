@@ -113,8 +113,7 @@ public class CompressorTileEntity extends BaseInventoryTileEntity implements ITi
 							input.shrink(consumeAmount);
 							this.materialCount += consumeAmount;
 
-							if (!mark)
-								mark = true;
+							mark = true;
 						}
 					}
 				}
@@ -134,6 +133,7 @@ public class CompressorTileEntity extends BaseInventoryTileEntity implements ITi
 							}
 						} else {
 							this.process(this.recipe);
+							mark = true;
 						}
 					}
 				}

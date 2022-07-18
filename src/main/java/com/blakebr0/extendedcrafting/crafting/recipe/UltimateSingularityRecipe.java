@@ -11,6 +11,7 @@ import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.registries.ForgeRegistryEntry;
 
 public class UltimateSingularityRecipe extends ShapelessTableRecipe {
@@ -35,6 +36,15 @@ public class UltimateSingularityRecipe extends ShapelessTableRecipe {
         }
 
         return super.getIngredients();
+    }
+
+    @Override
+    public boolean matches(IItemHandler inventory) {
+        // ensure ingredients list is initialized
+        NonNullList<Ingredient> ingredients = this.getIngredients();
+
+        // in the case there are no ingredients, the recipe should never match
+        return !ingredients.isEmpty() && super.matches(inventory);
     }
 
     @Override

@@ -12,7 +12,7 @@ apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'idea'
 apply plugin: 'maven-publish'
 
-version = '1.16.5-3.1.11'
+version = '1.16.5-3.1.12'
 group = 'com.blakebr0.extendedcrafting'
 archivesBaseName = 'ExtendedCrafting'
 
@@ -21,7 +21,7 @@ sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = co
 repositories {
     maven { url 'https://dvs1.progwml6.com/files/maven/' }
     maven { url 'https://maven.blamejared.com' }
-    maven { url 'https://maven.tehnut.info' }
+    maven { url 'https://cursemaven.com' }
 
     flatDir { dir 'libs' }
 }
@@ -62,8 +62,7 @@ dependencies {
     minecraft 'net.minecraftforge:forge:1.16.5-36.2.4'
 
     compile fg.deobf('ignored:Cucumber:1.16.5-4.1.12')
-    compileOnly fg.deobf('mcp.mobius.waila:Hwyla:1.10.11-B78_1.16.2:api')
-    runtimeOnly fg.deobf('mcp.mobius.waila:Hwyla:1.10.11-B78_1.16.2')
+    compile fg.deobf('curse.maven:hwyla-253449:3033593')
     compileOnly fg.deobf('mezz.jei:jei-1.16.2:7.1.1.15:api')
     runtimeOnly fg.deobf('mezz.jei:jei-1.16.2:7.1.1.15')
     compile fg.deobf('com.blamejared.crafttweaker:CraftTweaker-1.16.4:7.1.0.84')

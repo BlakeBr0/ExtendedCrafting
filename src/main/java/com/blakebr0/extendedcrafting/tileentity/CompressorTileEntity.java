@@ -123,7 +123,7 @@ public class CompressorTileEntity extends BaseInventoryTileEntity implements Men
 						input.shrink(consumeAmount);
 						tile.materialCount += consumeAmount;
 
-						if (!mark)
+
 							mark = true;
 					}
 				}
@@ -145,7 +145,7 @@ public class CompressorTileEntity extends BaseInventoryTileEntity implements Men
 						}
 					} else {
 						tile.process(tile.recipe);
-					}
+					mark = true;}
 				}
 			}
 

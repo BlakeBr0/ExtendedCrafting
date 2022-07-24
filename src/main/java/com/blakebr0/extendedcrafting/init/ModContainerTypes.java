@@ -36,7 +36,7 @@ import net.minecraftforge.registries.RegistryObject;
 import java.util.function.Supplier;
 
 public final class ModContainerTypes {
-    public static final DeferredRegister<MenuType<?>> REGISTRY = DeferredRegister.create(ForgeRegistries.CONTAINERS, ExtendedCrafting.MOD_ID);
+    public static final DeferredRegister<MenuType<?>> REGISTRY = DeferredRegister.create(ForgeRegistries.MENU_TYPES, ExtendedCrafting.MOD_ID);
 
     public static final RegistryObject<MenuType<CraftingCoreContainer>> CRAFTING_CORE = register("crafting_core", () -> new MenuType<>((IContainerFactory<CraftingCoreContainer>) CraftingCoreContainer::create));
     public static final RegistryObject<MenuType<BasicTableContainer>> BASIC_TABLE = register("basic_table", () -> new MenuType<>(BasicTableContainer::create));

@@ -76,7 +76,7 @@ public class CraftingCoreBlock extends BaseTileEntityBlock implements IEnableabl
 						inventory.setStackInSlot(0, ItemStack.EMPTY);
 					}
 				} else {
-					NetworkHooks.openGui((ServerPlayer) player, core, pos);
+					NetworkHooks.openScreen((ServerPlayer) player, core, pos);
 				}
 			}
 		}

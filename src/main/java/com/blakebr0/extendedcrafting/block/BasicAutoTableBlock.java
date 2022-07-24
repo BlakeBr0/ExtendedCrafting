@@ -59,7 +59,7 @@ public class BasicAutoTableBlock extends BaseTileEntityBlock implements IEnablea
             var tile = level.getBlockEntity(pos);
 
             if (tile instanceof AutoTableTileEntity.Basic table) {
-                NetworkHooks.openGui((ServerPlayer) player, table, pos);
+                NetworkHooks.openScreen((ServerPlayer) player, table, pos);
             }
         }
 

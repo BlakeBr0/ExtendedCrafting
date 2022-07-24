@@ -59,7 +59,7 @@ public class AdvancedAutoTableBlock extends BaseTileEntityBlock implements IEnab
             var tile = level.getBlockEntity(pos);
 
             if (tile instanceof AutoTableTileEntity.Advanced table) {
-                NetworkHooks.openGui((ServerPlayer) player, table, pos);
+                NetworkHooks.openScreen((ServerPlayer) player, table, pos);
             }
         }
 

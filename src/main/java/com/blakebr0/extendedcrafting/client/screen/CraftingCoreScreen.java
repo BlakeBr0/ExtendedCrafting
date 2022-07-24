@@ -10,6 +10,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
+import net.minecraftforge.client.extensions.common.IClientItemExtensions;
 
 public class CraftingCoreScreen extends BaseContainerScreen<CraftingCoreContainer> {
 	private static final ResourceLocation BACKGROUND = new ResourceLocation(ExtendedCrafting.MOD_ID, "textures/gui/crafting_core.png");
@@ -107,7 +108,8 @@ public class CraftingCoreScreen extends BaseContainerScreen<CraftingCoreContaine
 		RenderSystem.applyModelViewMatrix();
 		this.setBlitOffset(200);
 		this.itemRenderer.blitOffset = 200.0F;
-		net.minecraft.client.gui.Font font = net.minecraftforge.client.RenderProperties.get(stack).getFont(stack);
+		net.minecraft.client.gui.Font font = IClientItemExtensions.of(stack).getFont(stack, IClientItemExtensions.FontContext.ITEM_COUNT);
+
 		if (font == null) font = this.font;
 		this.itemRenderer.renderAndDecorateItem(stack, x, y);
 //		this.itemRenderer.renderGuiItemDecorations(font, stack, x, y - (this.draggingItem.isEmpty() ? 0 : 8), "");

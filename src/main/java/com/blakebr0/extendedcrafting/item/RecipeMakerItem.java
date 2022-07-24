@@ -35,7 +35,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.common.crafting.NBTIngredient;
+import net.minecraftforge.common.crafting.StrictNBTIngredient;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -355,7 +355,7 @@ public class RecipeMakerItem extends BaseItem implements IEnableable {
 				keysMap.put(Ingredient.of(tag), key);
 			} else {
 				if (ModConfigs.RECIPE_MAKER_USE_NBT.get() && stack.hasTag()) {
-					keysMap.put(new NBTIngredient(stack) { }, key);
+					keysMap.put(StrictNBTIngredient.of(stack), key);
 				} else {
 					keysMap.put(Ingredient.of(stack), key);
 				}
@@ -430,7 +430,7 @@ public class RecipeMakerItem extends BaseItem implements IEnableable {
 					ingredients.add(tag);
 				} else {
 					if (ModConfigs.RECIPE_MAKER_USE_NBT.get() && stack.hasTag()) {
-						ingredients.add(new NBTIngredient(stack) { }.toJson());
+						ingredients.add(StrictNBTIngredient.of(stack).toJson());
 					} else {
 						ingredients.add(Ingredient.of(stack).toJson());
 					}
@@ -472,7 +472,7 @@ public class RecipeMakerItem extends BaseItem implements IEnableable {
 				ingredients.add(tag);
 			} else {
 				if (ModConfigs.RECIPE_MAKER_USE_NBT.get() && stack.hasTag()) {
-					ingredients.add(new NBTIngredient(stack) { }.toJson());
+					ingredients.add(StrictNBTIngredient.of(stack).toJson());
 				} else {
 					ingredients.add(Ingredient.of(stack).toJson());
 				}

@@ -47,7 +47,7 @@ public class CompressorBlock extends BaseTileEntityBlock implements IEnableable 
 			var tile = level.getBlockEntity(pos);
 
 			if (tile instanceof CompressorTileEntity compressor) {
-				NetworkHooks.openGui((ServerPlayer) player, compressor, pos);
+				NetworkHooks.openScreen((ServerPlayer) player, compressor, pos);
 			}
 		}
 

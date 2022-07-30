@@ -58,7 +58,7 @@ public class ShapelessEnderCrafterRecipe implements ISpecialRecipe, IEnderCrafte
 
 	@Override
 	public RecipeSerializer<?> getSerializer() {
-		return ModRecipeSerializers.SHAPELESS_ENDER_CRAFTER;
+		return ModRecipeSerializers.SHAPELESS_ENDER_CRAFTER.get();
 	}
 
 	@Override

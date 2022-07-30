@@ -60,7 +60,7 @@ public class ShapelessTableRecipe implements ISpecialRecipe, ITableRecipe {
 
 	@Override
 	public RecipeSerializer<?> getSerializer() {
-		return ModRecipeSerializers.SHAPELESS_TABLE;
+		return ModRecipeSerializers.SHAPELESS_TABLE.get();
 	}
 
 	@Override

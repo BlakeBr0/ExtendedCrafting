@@ -93,7 +93,7 @@ public class ShapedEnderCrafterRecipe implements ISpecialRecipe, IEnderCrafterRe
 
 	@Override
 	public RecipeSerializer<?> getSerializer() {
-		return ModRecipeSerializers.SHAPED_ENDER_CRAFTER;
+		return ModRecipeSerializers.SHAPED_ENDER_CRAFTER.get();
 	}
 
 	@Override

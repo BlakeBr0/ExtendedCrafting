@@ -14,29 +14,27 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraftforge.common.crafting.CraftingHelper;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegisterEvent;
+import net.minecraftforge.registries.RegistryObject;
+
+import java.util.function.Supplier;
 
 public final class ModRecipeSerializers {
-    public static final RecipeSerializer<CombinationRecipe> COMBINATION = new CombinationRecipe.Serializer();
-    public static final RecipeSerializer<ShapedTableRecipe> SHAPED_TABLE = new ShapedTableRecipe.Serializer();
-    public static final RecipeSerializer<ShapelessTableRecipe> SHAPELESS_TABLE = new ShapelessTableRecipe.Serializer();
-    public static final RecipeSerializer<CompressorRecipe> COMPRESSOR = new CompressorRecipe.Serializer();
-    public static final RecipeSerializer<ShapedEnderCrafterRecipe> SHAPED_ENDER_CRAFTER = new ShapedEnderCrafterRecipe.Serializer();
-    public static final RecipeSerializer<ShapelessEnderCrafterRecipe> SHAPELESS_ENDER_CRAFTER = new ShapelessEnderCrafterRecipe.Serializer();
-    public static final RecipeSerializer<UltimateSingularityRecipe> ULTIMATE_SINGULARITY = new UltimateSingularityRecipe.Serializer();
+    public static final DeferredRegister<RecipeSerializer<?>> REGISTRY = DeferredRegister.create(ForgeRegistries.RECIPE_SERIALIZERS, ExtendedCrafting.MOD_ID);
+
+    public static final RegistryObject<RecipeSerializer<?>> COMBINATION = register("combination", CombinationRecipe.Serializer::new);
+    public static final RegistryObject<RecipeSerializer<?>> SHAPED_TABLE = register("shaped_table", ShapedTableRecipe.Serializer::new);
+    public static final RegistryObject<RecipeSerializer<?>> SHAPELESS_TABLE = register("shapeless_table", ShapelessTableRecipe.Serializer::new);
+    public static final RegistryObject<RecipeSerializer<?>> COMPRESSOR = register("compressor", CompressorRecipe.Serializer::new);
+    public static final RegistryObject<RecipeSerializer<?>> SHAPED_ENDER_CRAFTER = register("shaped_ender_crafter", ShapedEnderCrafterRecipe.Serializer::new);
+    public static final RegistryObject<RecipeSerializer<?>> SHAPELESS_ENDER_CRAFTER = register("shapeless_ender_crafter", ShapelessEnderCrafterRecipe.Serializer::new);
+    public static final RegistryObject<RecipeSerializer<?>> ULTIMATE_SINGULARITY = register("ultimate_singularity", UltimateSingularityRecipe.Serializer::new);
 
     @SubscribeEvent
     public void onRegisterSerializers(RegisterEvent event) {
         event.register(ForgeRegistries.Keys.RECIPE_SERIALIZERS, registry -> {
-            registry.register(new ResourceLocation(ExtendedCrafting.MOD_ID, "combination"), COMBINATION);
-            registry.register(new ResourceLocation(ExtendedCrafting.MOD_ID, "shaped_table"), SHAPED_TABLE);
-            registry.register(new ResourceLocation(ExtendedCrafting.MOD_ID, "shapeless_table"), SHAPELESS_TABLE);
-            registry.register(new ResourceLocation(ExtendedCrafting.MOD_ID, "compressor"), COMPRESSOR);
-            registry.register(new ResourceLocation(ExtendedCrafting.MOD_ID, "shaped_ender_crafter"), SHAPED_ENDER_CRAFTER);
-            registry.register(new ResourceLocation(ExtendedCrafting.MOD_ID, "shapeless_ender_crafter"), SHAPELESS_ENDER_CRAFTER);
-            registry.register(new ResourceLocation(ExtendedCrafting.MOD_ID, "ultimate_singularity"), ULTIMATE_SINGULARITY);
-
             CraftingHelper.register(UltimateSingularityRecipeCondition.Serializer.INSTANCE);
         });
 
@@ -46,5 +44,9 @@ public final class ModRecipeSerializers {
             registry.register(new ResourceLocation(ExtendedCrafting.MOD_ID, "compressor"), RecipeTypes.COMPRESSOR);
             registry.register(new ResourceLocation(ExtendedCrafting.MOD_ID, "ender_crafter"), RecipeTypes.ENDER_CRAFTER);
         });
+    }
+
+    private static RegistryObject<RecipeSerializer<?>> register(String name, Supplier<RecipeSerializer<?>> serializer) {
+        return REGISTRY.register(name, serializer);
     }
 }

@@ -68,7 +68,7 @@ public class CombinationRecipe implements ISpecialRecipe, ICombinationRecipe {
 
 	@Override
 	public RecipeSerializer<?> getSerializer() {
-		return ModRecipeSerializers.COMBINATION;
+		return ModRecipeSerializers.COMBINATION.get();
 	}
 
 	@Override

@@ -40,7 +40,7 @@ public class UltimateSingularityRecipe extends ShapelessTableRecipe {
     @Override
     public boolean matches(IItemHandler inventory) {
         // ensure ingredients list is initialized
-        NonNullList<Ingredient> ingredients = this.getIngredients();
+        var ingredients = this.getIngredients();
 
         // in the case there are no ingredients, the recipe should never match
         return !ingredients.isEmpty() && super.matches(inventory);
@@ -48,7 +48,7 @@ public class UltimateSingularityRecipe extends ShapelessTableRecipe {
 
     @Override
     public RecipeSerializer<?> getSerializer() {
-        return ModRecipeSerializers.ULTIMATE_SINGULARITY;
+        return ModRecipeSerializers.ULTIMATE_SINGULARITY.get();
     }
 
     public static class Serializer implements RecipeSerializer<UltimateSingularityRecipe> {

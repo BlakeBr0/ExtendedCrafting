@@ -99,7 +99,7 @@ public class ShapedTableRecipe implements ISpecialRecipe, ITableRecipe {
 
 	@Override
 	public RecipeSerializer<?> getSerializer() {
-		return ModRecipeSerializers.SHAPED_TABLE;
+		return ModRecipeSerializers.SHAPED_TABLE.get();
 	}
 
 	@Override

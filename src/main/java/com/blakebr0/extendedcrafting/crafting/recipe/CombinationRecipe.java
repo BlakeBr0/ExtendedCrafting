@@ -2,9 +2,9 @@ package com.blakebr0.extendedcrafting.crafting.recipe;
 
 import com.blakebr0.cucumber.crafting.ISpecialRecipe;
 import com.blakebr0.extendedcrafting.api.crafting.ICombinationRecipe;
-import com.blakebr0.extendedcrafting.api.crafting.RecipeTypes;
 import com.blakebr0.extendedcrafting.config.ModConfigs;
 import com.blakebr0.extendedcrafting.init.ModRecipeSerializers;
+import com.blakebr0.extendedcrafting.init.ModRecipeTypes;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
 import net.minecraft.core.NonNullList;
@@ -73,7 +73,7 @@ public class CombinationRecipe implements ISpecialRecipe, ICombinationRecipe {
 
 	@Override
 	public RecipeType<?> getType() {
-		return RecipeTypes.COMBINATION;
+		return ModRecipeTypes.COMBINATION.get();
 	}
 
 	@Override

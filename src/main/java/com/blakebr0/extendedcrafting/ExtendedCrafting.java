@@ -9,6 +9,7 @@ import com.blakebr0.extendedcrafting.init.ModBlocks;
 import com.blakebr0.extendedcrafting.init.ModContainerTypes;
 import com.blakebr0.extendedcrafting.init.ModItems;
 import com.blakebr0.extendedcrafting.init.ModRecipeSerializers;
+import com.blakebr0.extendedcrafting.init.ModRecipeTypes;
 import com.blakebr0.extendedcrafting.init.ModReloadListeners;
 import com.blakebr0.extendedcrafting.init.ModTileEntities;
 import com.blakebr0.extendedcrafting.network.NetworkHandler;
@@ -44,6 +45,7 @@ public final class ExtendedCrafting {
 		ModItems.REGISTRY.register(bus);
 		ModTileEntities.REGISTRY.register(bus);
 		ModContainerTypes.REGISTRY.register(bus);
+		ModRecipeTypes.REGISTRY.register(bus);
 		ModRecipeSerializers.REGISTRY.register(bus);
 
 		DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {

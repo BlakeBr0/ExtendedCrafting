@@ -1,7 +1,6 @@
 package com.blakebr0.extendedcrafting.init;
 
 import com.blakebr0.extendedcrafting.ExtendedCrafting;
-import com.blakebr0.extendedcrafting.api.crafting.RecipeTypes;
 import com.blakebr0.extendedcrafting.crafting.condition.UltimateSingularityRecipeCondition;
 import com.blakebr0.extendedcrafting.crafting.recipe.CombinationRecipe;
 import com.blakebr0.extendedcrafting.crafting.recipe.CompressorRecipe;
@@ -10,7 +9,6 @@ import com.blakebr0.extendedcrafting.crafting.recipe.ShapedTableRecipe;
 import com.blakebr0.extendedcrafting.crafting.recipe.ShapelessEnderCrafterRecipe;
 import com.blakebr0.extendedcrafting.crafting.recipe.ShapelessTableRecipe;
 import com.blakebr0.extendedcrafting.crafting.recipe.UltimateSingularityRecipe;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraftforge.common.crafting.CraftingHelper;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -36,13 +34,6 @@ public final class ModRecipeSerializers {
     public void onRegisterSerializers(RegisterEvent event) {
         event.register(ForgeRegistries.Keys.RECIPE_SERIALIZERS, registry -> {
             CraftingHelper.register(UltimateSingularityRecipeCondition.Serializer.INSTANCE);
-        });
-
-        event.register(ForgeRegistries.Keys.RECIPE_TYPES, registry -> {
-            registry.register(new ResourceLocation(ExtendedCrafting.MOD_ID, "combination"), RecipeTypes.COMBINATION);
-            registry.register(new ResourceLocation(ExtendedCrafting.MOD_ID, "table"), RecipeTypes.TABLE);
-            registry.register(new ResourceLocation(ExtendedCrafting.MOD_ID, "compressor"), RecipeTypes.COMPRESSOR);
-            registry.register(new ResourceLocation(ExtendedCrafting.MOD_ID, "ender_crafter"), RecipeTypes.ENDER_CRAFTER);
         });
     }
 

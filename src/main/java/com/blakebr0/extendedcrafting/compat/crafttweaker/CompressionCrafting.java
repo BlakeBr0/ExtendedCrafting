@@ -1,8 +1,8 @@
 package com.blakebr0.extendedcrafting.compat.crafttweaker;
 
 import com.blakebr0.cucumber.helper.RecipeHelper;
-import com.blakebr0.extendedcrafting.api.crafting.RecipeTypes;
 import com.blakebr0.extendedcrafting.crafting.recipe.CompressorRecipe;
+import com.blakebr0.extendedcrafting.init.ModRecipeTypes;
 import com.blamejared.crafttweaker.api.CraftTweakerAPI;
 import com.blamejared.crafttweaker.api.action.base.IRuntimeAction;
 import com.blamejared.crafttweaker.api.annotation.ZenRegister;
@@ -56,14 +56,14 @@ public final class CompressionCrafting {
 			@Override
 			public void apply() {
 				List<ResourceLocation> recipes = RecipeHelper.getRecipes()
-                        .getOrDefault(RecipeTypes.COMPRESSOR, new HashMap<>())
+                        .getOrDefault(ModRecipeTypes.COMPRESSOR.get(), new HashMap<>())
                         .values().stream()
                         .filter(r -> r.getResultItem().sameItem(stack.getInternal()))
                         .map(Recipe::getId)
                         .toList();
 
 				recipes.forEach(r -> {
-					RecipeHelper.getRecipes().get(RecipeTypes.COMPRESSOR).remove(r);
+					RecipeHelper.getRecipes().get(ModRecipeTypes.COMPRESSOR.get()).remove(r);
 				});
 			}
 

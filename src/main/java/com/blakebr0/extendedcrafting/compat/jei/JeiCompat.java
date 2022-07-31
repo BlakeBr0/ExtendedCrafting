@@ -2,7 +2,6 @@ package com.blakebr0.extendedcrafting.compat.jei;
 
 import com.blakebr0.cucumber.helper.NBTHelper;
 import com.blakebr0.extendedcrafting.ExtendedCrafting;
-import com.blakebr0.extendedcrafting.api.crafting.RecipeTypes;
 import com.blakebr0.extendedcrafting.client.screen.AdvancedAutoTableScreen;
 import com.blakebr0.extendedcrafting.client.screen.AdvancedTableScreen;
 import com.blakebr0.extendedcrafting.client.screen.BasicAutoTableScreen;
@@ -34,6 +33,7 @@ import com.blakebr0.extendedcrafting.container.UltimateTableContainer;
 import com.blakebr0.extendedcrafting.init.ModBlocks;
 import com.blakebr0.extendedcrafting.init.ModContainerTypes;
 import com.blakebr0.extendedcrafting.init.ModItems;
+import com.blakebr0.extendedcrafting.init.ModRecipeTypes;
 import com.blakebr0.extendedcrafting.singularity.SingularityUtils;
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
@@ -96,12 +96,12 @@ public final class JeiCompat implements IModPlugin {
 			var manager = level.getRecipeManager();
 
 			if (ModConfigs.ENABLE_CRAFTING_CORE.get()) {
-				registration.addRecipes(CombinationCraftingCategory.RECIPE_TYPE, manager.getAllRecipesFor(RecipeTypes.COMBINATION));
+				registration.addRecipes(CombinationCraftingCategory.RECIPE_TYPE, manager.getAllRecipesFor(ModRecipeTypes.COMBINATION.get()));
 			}
 
 			if (ModConfigs.ENABLE_TABLES.get()) {
 				var recipes = Stream.of(1, 2, 3, 4).collect(Collectors.toMap(tier -> tier, tier ->
-					manager.byType(RecipeTypes.TABLE).values()
+					manager.byType(ModRecipeTypes.TABLE.get()).values()
 						.stream()
 						.filter(recipe -> recipe.hasRequiredTier() ? tier == recipe.getTier() : tier >= recipe.getTier())
 						.toList()
@@ -114,11 +114,11 @@ public final class JeiCompat implements IModPlugin {
 			}
 
 			if (ModConfigs.ENABLE_COMPRESSOR.get()) {
-				registration.addRecipes(CompressorCraftingCategory.RECIPE_TYPE, manager.getAllRecipesFor(RecipeTypes.COMPRESSOR));
+				registration.addRecipes(CompressorCraftingCategory.RECIPE_TYPE, manager.getAllRecipesFor(ModRecipeTypes.COMPRESSOR.get()));
 			}
 
 			if (ModConfigs.ENABLE_ENDER_CRAFTER.get()) {
-				registration.addRecipes(EnderCrafterCategory.RECIPE_TYPE, manager.getAllRecipesFor(RecipeTypes.ENDER_CRAFTER));
+				registration.addRecipes(EnderCrafterCategory.RECIPE_TYPE, manager.getAllRecipesFor(ModRecipeTypes.ENDER_CRAFTER.get()));
 			}
 		}
 	}

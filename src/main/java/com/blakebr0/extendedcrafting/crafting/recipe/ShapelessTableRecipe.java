@@ -2,8 +2,8 @@ package com.blakebr0.extendedcrafting.crafting.recipe;
 
 import com.blakebr0.cucumber.crafting.ISpecialRecipe;
 import com.blakebr0.extendedcrafting.api.crafting.ITableRecipe;
-import com.blakebr0.extendedcrafting.api.crafting.RecipeTypes;
 import com.blakebr0.extendedcrafting.init.ModRecipeSerializers;
+import com.blakebr0.extendedcrafting.init.ModRecipeTypes;
 import com.google.gson.JsonObject;
 import net.minecraft.core.NonNullList;
 import net.minecraft.network.FriendlyByteBuf;
@@ -65,7 +65,7 @@ public class ShapelessTableRecipe implements ISpecialRecipe, ITableRecipe {
 
 	@Override
 	public RecipeType<?> getType() {
-		return RecipeTypes.TABLE;
+		return ModRecipeTypes.TABLE.get();
 	}
 
 	@Override

@@ -4,10 +4,10 @@ import com.blakebr0.cucumber.helper.StackHelper;
 import com.blakebr0.cucumber.inventory.BaseItemStackHandler;
 import com.blakebr0.cucumber.tileentity.BaseInventoryTileEntity;
 import com.blakebr0.cucumber.util.Localizable;
-import com.blakebr0.extendedcrafting.api.crafting.RecipeTypes;
 import com.blakebr0.extendedcrafting.config.ModConfigs;
 import com.blakebr0.extendedcrafting.container.CompressorContainer;
 import com.blakebr0.extendedcrafting.crafting.recipe.CompressorRecipe;
+import com.blakebr0.extendedcrafting.init.ModRecipeTypes;
 import com.blakebr0.extendedcrafting.init.ModTileEntities;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -103,7 +103,7 @@ public class CompressorTileEntity extends BaseInventoryTileEntity implements Men
 		tile.recipeInventory.setStackInSlot(1, catalyst);
 
 		if (tile.recipe == null || !tile.recipe.matches(tile.recipeInventory)) {
-			tile.recipe = (CompressorRecipe) level.getRecipeManager().getRecipeFor(RecipeTypes.COMPRESSOR, tile.recipeInventory.toIInventory(), level).orElse(null);
+			tile.recipe = (CompressorRecipe) level.getRecipeManager().getRecipeFor(ModRecipeTypes.COMPRESSOR.get(), tile.recipeInventory.toIInventory(), level).orElse(null);
 		}
 
 		if (!level.isClientSide()) {

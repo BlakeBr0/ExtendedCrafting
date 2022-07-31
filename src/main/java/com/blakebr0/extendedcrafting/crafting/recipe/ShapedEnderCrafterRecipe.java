@@ -2,9 +2,9 @@ package com.blakebr0.extendedcrafting.crafting.recipe;
 
 import com.blakebr0.cucumber.crafting.ISpecialRecipe;
 import com.blakebr0.extendedcrafting.api.crafting.IEnderCrafterRecipe;
-import com.blakebr0.extendedcrafting.api.crafting.RecipeTypes;
 import com.blakebr0.extendedcrafting.config.ModConfigs;
 import com.blakebr0.extendedcrafting.init.ModRecipeSerializers;
+import com.blakebr0.extendedcrafting.init.ModRecipeTypes;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
@@ -98,7 +98,7 @@ public class ShapedEnderCrafterRecipe implements ISpecialRecipe, IEnderCrafterRe
 
 	@Override
 	public RecipeType<?> getType() {
-		return RecipeTypes.ENDER_CRAFTER;
+		return ModRecipeTypes.ENDER_CRAFTER.get();
 	}
 
 	@Override

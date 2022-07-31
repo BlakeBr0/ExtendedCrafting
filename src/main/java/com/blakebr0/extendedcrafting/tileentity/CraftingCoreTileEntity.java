@@ -4,10 +4,10 @@ import com.blakebr0.cucumber.helper.StackHelper;
 import com.blakebr0.cucumber.inventory.BaseItemStackHandler;
 import com.blakebr0.cucumber.tileentity.BaseInventoryTileEntity;
 import com.blakebr0.cucumber.util.Localizable;
-import com.blakebr0.extendedcrafting.api.crafting.RecipeTypes;
 import com.blakebr0.extendedcrafting.config.ModConfigs;
 import com.blakebr0.extendedcrafting.container.CraftingCoreContainer;
 import com.blakebr0.extendedcrafting.crafting.recipe.CombinationRecipe;
+import com.blakebr0.extendedcrafting.init.ModRecipeTypes;
 import com.blakebr0.extendedcrafting.init.ModTileEntities;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -97,7 +97,7 @@ public class CraftingCoreTileEntity extends BaseInventoryTileEntity implements M
 		tile.updateRecipeInventory(stacks);
 
 		if (tile.haveItemsChanged && (tile.recipe == null || !tile.recipe.matches(tile.recipeInventory))) {
-			tile.recipe = (CombinationRecipe) level.getRecipeManager().getRecipeFor(RecipeTypes.COMBINATION, tile.recipeInventory.toIInventory(), level).orElse(null);
+			tile.recipe = (CombinationRecipe) level.getRecipeManager().getRecipeFor(ModRecipeTypes.COMBINATION.get(), tile.recipeInventory.toIInventory(), level).orElse(null);
 		}
 
 		if (!level.isClientSide()) {

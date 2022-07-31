@@ -1,8 +1,8 @@
 package com.blakebr0.extendedcrafting.compat.crafttweaker;
 
 import com.blakebr0.cucumber.helper.RecipeHelper;
-import com.blakebr0.extendedcrafting.api.crafting.RecipeTypes;
 import com.blakebr0.extendedcrafting.crafting.recipe.CombinationRecipe;
+import com.blakebr0.extendedcrafting.init.ModRecipeTypes;
 import com.blamejared.crafttweaker.api.CraftTweakerAPI;
 import com.blamejared.crafttweaker.api.action.base.IRuntimeAction;
 import com.blamejared.crafttweaker.api.annotation.ZenRegister;
@@ -60,14 +60,14 @@ public final class CombinationCrafting {
 			@Override
 			public void apply() {
 				List<ResourceLocation> recipes = RecipeHelper.getRecipes()
-                        .getOrDefault(RecipeTypes.COMBINATION, new HashMap<>())
+                        .getOrDefault(ModRecipeTypes.COMBINATION.get(), new HashMap<>())
                         .values().stream()
                         .filter(r -> r.getResultItem().sameItem(stack.getInternal()))
                         .map(Recipe::getId)
                         .toList();
 
 				recipes.forEach(r -> {
-					RecipeHelper.getRecipes().get(RecipeTypes.COMBINATION).remove(r);
+					RecipeHelper.getRecipes().get(ModRecipeTypes.COMBINATION.get()).remove(r);
 				});
 			}
 

@@ -5,7 +5,6 @@ import com.blakebr0.cucumber.inventory.BaseItemStackHandler;
 import com.blakebr0.cucumber.tileentity.BaseInventoryTileEntity;
 import com.blakebr0.cucumber.util.Localizable;
 import com.blakebr0.extendedcrafting.api.crafting.ITableRecipe;
-import com.blakebr0.extendedcrafting.api.crafting.RecipeTypes;
 import com.blakebr0.extendedcrafting.config.ModConfigs;
 import com.blakebr0.extendedcrafting.container.AdvancedAutoTableContainer;
 import com.blakebr0.extendedcrafting.container.BasicAutoTableContainer;
@@ -13,6 +12,7 @@ import com.blakebr0.extendedcrafting.container.EliteAutoTableContainer;
 import com.blakebr0.extendedcrafting.container.UltimateAutoTableContainer;
 import com.blakebr0.extendedcrafting.container.inventory.ExtendedCraftingInventory;
 import com.blakebr0.extendedcrafting.crafting.TableRecipeStorage;
+import com.blakebr0.extendedcrafting.init.ModRecipeTypes;
 import com.blakebr0.extendedcrafting.init.ModTileEntities;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -28,6 +28,7 @@ import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.inventory.SimpleContainerData;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.CraftingRecipe;
+import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -102,7 +103,7 @@ public abstract class AutoTableTileEntity extends BaseInventoryTileEntity implem
             var recipeInventory = tile.getRecipeInventory().toIInventory();
 
             if (tile.isGridChanged && (tile.recipe == null || !tile.recipe.matches(recipeInventory, level))) {
-                var recipe = level.getRecipeManager().getRecipeFor(RecipeTypes.TABLE, recipeInventory, level).orElse(null);
+                var recipe = level.getRecipeManager().getRecipeFor(ModRecipeTypes.TABLE.get(), recipeInventory, level).orElse(null);
 
                 tile.recipe = recipe != null ? new WrappedRecipe(recipe) : null;
 
@@ -226,7 +227,7 @@ public abstract class AutoTableTileEntity extends BaseInventoryTileEntity implem
         }
 
         var result = ItemStack.EMPTY;
-        var recipe = level.getRecipeManager().getRecipeFor(RecipeTypes.TABLE, recipeIInventory, level).orElse(null);
+        var recipe = level.getRecipeManager().getRecipeFor(ModRecipeTypes.TABLE.get(), recipeIInventory, level).orElse(null);
 
         if (recipe != null) {
             result = recipe.assemble(recipeIInventory);

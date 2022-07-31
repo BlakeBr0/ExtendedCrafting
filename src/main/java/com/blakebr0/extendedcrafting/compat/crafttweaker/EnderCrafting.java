@@ -1,10 +1,10 @@
 package com.blakebr0.extendedcrafting.compat.crafttweaker;
 
 import com.blakebr0.cucumber.helper.RecipeHelper;
-import com.blakebr0.extendedcrafting.api.crafting.RecipeTypes;
 import com.blakebr0.extendedcrafting.config.ModConfigs;
 import com.blakebr0.extendedcrafting.crafting.recipe.ShapedEnderCrafterRecipe;
 import com.blakebr0.extendedcrafting.crafting.recipe.ShapelessEnderCrafterRecipe;
+import com.blakebr0.extendedcrafting.init.ModRecipeTypes;
 import com.blamejared.crafttweaker.api.CraftTweakerAPI;
 import com.blamejared.crafttweaker.api.action.base.IRuntimeAction;
 import com.blamejared.crafttweaker.api.annotation.ZenRegister;
@@ -91,14 +91,14 @@ public final class EnderCrafting {
 			@Override
 			public void apply() {
 				var recipes = RecipeHelper.getRecipes()
-                        .getOrDefault(RecipeTypes.ENDER_CRAFTER, new HashMap<>())
+                        .getOrDefault(ModRecipeTypes.ENDER_CRAFTER.get(), new HashMap<>())
                         .values().stream()
                         .filter(r -> r.getResultItem().sameItem(stack.getInternal()))
                         .map(Recipe::getId)
                         .toList();
 
 				recipes.forEach(r -> {
-					RecipeHelper.getRecipes().get(RecipeTypes.ENDER_CRAFTER).remove(r);
+					RecipeHelper.getRecipes().get(ModRecipeTypes.ENDER_CRAFTER.get()).remove(r);
 				});
 			}
 

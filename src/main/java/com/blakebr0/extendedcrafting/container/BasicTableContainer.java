@@ -1,11 +1,11 @@
 package com.blakebr0.extendedcrafting.container;
 
 import com.blakebr0.cucumber.inventory.BaseItemStackHandler;
-import com.blakebr0.extendedcrafting.api.crafting.RecipeTypes;
 import com.blakebr0.extendedcrafting.config.ModConfigs;
 import com.blakebr0.extendedcrafting.container.inventory.ExtendedCraftingInventory;
 import com.blakebr0.extendedcrafting.container.slot.TableOutputSlot;
 import com.blakebr0.extendedcrafting.init.ModContainerTypes;
+import com.blakebr0.extendedcrafting.init.ModRecipeTypes;
 import com.blakebr0.extendedcrafting.tileentity.BasicTableTileEntity;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Inventory;
@@ -63,7 +63,7 @@ public class BasicTableContainer extends AbstractContainerMenu {
 
 	@Override
 	public void slotsChanged(Container matrix) {
-		var recipe = this.world.getRecipeManager().getRecipeFor(RecipeTypes.TABLE, matrix, this.world);
+		var recipe = this.world.getRecipeManager().getRecipeFor(ModRecipeTypes.TABLE.get(), matrix, this.world);
 
 		this.isVanillaRecipe = false;
 

@@ -1,9 +1,9 @@
 package com.blakebr0.extendedcrafting.compat.crafttweaker;
 
 import com.blakebr0.cucumber.helper.RecipeHelper;
-import com.blakebr0.extendedcrafting.api.crafting.RecipeTypes;
 import com.blakebr0.extendedcrafting.crafting.recipe.ShapedTableRecipe;
 import com.blakebr0.extendedcrafting.crafting.recipe.ShapelessTableRecipe;
+import com.blakebr0.extendedcrafting.init.ModRecipeTypes;
 import com.blamejared.crafttweaker.api.CraftTweakerAPI;
 import com.blamejared.crafttweaker.api.action.base.IRuntimeAction;
 import com.blamejared.crafttweaker.api.annotation.ZenRegister;
@@ -129,14 +129,14 @@ public final class TableCrafting {
 			@Override
 			public void apply() {
 				var recipes = RecipeHelper.getRecipes()
-                        .getOrDefault(RecipeTypes.TABLE, new HashMap<>())
+                        .getOrDefault(ModRecipeTypes.TABLE.get(), new HashMap<>())
                         .values().stream()
                         .filter(r -> r.getResultItem().sameItem(stack.getInternal()))
                         .map(Recipe::getId)
                         .toList();
 
 				recipes.forEach(r -> {
-					RecipeHelper.getRecipes().get(RecipeTypes.TABLE).remove(r);
+					RecipeHelper.getRecipes().get(ModRecipeTypes.TABLE.get()).remove(r);
 				});
 			}
 

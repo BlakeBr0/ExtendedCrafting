@@ -2,8 +2,8 @@ package com.blakebr0.extendedcrafting.crafting.recipe;
 
 import com.blakebr0.cucumber.crafting.ISpecialRecipe;
 import com.blakebr0.extendedcrafting.api.crafting.ITableRecipe;
-import com.blakebr0.extendedcrafting.api.crafting.RecipeTypes;
 import com.blakebr0.extendedcrafting.init.ModRecipeSerializers;
+import com.blakebr0.extendedcrafting.init.ModRecipeTypes;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
@@ -104,7 +104,7 @@ public class ShapedTableRecipe implements ISpecialRecipe, ITableRecipe {
 
 	@Override
 	public RecipeType<?> getType() {
-		return RecipeTypes.TABLE;
+		return ModRecipeTypes.TABLE.get();
 	}
 
 	@Override

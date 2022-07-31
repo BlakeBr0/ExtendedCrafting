@@ -1,8 +1,8 @@
 package com.blakebr0.extendedcrafting.container.slot;
 
-import com.blakebr0.extendedcrafting.api.crafting.RecipeTypes;
 import com.blakebr0.extendedcrafting.container.BasicAutoTableContainer;
 import com.blakebr0.extendedcrafting.container.BasicTableContainer;
+import com.blakebr0.extendedcrafting.init.ModRecipeTypes;
 import net.minecraft.core.NonNullList;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Player;
@@ -42,7 +42,7 @@ public class TableOutputSlot extends Slot {
         if (isVanilla) {
             remaining = player.level.getRecipeManager().getRemainingItemsFor(RecipeType.CRAFTING, (CraftingContainer) this.matrix, player.level);
         } else {
-            remaining = player.level.getRecipeManager().getRemainingItemsFor(RecipeTypes.TABLE, this.matrix, player.level);
+            remaining = player.level.getRecipeManager().getRemainingItemsFor(ModRecipeTypes.TABLE.get(), this.matrix, player.level);
         }
 
         for (int i = 0; i < remaining.size(); i++) {

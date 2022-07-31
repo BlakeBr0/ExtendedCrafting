@@ -2,9 +2,9 @@ package com.blakebr0.extendedcrafting.crafting.recipe;
 
 import com.blakebr0.cucumber.crafting.ISpecialRecipe;
 import com.blakebr0.extendedcrafting.api.crafting.ICompressorRecipe;
-import com.blakebr0.extendedcrafting.api.crafting.RecipeTypes;
 import com.blakebr0.extendedcrafting.config.ModConfigs;
 import com.blakebr0.extendedcrafting.init.ModRecipeSerializers;
+import com.blakebr0.extendedcrafting.init.ModRecipeTypes;
 import com.google.gson.JsonObject;
 import net.minecraft.core.NonNullList;
 import net.minecraft.network.FriendlyByteBuf;
@@ -70,7 +70,7 @@ public class CompressorRecipe implements ISpecialRecipe, ICompressorRecipe {
 
 	@Override
 	public RecipeType<?> getType() {
-		return RecipeTypes.COMPRESSOR;
+		return ModRecipeTypes.COMPRESSOR.get();
 	}
 
 	@Override

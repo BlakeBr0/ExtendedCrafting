@@ -5,10 +5,10 @@ import com.blakebr0.cucumber.inventory.BaseItemStackHandler;
 import com.blakebr0.cucumber.tileentity.BaseInventoryTileEntity;
 import com.blakebr0.cucumber.util.Localizable;
 import com.blakebr0.extendedcrafting.api.crafting.IEnderCrafterRecipe;
-import com.blakebr0.extendedcrafting.api.crafting.RecipeTypes;
 import com.blakebr0.extendedcrafting.block.EnderAlternatorBlock;
 import com.blakebr0.extendedcrafting.config.ModConfigs;
 import com.blakebr0.extendedcrafting.container.EnderCrafterContainer;
+import com.blakebr0.extendedcrafting.init.ModRecipeTypes;
 import com.blakebr0.extendedcrafting.init.ModTileEntities;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleOptions;
@@ -79,7 +79,7 @@ public class EnderCrafterTileEntity extends BaseInventoryTileEntity implements M
 		var recipeInventory = tile.recipeInventory.toIInventory();
 
 		if (tile.isGridChanged && (tile.recipe == null || !tile.recipe.matches(recipeInventory, level))) {
-			tile.recipe = level.getRecipeManager().getRecipeFor(RecipeTypes.ENDER_CRAFTER, recipeInventory, level).orElse(null);
+			tile.recipe = level.getRecipeManager().getRecipeFor(ModRecipeTypes.ENDER_CRAFTER.get(), recipeInventory, level).orElse(null);
 		}
 
 		if (!level.isClientSide()) {

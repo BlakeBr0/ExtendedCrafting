@@ -96,7 +96,7 @@ public class BasicTableCategory implements IRecipeCategory<ITableRecipe> {
 
 			for (int i = heightOffset; i < shaped.getHeight() + heightOffset; i++) {
 				for (int j = widthOffset; j < shaped.getWidth() + widthOffset; j++) {
-					builder.addSlot(RecipeIngredientRole.INPUT, j * 18, i * 18).addIngredients(inputs.get(stackIndex));
+					builder.addSlot(RecipeIngredientRole.INPUT, j * 18 + 1, i * 18 + 1).addIngredients(inputs.get(stackIndex));
 
 					stackIndex++;
 				}
@@ -104,13 +104,15 @@ public class BasicTableCategory implements IRecipeCategory<ITableRecipe> {
 		} else if (recipe instanceof ShapelessTableRecipe) {
 			for (int i = 0; i < 3; i++) {
 				for (int j = 0; j < 3; j++) {
-					int index = 1 + j + (i * 3);
+					int index = j + (i * 3);
 
-					builder.addSlot(RecipeIngredientRole.INPUT, j * 18, i * 18).addIngredients(inputs.get(index));
+					if (index < inputs.size()) {
+						builder.addSlot(RecipeIngredientRole.INPUT, j * 18 + 1, i * 18 + 1).addIngredients(inputs.get(index));
+					}
 				}
 			}
 
-			builder.setShapeless(217, 0);
+			builder.setShapeless();
 		}
 
 		builder.addSlot(RecipeIngredientRole.OUTPUT, 95, 19).addItemStack(output);

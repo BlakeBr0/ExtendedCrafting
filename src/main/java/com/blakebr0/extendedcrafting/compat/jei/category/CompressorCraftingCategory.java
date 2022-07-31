@@ -64,7 +64,7 @@ public class CompressorCraftingCategory implements IRecipeCategory<ICompressorRe
 		}
 
 		if (mouseX > 54 && mouseX < 78 && mouseY > 58 && mouseY < 68) {
-			return List.of(ModTooltips.NUM_ITEMS.args(recipe.getInputCount()).color(ChatFormatting.WHITE).build());
+			return List.of(ModTooltips.NUM_ITEMS.args(Utils.format(recipe.getInputCount())).color(ChatFormatting.WHITE).build());
 		}
 
 		return List.of();

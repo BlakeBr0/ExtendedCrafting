@@ -96,7 +96,7 @@ public class EliteTableCategory implements IRecipeCategory<ITableRecipe> {
 
 			for (int i = heightOffset; i < shaped.getHeight() + heightOffset; i++) {
 				for (int j = widthOffset; j < shaped.getWidth() + widthOffset; j++) {
-					builder.addSlot(RecipeIngredientRole.INPUT, j * 18, i * 18).addIngredients(inputs.get(stackIndex));
+					builder.addSlot(RecipeIngredientRole.INPUT, j * 18 + 1, i * 18 + 1).addIngredients(inputs.get(stackIndex));
 
 					stackIndex++;
 				}
@@ -106,11 +106,13 @@ public class EliteTableCategory implements IRecipeCategory<ITableRecipe> {
 				for (int j = 0; j < 7; j++) {
 					int index = j + (i * 7);
 
-					builder.addSlot(RecipeIngredientRole.INPUT, j * 18, i * 18).addIngredients(inputs.get(index));
+					if (index < inputs.size()) {
+						builder.addSlot(RecipeIngredientRole.INPUT, j * 18 + 1, i * 18 + 1).addIngredients(inputs.get(index));
+					}
 				}
 			}
 
-			builder.setShapeless(237, 257);
+			builder.setShapeless(118, 128);
 		}
 
 		builder.addSlot(RecipeIngredientRole.OUTPUT, 66, 138).addItemStack(output);

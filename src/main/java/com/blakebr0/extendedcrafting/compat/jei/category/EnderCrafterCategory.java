@@ -86,7 +86,7 @@ public class EnderCrafterCategory implements IRecipeCategory<IEnderCrafterRecipe
 
 			for (int i = 0; i < shaped.getHeight(); i++) {
 				for (int j = 0; j < shaped.getWidth(); j++) {
-					builder.addSlot(RecipeIngredientRole.INPUT, j * 18, i * 18).addIngredients(inputs.get(stackIndex));
+					builder.addSlot(RecipeIngredientRole.INPUT, j * 18 + 1, i * 18 + 1).addIngredients(inputs.get(stackIndex));
 
 					stackIndex++;
 				}
@@ -97,7 +97,7 @@ public class EnderCrafterCategory implements IRecipeCategory<IEnderCrafterRecipe
 					int index = j + (i * 9);
 
 					if (index < inputs.size()) {
-						builder.addSlot(RecipeIngredientRole.INPUT, j * 18, i * 18).addIngredients(inputs.get(index));
+						builder.addSlot(RecipeIngredientRole.INPUT, j * 18 + 1, i * 18 + 1).addIngredients(inputs.get(index));
 					}
 				}
 			}

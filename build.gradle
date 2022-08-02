@@ -11,7 +11,7 @@ apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'eclipse'
 apply plugin: 'maven-publish'
 
-version = '1.18.2-4.1.1'
+version = '1.19.1-5.0.0'
 group = 'com.blakebr0.extendedcrafting'
 archivesBaseName = 'ExtendedCrafting'
 
@@ -85,7 +85,7 @@ dependencies {
 
     implementation project(':Cucumber')
     implementation fg.deobf("curse.maven:jade-324717:${jade_version}")
-    implementation fg.deobf("com.blamejared.crafttweaker:CraftTweaker-forge-${crafttweaker_version}")
+    compileOnly fg.deobf("com.blamejared.crafttweaker:CraftTweaker-forge-${crafttweaker_version}") // TODO: implementation
 
     runtimeOnly fg.deobf("vazkii.patchouli:Patchouli:${patchouli_version}")
     runtimeOnly fg.deobf("mezz.jei:jei-${mc_version}-forge:${jei_version}")

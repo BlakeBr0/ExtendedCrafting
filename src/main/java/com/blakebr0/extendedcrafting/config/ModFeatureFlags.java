@@ -1,9 +1,11 @@
 package com.blakebr0.extendedcrafting.config;
 
 import com.blakebr0.cucumber.util.FeatureFlag;
+import com.blakebr0.cucumber.util.FeatureFlags;
 import com.blakebr0.extendedcrafting.ExtendedCrafting;
 import net.minecraft.resources.ResourceLocation;
 
+@FeatureFlags
 public final class ModFeatureFlags {
     public static final FeatureFlag AUTO_TABLES = FeatureFlag.create(new ResourceLocation(ExtendedCrafting.MOD_ID, "auto_tables"), ModConfigs.ENABLE_AUTO_TABLES);
     public static final FeatureFlag COMPRESSOR = FeatureFlag.create(new ResourceLocation(ExtendedCrafting.MOD_ID, "compressor"), ModConfigs.ENABLE_COMPRESSOR);

@@ -29,7 +29,6 @@ import snownee.jade.api.config.IPluginConfig;
 
 @WailaPlugin
 public class JadeCompat implements IWailaPlugin {
-	private static final ResourceLocation PEDESTAL_PROVIDER = new ResourceLocation(ExtendedCrafting.MOD_ID, "pedestal");
 	private static final ResourceLocation CRAFTING_CORE_PROVIDER = new ResourceLocation(ExtendedCrafting.MOD_ID, "crafting_core");
 	private static final ResourceLocation BASIC_TABLE_PROVIDER = new ResourceLocation(ExtendedCrafting.MOD_ID, "basic_table");
 	private static final ResourceLocation ADVANCED_TABLE_PROVIDER = new ResourceLocation(ExtendedCrafting.MOD_ID, "advanced_table");
@@ -45,22 +44,6 @@ public class JadeCompat implements IWailaPlugin {
 
 	@Override
 	public void registerClient(IWailaClientRegistration registration) {
-		registration.registerBlockComponent(new IBlockComponentProvider() {
-			@Override
-			public void appendTooltip(ITooltip tooltip, BlockAccessor accessor, IPluginConfig config) {
-				var pedestal = (PedestalTileEntity) accessor.getBlockEntity();
-				var stack = pedestal.getInventory().getStackInSlot(0);
-
-				if (!stack.isEmpty())
-					tooltip.add(stack.getHoverName());
-			}
-
-			@Override
-			public ResourceLocation getUid() {
-				return PEDESTAL_PROVIDER;
-			}
-		}, PedestalBlock.class);
-
 		registration.registerBlockComponent(new IBlockComponentProvider() {
 			@Override
 			public void appendTooltip(ITooltip tooltip, BlockAccessor accessor, IPluginConfig config) {

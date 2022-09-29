@@ -4,6 +4,7 @@ import com.blakebr0.extendedcrafting.ExtendedCrafting;
 import com.blakebr0.extendedcrafting.client.tesr.CompressorRenderer;
 import com.blakebr0.extendedcrafting.client.tesr.CraftingCoreRenderer;
 import com.blakebr0.extendedcrafting.client.tesr.PedestalRenderer;
+import com.blakebr0.extendedcrafting.client.tesr.TheUltimateBlockRenderer;
 import com.blakebr0.extendedcrafting.tileentity.AdvancedTableTileEntity;
 import com.blakebr0.extendedcrafting.tileentity.AutoTableTileEntity;
 import com.blakebr0.extendedcrafting.tileentity.BasicTableTileEntity;
@@ -12,6 +13,7 @@ import com.blakebr0.extendedcrafting.tileentity.CraftingCoreTileEntity;
 import com.blakebr0.extendedcrafting.tileentity.EliteTableTileEntity;
 import com.blakebr0.extendedcrafting.tileentity.EnderCrafterTileEntity;
 import com.blakebr0.extendedcrafting.tileentity.PedestalTileEntity;
+import com.blakebr0.extendedcrafting.tileentity.TheUltimateBlockTileEntity;
 import com.blakebr0.extendedcrafting.tileentity.UltimateTableTileEntity;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
 import net.minecraft.world.level.block.Block;
@@ -28,6 +30,7 @@ import java.util.function.Supplier;
 public final class ModTileEntities {
 	public static final DeferredRegister<BlockEntityType<?>> REGISTRY = DeferredRegister.create(ForgeRegistries.BLOCK_ENTITY_TYPES, ExtendedCrafting.MOD_ID);
 
+	public static final RegistryObject<BlockEntityType<TheUltimateBlockTileEntity>> THE_ULTIMATE_BLOCK = register("the_ultimate_block", TheUltimateBlockTileEntity::new, () -> new Block[] { ModBlocks.THE_ULTIMATE_BLOCK.get() });
 	public static final RegistryObject<BlockEntityType<PedestalTileEntity>> PEDESTAL = register("pedestal", PedestalTileEntity::new, () -> new Block[] { ModBlocks.PEDESTAL.get() });
 	public static final RegistryObject<BlockEntityType<CraftingCoreTileEntity>> CRAFTING_CORE = register("crafting_core", CraftingCoreTileEntity::new, () -> new Block[] { ModBlocks.CRAFTING_CORE.get() });
 	public static final RegistryObject<BlockEntityType<BasicTableTileEntity>> BASIC_TABLE = register("basic_table", BasicTableTileEntity::new, () -> new Block[] { ModBlocks.BASIC_TABLE.get() });
@@ -43,6 +46,7 @@ public final class ModTileEntities {
 
 	@OnlyIn(Dist.CLIENT)
 	public static void onClientSetup() {
+		BlockEntityRenderers.register(THE_ULTIMATE_BLOCK.get(), TheUltimateBlockRenderer::new);
 		BlockEntityRenderers.register(PEDESTAL.get(), PedestalRenderer::new);
 		BlockEntityRenderers.register(CRAFTING_CORE.get(), CraftingCoreRenderer::new);
 		BlockEntityRenderers.register(COMPRESSOR.get(), CompressorRenderer::new);

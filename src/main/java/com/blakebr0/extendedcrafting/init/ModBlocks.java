@@ -15,6 +15,7 @@ import com.blakebr0.extendedcrafting.block.EnderAlternatorBlock;
 import com.blakebr0.extendedcrafting.block.EnderCrafterBlock;
 import com.blakebr0.extendedcrafting.block.FrameBlock;
 import com.blakebr0.extendedcrafting.block.PedestalBlock;
+import com.blakebr0.extendedcrafting.block.TheUltimateBlock;
 import com.blakebr0.extendedcrafting.block.UltimateAutoTableBlock;
 import com.blakebr0.extendedcrafting.block.UltimateTableBlock;
 import net.minecraft.world.item.BlockItem;
@@ -43,7 +44,7 @@ public final class ModBlocks {
 	public static final RegistryObject<Block> ENDER_INGOT_BLOCK = register("ender_ingot_block", () -> new BaseBlock(Material.METAL, SoundType.METAL, 5.0F, 10.0F, true));
 	public static final RegistryObject<Block> ENHANCED_ENDER_INGOT_BLOCK = register("enhanced_ender_ingot_block", () -> new BaseBlock(Material.METAL, SoundType.METAL, 5.0F, 10.0F, true), Rarity.UNCOMMON);
 	public static final RegistryObject<Block> CRYSTALTINE_BLOCK = register("crystaltine_block", () -> new BaseBlock(Material.METAL, SoundType.METAL, 5.0F, 10.0F, true), Rarity.UNCOMMON);
-	public static final RegistryObject<Block> THE_ULTIMATE_BLOCK = register("the_ultimate_block", () -> new BaseBlock(Material.METAL, SoundType.METAL, 5.0F, 10.0F, true), Rarity.EPIC);
+	public static final RegistryObject<Block> THE_ULTIMATE_BLOCK = register("the_ultimate_block", TheUltimateBlock::new, Rarity.EPIC);
 	public static final RegistryObject<Block> NETHER_STAR_BLOCK = register("nether_star_block", () -> new BaseBlock(Material.METAL, SoundType.METAL, 5.0F, 10.0F, true), Rarity.UNCOMMON);
 	public static final RegistryObject<Block> ENDER_STAR_BLOCK = register("ender_star_block", () -> new BaseBlock(Material.METAL, SoundType.METAL, 5.0F, 10.0F, true), Rarity.UNCOMMON);
 

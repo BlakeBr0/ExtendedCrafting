@@ -1,6 +1,21 @@
 {
-  "parent": "block/cube_all",
+  "parent": "block/block",
   "textures": {
-    "all": "extendedcrafting:block/the_ultimate_block"
-  }
+    "particle": "block/iron_block",
+    "side": "block/iron_block"
+  },
+  "elements": [
+    {
+      "from": [ 0.08, 0.08, 0.08 ],
+      "to": [ 15.92, 15.92, 15.92 ],
+      "faces": {
+        "down":  { "uv": [ 0, 0, 16, 16 ], "texture": "#side", "cullface": "down",  "tintindex": 0 },
+        "up":    { "uv": [ 0, 0, 16, 16 ], "texture": "#side", "cullface": "up",    "tintindex": 0 },
+        "north": { "uv": [ 0, 0, 16, 16 ], "texture": "#side", "cullface": "north", "tintindex": 0 },
+        "south": { "uv": [ 0, 0, 16, 16 ], "texture": "#side", "cullface": "south", "tintindex": 0 },
+        "west":  { "uv": [ 0, 0, 16, 16 ], "texture": "#side", "cullface": "west",  "tintindex": 0 },
+        "east":  { "uv": [ 0, 0, 16, 16 ], "texture": "#side", "cullface": "east",  "tintindex": 0 }
+      }
+    }
+  ]
 }

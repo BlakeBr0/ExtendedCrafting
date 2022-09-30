@@ -5,6 +5,7 @@ import com.blakebr0.extendedcrafting.api.crafting.ICombinationRecipe;
 import com.blakebr0.extendedcrafting.config.ModConfigs;
 import com.blakebr0.extendedcrafting.init.ModRecipeSerializers;
 import com.blakebr0.extendedcrafting.init.ModRecipeTypes;
+import com.blakebr0.extendedcrafting.util.IngredientListCache;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
 import net.minecraft.core.NonNullList;
@@ -22,7 +23,6 @@ import net.minecraft.world.level.Level;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.wrapper.InvWrapper;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class CombinationRecipe implements ISpecialRecipe, ICombinationRecipe {
@@ -31,8 +31,7 @@ public class CombinationRecipe implements ISpecialRecipe, ICombinationRecipe {
 	private final NonNullList<Ingredient> ingredients;
 	private final int powerCost;
 	private final int powerRate;
-	private final List<Component> inputsList;
-	
+
 	public CombinationRecipe(ResourceLocation recipeId, NonNullList<Ingredient> ingredients, ItemStack output, int powerCost) {
 		this(recipeId, ingredients, output, powerCost, ModConfigs.CRAFTING_CORE_POWER_RATE.get());
 	}
@@ -43,7 +42,6 @@ public class CombinationRecipe implements ISpecialRecipe, ICombinationRecipe {
 		this.output = output;
 		this.powerCost = powerCost;
 		this.powerRate = powerRate;
-		this.inputsList = new ArrayList<>();
 	}
 
 	@Override
@@ -109,7 +107,7 @@ public class CombinationRecipe implements ISpecialRecipe, ICombinationRecipe {
 
 	@Override
 	public List<Component> getInputsList() {
-		return this.inputsList;
+		return IngredientListCache.getInstance().getIngredientsList(this.recipeId, this.ingredients);
 	}
 
 	public static class Serializer implements RecipeSerializer<CombinationRecipe> {

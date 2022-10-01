@@ -34,62 +34,59 @@ public class CraftingCoreScreen extends BaseContainerScreen<CraftingCoreContaine
 
 		super.render(matrix, mouseX, mouseY, partialTicks);
 
-		if (this.hasRecipe()) {
-			var output = this.getRecipeOutput();
-
-			this.drawItemStack(output, x + 148, y + 47);
-
-			if (isHoveringSlot(x + 148, y + 47, mouseX, mouseY)) {
-				this.renderTooltip(matrix, output, mouseX, mouseY);
-			}
-		}
-
 		if (mouseX > x + 7 && mouseX < x + 20 && mouseY > y + 17 && mouseY < y + 94) {
 			var text = Component.literal(number(this.getEnergyStored()) + " / " + number(this.getMaxEnergyStored()) + " FE");
 			this.renderTooltip(matrix, text, mouseX, mouseY);
 		}
+
+		var isHoldingItem = !this.menu.getCarried().isEmpty() || this.isDragging();
+
+		if (!isHoldingItem && isHoveringSlot(x + 148, y + 47, mouseX, mouseY)) {
+			var output = this.getRecipeOutput();
+			this.renderTooltip(matrix, output, mouseX, mouseY);
+		}
 	}
 
 	@Override
-	protected void renderLabels(PoseStack stack, int mouseX, int mouseY) {
+	protected void renderLabels(PoseStack matrix, int mouseX, int mouseY) {
 		var title = this.getTitle().getString();
 
-		this.font.draw(stack, title, (float) (this.imageWidth / 2 - this.font.width(title) / 2), 6.0F, 4210752);
-		this.font.draw(stack, this.playerInventoryTitle, 8.0F, this.imageHeight - 94.0F, 4210752);
+		this.font.draw(matrix, title, (float) (this.imageWidth / 2 - this.font.width(title) / 2), 6.0F, 4210752);
+		this.font.draw(matrix, this.playerInventoryTitle, 8.0F, this.imageHeight - 94.0F, 4210752);
 
-		stack.pushPose();
-		stack.scale(0.75F, 0.75F, 0.75F);
+		matrix.pushPose();
+		matrix.scale(0.75F, 0.75F, 0.75F);
 
-		this.font.draw(stack, text("screen.extendedcrafting.crafting_core.pedestals", this.getPedestalCount()), 36, 36, -1);
+		this.font.draw(matrix, text("screen.extendedcrafting.crafting_core.pedestals", this.getPedestalCount()), 36, 36, -1);
 
 		if (!this.hasRecipe()) {
-			this.font.draw(stack, text("screen.extendedcrafting.crafting_core.no_recipe"), 36, 56, -1);
+			this.font.draw(matrix, text("screen.extendedcrafting.crafting_core.no_recipe"), 36, 56, -1);
 		} else {
-			this.font.draw(stack, text("screen.extendedcrafting.crafting_core.power_cost", number(this.getEnergyRequired())) + " FE", 36, 56, -1);
-			this.font.draw(stack, text("screen.extendedcrafting.crafting_core.power_rate", number(this.getEnergyRate())) + " FE/t", 36, 66, -1);
+			this.font.draw(matrix, text("screen.extendedcrafting.crafting_core.power_cost", number(this.getEnergyRequired())) + " FE", 36, 56, -1);
+			this.font.draw(matrix, text("screen.extendedcrafting.crafting_core.power_rate", number(this.getEnergyRate())) + " FE/t", 36, 66, -1);
 			if (this.getEnergyStored() < this.getEnergyRate()) {
-				this.font.draw(stack, text("screen.extendedcrafting.crafting_core.no_power"), 36, 86, -1);
+				this.font.draw(matrix, text("screen.extendedcrafting.crafting_core.no_power"), 36, 86, -1);
 			}
 		}
 
-		stack.popPose();
+		matrix.popPose();
 	}
 
 	@Override
-	protected void renderBg(PoseStack stack, float partialTicks, int mouseX, int mouseY) {
-		super.renderDefaultBg(stack, partialTicks, mouseX, mouseY);
+	protected void renderBg(PoseStack matrix, float partialTicks, int mouseX, int mouseY) {
+		super.renderDefaultBg(matrix, partialTicks, mouseX, mouseY);
 
 		int x = this.getGuiLeft();
 		int y = this.getGuiTop();
 
 		int i1 = this.getEnergyBarScaled();
 
-		this.blit(stack, x + 7, y + 95 - i1, 178, 78 - i1, 15, i1 + 1);
+		this.blit(matrix, x + 7, y + 95 - i1, 178, 78 - i1, 15, i1 + 1);
 
 		if (this.hasRecipe()) {
 			if (this.getProgress() > 0 && this.getEnergyRate() > 0) {
 				int i2 = this.getProgressBarScaled();
-				this.blit(stack, x + 116, y + 47, 194, 0, i2 + 1, 16);
+				this.blit(matrix, x + 116, y + 47, 194, 0, i2 + 1, 16);
 			}
 
 			var output = this.getRecipeOutput();
@@ -97,7 +94,7 @@ public class CraftingCoreScreen extends BaseContainerScreen<CraftingCoreContaine
 			this.drawItemStack(output, x + 148, y + 47);
 
 			if (isHoveringSlot(x + 148, y + 47, mouseX, mouseY)) {
-				this.drawItemHoverOverlay(stack, x + 148, y + 47);
+				renderSlotHighlight(matrix, x + 148, y + 47, this.getBlitOffset());
 			}
 		}
 	}
@@ -115,18 +112,6 @@ public class CraftingCoreScreen extends BaseContainerScreen<CraftingCoreContaine
 //		this.itemRenderer.renderGuiItemDecorations(font, stack, x, y - (this.draggingItem.isEmpty() ? 0 : 8), "");
 		this.setBlitOffset(0);
 		this.itemRenderer.blitOffset = 0.0F;
-	}
-
-	private void drawItemHoverOverlay(PoseStack stack, int x, int y) {
-//		RenderSystem.pushMatrix();
-//		RenderSystem.disableLighting();
-//		RenderSystem.disableDepthTest();
-//		RenderSystem.colorMask(true, true, true, false);
-//		this.fillGradient(stack, x, y, x + 16, y + 16, -2130706433, -2130706433);
-//		RenderSystem.colorMask(true, true, true, true);
-//		RenderSystem.enableLighting();
-//		RenderSystem.enableDepthTest();
-//		RenderSystem.popMatrix();
 	}
 
 	private CraftingCoreTileEntity getTileEntity() {

@@ -1,6 +1,7 @@
 package com.blakebr0.extendedcrafting.client.screen;
 
 import com.blakebr0.cucumber.client.screen.BaseContainerScreen;
+import com.blakebr0.cucumber.client.screen.widget.EnergyBarWidget;
 import com.blakebr0.extendedcrafting.ExtendedCrafting;
 import com.blakebr0.extendedcrafting.client.screen.button.EjectModeSwitchButton;
 import com.blakebr0.extendedcrafting.client.screen.button.InputLimitSwitchButton;
@@ -37,6 +38,10 @@ public class CompressorScreen extends BaseContainerScreen<CompressorContainer> {
 		this.addRenderableWidget(new InputLimitSwitchButton(x + 91, y + 74, pos, this::isLimitingInput));
 
 		this.tile = this.getTileEntity();
+
+		if (this.tile != null) {
+			this.addRenderableWidget(new EnergyBarWidget(x + 7, y + 17, this.tile.getEnergy(), this));
+		}
 	}
 
 	@Override
@@ -45,11 +50,6 @@ public class CompressorScreen extends BaseContainerScreen<CompressorContainer> {
 		int y = this.getGuiTop();
 
 		super.render(matrix, mouseX, mouseY, partialTicks);
-
-		if (mouseX > x + 7 && mouseX < x + 20 && mouseY > y + 17 && mouseY < y + 94) {
-			var text = Component.literal(number(this.getEnergyStored()) + " / " + number(this.getMaxEnergyStored()) + " FE");
-			this.renderTooltip(matrix, text, mouseX, mouseY);
-		}
 
 		if (mouseX > x + 60 && mouseX < x + 85 && mouseY > y + 74 && mouseY < y + 83) {
 			List<Component> tooltip = new ArrayList<>();
@@ -100,10 +100,6 @@ public class CompressorScreen extends BaseContainerScreen<CompressorContainer> {
 
 		int x = this.getGuiLeft();
 		int y = this.getGuiTop();
-
-		int i1 = this.getEnergyBarScaled(78);
-
-		this.blit(stack, x + 7, y + 95 - i1, 178, 78 - i1, 15, i1 + 1);
 
 		if (this.hasRecipe()) {
 			if (this.getMaterialCount() > 0 && this.getMaterialsRequired() > 0) {
@@ -194,20 +190,6 @@ public class CompressorScreen extends BaseContainerScreen<CompressorContainer> {
 		return this.tile.getMaterialCount();
 	}
 
-	public int getEnergyStored() {
-		if (this.tile == null)
-			return 0;
-
-		return this.tile.getEnergy().getEnergyStored();
-	}
-
-	public int getMaxEnergyStored() {
-		if (this.tile == null)
-			return 0;
-
-		return this.tile.getEnergy().getMaxEnergyStored();
-	}
-
 	public int getEnergyRequired() {
 		if (this.tile == null)
 			return 0;
@@ -220,12 +202,6 @@ public class CompressorScreen extends BaseContainerScreen<CompressorContainer> {
 			return 0;
 
 		return this.tile.getMaterialsRequired();
-	}
-
-	public int getEnergyBarScaled(int pixels) {
-		int i = this.getEnergyStored();
-		int j = this.getMaxEnergyStored();
-		return (int) (j != 0 && i != 0 ? (long) i * pixels / j : 0);
 	}
 
 	public int getMaterialBarScaled(int pixels) {

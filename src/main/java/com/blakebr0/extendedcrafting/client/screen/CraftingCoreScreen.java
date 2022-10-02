@@ -1,6 +1,7 @@
 package com.blakebr0.extendedcrafting.client.screen;
 
 import com.blakebr0.cucumber.client.screen.BaseContainerScreen;
+import com.blakebr0.cucumber.client.screen.widget.EnergyBarWidget;
 import com.blakebr0.extendedcrafting.ExtendedCrafting;
 import com.blakebr0.extendedcrafting.container.CraftingCoreContainer;
 import com.blakebr0.extendedcrafting.tileentity.CraftingCoreTileEntity;
@@ -23,8 +24,14 @@ public class CraftingCoreScreen extends BaseContainerScreen<CraftingCoreContaine
 	@Override
 	protected void init() {
 		super.init();
+		int x = this.getGuiLeft();
+		int y = this.getGuiTop();
 
 		this.tile = this.getTileEntity();
+
+		if (this.tile != null) {
+			this.addRenderableWidget(new EnergyBarWidget(x + 7, y + 17, tile.getEnergy(), this));
+		}
 	}
 
 	@Override
@@ -33,11 +40,6 @@ public class CraftingCoreScreen extends BaseContainerScreen<CraftingCoreContaine
 		int y = this.getGuiTop();
 
 		super.render(matrix, mouseX, mouseY, partialTicks);
-
-		if (mouseX > x + 7 && mouseX < x + 20 && mouseY > y + 17 && mouseY < y + 94) {
-			var text = Component.literal(number(this.getEnergyStored()) + " / " + number(this.getMaxEnergyStored()) + " FE");
-			this.renderTooltip(matrix, text, mouseX, mouseY);
-		}
 
 		var isHoldingItem = !this.menu.getCarried().isEmpty() || this.isDragging();
 
@@ -78,10 +80,6 @@ public class CraftingCoreScreen extends BaseContainerScreen<CraftingCoreContaine
 
 		int x = this.getGuiLeft();
 		int y = this.getGuiTop();
-
-		int i1 = this.getEnergyBarScaled();
-
-		this.blit(matrix, x + 7, y + 95 - i1, 178, 78 - i1, 15, i1 + 1);
 
 		if (this.hasRecipe()) {
 			if (this.getProgress() > 0 && this.getEnergyRate() > 0) {
@@ -187,12 +185,6 @@ public class CraftingCoreScreen extends BaseContainerScreen<CraftingCoreContaine
 			return 0;
 
 		return this.tile.getPedestalCount();
-	}
-
-	private int getEnergyBarScaled() {
-		int i = this.getEnergyStored();
-		int j = this.getMaxEnergyStored();
-		return (int) (j != 0 && i != 0 ? i * (long) 78 / j : 0);
 	}
 
 	private int getProgressBarScaled() {

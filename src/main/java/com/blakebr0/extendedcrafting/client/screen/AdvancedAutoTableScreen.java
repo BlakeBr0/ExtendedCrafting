@@ -2,6 +2,7 @@ package com.blakebr0.extendedcrafting.client.screen;
 
 import com.blakebr0.cucumber.client.render.GhostItemRenderer;
 import com.blakebr0.cucumber.client.screen.BaseContainerScreen;
+import com.blakebr0.cucumber.client.screen.widget.EnergyBarWidget;
 import com.blakebr0.cucumber.inventory.BaseItemStackHandler;
 import com.blakebr0.extendedcrafting.ExtendedCrafting;
 import com.blakebr0.extendedcrafting.client.screen.button.RecipeSelectButton;
@@ -43,6 +44,10 @@ public class AdvancedAutoTableScreen extends BaseContainerScreen<AdvancedAutoTab
 		this.recipeSelectButtons[2] = this.addRenderableWidget(new RecipeSelectButton(x + 168, y + 7, pos, 2, this::isRecipeSelected));
 
 		this.tile = this.getTileEntity();
+
+		if (this.tile != null) {
+			this.addRenderableWidget(new EnergyBarWidget(x + 7, y + 23, this.tile.getEnergy(), this));
+		}
 	}
 
 	@Override
@@ -51,11 +56,6 @@ public class AdvancedAutoTableScreen extends BaseContainerScreen<AdvancedAutoTab
 		int y = this.getGuiTop();
 
 		super.renderTooltip(stack, mouseX, mouseY);
-
-		if (mouseX > x + 7 && mouseX < x + 20 && mouseY > y + 23 && mouseY < y + 100) {
-			var text = Component.literal(number(this.getEnergyStored()) + " / " + number(this.getMaxEnergyStored()) + " FE");
-			this.renderTooltip(stack, text, mouseX, mouseY);
-		}
 
 		if (mouseX > x + 155 && mouseX < x + 168 && mouseY > y + 62 && mouseY < y + 78) {
 			this.renderTooltip(stack, ModTooltips.TOGGLE_AUTO_CRAFTING.color(ChatFormatting.WHITE).build(), mouseX, mouseY);
@@ -112,10 +112,6 @@ public class AdvancedAutoTableScreen extends BaseContainerScreen<AdvancedAutoTab
 
 		int x = this.getGuiLeft();
 		int y = this.getGuiTop();
-
-		int i1 = this.getEnergyBarScaled();
-
-		this.blit(stack, x + 7, y + 101 - i1, 188, 78 - i1, 15, i1 + 1);
 
 		if (this.isRunning()) {
 			int i2 = this.getProgressBarScaled();
@@ -185,20 +181,6 @@ public class AdvancedAutoTableScreen extends BaseContainerScreen<AdvancedAutoTab
 		return this.tile.getRecipeStorage().getSelected();
 	}
 
-	private int getEnergyStored() {
-		if (this.tile == null)
-			return 0;
-
-		return this.tile.getEnergy().getEnergyStored();
-	}
-
-	private int getMaxEnergyStored() {
-		if (this.tile == null)
-			return 0;
-
-		return this.tile.getEnergy().getMaxEnergyStored();
-	}
-
 	private int getProgress() {
 		if (this.tile == null)
 			return 0;
@@ -211,12 +193,6 @@ public class AdvancedAutoTableScreen extends BaseContainerScreen<AdvancedAutoTab
 			return 0;
 
 		return this.tile.getProgressRequired();
-	}
-
-	private int getEnergyBarScaled() {
-		int i = this.getEnergyStored();
-		int j = this.getMaxEnergyStored();
-		return (int) (j != 0 && i != 0 ? (long) i * 78 / j : 0);
 	}
 
 	private int getProgressBarScaled() {

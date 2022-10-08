@@ -26,14 +26,14 @@ public final class ModConfigs {
 	public static final ForgeConfigSpec.BooleanValue ENABLE_CRAFTING_CORE;
 	public static final ForgeConfigSpec.IntValue CRAFTING_CORE_POWER_CAPACITY;
 	public static final ForgeConfigSpec.IntValue CRAFTING_CORE_POWER_RATE;
-	
+
 	public static final ForgeConfigSpec.BooleanValue ENABLE_TABLES;
 	public static final ForgeConfigSpec.BooleanValue ENABLE_AUTO_TABLES;
 	public static final ForgeConfigSpec.BooleanValue TABLE_USE_VANILLA_RECIPES;
 	public static final ForgeConfigSpec.IntValue AUTO_TABLE_POWER_CAPACITY;
 	public static final ForgeConfigSpec.IntValue AUTO_TABLE_POWER_RATE;
 	public static final ForgeConfigSpec.IntValue AUTO_TABLE_INSERT_POWER_RATE;
-	
+
 	public static final ForgeConfigSpec.BooleanValue ENABLE_COMPRESSOR;
 	public static final ForgeConfigSpec.IntValue COMPRESSOR_POWER_CAPACITY;
 	public static final ForgeConfigSpec.IntValue COMPRESSOR_POWER_RATE;
@@ -41,6 +41,8 @@ public final class ModConfigs {
 	public static final ForgeConfigSpec.BooleanValue ENABLE_ENDER_CRAFTER;
 	public static final ForgeConfigSpec.IntValue ENDER_CRAFTER_TIME_REQUIRED;
 	public static final ForgeConfigSpec.DoubleValue ENDER_CRAFTER_ALTERNATOR_EFFECTIVENESS;
+
+	public static final ForgeConfigSpec.BooleanValue ENABLE_FLUX_CRAFTER;
 
 	public static final ForgeConfigSpec.BooleanValue ENABLE_SINGULARITIES;
 	public static final ForgeConfigSpec.IntValue SINGULARITY_MATERIALS_REQUIRED;
@@ -118,6 +120,12 @@ public final class ModConfigs {
 		ENDER_CRAFTER_ALTERNATOR_EFFECTIVENESS = common
 				.comment("How much a single Ender Alternator should speed up a craft. This is a percentage of the time required.")
 				.defineInRange("alternatorEffectiveness", 0.01, 0, 1);
+		common.pop();
+
+		common.comment("Settings for the Flux Crafter.").push("Flux Crafting");
+		ENABLE_FLUX_CRAFTER = common
+				.comment("Should the Flux Crafter be enabled?")
+                .define("enabled", true);
 		common.pop();
 
 		common.comment("Settings for Singularities.").push("Singularities");

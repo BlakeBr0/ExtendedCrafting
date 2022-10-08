@@ -1,0 +1,12 @@
+{
+  "parent": "block/cube",
+  "textures": {
+    "particle": "extendedcrafting:block/redstone_ingot_block",
+    "down": "extendedcrafting:block/redstone_ingot_block",
+    "up": "extendedcrafting:block/flux_crafter_top",
+    "north": "extendedcrafting:block/flux_crafter_side",
+    "east": "extendedcrafting:block/flux_crafter_side",
+    "south": "extendedcrafting:block/flux_crafter_side",
+    "west": "extendedcrafting:block/flux_crafter_side"
+  }
+}

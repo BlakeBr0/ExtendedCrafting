@@ -5,8 +5,10 @@ import com.blakebr0.extendedcrafting.crafting.condition.UltimateSingularityRecip
 import com.blakebr0.extendedcrafting.crafting.recipe.CombinationRecipe;
 import com.blakebr0.extendedcrafting.crafting.recipe.CompressorRecipe;
 import com.blakebr0.extendedcrafting.crafting.recipe.ShapedEnderCrafterRecipe;
+import com.blakebr0.extendedcrafting.crafting.recipe.ShapedFluxCrafterRecipe;
 import com.blakebr0.extendedcrafting.crafting.recipe.ShapedTableRecipe;
 import com.blakebr0.extendedcrafting.crafting.recipe.ShapelessEnderCrafterRecipe;
+import com.blakebr0.extendedcrafting.crafting.recipe.ShapelessFluxCrafterRecipe;
 import com.blakebr0.extendedcrafting.crafting.recipe.ShapelessTableRecipe;
 import com.blakebr0.extendedcrafting.crafting.recipe.UltimateSingularityRecipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
@@ -28,6 +30,8 @@ public final class ModRecipeSerializers {
     public static final RegistryObject<RecipeSerializer<?>> COMPRESSOR = register("compressor", CompressorRecipe.Serializer::new);
     public static final RegistryObject<RecipeSerializer<?>> SHAPED_ENDER_CRAFTER = register("shaped_ender_crafter", ShapedEnderCrafterRecipe.Serializer::new);
     public static final RegistryObject<RecipeSerializer<?>> SHAPELESS_ENDER_CRAFTER = register("shapeless_ender_crafter", ShapelessEnderCrafterRecipe.Serializer::new);
+    public static final RegistryObject<RecipeSerializer<?>> SHAPED_FLUX_CRAFTER = register("shaped_flux_crafter", ShapedFluxCrafterRecipe.Serializer::new);
+    public static final RegistryObject<RecipeSerializer<?>> SHAPELESS_FLUX_CRAFTER = register("shapeless_flux_crafter", ShapelessFluxCrafterRecipe.Serializer::new);
     public static final RegistryObject<RecipeSerializer<?>> ULTIMATE_SINGULARITY = register("ultimate_singularity", UltimateSingularityRecipe.Serializer::new);
 
     @SubscribeEvent

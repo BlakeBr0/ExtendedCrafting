@@ -24,6 +24,8 @@
   "block.extendedcrafting.compressor": "Quantum Compressor",
   "block.extendedcrafting.ender_alternator": "Ender Alternator",
   "block.extendedcrafting.ender_crafter": "Ender Crafter",
+  "block.extendedcrafting.flux_alternator": "Flux Alternator",
+  "block.extendedcrafting.flux_crafter": "Flux Crafter",
 
   "item.extendedcrafting.luminessence": "Luminessence",
   "item.extendedcrafting.black_iron_ingot": "Black Iron Ingot",
@@ -70,6 +72,7 @@
   "container.extendedcrafting.ultimate_table": "Ultimate Crafting",
   "container.extendedcrafting.compressor": "Quantum Compressor",
   "container.extendedcrafting.ender_crafter": "Ender Crafting",
+  "container.extendedcrafting.flux_crafter": "Flux Crafting",
 
   "screen.extendedcrafting.crafting_core.pedestals": "Pedestals: %s",
   "screen.extendedcrafting.crafting_core.power_cost": "FE Cost: %s",
@@ -110,6 +113,7 @@
   "jei.category.extendedcrafting.ultimate_crafting": "Ultimate Crafting",
   "jei.category.extendedcrafting.compressor": "Quantum Compression",
   "jei.category.extendedcrafting.ender_crafting": "Ender Crafting",
+  "jei.category.extendedcrafting.flux_crafting": "Flux Crafting",
 
   "config.jade.plugin_extendedcrafting.pedestal": "Pedestal info",
   "config.jade.plugin_extendedcrafting.crafting_core": "Crafting Core info",
@@ -121,8 +125,9 @@
   "config.jade.plugin_extendedcrafting.advanced_auto_table": "Advanced Auto Table info",
   "config.jade.plugin_extendedcrafting.elite_auto_table": "Elite Auto Table info",
   "config.jade.plugin_extendedcrafting.ultimate_auto_table": "Ultimate Auto Table info",
-  "config.jade.plugin_extendedcrafting.ender_crafter": "Ender Crafter info",
   "config.jade.plugin_extendedcrafting.compressor": "Quantum Compressor info",
+  "config.jade.plugin_extendedcrafting.ender_crafter": "Ender Crafter info",
+  "config.jade.plugin_extendedcrafting.flux_crafter": "Flux Crafter info",
 
   "singularity.extendedcrafting.coal": "Coal",
   "singularity.extendedcrafting.iron": "Iron",

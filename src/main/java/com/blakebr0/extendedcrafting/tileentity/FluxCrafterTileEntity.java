@@ -4,18 +4,13 @@ import com.blakebr0.cucumber.helper.StackHelper;
 import com.blakebr0.cucumber.inventory.BaseItemStackHandler;
 import com.blakebr0.cucumber.tileentity.BaseInventoryTileEntity;
 import com.blakebr0.cucumber.util.Localizable;
-import com.blakebr0.extendedcrafting.api.crafting.IEnderCrafterRecipe;
 import com.blakebr0.extendedcrafting.api.crafting.IFluxCrafterRecipe;
-import com.blakebr0.extendedcrafting.block.EnderAlternatorBlock;
-import com.blakebr0.extendedcrafting.block.FluxAlternatorBlock;
-import com.blakebr0.extendedcrafting.config.ModConfigs;
-import com.blakebr0.extendedcrafting.container.EnderCrafterContainer;
 import com.blakebr0.extendedcrafting.container.FluxCrafterContainer;
 import com.blakebr0.extendedcrafting.init.ModRecipeTypes;
 import com.blakebr0.extendedcrafting.init.ModTileEntities;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.particles.DustParticleOptions;
 import net.minecraft.core.particles.ParticleOptions;
-import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
@@ -27,7 +22,6 @@ import net.minecraft.world.inventory.SimpleContainerData;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.energy.EnergyStorage;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,17 +29,15 @@ import java.util.List;
 public class FluxCrafterTileEntity extends BaseInventoryTileEntity implements MenuProvider {
 	private final BaseItemStackHandler inventory;
 	private final BaseItemStackHandler recipeInventory;
-	private final EnergyStorage energy;
 	private IFluxCrafterRecipe recipe;
 	private int progress;
 	private int progressReq;
 	private boolean isGridChanged = true;
 
 	public FluxCrafterTileEntity(BlockPos pos, BlockState state) {
-		super(ModTileEntities.ENDER_CRAFTER.get(), pos, state);
+		super(ModTileEntities.FLUX_CRAFTER.get(), pos, state);
 		this.inventory = createInventoryHandler(this::onContentsChanged);
 		this.recipeInventory = new BaseItemStackHandler(9);
-		this.energy = new EnergyStorage(100);
 	}
 
 	@Override
@@ -58,7 +50,6 @@ public class FluxCrafterTileEntity extends BaseInventoryTileEntity implements Me
 		super.load(tag);
 		this.progress = tag.getInt("Progress");
 		this.progressReq = tag.getInt("ProgressReq");
-		this.energy.deserializeNBT(tag.get("Energy"));
 	}
 
 	@Override
@@ -66,7 +57,6 @@ public class FluxCrafterTileEntity extends BaseInventoryTileEntity implements Me
 		super.saveAdditional(tag);
 		tag.putInt("Progress", this.progress);
 		tag.putInt("ProgressReq", this.progressReq);
-		tag.putInt("Energy", this.energy.getEnergyStored());
 	}
 
 	@Override
@@ -96,16 +86,19 @@ public class FluxCrafterTileEntity extends BaseInventoryTileEntity implements Me
 				var output = tile.inventory.getStackInSlot(9);
 
 				if (StackHelper.canCombineStacks(result, output)) {
-					var alternators = tile.getAlternatorPositions();
+					var alternators = tile.getAlternators();
 					int alternatorCount = alternators.size();
 
 					if (alternatorCount > 0) {
-						tile.progress(alternatorCount, tile.recipe.getPowerRate());
+						tile.progress(alternatorCount);
 
-						for (var alternatorPos : alternators) {
+						for (var alternator : alternators) {
+							var alternatorPos = alternator.getBlockPos();
 							if (level.isEmptyBlock(alternatorPos.above())) {
-								tile.spawnParticles(ParticleTypes.PORTAL, alternatorPos, 1, 1);
+								tile.spawnDustParticles(alternatorPos, 1, 1);
 							}
+
+							alternator.getEnergy().extractEnergy(tile.recipe.getPowerRate(), false);
 						}
 
 						if (tile.progress >= tile.progressReq) {
@@ -121,16 +114,14 @@ public class FluxCrafterTileEntity extends BaseInventoryTileEntity implements Me
 					}
 				} else {
 					if (tile.progress > 0 || tile.progressReq > 0) {
-						tile.progress = 0;
-						tile.progressReq = 0;
+						tile.reset();
 
 						mark = true;
 					}
 				}
 			} else {
 				if (tile.progress > 0 || tile.progressReq > 0) {
-					tile.progress = 0;
-					tile.progressReq = 0;
+					tile.reset();
 
 					mark = true;
 				}
@@ -168,32 +159,34 @@ public class FluxCrafterTileEntity extends BaseInventoryTileEntity implements Me
 		}
 	}
 
-	private List<BlockPos> getAlternatorPositions() {
-		List<BlockPos> alternators = new ArrayList<>();
+	private List<FluxAlternatorTileEntity> getAlternators() {
+		List<FluxAlternatorTileEntity> alternators = new ArrayList<>();
 		var level = this.getLevel();
 
 		if (level != null) {
 			var pos = this.getBlockPos();
 
 			BlockPos.betweenClosedStream(pos.offset(-3, -3, -3), pos.offset(3, 3, 3)).forEach(aoePos -> {
-				var block = level.getBlockState(aoePos).getBlock();
-				if (block instanceof FluxAlternatorBlock)
-					alternators.add(aoePos.immutable());
+				var tile = level.getBlockEntity(aoePos);
+				if (tile instanceof FluxAlternatorTileEntity alternator && alternator.getEnergy().getEnergyStored() >= this.recipe.getPowerRate())
+					alternators.add(alternator);
 			});
 		}
 
 		return alternators;
 	}
 
-	private void progress(int alternators, int timeRequired) {
-		this.progress++;
-
-		int timeReq = 20 * timeRequired;
-		double effectiveness = ModConfigs.ENDER_CRAFTER_ALTERNATOR_EFFECTIVENESS.get();
-		this.progressReq = (int) Math.max(timeReq - (timeReq * (effectiveness * alternators)), 20);
+	private void progress(int alternators) {
+		this.progress += this.recipe.getPowerRate() * alternators;
+		this.progressReq = this.recipe.getPowerRequired();
 	}
 
-	private <T extends ParticleOptions> void spawnParticles(T particle, BlockPos pos, double yOffset, int count) {
+	private void reset() {
+		this.progress = 0;
+		this.progressReq = 0;
+	}
+
+	private <T extends ParticleOptions> void spawnDustParticles(BlockPos pos, double yOffset, int count) {
 		if (this.getLevel() == null || this.getLevel().isClientSide())
 			return;
 
@@ -203,7 +196,7 @@ public class FluxCrafterTileEntity extends BaseInventoryTileEntity implements Me
 		double y = pos.getY() + yOffset;
 		double z = pos.getZ() + 0.5D;
 
-		level.sendParticles(particle, x, y, z, count, 0, 0, 0, 0.1D);
+		level.sendParticles(new DustParticleOptions(DustParticleOptions.REDSTONE_PARTICLE_COLOR, 1.0f), x, y, z, count, 0, 0, 0, 0.1D);
 	}
 
 	private void onContentsChanged() {

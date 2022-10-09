@@ -10,6 +10,7 @@ import com.blakebr0.extendedcrafting.client.screen.CraftingCoreScreen;
 import com.blakebr0.extendedcrafting.client.screen.EliteAutoTableScreen;
 import com.blakebr0.extendedcrafting.client.screen.EliteTableScreen;
 import com.blakebr0.extendedcrafting.client.screen.EnderCrafterScreen;
+import com.blakebr0.extendedcrafting.client.screen.FluxAlternatorScreen;
 import com.blakebr0.extendedcrafting.client.screen.FluxCrafterScreen;
 import com.blakebr0.extendedcrafting.client.screen.UltimateAutoTableScreen;
 import com.blakebr0.extendedcrafting.client.screen.UltimateTableScreen;
@@ -22,6 +23,7 @@ import com.blakebr0.extendedcrafting.container.CraftingCoreContainer;
 import com.blakebr0.extendedcrafting.container.EliteAutoTableContainer;
 import com.blakebr0.extendedcrafting.container.EliteTableContainer;
 import com.blakebr0.extendedcrafting.container.EnderCrafterContainer;
+import com.blakebr0.extendedcrafting.container.FluxAlternatorContainer;
 import com.blakebr0.extendedcrafting.container.FluxCrafterContainer;
 import com.blakebr0.extendedcrafting.container.UltimateAutoTableContainer;
 import com.blakebr0.extendedcrafting.container.UltimateTableContainer;
@@ -51,6 +53,7 @@ public final class ModContainerTypes {
     public static final RegistryObject<MenuType<UltimateAutoTableContainer>> ULTIMATE_AUTO_TABLE = register("ultimate_auto_table", () -> new MenuType<>((IContainerFactory<UltimateAutoTableContainer>) UltimateAutoTableContainer::create));
     public static final RegistryObject<MenuType<CompressorContainer>> COMPRESSOR = register("compressor", () -> new MenuType<>((IContainerFactory<CompressorContainer>) CompressorContainer::create));
     public static final RegistryObject<MenuType<EnderCrafterContainer>> ENDER_CRAFTER = register("ender_crafter", () -> new MenuType<>((IContainerFactory<EnderCrafterContainer>) EnderCrafterContainer::create));
+    public static final RegistryObject<MenuType<FluxAlternatorContainer>> FLUX_ALTERNATOR = register("flux_alternator", () -> new MenuType<>((IContainerFactory<FluxAlternatorContainer>) FluxAlternatorContainer::create));
     public static final RegistryObject<MenuType<FluxCrafterContainer>> FLUX_CRAFTER = register("flux_crafter", () -> new MenuType<>((IContainerFactory<FluxCrafterContainer>) FluxCrafterContainer::create));
 
     @OnlyIn(Dist.CLIENT)
@@ -66,6 +69,7 @@ public final class ModContainerTypes {
         ULTIMATE_AUTO_TABLE.ifPresent(container -> MenuScreens.register(container, UltimateAutoTableScreen::new));
         COMPRESSOR.ifPresent(container -> MenuScreens.register(container, CompressorScreen::new));
         ENDER_CRAFTER.ifPresent(container -> MenuScreens.register(container, EnderCrafterScreen::new));
+        FLUX_ALTERNATOR.ifPresent(container -> MenuScreens.register(container, FluxAlternatorScreen::new));
         FLUX_CRAFTER.ifPresent(container -> MenuScreens.register(container, FluxCrafterScreen::new));
     }
 

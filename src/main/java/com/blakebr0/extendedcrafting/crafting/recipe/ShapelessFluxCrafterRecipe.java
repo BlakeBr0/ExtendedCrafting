@@ -1,7 +1,7 @@
 package com.blakebr0.extendedcrafting.crafting.recipe;
 
 import com.blakebr0.cucumber.crafting.ISpecialRecipe;
-import com.blakebr0.extendedcrafting.api.crafting.IEnderCrafterRecipe;
+import com.blakebr0.extendedcrafting.api.crafting.IFluxCrafterRecipe;
 import com.blakebr0.extendedcrafting.config.ModConfigs;
 import com.blakebr0.extendedcrafting.init.ModRecipeSerializers;
 import com.blakebr0.extendedcrafting.init.ModRecipeTypes;
@@ -24,21 +24,23 @@ import net.minecraftforge.items.wrapper.InvWrapper;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ShapelessFluxCrafterRecipe implements ISpecialRecipe, IEnderCrafterRecipe {
+public class ShapelessFluxCrafterRecipe implements ISpecialRecipe, IFluxCrafterRecipe {
 	private final ResourceLocation recipeId;
 	private final NonNullList<Ingredient> inputs;
 	private final ItemStack output;
-	private final int craftingTime;
+	private final int powerRequired;
+	private final int powerRate;
 
-	public ShapelessFluxCrafterRecipe(ResourceLocation recipeId, NonNullList<Ingredient> inputs, ItemStack output) {
-		this(recipeId, inputs, output, ModConfigs.ENDER_CRAFTER_TIME_REQUIRED.get());
+	public ShapelessFluxCrafterRecipe(ResourceLocation recipeId, NonNullList<Ingredient> inputs, ItemStack output, int powerRequired) {
+		this(recipeId, inputs, output, powerRequired, ModConfigs.FLUX_CRAFTER_POWER_RATE.get());
 	}
 
-	public ShapelessFluxCrafterRecipe(ResourceLocation recipeId, NonNullList<Ingredient> inputs, ItemStack output, int craftingTime) {
+	public ShapelessFluxCrafterRecipe(ResourceLocation recipeId, NonNullList<Ingredient> inputs, ItemStack output, int powerRequired, int powerRate) {
 		this.recipeId = recipeId;
 		this.inputs = inputs;
 		this.output = output;
-		this.craftingTime = craftingTime;
+		this.powerRequired = powerRequired;
+		this.powerRate = powerRate;
 	}
 
 	@Override
@@ -105,8 +107,13 @@ public class ShapelessFluxCrafterRecipe implements ISpecialRecipe, IEnderCrafter
 	}
 
 	@Override
-	public int getCraftingTime() {
-		return this.craftingTime;
+	public int getPowerRequired() {
+		return this.powerRequired;
+	}
+
+	@Override
+	public int getPowerRate() {
+		return this.powerRate;
 	}
 
 	public static class Serializer implements RecipeSerializer<ShapelessFluxCrafterRecipe> {
@@ -120,9 +127,10 @@ public class ShapelessFluxCrafterRecipe implements ISpecialRecipe, IEnderCrafter
 			}
 
 			var output = ShapedRecipe.itemStackFromJson(GsonHelper.getAsJsonObject(json, "result"));
-			int craftingTime = GsonHelper.getAsInt(json, "craftingTime", 0);
+			int powerRequired = GsonHelper.getAsInt(json, "powerRequired");
+			int powerRate = GsonHelper.getAsInt(json, "powerRate", ModConfigs.FLUX_CRAFTER_POWER_RATE.get());
 
-			return new ShapelessFluxCrafterRecipe(recipeId, inputs, output, craftingTime);
+			return new ShapelessFluxCrafterRecipe(recipeId, inputs, output, powerRequired, powerRate);
 		}
 
 		@Override
@@ -135,9 +143,10 @@ public class ShapelessFluxCrafterRecipe implements ISpecialRecipe, IEnderCrafter
 			}
 
 			var output = buffer.readItem();
-			int craftingTime = buffer.readVarInt();
+			int powerRequired = buffer.readVarInt();
+			int powerRate = buffer.readVarInt();
 
-			return new ShapelessFluxCrafterRecipe(recipeId, inputs, output, craftingTime);
+			return new ShapelessFluxCrafterRecipe(recipeId, inputs, output, powerRequired, powerRate);
 		}
 
 		@Override
@@ -149,7 +158,8 @@ public class ShapelessFluxCrafterRecipe implements ISpecialRecipe, IEnderCrafter
 			}
 
 			buffer.writeItem(recipe.output);
-			buffer.writeVarInt(recipe.craftingTime);
+			buffer.writeVarInt(recipe.powerRequired);
+			buffer.writeVarInt(recipe.powerRate);
 		}
 	}
 }

@@ -72,6 +72,7 @@
   "container.extendedcrafting.ultimate_table": "Ultimate Crafting",
   "container.extendedcrafting.compressor": "Quantum Compressor",
   "container.extendedcrafting.ender_crafter": "Ender Crafting",
+  "container.extendedcrafting.flux_alternator": "Flux Alternator",
   "container.extendedcrafting.flux_crafter": "Flux Crafting",
 
   "screen.extendedcrafting.crafting_core.pedestals": "Pedestals: %s",

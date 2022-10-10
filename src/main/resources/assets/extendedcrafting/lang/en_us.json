@@ -131,6 +131,7 @@
   "config.jade.plugin_extendedcrafting.flux_crafter": "Flux Crafter info",
 
   "singularity.extendedcrafting.coal": "Coal",
+  "singularity.extendedcrafting.copper": "Copper",
   "singularity.extendedcrafting.iron": "Iron",
   "singularity.extendedcrafting.lapis_lazuli": "Lapis Lazuli",
   "singularity.extendedcrafting.redstone": "Redstone",
@@ -139,7 +140,6 @@
   "singularity.extendedcrafting.diamond": "Diamond",
   "singularity.extendedcrafting.emerald": "Emerald",
   "singularity.extendedcrafting.aluminum": "Aluminum",
-  "singularity.extendedcrafting.copper": "Copper",
   "singularity.extendedcrafting.tin": "Tin",
   "singularity.extendedcrafting.bronze": "Bronze",
   "singularity.extendedcrafting.silver": "Silver",
@@ -148,7 +148,6 @@
   "singularity.extendedcrafting.nickel": "Nickel",
   "singularity.extendedcrafting.electrum": "Electrum",
   "singularity.extendedcrafting.invar": "Invar",
-  "singularity.extendedcrafting.uranium": "Uranium",
   "singularity.extendedcrafting.platinum": "Platinum",
 
   "book.extendedcrafting.name": "Extended Crafting",

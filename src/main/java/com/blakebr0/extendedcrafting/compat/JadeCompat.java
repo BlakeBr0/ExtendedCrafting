@@ -10,14 +10,14 @@ import com.blakebr0.extendedcrafting.block.CraftingCoreBlock;
 import com.blakebr0.extendedcrafting.block.EliteAutoTableBlock;
 import com.blakebr0.extendedcrafting.block.EliteTableBlock;
 import com.blakebr0.extendedcrafting.block.EnderCrafterBlock;
-import com.blakebr0.extendedcrafting.block.PedestalBlock;
+import com.blakebr0.extendedcrafting.block.FluxCrafterBlock;
 import com.blakebr0.extendedcrafting.block.UltimateAutoTableBlock;
 import com.blakebr0.extendedcrafting.block.UltimateTableBlock;
 import com.blakebr0.extendedcrafting.lib.ModTooltips;
 import com.blakebr0.extendedcrafting.tileentity.CompressorTileEntity;
 import com.blakebr0.extendedcrafting.tileentity.CraftingCoreTileEntity;
 import com.blakebr0.extendedcrafting.tileentity.EnderCrafterTileEntity;
-import com.blakebr0.extendedcrafting.tileentity.PedestalTileEntity;
+import com.blakebr0.extendedcrafting.tileentity.FluxCrafterTileEntity;
 import net.minecraft.resources.ResourceLocation;
 import snownee.jade.api.BlockAccessor;
 import snownee.jade.api.IBlockComponentProvider;
@@ -39,6 +39,7 @@ public class JadeCompat implements IWailaPlugin {
 	private static final ResourceLocation ELITE_AUTO_TABLE_PROVIDER = new ResourceLocation(ExtendedCrafting.MOD_ID, "elite_auto_table");
 	private static final ResourceLocation ULTIMATE_AUTO_TABLE_PROVIDER = new ResourceLocation(ExtendedCrafting.MOD_ID, "ultimate_auto_table");
 	private static final ResourceLocation ENDER_CRAFTER_PROVIDER = new ResourceLocation(ExtendedCrafting.MOD_ID, "ender_crafter");
+	private static final ResourceLocation FLUX_CRAFTER_PROVIDER = new ResourceLocation(ExtendedCrafting.MOD_ID, "flux_crafter");
 	private static final ResourceLocation COMPRESSOR_PROVIDER = new ResourceLocation(ExtendedCrafting.MOD_ID, "compressor");
 
 
@@ -175,6 +176,24 @@ public class JadeCompat implements IWailaPlugin {
 				return ENDER_CRAFTER_PROVIDER;
 			}
 		}, EnderCrafterBlock.class);
+
+		registration.registerBlockComponent(new IBlockComponentProvider() {
+			@Override
+			public void appendTooltip(ITooltip tooltip, BlockAccessor accessor, IPluginConfig config) {
+				var crafter = (FluxCrafterTileEntity) accessor.getBlockEntity();
+				var recipe = crafter.getActiveRecipe();
+
+				if (recipe != null) {
+					var output = recipe.getResultItem();
+					tooltip.add(ModTooltips.CRAFTING.args(output.getCount(), output.getHoverName()).build());
+				}
+			}
+
+			@Override
+			public ResourceLocation getUid() {
+				return FLUX_CRAFTER_PROVIDER;
+			}
+		}, FluxCrafterBlock.class);
 
 		registration.registerBlockComponent(new IBlockComponentProvider() {
 			@Override

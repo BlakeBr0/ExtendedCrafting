@@ -1,0 +1,16 @@
+{
+  "name": "book.extendedcrafting.entry.flux_crafting",
+  "category": "extendedcrafting:crafting",
+  "icon": "extendedcrafting:flux_crafter",
+  "sortnum": 5,
+  "pages": [
+    {
+      "type": "text",
+      "text": "book.extendedcrafting.entry.flux_crafting.page.1"
+    },
+    {
+      "type": "text",
+      "text": "book.extendedcrafting.entry.flux_crafting.page.2"
+    }
+  ]
+}

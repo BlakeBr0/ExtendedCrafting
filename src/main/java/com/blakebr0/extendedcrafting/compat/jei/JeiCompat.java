@@ -11,11 +11,13 @@ import com.blakebr0.extendedcrafting.client.screen.CraftingCoreScreen;
 import com.blakebr0.extendedcrafting.client.screen.EliteAutoTableScreen;
 import com.blakebr0.extendedcrafting.client.screen.EliteTableScreen;
 import com.blakebr0.extendedcrafting.client.screen.EnderCrafterScreen;
+import com.blakebr0.extendedcrafting.client.screen.FluxCrafterScreen;
 import com.blakebr0.extendedcrafting.client.screen.UltimateAutoTableScreen;
 import com.blakebr0.extendedcrafting.client.screen.UltimateTableScreen;
 import com.blakebr0.extendedcrafting.compat.jei.category.CombinationCraftingCategory;
 import com.blakebr0.extendedcrafting.compat.jei.category.CompressorCraftingCategory;
 import com.blakebr0.extendedcrafting.compat.jei.category.EnderCrafterCategory;
+import com.blakebr0.extendedcrafting.compat.jei.category.FluxCraftingCategory;
 import com.blakebr0.extendedcrafting.compat.jei.category.table.AdvancedTableCategory;
 import com.blakebr0.extendedcrafting.compat.jei.category.table.BasicTableCategory;
 import com.blakebr0.extendedcrafting.compat.jei.category.table.EliteTableCategory;
@@ -28,6 +30,7 @@ import com.blakebr0.extendedcrafting.container.BasicTableContainer;
 import com.blakebr0.extendedcrafting.container.EliteAutoTableContainer;
 import com.blakebr0.extendedcrafting.container.EliteTableContainer;
 import com.blakebr0.extendedcrafting.container.EnderCrafterContainer;
+import com.blakebr0.extendedcrafting.container.FluxCrafterContainer;
 import com.blakebr0.extendedcrafting.container.UltimateAutoTableContainer;
 import com.blakebr0.extendedcrafting.container.UltimateTableContainer;
 import com.blakebr0.extendedcrafting.init.ModBlocks;
@@ -86,6 +89,10 @@ public final class JeiCompat implements IModPlugin {
 		if (ModConfigs.ENABLE_ENDER_CRAFTER.get()) {
 			registration.addRecipeCategories(new EnderCrafterCategory(helper));
 		}
+
+		if (ModConfigs.ENABLE_FLUX_CRAFTER.get()) {
+			registration.addRecipeCategories(new FluxCraftingCategory(helper));
+		}
 	}
 
 	@Override
@@ -119,6 +126,10 @@ public final class JeiCompat implements IModPlugin {
 
 			if (ModConfigs.ENABLE_ENDER_CRAFTER.get()) {
 				registration.addRecipes(EnderCrafterCategory.RECIPE_TYPE, manager.getAllRecipesFor(ModRecipeTypes.ENDER_CRAFTER.get()));
+			}
+
+			if (ModConfigs.ENABLE_FLUX_CRAFTER.get()) {
+				registration.addRecipes(FluxCraftingCategory.RECIPE_TYPE, manager.getAllRecipesFor(ModRecipeTypes.FLUX_CRAFTER.get()));
 			}
 		}
 	}
@@ -164,6 +175,11 @@ public final class JeiCompat implements IModPlugin {
 			registration.addRecipeCatalyst(new ItemStack(ModBlocks.ENDER_CRAFTER.get()), EnderCrafterCategory.RECIPE_TYPE);
 			registration.addRecipeCatalyst(new ItemStack(ModBlocks.ENDER_ALTERNATOR.get()), EnderCrafterCategory.RECIPE_TYPE);
 		}
+
+		if (ModConfigs.ENABLE_FLUX_CRAFTER.get()) {
+			registration.addRecipeCatalyst(new ItemStack(ModBlocks.FLUX_CRAFTER.get()), FluxCraftingCategory.RECIPE_TYPE);
+			registration.addRecipeCatalyst(new ItemStack(ModBlocks.FLUX_ALTERNATOR.get()), FluxCraftingCategory.RECIPE_TYPE);
+		}
 	}
 
 	@Override
@@ -193,6 +209,10 @@ public final class JeiCompat implements IModPlugin {
 		if (ModConfigs.ENABLE_ENDER_CRAFTER.get()) {
 			registration.addRecipeTransferHandler(EnderCrafterContainer.class, ModContainerTypes.ENDER_CRAFTER.get(), EnderCrafterCategory.RECIPE_TYPE, 1, 9, 10, 36);
 		}
+
+		if (ModConfigs.ENABLE_FLUX_CRAFTER.get()) {
+			registration.addRecipeTransferHandler(FluxCrafterContainer.class, ModContainerTypes.FLUX_CRAFTER.get(), FluxCraftingCategory.RECIPE_TYPE, 1, 9, 10, 36);
+		}
 	}
 
 	@Override
@@ -221,6 +241,10 @@ public final class JeiCompat implements IModPlugin {
 
 		if (ModConfigs.ENABLE_ENDER_CRAFTER.get()) {
 			registration.addRecipeClickArea(EnderCrafterScreen.class, 90, 36, 21, 14, EnderCrafterCategory.RECIPE_TYPE);
+		}
+
+		if (ModConfigs.ENABLE_FLUX_CRAFTER.get()) {
+			registration.addRecipeClickArea(FluxCrafterScreen.class, 90, 36, 21, 14, FluxCraftingCategory.RECIPE_TYPE);
 		}
 	}
 

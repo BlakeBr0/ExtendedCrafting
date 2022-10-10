@@ -13,6 +13,8 @@ import com.blakebr0.extendedcrafting.block.EliteAutoTableBlock;
 import com.blakebr0.extendedcrafting.block.EliteTableBlock;
 import com.blakebr0.extendedcrafting.block.EnderAlternatorBlock;
 import com.blakebr0.extendedcrafting.block.EnderCrafterBlock;
+import com.blakebr0.extendedcrafting.block.FluxAlternatorBlock;
+import com.blakebr0.extendedcrafting.block.FluxCrafterBlock;
 import com.blakebr0.extendedcrafting.block.FrameBlock;
 import com.blakebr0.extendedcrafting.block.PedestalBlock;
 import com.blakebr0.extendedcrafting.block.TheUltimateBlock;
@@ -62,6 +64,8 @@ public final class ModBlocks {
 	public static final RegistryObject<Block> COMPRESSOR = register("compressor", CompressorBlock::new);
 	public static final RegistryObject<Block> ENDER_ALTERNATOR = register("ender_alternator", EnderAlternatorBlock::new);
 	public static final RegistryObject<Block> ENDER_CRAFTER = register("ender_crafter", EnderCrafterBlock::new);
+	public static final RegistryObject<Block> FLUX_ALTERNATOR = register("flux_alternator", FluxAlternatorBlock::new);
+	public static final RegistryObject<Block> FLUX_CRAFTER = register("flux_crafter", FluxCrafterBlock::new);
 
 	private static RegistryObject<Block> register(String name, Supplier<Block> block) {
 		return register(name, block, b -> () -> new BaseBlockItem(b.get(), p -> p.tab(CREATIVE_TAB)));

@@ -1,0 +1,28 @@
+{
+  "type": "crafting_shaped",
+  "conditions": [
+    {
+      "type": "cucumber:enabled",
+      "item": "extendedcrafting:flux_crafter"
+    }
+  ],
+  "pattern": [
+    "EEE",
+    "ICI",
+    "III"
+  ],
+  "key": {
+    "E": {
+      "tag": "forge:ingots/gold"
+    },
+    "I": {
+      "item": "extendedcrafting:redstone_ingot"
+    },
+    "C": {
+      "item": "minecraft:crafting_table"
+    }
+  },
+  "result": {
+    "item": "extendedcrafting:flux_crafter"
+  }
+}

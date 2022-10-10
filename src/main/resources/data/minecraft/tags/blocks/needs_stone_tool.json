@@ -19,6 +19,8 @@
     "extendedcrafting:ultimate_auto_table",
     "extendedcrafting:compressor",
     "extendedcrafting:ender_alternator",
-    "extendedcrafting:ender_crafter"
+    "extendedcrafting:ender_crafter",
+    "extendedcrafting:flux_alternator",
+    "extendedcrafting:flux_crafter"
   ]
 }

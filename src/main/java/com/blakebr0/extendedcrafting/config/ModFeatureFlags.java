@@ -11,6 +11,7 @@ public final class ModFeatureFlags {
     public static final FeatureFlag COMPRESSOR = FeatureFlag.create(new ResourceLocation(ExtendedCrafting.MOD_ID, "compressor"), ModConfigs.ENABLE_COMPRESSOR);
     public static final FeatureFlag CRAFTING_CORE = FeatureFlag.create(new ResourceLocation(ExtendedCrafting.MOD_ID, "crafting_core"), ModConfigs.ENABLE_CRAFTING_CORE);
     public static final FeatureFlag ENDER_CRAFTER = FeatureFlag.create(new ResourceLocation(ExtendedCrafting.MOD_ID, "ender_crafter"), ModConfigs.ENABLE_ENDER_CRAFTER);
+    public static final FeatureFlag FLUX_CRAFTER = FeatureFlag.create(new ResourceLocation(ExtendedCrafting.MOD_ID, "flux_crafter"), ModConfigs.ENABLE_FLUX_CRAFTER);
     public static final FeatureFlag HANDHELD_WORKBENCH = FeatureFlag.create(new ResourceLocation(ExtendedCrafting.MOD_ID, "handheld_workbench"), ModConfigs.ENABLE_HANDHELD_WORKBENCH);
     public static final FeatureFlag RECIPE_MAKER = FeatureFlag.create(new ResourceLocation(ExtendedCrafting.MOD_ID, "recipe_maker"), ModConfigs.ENABLE_RECIPE_MAKER);
     public static final FeatureFlag RECIPE_MAKER_USE_NBT = FeatureFlag.create(new ResourceLocation(ExtendedCrafting.MOD_ID, "recipe_maker_use_nbt"), ModConfigs.RECIPE_MAKER_USE_NBT);

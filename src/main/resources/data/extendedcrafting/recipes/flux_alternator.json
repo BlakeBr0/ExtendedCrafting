@@ -1,0 +1,26 @@
+{
+  "type": "crafting_shaped",
+  "conditions": [
+    {
+      "type": "cucumber:enabled",
+      "item": "extendedcrafting:flux_alternator"
+    }
+  ],
+  "pattern": [
+    " E ",
+    " I ",
+    "III"
+  ],
+  "key": {
+    "E": {
+      "tag": "forge:ingots/gold"
+    },
+    "I": {
+      "item": "extendedcrafting:redstone_ingot"
+    }
+  },
+  "result": {
+    "item": "extendedcrafting:flux_alternator",
+    "count": 2
+  }
+}

@@ -11,6 +11,7 @@ import com.blakebr0.extendedcrafting.init.ModRecipeTypes;
 import com.blakebr0.extendedcrafting.init.ModTileEntities;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.network.chat.Component;
@@ -38,7 +39,7 @@ public class CompressorTileEntity extends BaseInventoryTileEntity implements Men
 	private final LazyOptional<IEnergyStorage> capability = LazyOptional.of(this::getEnergy);
 	private CompressorRecipe recipe;
 	private ItemStack materialStack = ItemStack.EMPTY;
-	private List<MaterialInput> inputs;
+	private List<MaterialInput> inputs = NonNullList.create();
 	private int materialCount;
 	private int progress;
 	private boolean ejecting = false;
@@ -295,14 +296,21 @@ public class CompressorTileEntity extends BaseInventoryTileEntity implements Men
 
 	private int canInsertItem(ItemStack stack) {
 		var size = this.inputs.size();
+		if (size == 0)
+			return 0;
+
 		for (int i = 0; i < size; i++) {
 			var input = this.inputs.get(i);
 			if (StackHelper.areStacksEqual(stack, input.stack))
 				return i;
 		}
 
-		if (size == 0 || (size < 100 && StackHelper.areItemsEqual(stack, this.inputs.get(0).stack)))
-			return size;
+		// if there's a valid recipe, we can start allowing item variants
+		if (size < 100 && this.recipe != null) {
+			var recipeStack = this.recipe.getIngredients().get(0);
+			if (recipeStack.test(stack))
+				return size;
+		}
 
 		return -1;
 	}
@@ -365,13 +373,17 @@ public class CompressorTileEntity extends BaseInventoryTileEntity implements Men
 		tag.put("Inputs", list);
 	}
 
-	private static class MaterialInput {
+	public static class MaterialInput {
 		public ItemStack stack;
 		public int count;
 
 		public MaterialInput(ItemStack stack, int count) {
 			this.stack = stack;
 			this.count = count;
+		}
+
+		public Component getDisplayName() {
+			return Component.literal(this.count + "x ").append(this.stack.getHoverName());
 		}
 
 		public CompoundTag save() {

@@ -93,6 +93,7 @@
   "tooltip.extendedcrafting.mode": "Mode: %s",
   "tooltip.extendedcrafting.type": "Type: %s",
   "tooltip.extendedcrafting.num_items": "%s Items",
+  "tooltip.extendedcrafting.and_x_more": "And %s more...",
   "tooltip.extendedcrafting.ticks": "%s Ticks",
   "tooltip.extendedcrafting.seconds": "%s Seconds",
   "tooltip.extendedcrafting.requires_table": "Requires Tier %s Crafting Table",

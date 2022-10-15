@@ -11,7 +11,9 @@ import com.blakebr0.extendedcrafting.init.ModRecipeTypes;
 import com.blakebr0.extendedcrafting.init.ModTileEntities;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Inventory;
@@ -27,6 +29,9 @@ import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.EnergyStorage;
 import net.minecraftforge.energy.IEnergyStorage;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class CompressorTileEntity extends BaseInventoryTileEntity implements MenuProvider {
 	private final BaseItemStackHandler inventory;
 	private final BaseItemStackHandler recipeInventory;
@@ -34,6 +39,7 @@ public class CompressorTileEntity extends BaseInventoryTileEntity implements Men
 	private final LazyOptional<IEnergyStorage> capability = LazyOptional.of(this::getEnergy);
 	private CompressorRecipe recipe;
 	private ItemStack materialStack = ItemStack.EMPTY;
+	private List<MaterialInput> inputs = NonNullList.create();
 	private int materialCount;
 	private int progress;
 	private boolean ejecting = false;
@@ -61,6 +67,8 @@ public class CompressorTileEntity extends BaseInventoryTileEntity implements Men
 		this.ejecting = tag.getBoolean("Ejecting");
 		this.energy.deserializeNBT(tag.get("Energy"));
 		this.inputLimit = tag.getBoolean("InputLimit");
+
+		this.inputs = loadMaterialInputs(tag);
 	}
 
 	@Override
@@ -72,6 +80,8 @@ public class CompressorTileEntity extends BaseInventoryTileEntity implements Men
 		tag.putBoolean("Ejecting", this.ejecting);
 		tag.putInt("Energy", this.energy.getEnergyStored());
 		tag.putBoolean("InputLimit", this.inputLimit);
+
+		saveMaterialInputs(tag, this.inputs);
 	}
 
 	@Override
@@ -103,7 +113,9 @@ public class CompressorTileEntity extends BaseInventoryTileEntity implements Men
 		tile.recipeInventory.setStackInSlot(1, catalyst);
 
 		if (tile.recipe == null || !tile.recipe.matches(tile.recipeInventory)) {
-			tile.recipe = (CompressorRecipe) level.getRecipeManager().getRecipeFor(ModRecipeTypes.COMPRESSOR.get(), tile.recipeInventory.toIInventory(), level).orElse(null);
+			tile.recipe = (CompressorRecipe) level.getRecipeManager()
+					.getRecipeFor(ModRecipeTypes.COMPRESSOR.get(), tile.recipeInventory.toIInventory(), level)
+					.orElse(null);
 		}
 
 		if (!level.isClientSide()) {
@@ -114,17 +126,10 @@ public class CompressorTileEntity extends BaseInventoryTileEntity implements Men
 				}
 
 				if (!tile.inputLimit || (tile.recipe != null && tile.materialCount < tile.recipe.getInputCount())) {
-					if (StackHelper.areStacksEqual(input, tile.materialStack)) {
-						int consumeAmount = input.getCount();
-						if (tile.inputLimit) {
-							consumeAmount = Math.min(consumeAmount, tile.recipe.getInputCount() - tile.materialCount);
-						}
-
-						input.shrink(consumeAmount);
-						tile.materialCount += consumeAmount;
-
-
-							mark = true;
+					var index = tile.canInsertItem(input);
+					if (index > -1) {
+						tile.insertItem(index, input);
+						mark = true;
 					}
 				}
 			}
@@ -145,18 +150,28 @@ public class CompressorTileEntity extends BaseInventoryTileEntity implements Men
 						}
 					} else {
 						tile.process(tile.recipe);
-					mark = true;}
+						mark = true;
+					}
 				}
 			}
 
 			if (tile.ejecting) {
-				if (tile.materialCount > 0 && !tile.materialStack.isEmpty() && (output.isEmpty() || StackHelper.areStacksEqual(tile.materialStack, output))) {
-					int addCount = Math.min(tile.materialCount, tile.materialStack.getMaxStackSize() - output.getCount());
+				var newestInput = tile.getNewestInput();
+				var newestStack = newestInput.stack;
+
+				if (tile.materialCount > 0 && !newestStack.isEmpty() && (output.isEmpty() || StackHelper.areStacksEqual(newestStack, output))) {
+					int addCount = Math.min(newestInput.count, newestStack.getMaxStackSize() - output.getCount());
 					if (addCount > 0) {
-						var toAdd = StackHelper.withSize(tile.materialStack, addCount, false);
+						var toAdd = StackHelper.withSize(newestStack, addCount, false);
 
 						tile.updateResult(toAdd);
 						tile.materialCount -= addCount;
+
+						newestInput.count -= addCount;
+
+						if (newestInput.count <= 0) {
+							tile.inputs.remove(tile.inputs.size() - 1);
+						}
 
 						if (tile.materialCount < 1) {
 							tile.materialStack = ItemStack.EMPTY;
@@ -255,6 +270,10 @@ public class CompressorTileEntity extends BaseInventoryTileEntity implements Men
 		return 0;
 	}
 
+	public List<MaterialInput> getInputs() {
+		return this.inputs;
+	}
+
 	private void process(CompressorRecipe recipe) {
 		int extract = recipe.getPowerRate();
 		int difference = recipe.getPowerCost() - this.progress;
@@ -272,6 +291,115 @@ public class CompressorTileEntity extends BaseInventoryTileEntity implements Men
 			this.inventory.setStackInSlot(0, stack);
 		} else {
 			this.inventory.setStackInSlot(0, StackHelper.grow(result, stack.getCount()));
+		}
+	}
+
+	private int canInsertItem(ItemStack stack) {
+		var size = this.inputs.size();
+		if (size == 0)
+			return 0;
+
+		for (int i = 0; i < size; i++) {
+			var input = this.inputs.get(i);
+			if (StackHelper.areStacksEqual(stack, input.stack))
+				return i;
+		}
+
+		// if there's a valid recipe, we can start allowing item variants
+		if (size < 100 && this.recipe != null) {
+			var recipeStack = this.recipe.getIngredients().get(0);
+			if (recipeStack.test(stack))
+				return size;
+		}
+
+		return -1;
+	}
+
+	private void insertItem(int index, ItemStack stack) {
+		int consumeAmount = stack.getCount();
+		if (this.inputLimit) {
+			consumeAmount = Math.min(consumeAmount, this.recipe.getInputCount() - this.materialCount);
+		}
+
+		if (this.inputs.isEmpty() || this.inputs.size() == index) {
+			this.inputs.add(new MaterialInput(stack.copy(), stack.getCount()));
+		} else {
+			var input = this.inputs.get(index);
+
+			if (StackHelper.areStacksEqual(stack, input.stack)) {
+				input.count += stack.getCount();
+			} else {
+				this.inputs.add(new MaterialInput(stack.copy(), stack.getCount()));
+			}
+		}
+
+		stack.shrink(consumeAmount);
+
+		this.materialCount += consumeAmount;
+	}
+
+	private MaterialInput getNewestInput() {
+		return this.inputs.get(this.inputs.size() - 1);
+	}
+
+	private static List<MaterialInput> loadMaterialInputs(CompoundTag tag) {
+		var list = tag.getList("Inputs", 10);
+		var inputs = new ArrayList<MaterialInput>();
+
+		for (int i = 0; i < list.size(); i++) {
+			inputs.add(MaterialInput.load(list.getCompound(i)));
+		}
+
+		// backwards compatibility
+		// if there is a material stack set but no inputs then we add it as an input
+		if (tag.contains("MaterialStack") && inputs.isEmpty()) {
+			var stack = ItemStack.of(tag.getCompound("MaterialStack"));
+			var count = tag.getInt("MaterialCount");
+
+			if (count > 0) {
+				inputs.add(new MaterialInput(stack, count));
+			}
+		}
+
+		return inputs;
+	}
+
+	private static void saveMaterialInputs(CompoundTag tag, List<MaterialInput> inputs) {
+		var list = new ListTag();
+		for (var input : inputs) {
+			list.add(input.save());
+		}
+
+		tag.put("Inputs", list);
+	}
+
+	public static class MaterialInput {
+		public ItemStack stack;
+		public int count;
+
+		public MaterialInput(ItemStack stack, int count) {
+			this.stack = stack;
+			this.count = count;
+		}
+
+		public Component getDisplayName() {
+			return Component.literal(this.count + "x ").append(this.stack.getHoverName());
+		}
+
+		public CompoundTag save() {
+			var tag = new CompoundTag();
+
+			tag.put("Item", stack.save(new CompoundTag()));
+			tag.putInt("Count", count);
+
+			return tag;
+		}
+
+		public static MaterialInput load(CompoundTag tag) {
+			var stack = ItemStack.of(tag.getCompound("Item"));
+			var count = tag.getInt("Count");
+
+			return new MaterialInput(stack, count);
 		}
 	}
 }

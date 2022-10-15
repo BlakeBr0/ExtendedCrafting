@@ -57,13 +57,21 @@ public class CompressorScreen extends BaseContainerScreen<CompressorContainer> {
 			if (this.getMaterialCount() < 1) {
 				tooltip.add(ModTooltips.EMPTY.color(ChatFormatting.WHITE).build());
 			} else {
-				if (this.hasMaterialStack()) {
-					tooltip.add(this.getMaterialStackDisplayName());
-				}
-
 				var text = Component.literal(number(this.getMaterialCount()) + " / " + number(this.getMaterialsRequired()));
 
 				tooltip.add(text);
+
+				if (this.hasMaterialStack()) {
+					var inputs = this.tile.getInputs();
+					var size = inputs.size();
+					for (int i = 0; i < size && i < 5; i++) {
+						tooltip.add(inputs.get(i).getDisplayName());
+					}
+
+					if (size > 5) {
+						tooltip.add(ModTooltips.AND_X_MORE.args(size - 5).build());
+					}
+				}
 			}
 
 			this.renderComponentTooltip(matrix, tooltip, mouseX, mouseY);
@@ -116,23 +124,6 @@ public class CompressorScreen extends BaseContainerScreen<CompressorContainer> {
 		if (this.isLimitingInput()) {
 			this.blit(stack, x + 90, y + 74, 203, 56, 9, 10);
 		}
-	}
-
-	private Component getMaterialStackDisplayName() {
-		var level = this.getMinecraft().level;
-
-		if (level != null) {
-			var container = this.getMenu();
-			var tile = level.getBlockEntity(container.getPos());
-
-			if (tile instanceof CompressorTileEntity compressor) {
-				var materialStack = compressor.getMaterialStack();
-
-				return materialStack.getHoverName();
-			}
-		}
-
-		return Component.literal("");
 	}
 
 	private CompressorTileEntity getTileEntity() {

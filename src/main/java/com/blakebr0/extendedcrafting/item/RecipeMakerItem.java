@@ -14,6 +14,7 @@ import com.blakebr0.extendedcrafting.tileentity.BasicTableTileEntity;
 import com.blakebr0.extendedcrafting.tileentity.CraftingCoreTileEntity;
 import com.blakebr0.extendedcrafting.tileentity.EliteTableTileEntity;
 import com.blakebr0.extendedcrafting.tileentity.EnderCrafterTileEntity;
+import com.blakebr0.extendedcrafting.tileentity.FluxCrafterTileEntity;
 import com.blakebr0.extendedcrafting.tileentity.UltimateTableTileEntity;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -41,6 +42,7 @@ import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -55,7 +57,7 @@ public class RecipeMakerItem extends BaseItem implements IEnableable {
 	public RecipeMakerItem(Function<Properties, Properties> properties) {
 		super(properties.compose(p -> p.stacksTo(1)));
 	}
-	
+
 	@Override
 	public void fillItemCategory(CreativeModeTab group, NonNullList<ItemStack> items) {
 		if (this.isEnabled() && this.allowedIn(group)) {
@@ -89,7 +91,11 @@ public class RecipeMakerItem extends BaseItem implements IEnableable {
 			if (level.isClientSide()) {
 				var type = NBTHelper.getString(stack, "Type");
 				var inventory = ((BaseInventoryTileEntity) tile).getInventory();
-				var block = tile instanceof EnderCrafterTileEntity ? "EnderCrafting" : "TableCrafting";
+				var block = tile instanceof EnderCrafterTileEntity
+						? "EnderCrafting"
+						: tile instanceof FluxCrafterTileEntity
+						? "FluxCrafting"
+						: "TableCrafting";
 
 				String string;
 				if ("CraftTweaker".equals(type)) {
@@ -168,7 +174,7 @@ public class RecipeMakerItem extends BaseItem implements IEnableable {
 		Minecraft.getInstance().keyboardHandler.setClipboard(string);
 	}
 
-	// Create a shaped CraftTweaker recipe for a Table or Ender Crafter
+	// Create a shaped CraftTweaker recipe for a Table, Flux Crafter or Ender Crafter
 	private static String makeShapedCraftTweakerTableRecipe(IItemHandler inventory, String type) {
 		var string = new StringBuilder();
 		var uuid = UUID.randomUUID();
@@ -225,12 +231,18 @@ public class RecipeMakerItem extends BaseItem implements IEnableable {
 			}
 		}
 
-		string.append("]);");
+		if (TableType.FLUX_CRAFTER.type.equals(type)) {
+			string.append("], 100000, ");
+			string.append(ModConfigs.FLUX_CRAFTER_POWER_RATE.get());
+			string.append(");");
+		} else {
+			string.append("]);");
+		}
 
 		return string.toString();
 	}
 
-	// Create a shapeless CraftTweaker recipe for a Table or Ender Crafter
+	// Create a shapeless CraftTweaker recipe for a Table, Flux Crafter or Ender Crafter
 	private static String makeShapelessCraftTweakerTableRecipe(IItemHandler inventory, String type) {
 		var string = new StringBuilder();
 		var uuid = UUID.randomUUID();
@@ -277,7 +289,14 @@ public class RecipeMakerItem extends BaseItem implements IEnableable {
 			}
 		}
 
-		string.append(System.lineSeparator()).append("]);");
+		if (TableType.FLUX_CRAFTER.type.equals(type)) {
+			string.append(System.lineSeparator());
+			string.append("], 100000, ");
+			string.append(ModConfigs.FLUX_CRAFTER_POWER_RATE.get());
+			string.append(");");
+		} else {
+			string.append(System.lineSeparator()).append("]);");
+		}
 
 		return string.toString();
 	}
@@ -331,14 +350,17 @@ public class RecipeMakerItem extends BaseItem implements IEnableable {
 		return string.toString();
 	}
 
-	// Create a shaped Datapack recipe for a Table or Ender Crafter
+	// Create a shaped Datapack recipe for a Table, Flux Crafter or Ender Crafter
 	private static String makeShapedDatapackTableRecipe(IItemHandler inventory, String type) {
 		var object = new JsonObject();
+		var tableType = TableType.fromType(type);
 
-		object.addProperty("type", "TableCrafting".equals(type)
-				? "extendedcrafting:shaped_table"
-				: "extendedcrafting:shaped_ender_crafter"
-		);
+		object.addProperty("type", tableType.shapedRecipeType);
+
+		if (tableType == TableType.FLUX_CRAFTER) {
+			object.addProperty("powerRequired", 100000);
+			object.addProperty("powerRate", ModConfigs.FLUX_CRAFTER_POWER_RATE.get());
+		}
 
 		Map<Ingredient, Character> keysMap = new LinkedHashMap<>();
 		int slots = getGridSlots(inventory);
@@ -405,14 +427,17 @@ public class RecipeMakerItem extends BaseItem implements IEnableable {
 		return GSON.toJson(object);
 	}
 
-	// Create a shapeless Datapack recipe for a Table or Ender Crafter
+	// Create a shapeless Datapack recipe for a Table Flux Crafter or Ender Crafter
 	private static String makeShapelessDatapackTableRecipe(IItemHandler inventory, String type) {
 		var object = new JsonObject();
+		var tableType = TableType.fromType(type);
 
-		object.addProperty("type", "TableCrafting".equals(type)
-				? "extendedcrafting:shapeless_table"
-				: "extendedcrafting:shapeless_ender_crafter"
-		);
+		object.addProperty("type", tableType.shapelessRecipeType);
+
+		if (tableType == TableType.FLUX_CRAFTER) {
+			object.addProperty("powerRequired", 100000);
+			object.addProperty("powerRate", ModConfigs.FLUX_CRAFTER_POWER_RATE.get());
+		}
 
 		var ingredients = new JsonArray();
 		int slots = getGridSlots(inventory);
@@ -495,7 +520,8 @@ public class RecipeMakerItem extends BaseItem implements IEnableable {
 				tile instanceof EliteTableTileEntity ||
 				tile instanceof UltimateTableTileEntity ||
 				tile instanceof AutoTableTileEntity ||
-				tile instanceof EnderCrafterTileEntity;
+				tile instanceof EnderCrafterTileEntity ||
+				tile instanceof FluxCrafterTileEntity;
 	}
 
 	private static String getModeString(ItemStack stack) {
@@ -513,5 +539,33 @@ public class RecipeMakerItem extends BaseItem implements IEnableable {
 		else if (slots >= 49) return 49;
 		else if (slots >= 25) return 25;
 		else return 9;
+	}
+
+	private enum TableType {
+		TABLE("TableCrafting", "extendedcrafting:shaped_table", "extendedcrafting:shapeless_table"),
+		ENDER_CRAFTER("EnderCrafting", "extendedcrafting:shaped_ender_crafter", "extendedcrafting:shapeless_ender_crafter"),
+		FLUX_CRAFTER("FluxCrafting","extendedcrafting:shaped_flux_crafter", "extendedcrafting:shapeless_flux_crafter");
+
+		private static final Map<String, TableType> LOOKUP = new HashMap<>();
+
+		static {
+			for (var value : values()) {
+				LOOKUP.put(value.type, value);
+			}
+		}
+
+		public final String type;
+		public final String shapedRecipeType;
+		public final String shapelessRecipeType;
+
+		TableType(String type, String shapedRecipeType, String shapelessRecipeType) {
+			this.type = type;
+			this.shapedRecipeType = shapedRecipeType;
+			this.shapelessRecipeType = shapelessRecipeType;
+		}
+
+		public static TableType fromType(String type) {
+			return LOOKUP.get(type);
+		}
 	}
 }

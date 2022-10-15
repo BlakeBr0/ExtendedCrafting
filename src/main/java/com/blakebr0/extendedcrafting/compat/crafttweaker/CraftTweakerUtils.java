@@ -1,7 +1,7 @@
 package com.blakebr0.extendedcrafting.compat.crafttweaker;
 
 import com.blamejared.crafttweaker.api.data.MapData;
-import com.blamejared.crafttweaker.api.data.base.visitor.DataToTextComponentVisitor;
+import com.blamejared.crafttweaker.api.data.visitor.DataToTextComponentVisitor;
 import net.minecraft.nbt.CompoundTag;
 
 public final class CraftTweakerUtils {

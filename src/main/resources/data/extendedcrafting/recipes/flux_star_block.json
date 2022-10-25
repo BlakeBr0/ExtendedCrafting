@@ -1,0 +1,16 @@
+{
+  "type": "crafting_shaped",
+  "pattern": [
+    "III",
+    "III",
+    "III"
+  ],
+  "key": {
+    "I": {
+      "item": "extendedcrafting:flux_star"
+    }
+  },
+  "result": {
+    "item": "extendedcrafting:flux_star_block"
+  }
+}

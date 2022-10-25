@@ -61,6 +61,7 @@ public final class ModItems {
 	public static final RegistryObject<Item> ENHANCED_ENDER_COMPONENT = register("enhanced_ender_component", () -> new BaseItem(p -> p.tab(CREATIVE_TAB).rarity(Rarity.UNCOMMON)));
 	public static final RegistryObject<Item> CRYSTALTINE_COMPONENT = register("crystaltine_component", () -> new BaseItem(p -> p.tab(CREATIVE_TAB).rarity(Rarity.UNCOMMON)));
 	public static final RegistryObject<Item> THE_ULTIMATE_COMPONENT = register("the_ultimate_component", () -> new BaseItem(p -> p.tab(CREATIVE_TAB).rarity(Rarity.EPIC)));
+	public static final RegistryObject<Item> FLUX_STAR = register("flux_star", () -> new BaseShinyItem(p -> p.tab(CREATIVE_TAB).rarity(Rarity.UNCOMMON)));
 	public static final RegistryObject<Item> ENDER_STAR = register("ender_star", () -> new BaseShinyItem(p -> p.tab(CREATIVE_TAB).rarity(Rarity.UNCOMMON)));
 	public static final RegistryObject<Item> HANDHELD_TABLE = register("handheld_table", () -> new HandheldTableItem(p -> p.tab(CREATIVE_TAB)));
 	public static final RegistryObject<Item> RECIPE_MAKER = register("recipe_maker", () -> new RecipeMakerItem(p -> p.tab(CREATIVE_TAB)));

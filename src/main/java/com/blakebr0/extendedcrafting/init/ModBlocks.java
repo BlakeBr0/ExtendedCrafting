@@ -43,6 +43,7 @@ public final class ModBlocks {
 	public static final RegistryObject<Block> LUMINESSENCE_BLOCK = register("luminessence_block", () -> new BaseBlock(Material.STONE, SoundType.STONE, 5.0F, 10.0F, true));
 	public static final RegistryObject<Block> BLACK_IRON_BLOCK = register("black_iron_block", () -> new BaseBlock(Material.METAL, SoundType.METAL, 5.0F, 10.0F, true));
 	public static final RegistryObject<Block> REDSTONE_INGOT_BLOCK = register("redstone_ingot_block", () -> new BaseBlock(Material.METAL, SoundType.METAL, 5.0F, 10.0F, true));
+	public static final RegistryObject<Block> ENHANCED_REDSTONE_INGOT_BLOCK = register("enhanced_redstone_ingot_block", () -> new BaseBlock(Material.METAL, SoundType.METAL, 5.0F, 10.0F, true), Rarity.UNCOMMON);
 	public static final RegistryObject<Block> ENDER_INGOT_BLOCK = register("ender_ingot_block", () -> new BaseBlock(Material.METAL, SoundType.METAL, 5.0F, 10.0F, true));
 	public static final RegistryObject<Block> ENHANCED_ENDER_INGOT_BLOCK = register("enhanced_ender_ingot_block", () -> new BaseBlock(Material.METAL, SoundType.METAL, 5.0F, 10.0F, true), Rarity.UNCOMMON);
 	public static final RegistryObject<Block> CRYSTALTINE_BLOCK = register("crystaltine_block", () -> new BaseBlock(Material.METAL, SoundType.METAL, 5.0F, 10.0F, true), Rarity.UNCOMMON);

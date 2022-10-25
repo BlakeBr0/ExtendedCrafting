@@ -28,12 +28,14 @@ public final class ModItems {
 	public static final RegistryObject<Item> LUMINESSENCE = register("luminessence");
 	public static final RegistryObject<Item> BLACK_IRON_INGOT = register("black_iron_ingot");
 	public static final RegistryObject<Item> REDSTONE_INGOT = register("redstone_ingot");
+	public static final RegistryObject<Item> ENHANCED_REDSTONE_INGOT = register("enhanced_redstone_ingot", () -> new BaseItem(p -> p.tab(CREATIVE_TAB).rarity(Rarity.UNCOMMON)));
 	public static final RegistryObject<Item> ENDER_INGOT = register("ender_ingot");
 	public static final RegistryObject<Item> ENHANCED_ENDER_INGOT = register("enhanced_ender_ingot", () -> new BaseItem(p -> p.tab(CREATIVE_TAB).rarity(Rarity.UNCOMMON)));
 	public static final RegistryObject<Item> CRYSTALTINE_INGOT = register("crystaltine_ingot", () -> new BaseItem(p -> p.tab(CREATIVE_TAB).rarity(Rarity.UNCOMMON)));
 	public static final RegistryObject<Item> THE_ULTIMATE_INGOT = register("the_ultimate_ingot", () -> new BaseItem(p -> p.tab(CREATIVE_TAB).rarity(Rarity.EPIC)));
 	public static final RegistryObject<Item> BLACK_IRON_NUGGET = register("black_iron_nugget");
 	public static final RegistryObject<Item> REDSTONE_NUGGET = register("redstone_nugget");
+	public static final RegistryObject<Item> ENHANCED_REDSTONE_NUGGET = register("enhanced_redstone_nugget", () -> new BaseItem(p -> p.tab(CREATIVE_TAB).rarity(Rarity.UNCOMMON)));
 	public static final RegistryObject<Item> ENDER_NUGGET = register("ender_nugget");
 	public static final RegistryObject<Item> ENHANCED_ENDER_NUGGET = register("enhanced_ender_nugget", () -> new BaseItem(p -> p.tab(CREATIVE_TAB).rarity(Rarity.UNCOMMON)));
 	public static final RegistryObject<Item> CRYSTALTINE_NUGGET = register("crystaltine_nugget", () -> new BaseItem(p -> p.tab(CREATIVE_TAB).rarity(Rarity.UNCOMMON)));
@@ -44,6 +46,7 @@ public final class ModItems {
 	public static final RegistryObject<Item> ELITE_CATALYST = register("elite_catalyst");
 	public static final RegistryObject<Item> ULTIMATE_CATALYST = register("ultimate_catalyst");
 	public static final RegistryObject<Item> REDSTONE_CATALYST = register("redstone_catalyst");
+	public static final RegistryObject<Item> ENHANCED_REDSTONE_CATALYST = register("enhanced_redstone_catalyst", () -> new BaseItem(p -> p.tab(CREATIVE_TAB).rarity(Rarity.UNCOMMON)));
 	public static final RegistryObject<Item> ENDER_CATALYST = register("ender_catalyst");
 	public static final RegistryObject<Item> ENHANCED_ENDER_CATALYST = register("enhanced_ender_catalyst", () -> new BaseItem(p -> p.tab(CREATIVE_TAB).rarity(Rarity.UNCOMMON)));
 	public static final RegistryObject<Item> CRYSTALTINE_CATALYST = register("crystaltine_catalyst", () -> new BaseItem(p -> p.tab(CREATIVE_TAB).rarity(Rarity.UNCOMMON)));
@@ -53,6 +56,7 @@ public final class ModItems {
 	public static final RegistryObject<Item> ELITE_COMPONENT = register("elite_component");
 	public static final RegistryObject<Item> ULTIMATE_COMPONENT = register("ultimate_component");
 	public static final RegistryObject<Item> REDSTONE_COMPONENT = register("redstone_component");
+	public static final RegistryObject<Item> ENHANCED_REDSTONE_COMPONENT = register("enhanced_redstone_component", () -> new BaseItem(p -> p.tab(CREATIVE_TAB).rarity(Rarity.UNCOMMON)));
 	public static final RegistryObject<Item> ENDER_COMPONENT = register("ender_component");
 	public static final RegistryObject<Item> ENHANCED_ENDER_COMPONENT = register("enhanced_ender_component", () -> new BaseItem(p -> p.tab(CREATIVE_TAB).rarity(Rarity.UNCOMMON)));
 	public static final RegistryObject<Item> CRYSTALTINE_COMPONENT = register("crystaltine_component", () -> new BaseItem(p -> p.tab(CREATIVE_TAB).rarity(Rarity.UNCOMMON)));

@@ -22,6 +22,7 @@ public final class ModTooltips {
     public static final Tooltip SECONDS = new Tooltip("tooltip.extendedcrafting.seconds");
     public static final Tooltip REQUIRES_TABLE = new Tooltip("tooltip.extendedcrafting.requires_table");
     public static final Tooltip ITEMS_REQUIRED = new Tooltip("tooltip.extendedcrafting.items_required");
+    public static final Tooltip PER_ALTERNATOR = new Tooltip("tooltip.extendedcrafting.per_alternator");
     public static final Tooltip SINGULARITY_ID = new Tooltip("tooltip.extendedcrafting.singularity_id");
     public static final Tooltip ADDED_BY = new Tooltip("tooltip.extendedcrafting.added_by");
     public static final Tooltip AUTO_TABLE_SAVE_RECIPE = new Tooltip("tooltip.extendedcrafting.auto_table_save_recipe");

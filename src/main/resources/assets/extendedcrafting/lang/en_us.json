@@ -105,6 +105,7 @@
   "tooltip.extendedcrafting.seconds": "%s Seconds",
   "tooltip.extendedcrafting.requires_table": "Requires Tier %s Crafting Table",
   "tooltip.extendedcrafting.items_required": "Items Required:",
+  "tooltip.extendedcrafting.per_alternator": "%s per alternator",
   "tooltip.extendedcrafting.singularity_id": "Singularity ID: %s",
   "tooltip.extendedcrafting.added_by": "Added By: %s",
   "tooltip.extendedcrafting.auto_table_save_recipe": "Shift + Left Click to save this recipe.",

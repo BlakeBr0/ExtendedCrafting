@@ -7,6 +7,7 @@ import com.blakebr0.extendedcrafting.api.crafting.IFluxCrafterRecipe;
 import com.blakebr0.extendedcrafting.crafting.recipe.ShapedFluxCrafterRecipe;
 import com.blakebr0.extendedcrafting.crafting.recipe.ShapelessFluxCrafterRecipe;
 import com.blakebr0.extendedcrafting.init.ModBlocks;
+import com.blakebr0.extendedcrafting.lib.ModTooltips;
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
@@ -16,6 +17,7 @@ import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.RecipeIngredientRole;
 import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.recipe.category.IRecipeCategory;
+import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
@@ -59,7 +61,7 @@ public class FluxCraftingCategory implements IRecipeCategory<IFluxCrafterRecipe>
 		if (mouseX > 1 && mouseX < 14 && mouseY > 1 && mouseY < 78) {
 			return List.of(
 					Component.literal(Utils.format(recipe.getPowerRequired()) + " FE"),
-					Component.literal(Utils.format(recipe.getPowerRate()) + " FE/t per alternator")
+					ModTooltips.PER_ALTERNATOR.args(Utils.format(recipe.getPowerRate()) + " FE/t").color(ChatFormatting.WHITE).build()
 			);
 		}
 

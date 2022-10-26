@@ -13,6 +13,7 @@ import com.blakebr0.extendedcrafting.tileentity.AutoTableTileEntity;
 import com.google.common.collect.Lists;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.gui.components.Button;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
@@ -22,7 +23,6 @@ import java.util.List;
 
 public class EliteAutoTableScreen extends BaseContainerScreen<EliteAutoTableContainer> {
 	public static final ResourceLocation BACKGROUND = new ResourceLocation(ExtendedCrafting.MOD_ID, "textures/gui/elite_auto_table.png");
-	private final RecipeSelectButton[] recipeSelectButtons = new RecipeSelectButton[3];
 	private AutoTableTileEntity tile;
 
 	public EliteAutoTableScreen(EliteAutoTableContainer container, Inventory inventory, Component title) {
@@ -39,13 +39,13 @@ public class EliteAutoTableScreen extends BaseContainerScreen<EliteAutoTableCont
 
 		this.addRenderableWidget(new ToggleTableRunningButton(x + 192, y + 96, pos, this::isRunning));
 
-		this.recipeSelectButtons[0] = this.addRenderableWidget(new RecipeSelectButton(x + 176, y + 7, pos, 0, this::isRecipeSelected));
-		this.recipeSelectButtons[1] = this.addRenderableWidget(new RecipeSelectButton(x + 189, y + 7, pos, 1, this::isRecipeSelected));
-		this.recipeSelectButtons[2] = this.addRenderableWidget(new RecipeSelectButton(x + 202, y + 7, pos, 2, this::isRecipeSelected));
-
 		this.tile = this.getTileEntity();
 
 		if (this.tile != null) {
+			this.addRenderableWidget(new RecipeSelectButton(x + 176, y + 7, pos, 0, this.tile.getRecipeStorage(), this::onSelectButtonTooltip));
+			this.addRenderableWidget(new RecipeSelectButton(x + 189, y + 7, pos, 1, this.tile.getRecipeStorage(), this::onSelectButtonTooltip));
+			this.addRenderableWidget(new RecipeSelectButton(x + 202, y + 7, pos, 2, this.tile.getRecipeStorage(), this::onSelectButtonTooltip));
+
 			this.addRenderableWidget(new EnergyBarWidget(x + 7, y + 41, this.tile.getEnergy(), this));
 		}
 	}
@@ -59,42 +59,6 @@ public class EliteAutoTableScreen extends BaseContainerScreen<EliteAutoTableCont
 
 		if (mouseX > x + 192 && mouseX < x + 205 && mouseY > y + 95 && mouseY < y + 111) {
 			this.renderTooltip(stack, ModTooltips.TOGGLE_AUTO_CRAFTING.color(ChatFormatting.WHITE).build(), mouseX, mouseY);
-		}
-
-		for (var button : this.recipeSelectButtons) {
-			if (button.isHoveredOrFocused()) {
-				var recipe = this.getRecipeInfo(button.getIndex());
-
-				if (recipe != null) {
-					List<Component> tooltip;
-					var hasRecipe = !recipe.getStacks().stream().allMatch(ItemStack::isEmpty);
-
-					if (hasRecipe) {
-						var output = recipe.getStackInSlot(recipe.getSlots() - 1);
-
-						tooltip = Lists.newArrayList(
-								Component.literal(output.getCount() + "x " + output.getHoverName().getString()),
-								Component.literal(""),
-								ModTooltips.AUTO_TABLE_DELETE_RECIPE.color(ChatFormatting.WHITE).build()
-						);
-
-						if (this.getSelected() == button.getIndex()) {
-							tooltip.add(1, ModTooltips.SELECTED.color(ChatFormatting.GREEN).build());
-						}
-					} else {
-						tooltip = Lists.newArrayList(
-								ModTooltips.AUTO_TABLE_SAVE_RECIPE.color(ChatFormatting.WHITE).build()
-						);
-
-						if (this.getSelected() == button.getIndex()) {
-							tooltip.add(0, ModTooltips.SELECTED.color(ChatFormatting.GREEN).build());
-							tooltip.add(1, Component.literal(""));
-						}
-					}
-
-					this.renderComponentTooltip(stack, tooltip, mouseX, mouseY);
-				}
-			}
 		}
 	}
 
@@ -136,8 +100,40 @@ public class EliteAutoTableScreen extends BaseContainerScreen<EliteAutoTableCont
 		}
 	}
 
-	private boolean isRecipeSelected(int index) {
-		return index == this.getSelected();
+	private void onSelectButtonTooltip(Button button, PoseStack matrix, int mouseX, int mouseY) {
+		var index = ((RecipeSelectButton) button).getIndex();
+		var isSelected = ((RecipeSelectButton) button).isSelected();
+		var recipe = this.getRecipeInfo(index);
+
+		if (recipe != null) {
+			List<Component> tooltip;
+			var hasRecipe = !recipe.getStacks().stream().allMatch(ItemStack::isEmpty);
+
+			if (hasRecipe) {
+				var output = recipe.getStackInSlot(recipe.getSlots() - 1);
+
+				tooltip = Lists.newArrayList(
+						Component.literal(output.getCount() + "x " + output.getHoverName().getString()),
+						Component.literal(""),
+						ModTooltips.AUTO_TABLE_DELETE_RECIPE.color(ChatFormatting.WHITE).build()
+				);
+
+				if (isSelected) {
+					tooltip.add(1, ModTooltips.SELECTED.color(ChatFormatting.GREEN).build());
+				}
+			} else {
+				tooltip = Lists.newArrayList(
+						ModTooltips.AUTO_TABLE_SAVE_RECIPE.color(ChatFormatting.WHITE).build()
+				);
+
+				if (isSelected) {
+					tooltip.add(0, ModTooltips.SELECTED.color(ChatFormatting.GREEN).build());
+					tooltip.add(1, Component.literal(""));
+				}
+			}
+
+			this.renderComponentTooltip(matrix, tooltip, mouseX, mouseY);
+		}
 	}
 
 	private AutoTableTileEntity getTileEntity() {
@@ -172,13 +168,6 @@ public class EliteAutoTableScreen extends BaseContainerScreen<EliteAutoTableCont
 			return null;
 
 		return this.tile.getRecipeStorage().getSelectedRecipe();
-	}
-
-	private int getSelected() {
-		if (this.tile == null)
-			return 0;
-
-		return this.tile.getRecipeStorage().getSelected();
 	}
 
 	private int getProgress() {

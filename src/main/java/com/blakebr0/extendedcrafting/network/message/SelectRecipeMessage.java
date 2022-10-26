@@ -1,6 +1,7 @@
 package com.blakebr0.extendedcrafting.network.message;
 
 import com.blakebr0.cucumber.network.message.Message;
+import com.blakebr0.extendedcrafting.tileentity.AutoEnderCrafterTileEntity;
 import com.blakebr0.extendedcrafting.tileentity.AutoTableTileEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
@@ -44,6 +45,9 @@ public class SelectRecipeMessage extends Message<SelectRecipeMessage> {
 
                 if (tile instanceof AutoTableTileEntity table)
                     table.selectRecipe(message.selected);
+
+                if (tile instanceof AutoEnderCrafterTileEntity crafter)
+                    crafter.selectRecipe(message.selected);
             }
         });
 

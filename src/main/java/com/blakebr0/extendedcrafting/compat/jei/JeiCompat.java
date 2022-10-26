@@ -254,7 +254,7 @@ public final class JeiCompat implements IModPlugin {
 			registration.addRecipeClickArea(EnderCrafterScreen.class, 90, 36, 21, 14, EnderCrafterCategory.RECIPE_TYPE);
 
 			if (ModConfigs.ENABLE_AUTO_ENDER_CRAFTER.get()) {
-				registration.addRecipeClickArea(AutoEnderCrafterScreen.class, 92, 46, 21, 14, EnderCrafterCategory.RECIPE_TYPE);
+				registration.addRecipeClickArea(AutoEnderCrafterScreen.class, 95, 48, 21, 14, EnderCrafterCategory.RECIPE_TYPE);
 			}
 		}
 

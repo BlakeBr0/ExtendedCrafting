@@ -5,6 +5,7 @@ import com.blakebr0.cucumber.item.BaseBlockItem;
 import com.blakebr0.extendedcrafting.ExtendedCrafting;
 import com.blakebr0.extendedcrafting.block.AdvancedAutoTableBlock;
 import com.blakebr0.extendedcrafting.block.AdvancedTableBlock;
+import com.blakebr0.extendedcrafting.block.AutoEnderCrafterBlock;
 import com.blakebr0.extendedcrafting.block.BasicAutoTableBlock;
 import com.blakebr0.extendedcrafting.block.BasicTableBlock;
 import com.blakebr0.extendedcrafting.block.CompressorBlock;
@@ -66,6 +67,7 @@ public final class ModBlocks {
 	public static final RegistryObject<Block> COMPRESSOR = register("compressor", CompressorBlock::new);
 	public static final RegistryObject<Block> ENDER_ALTERNATOR = register("ender_alternator", EnderAlternatorBlock::new);
 	public static final RegistryObject<Block> ENDER_CRAFTER = register("ender_crafter", EnderCrafterBlock::new);
+	public static final RegistryObject<Block> AUTO_ENDER_CRAFTER = register("auto_ender_crafter", AutoEnderCrafterBlock::new);
 	public static final RegistryObject<Block> FLUX_ALTERNATOR = register("flux_alternator", FluxAlternatorBlock::new);
 	public static final RegistryObject<Block> FLUX_CRAFTER = register("flux_crafter", FluxCrafterBlock::new);
 

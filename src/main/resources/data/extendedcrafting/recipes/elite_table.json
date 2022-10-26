@@ -15,9 +15,14 @@
     "I": {
       "tag": "forge:storage_blocks/diamond"
     },
-    "C": {
-      "item": "extendedcrafting:advanced_table"
-    },
+    "C": [
+      {
+        "item": "extendedcrafting:advanced_table"
+      },
+      {
+        "item": "extendedcrafting:advanced_auto_table"
+      }
+    ],
     "B": {
       "item": "extendedcrafting:elite_component"
     },

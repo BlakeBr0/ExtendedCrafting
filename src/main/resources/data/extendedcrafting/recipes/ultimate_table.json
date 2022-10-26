@@ -15,9 +15,14 @@
     "I": {
       "tag": "forge:storage_blocks/emerald"
     },
-    "C": {
-      "item": "extendedcrafting:elite_table"
-    },
+    "C": [
+      {
+        "item": "extendedcrafting:elite_table"
+      },
+      {
+        "item": "extendedcrafting:elite_auto_table"
+      }
+    ],
     "B": {
       "item": "extendedcrafting:ultimate_component"
     },

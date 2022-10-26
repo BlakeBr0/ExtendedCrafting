@@ -15,9 +15,14 @@
     "I": {
       "tag": "forge:storage_blocks/gold"
     },
-    "C": {
-      "item": "extendedcrafting:basic_table"
-    },
+    "C": [
+      {
+        "item": "extendedcrafting:basic_table"
+      },
+      {
+        "item": "extendedcrafting:basic_auto_table"
+      }
+    ],
     "B": {
       "item": "extendedcrafting:advanced_component"
     },

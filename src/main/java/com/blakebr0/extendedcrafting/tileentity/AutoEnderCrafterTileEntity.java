@@ -12,7 +12,6 @@ import com.blakebr0.extendedcrafting.util.EmptyContainer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.chat.Component;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -31,6 +30,7 @@ import net.minecraftforge.items.IItemHandler;
 public class AutoEnderCrafterTileEntity extends EnderCrafterTileEntity implements MenuProvider {
     private final EnergyStorage energy;
     private final TableRecipeStorage recipeStorage;
+    private int oldEnergy;
 
     public AutoEnderCrafterTileEntity(BlockPos pos, BlockState state) {
         super(ModTileEntities.AUTO_ENDER_CRAFTER.get(), pos, state);
@@ -88,6 +88,11 @@ public class AutoEnderCrafterTileEntity extends EnderCrafterTileEntity implement
                     }
                 });
             }
+        }
+
+        if (tile.oldEnergy != tile.energy.getEnergyStored()) {
+            tile.oldEnergy = tile.energy.getEnergyStored();
+            tile.markDirtyAndDispatch();
         }
     }
 
@@ -150,17 +155,6 @@ public class AutoEnderCrafterTileEntity extends EnderCrafterTileEntity implement
         for (int i = 0; i < inventory.getSlots() - 1; i++) {
             var stack = inventory.getStackInSlot(i);
             this.getRecipeInventory().setStackInSlot(i, stack);
-        }
-    }
-
-    private void updateResult(ItemStack stack, int slot) {
-        var inventory = this.getInventory();
-        var result = inventory.getStackInSlot(inventory.getSlots() - 1);
-
-        if (result.isEmpty()) {
-            inventory.setStackInSlot(slot, stack);
-        } else {
-            inventory.setStackInSlot(slot, StackHelper.grow(result, stack.getCount()));
         }
     }
 

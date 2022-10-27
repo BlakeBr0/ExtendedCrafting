@@ -138,6 +138,7 @@
   "config.jade.plugin_extendedcrafting.ultimate_auto_table": "Ultimate Auto Table info",
   "config.jade.plugin_extendedcrafting.compressor": "Quantum Compressor info",
   "config.jade.plugin_extendedcrafting.ender_crafter": "Ender Crafter info",
+  "config.jade.plugin_extendedcrafting.auto_ender_crafter": "Auto Ender Crafter info",
   "config.jade.plugin_extendedcrafting.flux_crafter": "Flux Crafter info",
 
   "singularity.extendedcrafting.coal": "Coal",

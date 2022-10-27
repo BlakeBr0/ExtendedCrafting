@@ -5,7 +5,6 @@ import com.blakebr0.cucumber.iface.IEnableable;
 import com.blakebr0.extendedcrafting.config.ModConfigs;
 import com.blakebr0.extendedcrafting.init.ModTileEntities;
 import com.blakebr0.extendedcrafting.tileentity.AutoEnderCrafterTileEntity;
-import com.blakebr0.extendedcrafting.tileentity.EnderCrafterTileEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.Containers;
@@ -60,16 +59,16 @@ public class AutoEnderCrafterBlock extends BaseTileEntityBlock implements IEnabl
 
 	@Override
 	public boolean isEnabled() {
-		return ModConfigs.ENABLE_ENDER_CRAFTER.get();
+		return ModConfigs.ENABLE_ENDER_CRAFTER.get() && ModConfigs.ENABLE_AUTO_ENDER_CRAFTER.get();
 	}
 
 	@Override
 	protected <T extends BlockEntity> BlockEntityTicker<T> getServerTicker(Level level, BlockState state, BlockEntityType<T> type) {
-		return createTicker(type, ModTileEntities.ENDER_CRAFTER.get(), EnderCrafterTileEntity::tick);
+		return createTicker(type, ModTileEntities.AUTO_ENDER_CRAFTER.get(), AutoEnderCrafterTileEntity::tick);
 	}
 
 	@Override
 	protected <T extends BlockEntity> BlockEntityTicker<T> getClientTicker(Level level, BlockState state, BlockEntityType<T> type) {
-		return createTicker(type, ModTileEntities.ENDER_CRAFTER.get(), EnderCrafterTileEntity::tick);
+		return createTicker(type, ModTileEntities.AUTO_ENDER_CRAFTER.get(), AutoEnderCrafterTileEntity::tick);
 	}
 }

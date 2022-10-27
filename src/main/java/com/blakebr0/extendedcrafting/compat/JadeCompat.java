@@ -3,6 +3,7 @@ package com.blakebr0.extendedcrafting.compat;
 import com.blakebr0.extendedcrafting.ExtendedCrafting;
 import com.blakebr0.extendedcrafting.block.AdvancedAutoTableBlock;
 import com.blakebr0.extendedcrafting.block.AdvancedTableBlock;
+import com.blakebr0.extendedcrafting.block.AutoEnderCrafterBlock;
 import com.blakebr0.extendedcrafting.block.BasicAutoTableBlock;
 import com.blakebr0.extendedcrafting.block.BasicTableBlock;
 import com.blakebr0.extendedcrafting.block.CompressorBlock;
@@ -39,6 +40,7 @@ public class JadeCompat implements IWailaPlugin {
 	private static final ResourceLocation ELITE_AUTO_TABLE_PROVIDER = new ResourceLocation(ExtendedCrafting.MOD_ID, "elite_auto_table");
 	private static final ResourceLocation ULTIMATE_AUTO_TABLE_PROVIDER = new ResourceLocation(ExtendedCrafting.MOD_ID, "ultimate_auto_table");
 	private static final ResourceLocation ENDER_CRAFTER_PROVIDER = new ResourceLocation(ExtendedCrafting.MOD_ID, "ender_crafter");
+	private static final ResourceLocation AUTO_ENDER_CRAFTER_PROVIDER = new ResourceLocation(ExtendedCrafting.MOD_ID, "auto_ender_crafter");
 	private static final ResourceLocation FLUX_CRAFTER_PROVIDER = new ResourceLocation(ExtendedCrafting.MOD_ID, "flux_crafter");
 	private static final ResourceLocation COMPRESSOR_PROVIDER = new ResourceLocation(ExtendedCrafting.MOD_ID, "compressor");
 
@@ -176,6 +178,24 @@ public class JadeCompat implements IWailaPlugin {
 				return ENDER_CRAFTER_PROVIDER;
 			}
 		}, EnderCrafterBlock.class);
+
+		registration.registerBlockComponent(new IBlockComponentProvider() {
+			@Override
+			public void appendTooltip(ITooltip tooltip, BlockAccessor accessor, IPluginConfig config) {
+				var crafter = (EnderCrafterTileEntity) accessor.getBlockEntity();
+				var recipe = crafter.getActiveRecipe();
+
+				if (recipe != null) {
+					var output = recipe.getResultItem();
+					tooltip.add(ModTooltips.CRAFTING.args(output.getCount(), output.getHoverName()).build());
+				}
+			}
+
+			@Override
+			public ResourceLocation getUid() {
+				return AUTO_ENDER_CRAFTER_PROVIDER;
+			}
+		}, AutoEnderCrafterBlock.class);
 
 		registration.registerBlockComponent(new IBlockComponentProvider() {
 			@Override

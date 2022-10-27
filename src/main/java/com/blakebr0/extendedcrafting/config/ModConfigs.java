@@ -39,8 +39,11 @@ public final class ModConfigs {
 	public static final ForgeConfigSpec.IntValue COMPRESSOR_POWER_RATE;
 
 	public static final ForgeConfigSpec.BooleanValue ENABLE_ENDER_CRAFTER;
+	public static final ForgeConfigSpec.BooleanValue ENABLE_AUTO_ENDER_CRAFTER;
 	public static final ForgeConfigSpec.IntValue ENDER_CRAFTER_TIME_REQUIRED;
 	public static final ForgeConfigSpec.DoubleValue ENDER_CRAFTER_ALTERNATOR_EFFECTIVENESS;
+	public static final ForgeConfigSpec.IntValue AUTO_ENDER_CRAFTER_POWER_CAPACITY;
+	public static final ForgeConfigSpec.IntValue AUTO_ENDER_CRAFTER_INSERT_POWER_RATE;
 
 	public static final ForgeConfigSpec.BooleanValue ENABLE_FLUX_CRAFTER;
 	public static final ForgeConfigSpec.IntValue FLUX_CRAFTER_POWER_RATE;
@@ -116,12 +119,21 @@ public final class ModConfigs {
 		ENABLE_ENDER_CRAFTER = common
 				.comment("Should the Ender Crafter be enabled?")
 				.define("enabled", true);
+		ENABLE_AUTO_ENDER_CRAFTER = common
+				.comment("Should the Auto Ender Crafter be enabled?")
+				.define("autoCrafterEnabled", true);
 		ENDER_CRAFTER_TIME_REQUIRED = common
 				.comment("How long a single Ender Crafter crafting operation should take (in seconds) by default.")
 				.defineInRange("defaultTimeRequired", 60, 1, Integer.MAX_VALUE);
 		ENDER_CRAFTER_ALTERNATOR_EFFECTIVENESS = common
 				.comment("How much a single Ender Alternator should speed up a craft. This is a percentage of the time required.")
 				.defineInRange("alternatorEffectiveness", 0.01, 0, 1);
+		AUTO_ENDER_CRAFTER_POWER_CAPACITY = common
+				.comment("How much FE the Auto Ender Crafter should hold.")
+				.defineInRange("autoCrafterPowerCapacity", 500000, 0, Integer.MAX_VALUE);
+		AUTO_ENDER_CRAFTER_INSERT_POWER_RATE = common
+				.comment("How much FE the Auto Ender Crafter should use when auto inserting items.")
+				.defineInRange("autoCrafterInsertPowerRate", 100, 0, Integer.MAX_VALUE);
 		common.pop();
 
 		common.comment("Settings for the Flux Crafter.").push("Flux Crafting");

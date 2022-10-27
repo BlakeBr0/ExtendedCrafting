@@ -23,6 +23,7 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.SimpleContainerData;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 
 import java.util.ArrayList;
@@ -34,10 +35,14 @@ public class EnderCrafterTileEntity extends BaseInventoryTileEntity implements M
 	private IEnderCrafterRecipe recipe;
 	private int progress;
 	private int progressReq;
-	private boolean isGridChanged = true;
+	protected boolean isGridChanged = true;
 
 	public EnderCrafterTileEntity(BlockPos pos, BlockState state) {
-		super(ModTileEntities.ENDER_CRAFTER.get(), pos, state);
+		this(ModTileEntities.ENDER_CRAFTER.get(), pos, state);
+	}
+
+	public EnderCrafterTileEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
+		super(type, pos, state);
 		this.inventory = createInventoryHandler(this::onContentsChanged);
 		this.recipeInventory = new BaseItemStackHandler(9);
 	}
@@ -209,6 +214,10 @@ public class EnderCrafterTileEntity extends BaseInventoryTileEntity implements M
 
 	public int getProgressRequired() {
 		return this.progressReq;
+	}
+
+	public BaseItemStackHandler getRecipeInventory() {
+		return this.recipeInventory;
 	}
 
 	public IEnderCrafterRecipe getActiveRecipe() {

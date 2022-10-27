@@ -1,0 +1,31 @@
+{
+  "type": "crafting_shaped",
+  "conditions": [
+    {
+      "type": "cucumber:enabled",
+      "item": "extendedcrafting:auto_ender_crafter"
+    }
+  ],
+  "pattern": [
+    "BSB",
+    "CTC",
+    "BSB"
+  ],
+  "key": {
+    "T": {
+      "item": "extendedcrafting:ender_crafter"
+    },
+    "C": {
+      "item": "extendedcrafting:crystaltine_component"
+    },
+    "B": {
+      "item": "extendedcrafting:black_iron_ingot"
+    },
+    "S": {
+      "item": "extendedcrafting:redstone_component"
+    }
+  },
+  "result": {
+    "item": "extendedcrafting:auto_ender_crafter"
+  }
+}

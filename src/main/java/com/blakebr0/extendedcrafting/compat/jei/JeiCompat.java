@@ -4,6 +4,7 @@ import com.blakebr0.cucumber.helper.NBTHelper;
 import com.blakebr0.extendedcrafting.ExtendedCrafting;
 import com.blakebr0.extendedcrafting.client.screen.AdvancedAutoTableScreen;
 import com.blakebr0.extendedcrafting.client.screen.AdvancedTableScreen;
+import com.blakebr0.extendedcrafting.client.screen.AutoEnderCrafterScreen;
 import com.blakebr0.extendedcrafting.client.screen.BasicAutoTableScreen;
 import com.blakebr0.extendedcrafting.client.screen.BasicTableScreen;
 import com.blakebr0.extendedcrafting.client.screen.CompressorScreen;
@@ -25,6 +26,7 @@ import com.blakebr0.extendedcrafting.compat.jei.category.table.UltimateTableCate
 import com.blakebr0.extendedcrafting.config.ModConfigs;
 import com.blakebr0.extendedcrafting.container.AdvancedAutoTableContainer;
 import com.blakebr0.extendedcrafting.container.AdvancedTableContainer;
+import com.blakebr0.extendedcrafting.container.AutoEnderCrafterContainer;
 import com.blakebr0.extendedcrafting.container.BasicAutoTableContainer;
 import com.blakebr0.extendedcrafting.container.BasicTableContainer;
 import com.blakebr0.extendedcrafting.container.EliteAutoTableContainer;
@@ -173,6 +175,11 @@ public final class JeiCompat implements IModPlugin {
 
 		if (ModConfigs.ENABLE_ENDER_CRAFTER.get()) {
 			registration.addRecipeCatalyst(new ItemStack(ModBlocks.ENDER_CRAFTER.get()), EnderCrafterCategory.RECIPE_TYPE);
+
+			if (ModConfigs.ENABLE_AUTO_ENDER_CRAFTER.get()) {
+				registration.addRecipeCatalyst(new ItemStack(ModBlocks.AUTO_ENDER_CRAFTER.get()), EnderCrafterCategory.RECIPE_TYPE);
+			}
+
 			registration.addRecipeCatalyst(new ItemStack(ModBlocks.ENDER_ALTERNATOR.get()), EnderCrafterCategory.RECIPE_TYPE);
 		}
 
@@ -208,6 +215,10 @@ public final class JeiCompat implements IModPlugin {
 
 		if (ModConfigs.ENABLE_ENDER_CRAFTER.get()) {
 			registration.addRecipeTransferHandler(EnderCrafterContainer.class, ModContainerTypes.ENDER_CRAFTER.get(), EnderCrafterCategory.RECIPE_TYPE, 1, 9, 10, 36);
+
+			if (ModConfigs.ENABLE_AUTO_ENDER_CRAFTER.get()) {
+				registration.addRecipeTransferHandler(AutoEnderCrafterContainer.class, ModContainerTypes.AUTO_ENDER_CRAFTER.get(), EnderCrafterCategory.RECIPE_TYPE, 1, 9, 10, 36);
+			}
 		}
 
 		if (ModConfigs.ENABLE_FLUX_CRAFTER.get()) {
@@ -241,6 +252,10 @@ public final class JeiCompat implements IModPlugin {
 
 		if (ModConfigs.ENABLE_ENDER_CRAFTER.get()) {
 			registration.addRecipeClickArea(EnderCrafterScreen.class, 90, 36, 21, 14, EnderCrafterCategory.RECIPE_TYPE);
+
+			if (ModConfigs.ENABLE_AUTO_ENDER_CRAFTER.get()) {
+				registration.addRecipeClickArea(AutoEnderCrafterScreen.class, 95, 48, 21, 14, EnderCrafterCategory.RECIPE_TYPE);
+			}
 		}
 
 		if (ModConfigs.ENABLE_FLUX_CRAFTER.get()) {

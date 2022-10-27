@@ -6,10 +6,9 @@ import com.blakebr0.cucumber.client.screen.widget.EnergyBarWidget;
 import com.blakebr0.cucumber.inventory.BaseItemStackHandler;
 import com.blakebr0.extendedcrafting.ExtendedCrafting;
 import com.blakebr0.extendedcrafting.client.screen.button.RecipeSelectButton;
-import com.blakebr0.extendedcrafting.client.screen.button.ToggleTableRunningButton;
-import com.blakebr0.extendedcrafting.container.UltimateAutoTableContainer;
+import com.blakebr0.extendedcrafting.container.AutoEnderCrafterContainer;
 import com.blakebr0.extendedcrafting.lib.ModTooltips;
-import com.blakebr0.extendedcrafting.tileentity.AutoTableTileEntity;
+import com.blakebr0.extendedcrafting.tileentity.AutoEnderCrafterTileEntity;
 import com.google.common.collect.Lists;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.ChatFormatting;
@@ -21,44 +20,30 @@ import net.minecraft.world.item.ItemStack;
 
 import java.util.List;
 
-public class UltimateAutoTableScreen extends BaseContainerScreen<UltimateAutoTableContainer> {
-	public static final ResourceLocation BACKGROUND = new ResourceLocation(ExtendedCrafting.MOD_ID, "textures/gui/ultimate_auto_table.png");
-	private AutoTableTileEntity tile;
+public class AutoEnderCrafterScreen extends BaseContainerScreen<AutoEnderCrafterContainer> {
+	private static final ResourceLocation BACKGROUND = new ResourceLocation(ExtendedCrafting.MOD_ID, "textures/gui/auto_ender_crafter.png");
+	private AutoEnderCrafterTileEntity tile;
 
-	public UltimateAutoTableScreen(UltimateAutoTableContainer container, Inventory inventory, Component title) {
-		super(container, inventory, title, BACKGROUND, 254, 278, 512, 512);
+	public AutoEnderCrafterScreen(AutoEnderCrafterContainer container, Inventory inventory, Component title) {
+		super(container, inventory, title, BACKGROUND, 176, 194);
 	}
 
 	@Override
-	public void init() {
+	protected void init() {
 		super.init();
 
 		int x = this.getGuiLeft();
 		int y = this.getGuiTop();
 		var pos = this.getMenu().getPos();
 
-		this.addRenderableWidget(new ToggleTableRunningButton(x + 226, y + 114, pos, this::isRunning));
-
 		this.tile = this.getTileEntity();
 
 		if (this.tile != null) {
-			this.addRenderableWidget(new RecipeSelectButton(x + 210, y + 7, pos, 0, this.tile.getRecipeStorage(), this::onSelectButtonTooltip));
-			this.addRenderableWidget(new RecipeSelectButton(x + 223, y + 7, pos, 1, this.tile.getRecipeStorage(), this::onSelectButtonTooltip));
-			this.addRenderableWidget(new RecipeSelectButton(x + 236, y + 7, pos, 2, this.tile.getRecipeStorage(), this::onSelectButtonTooltip));
+			this.addRenderableWidget(new RecipeSelectButton(x + 132, y + 7, pos, 0, this.tile.getRecipeStorage(), this::onSelectButtonTooltip));
+			this.addRenderableWidget(new RecipeSelectButton(x + 145, y + 7, pos, 1, this.tile.getRecipeStorage(), this::onSelectButtonTooltip));
+			this.addRenderableWidget(new RecipeSelectButton(x + 158, y + 7, pos, 2, this.tile.getRecipeStorage(), this::onSelectButtonTooltip));
 
-			this.addRenderableWidget(new EnergyBarWidget(x + 7, y + 59, this.tile.getEnergy(), this));
-		}
-	}
-
-	@Override
-	protected void renderTooltip(PoseStack stack, int mouseX, int mouseY) {
-		int x = this.getGuiLeft();
-		int y = this.getGuiTop();
-
-		super.renderTooltip(stack, mouseX, mouseY);
-
-		if (mouseX > x + 226 && mouseX < x + 239 && mouseY > y + 113 && mouseY < y + 129) {
-			this.renderTooltip(stack, ModTooltips.TOGGLE_AUTO_CRAFTING.color(ChatFormatting.WHITE).build(), mouseX, mouseY);
+			this.addRenderableWidget(new EnergyBarWidget(x + 7, y + 17, this.tile.getEnergy(), this));
 		}
 	}
 
@@ -66,8 +51,8 @@ public class UltimateAutoTableScreen extends BaseContainerScreen<UltimateAutoTab
 	protected void renderLabels(PoseStack stack, int mouseX, int mouseY) {
 		var title = this.getTitle().getString();
 
-		this.font.draw(stack, title, 26.0F, 6.0F, 4210752);
-		this.font.draw(stack, this.playerInventoryTitle, 47.0F, this.imageHeight - 94.0F, 4210752);
+		this.font.draw(stack, title, 32.0F, 6.0F, 4210752);
+		this.font.draw(stack, this.playerInventoryTitle, 8.0F, this.imageHeight - 94.0F, 4210752);
 	}
 
 	@Override
@@ -77,26 +62,26 @@ public class UltimateAutoTableScreen extends BaseContainerScreen<UltimateAutoTab
 		int x = this.getGuiLeft();
 		int y = this.getGuiTop();
 
-		if (this.isRunning()) {
+		if (this.getProgress() > 0) {
 			int i2 = this.getProgressBarScaled();
-			blit(stack, x + 225, y + 113, 272, 0, 13, i2, 512, 512);
+			this.blit(stack, x + 89, y + 36, 194, 0, i2 + 1, 16);
 		}
 
 		var recipe = this.getSelectedRecipe();
 
 		if (recipe != null) {
-			for (int i = 0; i < 9; i++) {
-				for (int j = 0; j < 9; j++) {
-					int index = (i * 9) + j;
+			for (int i = 0; i < 3; i++) {
+				for (int j = 0; j < 3; j++) {
+					int index = (i * 3) + j;
 					var item = recipe.getStackInSlot(index);
 
-					GhostItemRenderer.renderItemIntoGui(item, x + 27 + (j * 18), y + 18 + (i * 18), this.itemRenderer);
+					GhostItemRenderer.renderItemIntoGui(item, x + 33 + (j * 18), y + 30 + (i * 18), this.itemRenderer);
 				}
 			}
 
 			var output = recipe.getStackInSlot(recipe.getSlots() - 1);
 
-			GhostItemRenderer.renderItemIntoGui(output, x + 225, y + 89, this.itemRenderer);
+			GhostItemRenderer.renderItemIntoGui(output, x + 129, y + 34, this.itemRenderer);
 		}
 	}
 
@@ -136,24 +121,17 @@ public class UltimateAutoTableScreen extends BaseContainerScreen<UltimateAutoTab
 		}
 	}
 
-	private AutoTableTileEntity getTileEntity() {
+	private AutoEnderCrafterTileEntity getTileEntity() {
 		var level = this.getMinecraft().level;
 
 		if (level != null) {
 			var tile = level.getBlockEntity(this.getMenu().getPos());
 
-			if (tile instanceof AutoTableTileEntity table)
-				return table;
+			if (tile instanceof AutoEnderCrafterTileEntity crafter)
+				return crafter;
 		}
 
 		return null;
-	}
-
-	private boolean isRunning() {
-		if (this.tile == null)
-			return false;
-
-		return this.tile.isRunning();
 	}
 
 	private BaseItemStackHandler getRecipeInfo(int selected) {
@@ -186,7 +164,7 @@ public class UltimateAutoTableScreen extends BaseContainerScreen<UltimateAutoTab
 
 	private int getProgressBarScaled() {
 		int i = this.getProgress();
-		int j = this.getProgressRequired();
-		return j != 0 && i != 0 ? i * 16 / j : 0;
+		int j = Math.max(this.getProgressRequired(), i);
+		return j != 0 && i != 0 ? i * 24 / j : 0;
 	}
 }

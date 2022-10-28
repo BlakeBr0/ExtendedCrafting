@@ -20,7 +20,9 @@
     "extendedcrafting:compressor",
     "extendedcrafting:ender_alternator",
     "extendedcrafting:ender_crafter",
+    "extendedcrafting:auto_ender_crafter",
     "extendedcrafting:flux_alternator",
-    "extendedcrafting:flux_crafter"
+    "extendedcrafting:flux_crafter",
+    "extendedcrafting:auto_flux_crafter"
   ]
 }

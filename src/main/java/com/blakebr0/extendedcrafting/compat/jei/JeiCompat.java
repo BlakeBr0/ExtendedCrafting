@@ -5,6 +5,7 @@ import com.blakebr0.extendedcrafting.ExtendedCrafting;
 import com.blakebr0.extendedcrafting.client.screen.AdvancedAutoTableScreen;
 import com.blakebr0.extendedcrafting.client.screen.AdvancedTableScreen;
 import com.blakebr0.extendedcrafting.client.screen.AutoEnderCrafterScreen;
+import com.blakebr0.extendedcrafting.client.screen.AutoFluxCrafterScreen;
 import com.blakebr0.extendedcrafting.client.screen.BasicAutoTableScreen;
 import com.blakebr0.extendedcrafting.client.screen.BasicTableScreen;
 import com.blakebr0.extendedcrafting.client.screen.CompressorScreen;
@@ -27,6 +28,7 @@ import com.blakebr0.extendedcrafting.config.ModConfigs;
 import com.blakebr0.extendedcrafting.container.AdvancedAutoTableContainer;
 import com.blakebr0.extendedcrafting.container.AdvancedTableContainer;
 import com.blakebr0.extendedcrafting.container.AutoEnderCrafterContainer;
+import com.blakebr0.extendedcrafting.container.AutoFluxCrafterContainer;
 import com.blakebr0.extendedcrafting.container.BasicAutoTableContainer;
 import com.blakebr0.extendedcrafting.container.BasicTableContainer;
 import com.blakebr0.extendedcrafting.container.EliteAutoTableContainer;
@@ -185,6 +187,11 @@ public final class JeiCompat implements IModPlugin {
 
 		if (ModConfigs.ENABLE_FLUX_CRAFTER.get()) {
 			registration.addRecipeCatalyst(new ItemStack(ModBlocks.FLUX_CRAFTER.get()), FluxCraftingCategory.RECIPE_TYPE);
+
+			if (ModConfigs.ENABLE_AUTO_FLUX_CRAFTER.get()) {
+				registration.addRecipeCatalyst(new ItemStack(ModBlocks.AUTO_FLUX_CRAFTER.get()), FluxCraftingCategory.RECIPE_TYPE);
+			}
+
 			registration.addRecipeCatalyst(new ItemStack(ModBlocks.FLUX_ALTERNATOR.get()), FluxCraftingCategory.RECIPE_TYPE);
 		}
 	}
@@ -223,6 +230,10 @@ public final class JeiCompat implements IModPlugin {
 
 		if (ModConfigs.ENABLE_FLUX_CRAFTER.get()) {
 			registration.addRecipeTransferHandler(FluxCrafterContainer.class, ModContainerTypes.FLUX_CRAFTER.get(), FluxCraftingCategory.RECIPE_TYPE, 1, 9, 10, 36);
+
+			if (ModConfigs.ENABLE_AUTO_FLUX_CRAFTER.get()) {
+				registration.addRecipeTransferHandler(AutoFluxCrafterContainer.class, ModContainerTypes.AUTO_FLUX_CRAFTER.get(), FluxCraftingCategory.RECIPE_TYPE, 1, 9, 10, 36);
+			}
 		}
 	}
 
@@ -260,6 +271,10 @@ public final class JeiCompat implements IModPlugin {
 
 		if (ModConfigs.ENABLE_FLUX_CRAFTER.get()) {
 			registration.addRecipeClickArea(FluxCrafterScreen.class, 90, 36, 21, 14, FluxCraftingCategory.RECIPE_TYPE);
+
+			if (ModConfigs.ENABLE_AUTO_FLUX_CRAFTER.get()) {
+				registration.addRecipeClickArea(AutoFluxCrafterScreen.class, 95, 48, 21, 14, FluxCraftingCategory.RECIPE_TYPE);
+			}
 		}
 	}
 

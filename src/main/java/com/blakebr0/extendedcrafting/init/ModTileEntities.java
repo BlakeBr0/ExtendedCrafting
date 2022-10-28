@@ -7,6 +7,7 @@ import com.blakebr0.extendedcrafting.client.tesr.PedestalRenderer;
 import com.blakebr0.extendedcrafting.client.tesr.TheUltimateBlockRenderer;
 import com.blakebr0.extendedcrafting.tileentity.AdvancedTableTileEntity;
 import com.blakebr0.extendedcrafting.tileentity.AutoEnderCrafterTileEntity;
+import com.blakebr0.extendedcrafting.tileentity.AutoFluxCrafterTileEntity;
 import com.blakebr0.extendedcrafting.tileentity.AutoTableTileEntity;
 import com.blakebr0.extendedcrafting.tileentity.BasicTableTileEntity;
 import com.blakebr0.extendedcrafting.tileentity.CompressorTileEntity;
@@ -49,6 +50,7 @@ public final class ModTileEntities {
 	public static final RegistryObject<BlockEntityType<AutoEnderCrafterTileEntity>> AUTO_ENDER_CRAFTER = register("auto_ender_crafter", AutoEnderCrafterTileEntity::new, () -> new Block[] { ModBlocks.AUTO_ENDER_CRAFTER.get() });
 	public static final RegistryObject<BlockEntityType<FluxAlternatorTileEntity>> FLUX_ALTERNATOR = register("flux_alternator", FluxAlternatorTileEntity::new, () -> new Block[] { ModBlocks.FLUX_ALTERNATOR.get() });
 	public static final RegistryObject<BlockEntityType<FluxCrafterTileEntity>> FLUX_CRAFTER = register("flux_crafter", FluxCrafterTileEntity::new, () -> new Block[] { ModBlocks.FLUX_CRAFTER.get() });
+	public static final RegistryObject<BlockEntityType<AutoFluxCrafterTileEntity>> AUTO_FLUX_CRAFTER = register("auto_flux_crafter", AutoFluxCrafterTileEntity::new, () -> new Block[] { ModBlocks.AUTO_FLUX_CRAFTER.get() });
 
 	@OnlyIn(Dist.CLIENT)
 	public static void onClientSetup() {

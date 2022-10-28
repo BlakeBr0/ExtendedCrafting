@@ -6,6 +6,7 @@ import com.blakebr0.extendedcrafting.ExtendedCrafting;
 import com.blakebr0.extendedcrafting.block.AdvancedAutoTableBlock;
 import com.blakebr0.extendedcrafting.block.AdvancedTableBlock;
 import com.blakebr0.extendedcrafting.block.AutoEnderCrafterBlock;
+import com.blakebr0.extendedcrafting.block.AutoFluxCrafterBlock;
 import com.blakebr0.extendedcrafting.block.BasicAutoTableBlock;
 import com.blakebr0.extendedcrafting.block.BasicTableBlock;
 import com.blakebr0.extendedcrafting.block.CompressorBlock;
@@ -70,6 +71,7 @@ public final class ModBlocks {
 	public static final RegistryObject<Block> AUTO_ENDER_CRAFTER = register("auto_ender_crafter", AutoEnderCrafterBlock::new);
 	public static final RegistryObject<Block> FLUX_ALTERNATOR = register("flux_alternator", FluxAlternatorBlock::new);
 	public static final RegistryObject<Block> FLUX_CRAFTER = register("flux_crafter", FluxCrafterBlock::new);
+	public static final RegistryObject<Block> AUTO_FLUX_CRAFTER = register("auto_flux_crafter", AutoFluxCrafterBlock::new);
 
 	private static RegistryObject<Block> register(String name, Supplier<Block> block) {
 		return register(name, block, b -> () -> new BaseBlockItem(b.get(), p -> p.tab(CREATIVE_TAB)));

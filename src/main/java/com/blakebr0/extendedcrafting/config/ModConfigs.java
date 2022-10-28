@@ -46,8 +46,11 @@ public final class ModConfigs {
 	public static final ForgeConfigSpec.IntValue AUTO_ENDER_CRAFTER_INSERT_POWER_RATE;
 
 	public static final ForgeConfigSpec.BooleanValue ENABLE_FLUX_CRAFTER;
+	public static final ForgeConfigSpec.BooleanValue ENABLE_AUTO_FLUX_CRAFTER;
 	public static final ForgeConfigSpec.IntValue FLUX_CRAFTER_POWER_RATE;
 	public static final ForgeConfigSpec.IntValue FLUX_ALTERNATOR_POWER_CAPACITY;
+	public static final ForgeConfigSpec.IntValue AUTO_FLUX_CRAFTER_POWER_CAPACITY;
+	public static final ForgeConfigSpec.IntValue AUTO_FLUX_CRAFTER_INSERT_POWER_RATE;
 
 	public static final ForgeConfigSpec.BooleanValue ENABLE_SINGULARITIES;
 	public static final ForgeConfigSpec.IntValue SINGULARITY_MATERIALS_REQUIRED;
@@ -140,12 +143,21 @@ public final class ModConfigs {
 		ENABLE_FLUX_CRAFTER = common
 				.comment("Should the Flux Crafter be enabled?")
                 .define("enabled", true);
+		ENABLE_AUTO_FLUX_CRAFTER = common
+				.comment("Should the Auto Flux Crafter be enabled?")
+				.define("autoCrafterEnabled", true);
 		FLUX_CRAFTER_POWER_RATE = common
 				.comment("How much FE/t the Flux Crafter should pull from each Flux Alternator when crafting by default.")
 				.defineInRange("defaultPowerRate", 400, 0, Integer.MAX_VALUE);
 		FLUX_ALTERNATOR_POWER_CAPACITY = common
 				.comment("How much FE the Flux Alternator should hold.")
                 .defineInRange("powerCapacity", 80000, 0, Integer.MAX_VALUE);
+		AUTO_FLUX_CRAFTER_POWER_CAPACITY = common
+				.comment("How much FE the Auto Flux Crafter should hold.")
+				.defineInRange("autoCrafterPowerCapacity", 500000, 0, Integer.MAX_VALUE);
+		AUTO_FLUX_CRAFTER_INSERT_POWER_RATE = common
+				.comment("How much FE the Auto Flux Crafter should use when auto inserting items.")
+				.defineInRange("autoCrafterInsertPowerRate", 100, 0, Integer.MAX_VALUE);
 		common.pop();
 
 		common.comment("Settings for Singularities.").push("Singularities");

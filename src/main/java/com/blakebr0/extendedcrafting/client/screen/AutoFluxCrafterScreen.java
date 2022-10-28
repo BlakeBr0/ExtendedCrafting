@@ -6,9 +6,9 @@ import com.blakebr0.cucumber.client.screen.widget.EnergyBarWidget;
 import com.blakebr0.cucumber.inventory.BaseItemStackHandler;
 import com.blakebr0.extendedcrafting.ExtendedCrafting;
 import com.blakebr0.extendedcrafting.client.screen.button.RecipeSelectButton;
-import com.blakebr0.extendedcrafting.container.AutoEnderCrafterContainer;
+import com.blakebr0.extendedcrafting.container.AutoFluxCrafterContainer;
 import com.blakebr0.extendedcrafting.lib.ModTooltips;
-import com.blakebr0.extendedcrafting.tileentity.AutoEnderCrafterTileEntity;
+import com.blakebr0.extendedcrafting.tileentity.AutoFluxCrafterTileEntity;
 import com.google.common.collect.Lists;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.ChatFormatting;
@@ -20,11 +20,11 @@ import net.minecraft.world.item.ItemStack;
 
 import java.util.List;
 
-public class AutoEnderCrafterScreen extends BaseContainerScreen<AutoEnderCrafterContainer> {
-	private static final ResourceLocation BACKGROUND = new ResourceLocation(ExtendedCrafting.MOD_ID, "textures/gui/auto_ender_crafter.png");
-	private AutoEnderCrafterTileEntity tile;
+public class AutoFluxCrafterScreen extends BaseContainerScreen<AutoFluxCrafterContainer> {
+	private static final ResourceLocation BACKGROUND = new ResourceLocation(ExtendedCrafting.MOD_ID, "textures/gui/auto_flux_crafter.png");
+	private AutoFluxCrafterTileEntity tile;
 
-	public AutoEnderCrafterScreen(AutoEnderCrafterContainer container, Inventory inventory, Component title) {
+	public AutoFluxCrafterScreen(AutoFluxCrafterContainer container, Inventory inventory, Component title) {
 		super(container, inventory, title, BACKGROUND, 176, 194);
 	}
 
@@ -121,13 +121,13 @@ public class AutoEnderCrafterScreen extends BaseContainerScreen<AutoEnderCrafter
 		}
 	}
 
-	private AutoEnderCrafterTileEntity getTileEntity() {
+	private AutoFluxCrafterTileEntity getTileEntity() {
 		var level = this.getMinecraft().level;
 
 		if (level != null) {
 			var tile = level.getBlockEntity(this.getMenu().getPos());
 
-			if (tile instanceof AutoEnderCrafterTileEntity crafter)
+			if (tile instanceof AutoFluxCrafterTileEntity crafter)
 				return crafter;
 		}
 

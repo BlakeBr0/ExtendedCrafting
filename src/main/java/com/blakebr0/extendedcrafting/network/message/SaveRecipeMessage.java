@@ -2,6 +2,7 @@ package com.blakebr0.extendedcrafting.network.message;
 
 import com.blakebr0.cucumber.network.message.Message;
 import com.blakebr0.extendedcrafting.tileentity.AutoEnderCrafterTileEntity;
+import com.blakebr0.extendedcrafting.tileentity.AutoFluxCrafterTileEntity;
 import com.blakebr0.extendedcrafting.tileentity.AutoTableTileEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
@@ -52,6 +53,14 @@ public class SaveRecipeMessage extends Message<SaveRecipeMessage> {
                 }
 
                 if (tile instanceof AutoEnderCrafterTileEntity crafter) {
+                    if (!crafter.getRecipeStorage().hasRecipe(message.selected)) {
+                        crafter.saveRecipe(message.selected);
+                    } else {
+                        crafter.deleteRecipe(message.selected);
+                    }
+                }
+
+                if (tile instanceof AutoFluxCrafterTileEntity crafter) {
                     if (!crafter.getRecipeStorage().hasRecipe(message.selected)) {
                         crafter.saveRecipe(message.selected);
                     } else {

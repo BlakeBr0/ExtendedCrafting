@@ -3,7 +3,7 @@ package com.blakebr0.extendedcrafting.tileentity;
 import com.blakebr0.cucumber.helper.StackHelper;
 import com.blakebr0.cucumber.inventory.BaseItemStackHandler;
 import com.blakebr0.extendedcrafting.config.ModConfigs;
-import com.blakebr0.extendedcrafting.container.AutoEnderCrafterContainer;
+import com.blakebr0.extendedcrafting.container.AutoFluxCrafterContainer;
 import com.blakebr0.extendedcrafting.crafting.TableRecipeStorage;
 import com.blakebr0.extendedcrafting.init.ModRecipeTypes;
 import com.blakebr0.extendedcrafting.init.ModTileEntities;
@@ -24,14 +24,14 @@ import net.minecraftforge.energy.EnergyStorage;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 
-public class AutoEnderCrafterTileEntity extends EnderCrafterTileEntity implements MenuProvider {
+public class AutoFluxCrafterTileEntity extends FluxCrafterTileEntity implements MenuProvider {
     private final EnergyStorage energy;
     private final TableRecipeStorage recipeStorage;
     private int oldEnergy;
 
-    public AutoEnderCrafterTileEntity(BlockPos pos, BlockState state) {
-        super(ModTileEntities.AUTO_ENDER_CRAFTER.get(), pos, state);
-        this.energy = new EnergyStorage(ModConfigs.AUTO_ENDER_CRAFTER_POWER_CAPACITY.get());
+    public AutoFluxCrafterTileEntity(BlockPos pos, BlockState state) {
+        super(ModTileEntities.AUTO_FLUX_CRAFTER.get(), pos, state);
+        this.energy = new EnergyStorage(ModConfigs.AUTO_FLUX_CRAFTER_POWER_CAPACITY.get());
         this.recipeStorage = new TableRecipeStorage(10);
     }
 
@@ -51,7 +51,7 @@ public class AutoEnderCrafterTileEntity extends EnderCrafterTileEntity implement
 
     @Override
     public AbstractContainerMenu createMenu(int windowId, Inventory playerInventory, Player player) {
-        return AutoEnderCrafterContainer.create(windowId, playerInventory, this::isUsableByPlayer, this.getInventory(), this.getBlockPos());
+        return AutoFluxCrafterContainer.create(windowId, playerInventory, this::isUsableByPlayer, this.getInventory(), this.getBlockPos());
     }
 
     @Override
@@ -63,10 +63,10 @@ public class AutoEnderCrafterTileEntity extends EnderCrafterTileEntity implement
         return super.getCapability(cap, side);
     }
 
-    public static void tick(Level level, BlockPos pos, BlockState state, AutoEnderCrafterTileEntity tile) {
-        EnderCrafterTileEntity.tick(level, pos, state, tile);
+    public static void tick(Level level, BlockPos pos, BlockState state, AutoFluxCrafterTileEntity tile) {
+        FluxCrafterTileEntity.tick(level, pos, state, tile);
 
-        int insertPowerRate = ModConfigs.AUTO_ENDER_CRAFTER_INSERT_POWER_RATE.get();
+        int insertPowerRate = ModConfigs.AUTO_FLUX_CRAFTER_INSERT_POWER_RATE.get();
         if (!level.isClientSide() && tile.getEnergy().getEnergyStored() >= insertPowerRate) {
             int selected = tile.getRecipeStorage().getSelected();
             if (selected != -1) {
@@ -114,7 +114,7 @@ public class AutoEnderCrafterTileEntity extends EnderCrafterTileEntity implement
         }
 
         var result = ItemStack.EMPTY;
-        var recipe = level.getRecipeManager().getRecipeFor(ModRecipeTypes.ENDER_CRAFTER.get(), recipeIInventory, level).orElse(null);
+        var recipe = level.getRecipeManager().getRecipeFor(ModRecipeTypes.FLUX_CRAFTER.get(), recipeIInventory, level).orElse(null);
 
         if (recipe != null) {
             result = recipe.assemble(recipeIInventory);
@@ -202,7 +202,7 @@ public class AutoEnderCrafterTileEntity extends EnderCrafterTileEntity implement
         this.isGridChanged = isGridChanged;
 
 		if (slotToPut > -1) {
-		    int insertPowerRate = ModConfigs.AUTO_ENDER_CRAFTER_INSERT_POWER_RATE.get();
+		    int insertPowerRate = ModConfigs.AUTO_FLUX_CRAFTER_INSERT_POWER_RATE.get();
             var toInsert = StackHelper.withSize(input, 1, false);
 
             this.addStackToSlot(toInsert, slotToPut);

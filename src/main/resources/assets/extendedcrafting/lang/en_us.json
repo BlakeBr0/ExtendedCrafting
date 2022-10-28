@@ -29,6 +29,7 @@
   "block.extendedcrafting.auto_ender_crafter": "Auto Ender Crafter",
   "block.extendedcrafting.flux_alternator": "Flux Alternator",
   "block.extendedcrafting.flux_crafter": "Flux Crafter",
+  "block.extendedcrafting.auto_flux_crafter": "Auto Flux Crafter",
 
   "item.extendedcrafting.luminessence": "Luminessence",
   "item.extendedcrafting.black_iron_ingot": "Black Iron Ingot",

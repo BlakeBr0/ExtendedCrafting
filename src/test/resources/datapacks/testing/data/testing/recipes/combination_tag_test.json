@@ -1,0 +1,36 @@
+{
+  "type": "extendedcrafting:combination",
+  "powerCost": 400000,
+  "input": {
+    "item": "minecraft:apple"
+  },
+  "ingredients": [
+    {
+      "tag": "forge:ores/diamond"
+    },
+    {
+      "tag": "forge:ores/diamond"
+    },
+    {
+      "tag": "forge:ores/diamond"
+    },
+    {
+      "tag": "forge:ores/diamond"
+    },
+    {
+      "tag": "forge:ores/diamond"
+    },
+    {
+      "tag": "forge:ores/diamond"
+    },
+    {
+      "tag": "forge:ores/diamond"
+    },
+    {
+      "tag": "forge:ores/diamond"
+    }
+  ],
+  "result": {
+    "item": "minecraft:dirt"
+  }
+}

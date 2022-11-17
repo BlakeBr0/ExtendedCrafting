@@ -1,0 +1,15 @@
+{
+  "type": "extendedcrafting:shapeless_table",
+  "tier": 3,
+  "ingredients": [
+    {
+      "item": "minecraft:coal"
+    },
+    {
+      "item": "minecraft:coal"
+    }
+  ],
+  "result": {
+    "item": "minecraft:apple"
+  }
+}

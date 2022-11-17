@@ -1,0 +1,14 @@
+{
+  "type": "extendedcrafting:shapeless_table",
+  "ingredients": [
+    {
+      "item": "minecraft:coal"
+    },
+    {
+      "item": "minecraft:coal"
+    }
+  ],
+  "result": {
+    "item": "minecraft:apple"
+  }
+}

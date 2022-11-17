@@ -1,0 +1,14 @@
+{
+  "type": "extendedcrafting:compressor",
+  "powerCost": 100000,
+  "inputCount": 1,
+  "ingredient": {
+    "item": "minecraft:dirt"
+  },
+  "catalyst": {
+    "item": "minecraft:gold_ingot"
+  },
+  "result": {
+    "item": "minecraft:dirt"
+  }
+}

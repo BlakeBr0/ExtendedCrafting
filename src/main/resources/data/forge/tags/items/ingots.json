@@ -1,0 +1,12 @@
+{
+  "replace": false,
+  "values": [
+    "#forge:ingots/black_iron",
+    "#forge:ingots/crystaltine",
+    "#forge:ingots/ender_ingot",
+    "#forge:ingots/enhanced_ender_ingot",
+    "#forge:ingots/enhanced_redstone_ingot",
+    "#forge:ingots/redstone_ingot",
+    "#forge:ingots/the_ultimate"
+  ]
+}

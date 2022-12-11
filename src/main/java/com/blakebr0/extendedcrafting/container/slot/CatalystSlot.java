@@ -27,6 +27,6 @@ public class CatalystSlot extends SingleSlot {
 
     @Override
     public ItemStack remove(int amount) {
-        return this.inventory.extractItemSuper(this.index, amount, false);
+        return this.inventory.extractItem(this.index, amount, false);
     }
 }

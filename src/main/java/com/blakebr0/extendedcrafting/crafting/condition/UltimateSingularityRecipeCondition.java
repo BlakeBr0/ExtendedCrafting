@@ -23,9 +23,7 @@ public class UltimateSingularityRecipeCondition implements ICondition {
     public static class Serializer implements IConditionSerializer<UltimateSingularityRecipeCondition> {
         public static final UltimateSingularityRecipeCondition.Serializer INSTANCE = new UltimateSingularityRecipeCondition.Serializer();
 
-        public void write(JsonObject json, UltimateSingularityRecipeCondition value) {
-
-        }
+        public void write(JsonObject json, UltimateSingularityRecipeCondition value) { }
 
         public UltimateSingularityRecipeCondition read(JsonObject json) {
             return new UltimateSingularityRecipeCondition();

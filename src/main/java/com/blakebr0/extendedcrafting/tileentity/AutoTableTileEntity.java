@@ -14,6 +14,7 @@ import com.blakebr0.extendedcrafting.container.inventory.ExtendedCraftingInvento
 import com.blakebr0.extendedcrafting.crafting.TableRecipeStorage;
 import com.blakebr0.extendedcrafting.init.ModRecipeTypes;
 import com.blakebr0.extendedcrafting.init.ModTileEntities;
+import com.blakebr0.extendedcrafting.util.EmptyContainer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
@@ -28,34 +29,20 @@ import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.inventory.SimpleContainerData;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.CraftingRecipe;
-import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.EnergyStorage;
-import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
 public abstract class AutoTableTileEntity extends BaseInventoryTileEntity implements MenuProvider {
-    private static final AbstractContainerMenu EMPTY_CONTAINER = new AbstractContainerMenu(null, -1) {
-        @Override
-        public ItemStack quickMoveStack(Player player, int slot) {
-            return ItemStack.EMPTY;
-        }
-
-        @Override
-        public boolean stillValid(Player player) {
-            return false;
-        }
-    };
-
     private WrappedRecipe recipe;
     private int progress;
     private boolean running = true;
@@ -86,8 +73,8 @@ public abstract class AutoTableTileEntity extends BaseInventoryTileEntity implem
 
     @Override
     public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
-        if (!this.isRemoved() && cap == CapabilityEnergy.ENERGY) {
-            return CapabilityEnergy.ENERGY.orEmpty(cap, LazyOptional.of(this::getEnergy));
+        if (!this.isRemoved() && cap == ForgeCapabilities.ENERGY) {
+            return ForgeCapabilities.ENERGY.orEmpty(cap, LazyOptional.of(this::getEnergy));
         }
 
         return super.getCapability(cap, side);
@@ -108,7 +95,7 @@ public abstract class AutoTableTileEntity extends BaseInventoryTileEntity implem
                 tile.recipe = recipe != null ? new WrappedRecipe(recipe) : null;
 
                 if (tile.recipe == null && ModConfigs.TABLE_USE_VANILLA_RECIPES.get() && tile instanceof Basic) {
-                    var craftingInventory = new ExtendedCraftingInventory(EMPTY_CONTAINER, tile.getRecipeInventory(), 3);
+                    var craftingInventory = new ExtendedCraftingInventory(EmptyContainer.INSTANCE, tile.getRecipeInventory(), 3);
                     var vanilla = level.getRecipeManager().getRecipeFor(RecipeType.CRAFTING, craftingInventory, level).orElse(null);
 
                     tile.recipe = vanilla != null ? new WrappedRecipe(vanilla, craftingInventory) : null;
@@ -136,7 +123,7 @@ public abstract class AutoTableTileEntity extends BaseInventoryTileEntity implem
                                 if (!remaining.get(i).isEmpty()) {
                                     inventory.setStackInSlot(i, remaining.get(i));
                                 } else {
-                                    inventory.extractItemSuper(i, 1, false);
+                                    inventory.setStackInSlot(i, StackHelper.shrink(inventory.getStackInSlot(i), 1, false));
                                 }
                             }
 
@@ -220,7 +207,7 @@ public abstract class AutoTableTileEntity extends BaseInventoryTileEntity implem
 
         var recipeInventory = this.getRecipeInventory();
         var recipeIInventory = recipeInventory.toIInventory();
-        var newRecipeInventory = new BaseItemStackHandler(recipeInventory.getSlots());
+        var newRecipeInventory = BaseItemStackHandler.create(recipeInventory.getSlots());
 
         for (int i = 0; i < recipeInventory.getSlots(); i++) {
             newRecipeInventory.setStackInSlot(i, recipeInventory.getStackInSlot(i).copy());
@@ -232,7 +219,7 @@ public abstract class AutoTableTileEntity extends BaseInventoryTileEntity implem
         if (recipe != null) {
             result = recipe.assemble(recipeIInventory);
         } else {
-            var craftingInventory = new ExtendedCraftingInventory(EMPTY_CONTAINER, recipeInventory, 3);
+            var craftingInventory = new ExtendedCraftingInventory(EmptyContainer.INSTANCE, recipeInventory, 3);
             var vanilla = level.getRecipeManager().getRecipeFor(RecipeType.CRAFTING, craftingInventory, level).orElse(null);
 
             if (vanilla != null) {
@@ -303,7 +290,7 @@ public abstract class AutoTableTileEntity extends BaseInventoryTileEntity implem
             var tile = level.getBlockEntity(pos);
 
             if (tile != null) {
-                return tile.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, Direction.DOWN);
+                return tile.getCapability(ForgeCapabilities.ITEM_HANDLER, Direction.DOWN);
             }
         }
 
@@ -389,7 +376,7 @@ public abstract class AutoTableTileEntity extends BaseInventoryTileEntity implem
         public Basic(BlockPos pos, BlockState state) {
             super(ModTileEntities.BASIC_AUTO_TABLE.get(), pos, state);
             this.inventory = createInventoryHandler(this::onContentsChanged);
-            this.recipeInventory = new BaseItemStackHandler(9);
+            this.recipeInventory = BaseItemStackHandler.create(9);
             this.recipeStorage = new TableRecipeStorage(10);
             this.energy = new EnergyStorage(ModConfigs.AUTO_TABLE_POWER_CAPACITY.get());
         }
@@ -430,12 +417,10 @@ public abstract class AutoTableTileEntity extends BaseInventoryTileEntity implem
         }
 
         public static BaseItemStackHandler createInventoryHandler(Runnable onContentsChanged) {
-            var inventory = new BaseItemStackHandler(10, onContentsChanged);
-
-            inventory.setOutputSlots(9);
-            inventory.setSlotValidator((slot, stack) -> false);
-
-            return inventory;
+            return BaseItemStackHandler.create(10, onContentsChanged, builder -> {
+                builder.setOutputSlots(9);
+                builder.setCanInsert((slot, stack) -> false);
+            });
         }
     }
 
@@ -448,7 +433,7 @@ public abstract class AutoTableTileEntity extends BaseInventoryTileEntity implem
         public Advanced(BlockPos pos, BlockState state) {
             super(ModTileEntities.ADVANCED_AUTO_TABLE.get(), pos, state);
             this.inventory = createInventoryHandler(this::onContentsChanged);
-            this.recipeInventory = new BaseItemStackHandler(25);
+            this.recipeInventory = BaseItemStackHandler.create(25);
             this.recipeStorage = new TableRecipeStorage(26);
             this.energy = new EnergyStorage(ModConfigs.AUTO_TABLE_POWER_CAPACITY.get() * 2);
         }
@@ -489,12 +474,10 @@ public abstract class AutoTableTileEntity extends BaseInventoryTileEntity implem
         }
 
         public static BaseItemStackHandler createInventoryHandler(Runnable onContentsChanged) {
-            var inventory = new BaseItemStackHandler(26, onContentsChanged);
-
-            inventory.setOutputSlots(25);
-            inventory.setSlotValidator((slot, stack) -> false);
-
-            return inventory;
+            return BaseItemStackHandler.create(26, onContentsChanged, builder -> {
+                builder.setOutputSlots(25);
+                builder.setCanInsert((slot, stack) -> false);
+            });
         }
     }
 
@@ -507,7 +490,7 @@ public abstract class AutoTableTileEntity extends BaseInventoryTileEntity implem
         public Elite(BlockPos pos, BlockState state) {
             super(ModTileEntities.ELITE_AUTO_TABLE.get(), pos, state);
             this.inventory = createInventoryHandler(this::onContentsChanged);
-            this.recipeInventory = new BaseItemStackHandler(49);
+            this.recipeInventory = BaseItemStackHandler.create(49);
             this.recipeStorage = new TableRecipeStorage(50);
             this.energy = new EnergyStorage(ModConfigs.AUTO_TABLE_POWER_CAPACITY.get() * 4);
         }
@@ -548,12 +531,10 @@ public abstract class AutoTableTileEntity extends BaseInventoryTileEntity implem
         }
 
         public static BaseItemStackHandler createInventoryHandler(Runnable onContentsChanged) {
-            var inventory = new BaseItemStackHandler(50, onContentsChanged);
-
-            inventory.setOutputSlots(49);
-            inventory.setSlotValidator((slot, stack) -> false);
-
-            return inventory;
+            return BaseItemStackHandler.create(50, onContentsChanged, builder -> {
+                builder.setOutputSlots(49);
+                builder.setCanInsert((slot, stack) -> false);
+            });
         }
     }
 
@@ -566,7 +547,7 @@ public abstract class AutoTableTileEntity extends BaseInventoryTileEntity implem
         public Ultimate(BlockPos pos, BlockState state) {
             super(ModTileEntities.ULTIMATE_AUTO_TABLE.get(), pos, state);
             this.inventory = createInventoryHandler(this::onContentsChanged);
-            this.recipeInventory = new BaseItemStackHandler(81);
+            this.recipeInventory = BaseItemStackHandler.create(81);
             this.recipeStorage = new TableRecipeStorage(82);
             this.energy = new EnergyStorage(ModConfigs.AUTO_TABLE_POWER_CAPACITY.get() * 8);
         }
@@ -607,12 +588,10 @@ public abstract class AutoTableTileEntity extends BaseInventoryTileEntity implem
         }
 
         public static BaseItemStackHandler createInventoryHandler(Runnable onContentsChanged) {
-            var inventory = new BaseItemStackHandler(82, onContentsChanged);
-
-            inventory.setOutputSlots(81);
-            inventory.setSlotValidator((slot, stack) -> false);
-
-            return inventory;
+            return BaseItemStackHandler.create(82, onContentsChanged, builder -> {
+                builder.setOutputSlots(81);
+                builder.setCanInsert((slot, stack) -> false);
+            });
         }
     }
 }

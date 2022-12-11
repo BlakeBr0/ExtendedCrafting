@@ -11,7 +11,7 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
 public class EnderAlternatorBlock extends BaseBlock {
-	private static final VoxelShape ENDER_ALTERNATOR_SHAPE = new VoxelShapeBuilder()
+	private static final VoxelShape ENDER_ALTERNATOR_SHAPE = VoxelShapeBuilder.builder()
 			.cuboid(0, 0, 0, 16, 6, 16)
 			.cuboid(4, 6, 4, 12, 15, 12)
 			.cuboid(3, 15, 3, 13, 16, 13)

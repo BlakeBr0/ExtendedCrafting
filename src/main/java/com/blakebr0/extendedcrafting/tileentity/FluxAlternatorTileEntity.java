@@ -16,8 +16,8 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.EnergyStorage;
 
 public class FluxAlternatorTileEntity extends BaseTileEntity implements MenuProvider {
@@ -53,8 +53,8 @@ public class FluxAlternatorTileEntity extends BaseTileEntity implements MenuProv
 
     @Override
     public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
-        if (!this.isRemoved() && cap == CapabilityEnergy.ENERGY) {
-            return CapabilityEnergy.ENERGY.orEmpty(cap, LazyOptional.of(this::getEnergy));
+        if (!this.isRemoved() && cap == ForgeCapabilities.ENERGY) {
+            return ForgeCapabilities.ENERGY.orEmpty(cap, LazyOptional.of(this::getEnergy));
         }
 
         return super.getCapability(cap, side);

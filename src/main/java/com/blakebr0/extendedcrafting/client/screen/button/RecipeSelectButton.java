@@ -16,11 +16,11 @@ public class RecipeSelectButton extends IconButton {
     private final int index;
     private final TableRecipeStorage recipeStorage;
 
-    public RecipeSelectButton(int x, int y, BlockPos pos, int index, TableRecipeStorage recipeStorage, OnTooltip onTooltip) {
+    public RecipeSelectButton(int x, int y, BlockPos pos, int index, TableRecipeStorage recipeStorage, CreateNarration onTooltip) {
         this(x, y, pos, index, 0, recipeStorage, onTooltip);
     }
 
-    public RecipeSelectButton(int x, int y, BlockPos pos, int index, int textureY, TableRecipeStorage recipeStorage, OnTooltip onTooltip) {
+    public RecipeSelectButton(int x, int y, BlockPos pos, int index, int textureY, TableRecipeStorage recipeStorage, CreateNarration onTooltip) {
         super(x, y, 11, 11, index * 11, textureY, WIDGETS_LOCATION, button -> onPress(pos, index), onTooltip);
         this.index = index;
         this.recipeStorage = recipeStorage;

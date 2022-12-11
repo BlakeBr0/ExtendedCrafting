@@ -2,9 +2,9 @@ package com.blakebr0.extendedcrafting;
 
 import com.blakebr0.cucumber.helper.ConfigHelper;
 import com.blakebr0.extendedcrafting.client.ModelHandler;
+import com.blakebr0.extendedcrafting.client.handler.ColorHandler;
 import com.blakebr0.extendedcrafting.config.ModConfigs;
 import com.blakebr0.extendedcrafting.crafting.DynamicRecipeManager;
-import com.blakebr0.extendedcrafting.handler.ColorHandler;
 import com.blakebr0.extendedcrafting.init.ModBlocks;
 import com.blakebr0.extendedcrafting.init.ModContainerTypes;
 import com.blakebr0.extendedcrafting.init.ModCreativeModeTabs;

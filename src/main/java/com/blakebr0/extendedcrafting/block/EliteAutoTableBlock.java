@@ -32,7 +32,7 @@ import net.minecraftforge.network.NetworkHooks;
 import java.util.List;
 
 public class EliteAutoTableBlock extends BaseTileEntityBlock {
-    public static final VoxelShape ELITE_AUTO_TABLE_SHAPE = new VoxelShapeBuilder()
+    public static final VoxelShape ELITE_AUTO_TABLE_SHAPE = VoxelShapeBuilder.builder()
             .cuboid(2, 0, 2, 14, 2, 14)
             .cuboid(3, 2, 3, 5, 10, 5)
             .cuboid(11, 2, 11, 13, 10, 13)

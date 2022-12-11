@@ -24,8 +24,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.EnergyStorage;
 import net.minecraftforge.energy.IEnergyStorage;
 
@@ -49,7 +49,7 @@ public class CompressorTileEntity extends BaseInventoryTileEntity implements Men
 	public CompressorTileEntity(BlockPos pos, BlockState state) {
 		super(ModTileEntities.COMPRESSOR.get(), pos, state);
 		this.inventory = createInventoryHandler(null);
-		this.recipeInventory = new BaseItemStackHandler(2);
+		this.recipeInventory = BaseItemStackHandler.create(2);
 		this.energy = new EnergyStorage(ModConfigs.COMPRESSOR_POWER_CAPACITY.get());
 	}
 
@@ -86,8 +86,8 @@ public class CompressorTileEntity extends BaseInventoryTileEntity implements Men
 
 	@Override
 	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
-		if (!this.isRemoved() && cap == CapabilityEnergy.ENERGY) {
-			return CapabilityEnergy.ENERGY.orEmpty(cap, this.capability);
+		if (!this.isRemoved() && cap == ForgeCapabilities.ENERGY) {
+			return ForgeCapabilities.ENERGY.orEmpty(cap, this.capability);
 		}
 
 		return super.getCapability(cap, side);
@@ -200,12 +200,10 @@ public class CompressorTileEntity extends BaseInventoryTileEntity implements Men
 	}
 
 	public static BaseItemStackHandler createInventoryHandler(Runnable onContentsChanged) {
-		var inventory = new BaseItemStackHandler(3, onContentsChanged);
-
-		inventory.setOutputSlots(0);
-		inventory.setSlotValidator((slot, stack) -> slot == 1);
-
-		return inventory;
+		return BaseItemStackHandler.create(3, onContentsChanged, builder -> {
+			builder.setOutputSlots(0);
+			builder.setCanInsert((slot, stack) -> slot == 1);
+		});
 	}
 
 	public EnergyStorage getEnergy() {

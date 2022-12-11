@@ -24,7 +24,7 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
 public class PedestalBlock extends BaseTileEntityBlock {
-	public static final VoxelShape PEDESTAL_SHAPE = new VoxelShapeBuilder()
+	public static final VoxelShape PEDESTAL_SHAPE = VoxelShapeBuilder.builder()
 			.cuboid(3, 2, 3, 13, 14, 13)
 			.cuboid(1, 0, 1, 15, 2, 15)
 			.cuboid(2, 14, 2, 14, 16, 14)

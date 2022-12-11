@@ -23,7 +23,7 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.network.NetworkHooks;
 
 public class FluxAlternatorBlock extends BaseTileEntityBlock {
-	private static final VoxelShape FLUX_CRAFTER_SHAPE = new VoxelShapeBuilder()
+	private static final VoxelShape FLUX_CRAFTER_SHAPE = VoxelShapeBuilder.builder()
 			.cuboid(0, 0, 0, 16, 6, 16)
 			.cuboid(4, 6, 4, 12, 15, 12)
 			.cuboid(3, 15, 3, 13, 16, 13)

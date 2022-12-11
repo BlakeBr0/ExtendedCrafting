@@ -3,8 +3,6 @@ package com.blakebr0.extendedcrafting.container;
 import com.blakebr0.cucumber.inventory.BaseItemStackHandler;
 import com.blakebr0.cucumber.inventory.slot.OutputSlot;
 import com.blakebr0.extendedcrafting.container.inventory.ExtendedCraftingInventory;
-import com.blakebr0.extendedcrafting.container.slot.AutoTableOutputSlot;
-import com.blakebr0.extendedcrafting.container.slot.TableOutputSlot;
 import com.blakebr0.extendedcrafting.init.ModContainerTypes;
 import com.blakebr0.extendedcrafting.tileentity.EnderCrafterTileEntity;
 import net.minecraft.core.BlockPos;

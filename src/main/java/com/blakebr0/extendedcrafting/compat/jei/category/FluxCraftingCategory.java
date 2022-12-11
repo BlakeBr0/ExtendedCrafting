@@ -1,7 +1,7 @@
 package com.blakebr0.extendedcrafting.compat.jei.category;
 
+import com.blakebr0.cucumber.util.Formatting;
 import com.blakebr0.cucumber.util.Localizable;
-import com.blakebr0.cucumber.util.Utils;
 import com.blakebr0.extendedcrafting.ExtendedCrafting;
 import com.blakebr0.extendedcrafting.api.crafting.IFluxCrafterRecipe;
 import com.blakebr0.extendedcrafting.crafting.recipe.ShapedFluxCrafterRecipe;
@@ -60,8 +60,8 @@ public class FluxCraftingCategory implements IRecipeCategory<IFluxCrafterRecipe>
 	public List<Component> getTooltipStrings(IFluxCrafterRecipe recipe, IRecipeSlotsView slots, double mouseX, double mouseY) {
 		if (mouseX > 1 && mouseX < 14 && mouseY > 1 && mouseY < 78) {
 			return List.of(
-					Component.literal(Utils.format(recipe.getPowerRequired()) + " FE"),
-					ModTooltips.PER_ALTERNATOR.args(Utils.format(recipe.getPowerRate()) + " FE/t").color(ChatFormatting.WHITE).build()
+					Formatting.energy(recipe.getPowerRequired()),
+					ModTooltips.PER_ALTERNATOR.args(Formatting.energyPerTick(recipe.getPowerRate())).color(ChatFormatting.WHITE).build()
 			);
 		}
 

@@ -30,7 +30,7 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.network.NetworkHooks;
 
 public class CraftingCoreBlock extends BaseTileEntityBlock {
-	public static final VoxelShape CRAFTING_CORE_SHAPE = new VoxelShapeBuilder()
+	public static final VoxelShape CRAFTING_CORE_SHAPE = VoxelShapeBuilder.builder()
 			.cuboid(2, 0, 2, 14, 2, 14)
 			.cuboid(0, 2, 0, 16, 5, 16)
 			.cuboid(1, 5, 1, 15, 6, 15)

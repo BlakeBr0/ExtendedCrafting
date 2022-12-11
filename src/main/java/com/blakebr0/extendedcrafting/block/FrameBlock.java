@@ -11,7 +11,7 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
 public class FrameBlock extends BaseBlock {
-    private static final VoxelShape FRAME_SHAPE = new VoxelShapeBuilder()
+    private static final VoxelShape FRAME_SHAPE = VoxelShapeBuilder.builder()
             .cuboid(2, 2, 2, 14, 14, 14)
             .cuboid(0, 0, 0, 16, 3, 3)
             .cuboid(0, 13, 0, 16, 16, 3)

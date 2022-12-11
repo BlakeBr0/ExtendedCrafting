@@ -26,8 +26,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.EnergyStorage;
 
 import java.util.HashMap;
@@ -47,7 +47,7 @@ public class CraftingCoreTileEntity extends BaseInventoryTileEntity implements M
 		super(ModTileEntities.CRAFTING_CORE.get(), pos, state);
 		this.inventory = createInventoryHandler(this::markDirtyAndDispatch);
 		this.energy = new EnergyStorage(ModConfigs.CRAFTING_CORE_POWER_CAPACITY.get());
-		this.recipeInventory = new BaseItemStackHandler(49);
+		this.recipeInventory = BaseItemStackHandler.create(49);
 	}
 
 	@Override
@@ -71,8 +71,8 @@ public class CraftingCoreTileEntity extends BaseInventoryTileEntity implements M
 
 	@Override
 	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
-		if (!this.isRemoved() && cap == CapabilityEnergy.ENERGY) {
-			return CapabilityEnergy.ENERGY.orEmpty(cap, LazyOptional.of(this::getEnergy));
+		if (!this.isRemoved() && cap == ForgeCapabilities.ENERGY) {
+			return ForgeCapabilities.ENERGY.orEmpty(cap, LazyOptional.of(this::getEnergy));
 		}
 
 		return super.getCapability(cap, side);
@@ -158,11 +158,9 @@ public class CraftingCoreTileEntity extends BaseInventoryTileEntity implements M
 	}
 
 	public static BaseItemStackHandler createInventoryHandler(Runnable onContentsChanged) {
-		var inventory = new BaseItemStackHandler(1, onContentsChanged);
-
-		inventory.setDefaultSlotLimit(1);
-
-		return inventory;
+		return BaseItemStackHandler.create(1, onContentsChanged, builder -> {
+			builder.setDefaultSlotLimit(1);
+		});
 	}
 
 	public EnergyStorage getEnergy() {

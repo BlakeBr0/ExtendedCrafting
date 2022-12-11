@@ -18,10 +18,9 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.EnergyStorage;
-import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 
 public class AutoFluxCrafterTileEntity extends FluxCrafterTileEntity implements MenuProvider {
@@ -56,8 +55,8 @@ public class AutoFluxCrafterTileEntity extends FluxCrafterTileEntity implements 
 
     @Override
     public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
-        if (!this.isRemoved() && cap == CapabilityEnergy.ENERGY) {
-            return CapabilityEnergy.ENERGY.orEmpty(cap, LazyOptional.of(this::getEnergy));
+        if (!this.isRemoved() && cap == ForgeCapabilities.ENERGY) {
+            return ForgeCapabilities.ENERGY.orEmpty(cap, LazyOptional.of(this::getEnergy));
         }
 
         return super.getCapability(cap, side);
@@ -107,7 +106,7 @@ public class AutoFluxCrafterTileEntity extends FluxCrafterTileEntity implements 
 
         var recipeInventory = this.getRecipeInventory();
         var recipeIInventory = recipeInventory.toIInventory();
-        var newRecipeInventory = new BaseItemStackHandler(recipeInventory.getSlots());
+        var newRecipeInventory = BaseItemStackHandler.create(recipeInventory.getSlots());
 
         for (int i = 0; i < recipeInventory.getSlots(); i++) {
             newRecipeInventory.setStackInSlot(i, recipeInventory.getStackInSlot(i).copy());
@@ -167,7 +166,7 @@ public class AutoFluxCrafterTileEntity extends FluxCrafterTileEntity implements 
             var tile = level.getBlockEntity(pos);
 
             if (tile != null) {
-                return tile.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, Direction.DOWN);
+                return tile.getCapability(ForgeCapabilities.ITEM_HANDLER, Direction.DOWN);
             }
         }
 

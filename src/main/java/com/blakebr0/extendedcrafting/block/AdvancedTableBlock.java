@@ -1,9 +1,7 @@
 package com.blakebr0.extendedcrafting.block;
 
 import com.blakebr0.cucumber.block.BaseTileEntityBlock;
-import com.blakebr0.cucumber.iface.IEnableable;
 import com.blakebr0.cucumber.util.VoxelShapeBuilder;
-import com.blakebr0.extendedcrafting.config.ModConfigs;
 import com.blakebr0.extendedcrafting.lib.ModTooltips;
 import com.blakebr0.extendedcrafting.tileentity.AdvancedTableTileEntity;
 import net.minecraft.core.BlockPos;
@@ -29,7 +27,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import java.util.List;
 
 public class AdvancedTableBlock extends BaseTileEntityBlock {
-	public static final VoxelShape ADVANCED_TABLE_SHAPE = new VoxelShapeBuilder()
+	public static final VoxelShape ADVANCED_TABLE_SHAPE = VoxelShapeBuilder.builder()
 			.cuboid(2, 0, 2, 14, 2, 14)
 			.cuboid(3, 2, 3, 5, 10, 5)
 			.cuboid(11, 2, 11, 13, 10, 13)

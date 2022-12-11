@@ -1,7 +1,7 @@
 package com.blakebr0.extendedcrafting.compat.jei.category;
 
+import com.blakebr0.cucumber.util.Formatting;
 import com.blakebr0.cucumber.util.Localizable;
-import com.blakebr0.cucumber.util.Utils;
 import com.blakebr0.extendedcrafting.ExtendedCrafting;
 import com.blakebr0.extendedcrafting.api.crafting.ICombinationRecipe;
 import com.blakebr0.extendedcrafting.init.ModBlocks;
@@ -57,8 +57,8 @@ public class CombinationCraftingCategory implements IRecipeCategory<ICombination
 	public List<Component> getTooltipStrings(ICombinationRecipe recipe, IRecipeSlotsView slots, double mouseX, double mouseY) {
 		if (mouseX > 1 && mouseX < 14 && mouseY > 9 && mouseY < 86) {
 			return List.of(
-					Component.literal(Utils.format(recipe.getPowerCost()) + " FE"),
-					Component.literal(Utils.format(recipe.getPowerRate()) + " FE/t")
+					Formatting.energy(recipe.getPowerCost()),
+					Formatting.energyPerTick(recipe.getPowerRate())
 			);
 		}
 

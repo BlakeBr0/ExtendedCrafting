@@ -42,7 +42,7 @@ public class FluxCrafterTileEntity extends BaseInventoryTileEntity implements Me
 	public FluxCrafterTileEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
 		super(type, pos, state);
 		this.inventory = createInventoryHandler(this::onContentsChanged);
-		this.recipeInventory = new BaseItemStackHandler(9);
+		this.recipeInventory = BaseItemStackHandler.create(9);
 	}
 
 	@Override
@@ -108,7 +108,7 @@ public class FluxCrafterTileEntity extends BaseInventoryTileEntity implements Me
 
 						if (tile.progress >= tile.progressReq) {
 							for (int i = 0; i < tile.inventory.getSlots() - 1; i++) {
-								tile.inventory.extractItemSuper(i, 1, false);
+								tile.inventory.setStackInSlot(i, StackHelper.shrink(tile.inventory.getStackInSlot(i), 1, false));
 							}
 
 							tile.updateResult(result);
@@ -139,12 +139,10 @@ public class FluxCrafterTileEntity extends BaseInventoryTileEntity implements Me
 	}
 
 	public static BaseItemStackHandler createInventoryHandler(Runnable onContentsChanged) {
-		var inventory = new BaseItemStackHandler(10, onContentsChanged);
-
-		inventory.setOutputSlots(9);
-		inventory.setSlotValidator((slot, stack) -> false);
-
-		return inventory;
+		return BaseItemStackHandler.create(10, onContentsChanged, builder -> {
+			builder.setOutputSlots(9);
+			builder.setCanInsert((slot, stack) -> false);
+		});
 	}
 
 	private void updateResult(ItemStack stack) {

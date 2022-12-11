@@ -15,7 +15,7 @@ public class TableRecipeStorage {
         this.slots = slots;
 
         for (int i = 0; i < this.recipes.length; i++) {
-            this.recipes[i] = new BaseItemStackHandler(slots);
+            this.recipes[i] = BaseItemStackHandler.create(slots);
         }
     }
 
@@ -49,7 +49,7 @@ public class TableRecipeStorage {
     }
 
     public void setRecipe(int index, BaseItemStackHandler inventory, ItemStack output) {
-        var recipe = new BaseItemStackHandler(this.slots);
+        var recipe = BaseItemStackHandler.create(this.slots);
 
         for (int i = 0; i < this.slots - 1; i++) {
             recipe.setStackInSlot(i, inventory.getStackInSlot(i));
@@ -64,7 +64,7 @@ public class TableRecipeStorage {
         if (index < 0 || index >= this.recipes.length)
             return;
 
-        this.recipes[index] = new BaseItemStackHandler(this.slots);
+        this.recipes[index] = BaseItemStackHandler.create(this.slots);
 
         if (index == this.selected)
             this.selected = -1;

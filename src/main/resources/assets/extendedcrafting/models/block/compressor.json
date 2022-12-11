@@ -1,4 +1,5 @@
 {
+  "render_type": "minecraft:cutout_mipped",
   "textures": {
     "0": "extendedcrafting:block/black_iron_block",
     "1": "extendedcrafting:block/crafting_core_band",

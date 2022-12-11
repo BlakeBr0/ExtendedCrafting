@@ -1,7 +1,6 @@
 package com.blakebr0.extendedcrafting;
 
 import com.blakebr0.cucumber.helper.ConfigHelper;
-import com.blakebr0.extendedcrafting.client.ModelHandler;
 import com.blakebr0.extendedcrafting.client.handler.ColorHandler;
 import com.blakebr0.extendedcrafting.config.ModConfigs;
 import com.blakebr0.extendedcrafting.crafting.DynamicRecipeManager;
@@ -74,8 +73,6 @@ public final class ExtendedCrafting {
 
 	@SubscribeEvent
 	public void onClientSetup(FMLClientSetupEvent event) {
-		ModelHandler.onClientSetup();
-
 		ModTileEntities.onClientSetup();
 		ModContainerTypes.onClientSetup();
 	}

@@ -7,6 +7,8 @@ import net.minecraft.resources.ResourceLocation;
 
 @FeatureFlags
 public final class ModFeatureFlags {
+    public static final FeatureFlag AUTO_ENDER_CRAFTER = FeatureFlag.create(new ResourceLocation(ExtendedCrafting.MOD_ID, "auto_ender_crafter"), ModConfigs.ENABLE_AUTO_ENDER_CRAFTER);
+    public static final FeatureFlag AUTO_FLUX_CRAFTER = FeatureFlag.create(new ResourceLocation(ExtendedCrafting.MOD_ID, "auto_flux_crafter"), ModConfigs.ENABLE_AUTO_FLUX_CRAFTER);
     public static final FeatureFlag AUTO_TABLES = FeatureFlag.create(new ResourceLocation(ExtendedCrafting.MOD_ID, "auto_tables"), ModConfigs.ENABLE_AUTO_TABLES);
     public static final FeatureFlag COMPRESSOR = FeatureFlag.create(new ResourceLocation(ExtendedCrafting.MOD_ID, "compressor"), ModConfigs.ENABLE_COMPRESSOR);
     public static final FeatureFlag CRAFTING_CORE = FeatureFlag.create(new ResourceLocation(ExtendedCrafting.MOD_ID, "crafting_core"), ModConfigs.ENABLE_CRAFTING_CORE);

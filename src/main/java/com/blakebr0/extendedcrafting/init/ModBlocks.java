@@ -36,8 +36,6 @@ import java.util.Map;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-import static com.blakebr0.extendedcrafting.ExtendedCrafting.CREATIVE_TAB;
-
 public final class ModBlocks {
 	public static final DeferredRegister<Block> REGISTRY = DeferredRegister.create(ForgeRegistries.BLOCKS, ExtendedCrafting.MOD_ID);
 	public static final Map<String, Supplier<BlockItem>> BLOCK_ITEMS = new LinkedHashMap<>();
@@ -74,11 +72,11 @@ public final class ModBlocks {
 	public static final RegistryObject<Block> AUTO_FLUX_CRAFTER = register("auto_flux_crafter", AutoFluxCrafterBlock::new);
 
 	private static RegistryObject<Block> register(String name, Supplier<Block> block) {
-		return register(name, block, b -> () -> new BaseBlockItem(b.get(), p -> p.tab(CREATIVE_TAB)));
+		return register(name, block, b -> () -> new BaseBlockItem(b.get()));
 	}
 
 	private static RegistryObject<Block> register(String name, Supplier<Block> block, Rarity rarity) {
-		return register(name, block, b -> () -> new BaseBlockItem(b.get(), p -> p.tab(CREATIVE_TAB).rarity(rarity)));
+		return register(name, block, b -> () -> new BaseBlockItem(b.get(), p -> p.rarity(rarity)));
 	}
 
 	private static RegistryObject<Block> register(String name, Supplier<Block> block, Function<RegistryObject<Block>, Supplier<? extends BlockItem>> item) {

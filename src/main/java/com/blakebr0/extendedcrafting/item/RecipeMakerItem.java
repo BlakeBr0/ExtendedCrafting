@@ -1,7 +1,6 @@
 package com.blakebr0.extendedcrafting.item;
 
 import com.blakebr0.cucumber.helper.NBTHelper;
-import com.blakebr0.cucumber.iface.IEnableable;
 import com.blakebr0.cucumber.item.BaseItem;
 import com.blakebr0.cucumber.tileentity.BaseInventoryTileEntity;
 import com.blakebr0.cucumber.util.Localizable;
@@ -21,13 +20,11 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import net.minecraft.client.Minecraft;
-import net.minecraft.core.NonNullList;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.UseOnContext;
@@ -47,32 +44,14 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-import java.util.function.Function;
 
-public class RecipeMakerItem extends BaseItem implements IEnableable {
+public class RecipeMakerItem extends BaseItem {
 	private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
 	private static final String NEW_LINE = System.lineSeparator() + "\t";
 	private static final char[] KEYS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+-_*/".toCharArray();
 
-	public RecipeMakerItem(Function<Properties, Properties> properties) {
-		super(properties.compose(p -> p.stacksTo(1)));
-	}
-
-	@Override
-	public void fillItemCategory(CreativeModeTab group, NonNullList<ItemStack> items) {
-		if (this.isEnabled() && this.allowedIn(group)) {
-			var stack1 = new ItemStack(this);
-			var stack2 = new ItemStack(this);
-
-			NBTHelper.setBoolean(stack1, "Shapeless", false);
-			NBTHelper.setString(stack1, "Type", "Datapack");
-
-			NBTHelper.setBoolean(stack2, "Shapeless", false);
-			NBTHelper.setString(stack2, "Type", "CraftTweaker");
-
-			items.add(stack1);
-			items.add(stack2);
-		}
+	public RecipeMakerItem() {
+		super(p -> p.stacksTo(1));
 	}
 
 	@Override
@@ -163,11 +142,6 @@ public class RecipeMakerItem extends BaseItem implements IEnableable {
 	public void appendHoverText(ItemStack stack, Level level, List<Component> tooltip, TooltipFlag flag) {
 		tooltip.add(ModTooltips.TYPE.args(NBTHelper.getString(stack, "Type")).build());
 		tooltip.add(ModTooltips.MODE.args(getModeString(stack)).build());
-	}
-
-	@Override
-	public boolean isEnabled() {
-		return ModConfigs.ENABLE_RECIPE_MAKER.get();
 	}
 
 	private static void setClipboard(String string) {

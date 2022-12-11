@@ -1,9 +1,7 @@
 package com.blakebr0.extendedcrafting.block;
 
 import com.blakebr0.cucumber.block.BaseTileEntityBlock;
-import com.blakebr0.cucumber.iface.IEnableable;
 import com.blakebr0.cucumber.util.VoxelShapeBuilder;
-import com.blakebr0.extendedcrafting.config.ModConfigs;
 import com.blakebr0.extendedcrafting.init.ModTileEntities;
 import com.blakebr0.extendedcrafting.lib.ModTooltips;
 import com.blakebr0.extendedcrafting.tileentity.AutoTableTileEntity;
@@ -33,7 +31,7 @@ import net.minecraftforge.network.NetworkHooks;
 
 import java.util.List;
 
-public class UltimateAutoTableBlock extends BaseTileEntityBlock implements IEnableable {
+public class UltimateAutoTableBlock extends BaseTileEntityBlock {
     public static final VoxelShape ULTIMATE_AUTO_TABLE_SHAPE = new VoxelShapeBuilder()
             .cuboid(2, 0, 2, 14, 2, 14)
             .cuboid(3, 2, 3, 5, 10, 5)
@@ -88,11 +86,6 @@ public class UltimateAutoTableBlock extends BaseTileEntityBlock implements IEnab
     @Override
     public void appendHoverText(ItemStack stack, BlockGetter level, List<Component> tooltip, TooltipFlag flag) {
         tooltip.add(ModTooltips.TIER.args(4).build());
-    }
-
-    @Override
-    public boolean isEnabled() {
-        return ModConfigs.ENABLE_TABLES.get() && ModConfigs.ENABLE_AUTO_TABLES.get();
     }
 
     @Override

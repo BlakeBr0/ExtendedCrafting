@@ -1,8 +1,6 @@
 package com.blakebr0.extendedcrafting.block;
 
 import com.blakebr0.cucumber.block.BaseTileEntityBlock;
-import com.blakebr0.cucumber.iface.IEnableable;
-import com.blakebr0.extendedcrafting.config.ModConfigs;
 import com.blakebr0.extendedcrafting.init.ModTileEntities;
 import com.blakebr0.extendedcrafting.tileentity.EnderCrafterTileEntity;
 import net.minecraft.core.BlockPos;
@@ -21,7 +19,7 @@ import net.minecraft.world.level.material.Material;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.network.NetworkHooks;
 
-public class EnderCrafterBlock extends BaseTileEntityBlock implements IEnableable {
+public class EnderCrafterBlock extends BaseTileEntityBlock {
 	public EnderCrafterBlock() {
 		super(Material.METAL, SoundType.METAL, 6.0F, 12.0F, true);
 	}
@@ -55,11 +53,6 @@ public class EnderCrafterBlock extends BaseTileEntityBlock implements IEnableabl
 		}
 
 		super.onRemove(state, level, pos, newState, isMoving);
-	}
-
-	@Override
-	public boolean isEnabled() {
-		return ModConfigs.ENABLE_ENDER_CRAFTER.get();
 	}
 
 	@Override

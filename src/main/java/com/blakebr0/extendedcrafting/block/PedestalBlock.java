@@ -2,9 +2,7 @@ package com.blakebr0.extendedcrafting.block;
 
 import com.blakebr0.cucumber.block.BaseTileEntityBlock;
 import com.blakebr0.cucumber.helper.StackHelper;
-import com.blakebr0.cucumber.iface.IEnableable;
 import com.blakebr0.cucumber.util.VoxelShapeBuilder;
-import com.blakebr0.extendedcrafting.config.ModConfigs;
 import com.blakebr0.extendedcrafting.tileentity.PedestalTileEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundEvents;
@@ -25,7 +23,7 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
-public class PedestalBlock extends BaseTileEntityBlock implements IEnableable {
+public class PedestalBlock extends BaseTileEntityBlock {
 	public static final VoxelShape PEDESTAL_SHAPE = new VoxelShapeBuilder()
 			.cuboid(3, 2, 3, 13, 14, 13)
 			.cuboid(1, 0, 1, 15, 2, 15)
@@ -82,10 +80,5 @@ public class PedestalBlock extends BaseTileEntityBlock implements IEnableable {
 	@Override
 	public VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
 		return PEDESTAL_SHAPE;
-	}
-
-	@Override
-	public boolean isEnabled() {
-		return ModConfigs.ENABLE_CRAFTING_CORE.get();
 	}
 }

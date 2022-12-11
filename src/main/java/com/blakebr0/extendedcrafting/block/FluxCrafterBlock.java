@@ -1,8 +1,6 @@
 package com.blakebr0.extendedcrafting.block;
 
 import com.blakebr0.cucumber.block.BaseTileEntityBlock;
-import com.blakebr0.cucumber.iface.IEnableable;
-import com.blakebr0.extendedcrafting.config.ModConfigs;
 import com.blakebr0.extendedcrafting.init.ModTileEntities;
 import com.blakebr0.extendedcrafting.tileentity.FluxCrafterTileEntity;
 import net.minecraft.core.BlockPos;
@@ -21,7 +19,7 @@ import net.minecraft.world.level.material.Material;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.network.NetworkHooks;
 
-public class FluxCrafterBlock extends BaseTileEntityBlock implements IEnableable {
+public class FluxCrafterBlock extends BaseTileEntityBlock {
 	public FluxCrafterBlock() {
 		super(Material.METAL, SoundType.METAL, 6.0F, 12.0F, true);
 	}
@@ -55,11 +53,6 @@ public class FluxCrafterBlock extends BaseTileEntityBlock implements IEnableable
 		}
 
 		super.onRemove(state, level, pos, newState, isMoving);
-	}
-
-	@Override
-	public boolean isEnabled() {
-		return ModConfigs.ENABLE_FLUX_CRAFTER.get();
 	}
 
 	@Override

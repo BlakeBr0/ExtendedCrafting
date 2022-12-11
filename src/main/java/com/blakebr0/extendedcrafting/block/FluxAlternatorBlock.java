@@ -1,9 +1,7 @@
 package com.blakebr0.extendedcrafting.block;
 
 import com.blakebr0.cucumber.block.BaseTileEntityBlock;
-import com.blakebr0.cucumber.iface.IEnableable;
 import com.blakebr0.cucumber.util.VoxelShapeBuilder;
-import com.blakebr0.extendedcrafting.config.ModConfigs;
 import com.blakebr0.extendedcrafting.init.ModTileEntities;
 import com.blakebr0.extendedcrafting.tileentity.FluxAlternatorTileEntity;
 import net.minecraft.core.BlockPos;
@@ -24,7 +22,7 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.network.NetworkHooks;
 
-public class FluxAlternatorBlock extends BaseTileEntityBlock implements IEnableable {
+public class FluxAlternatorBlock extends BaseTileEntityBlock {
 	private static final VoxelShape FLUX_CRAFTER_SHAPE = new VoxelShapeBuilder()
 			.cuboid(0, 0, 0, 16, 6, 16)
 			.cuboid(4, 6, 4, 12, 15, 12)
@@ -56,11 +54,6 @@ public class FluxAlternatorBlock extends BaseTileEntityBlock implements IEnablea
 	@Override
 	public VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
 		return FLUX_CRAFTER_SHAPE;
-	}
-
-	@Override
-	public boolean isEnabled() {
-		return ModConfigs.ENABLE_FLUX_CRAFTER.get();
 	}
 
 	@Override

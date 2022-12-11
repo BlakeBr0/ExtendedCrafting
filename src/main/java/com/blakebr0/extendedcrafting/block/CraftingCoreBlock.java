@@ -2,9 +2,7 @@ package com.blakebr0.extendedcrafting.block;
 
 import com.blakebr0.cucumber.block.BaseTileEntityBlock;
 import com.blakebr0.cucumber.helper.StackHelper;
-import com.blakebr0.cucumber.iface.IEnableable;
 import com.blakebr0.cucumber.util.VoxelShapeBuilder;
-import com.blakebr0.extendedcrafting.config.ModConfigs;
 import com.blakebr0.extendedcrafting.init.ModTileEntities;
 import com.blakebr0.extendedcrafting.tileentity.CraftingCoreTileEntity;
 import net.minecraft.core.BlockPos;
@@ -31,7 +29,7 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.network.NetworkHooks;
 
-public class CraftingCoreBlock extends BaseTileEntityBlock implements IEnableable {
+public class CraftingCoreBlock extends BaseTileEntityBlock {
 	public static final VoxelShape CRAFTING_CORE_SHAPE = new VoxelShapeBuilder()
 			.cuboid(2, 0, 2, 14, 2, 14)
 			.cuboid(0, 2, 0, 16, 5, 16)
@@ -100,11 +98,6 @@ public class CraftingCoreBlock extends BaseTileEntityBlock implements IEnableabl
 	@Override
 	public VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
 		return CRAFTING_CORE_SHAPE;
-	}
-
-	@Override
-	public boolean isEnabled() {
-		return ModConfigs.ENABLE_CRAFTING_CORE.get();
 	}
 
 	@Override

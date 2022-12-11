@@ -1,9 +1,7 @@
 package com.blakebr0.extendedcrafting.item;
 
-import com.blakebr0.cucumber.iface.IEnableable;
 import com.blakebr0.cucumber.item.BaseItem;
 import com.blakebr0.cucumber.util.Localizable;
-import com.blakebr0.extendedcrafting.config.ModConfigs;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
@@ -15,11 +13,9 @@ import net.minecraft.world.inventory.CraftingMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 
-import java.util.function.Function;
-
-public class HandheldTableItem extends BaseItem implements IEnableable {
-	public HandheldTableItem(Function<Properties, Properties> properties) {
-		super(properties.compose(p -> p.stacksTo(1)));
+public class HandheldTableItem extends BaseItem {
+	public HandheldTableItem() {
+		super(p -> p.stacksTo(1));
 	}
 
 	@Override
@@ -29,11 +25,6 @@ public class HandheldTableItem extends BaseItem implements IEnableable {
 		}
 
 		return super.use(world, player, hand);
-	}
-
-	@Override
-	public boolean isEnabled() {
-		return ModConfigs.ENABLE_HANDHELD_WORKBENCH.get();
 	}
 
 	private MenuProvider getContainer(Level world, BlockPos pos) {

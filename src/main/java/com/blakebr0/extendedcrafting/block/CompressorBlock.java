@@ -1,8 +1,6 @@
 package com.blakebr0.extendedcrafting.block;
 
 import com.blakebr0.cucumber.block.BaseTileEntityBlock;
-import com.blakebr0.cucumber.iface.IEnableable;
-import com.blakebr0.extendedcrafting.config.ModConfigs;
 import com.blakebr0.extendedcrafting.init.ModTileEntities;
 import com.blakebr0.extendedcrafting.tileentity.CompressorTileEntity;
 import net.minecraft.core.BlockPos;
@@ -29,7 +27,7 @@ import net.minecraft.world.level.material.Material;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.network.NetworkHooks;
 
-public class CompressorBlock extends BaseTileEntityBlock implements IEnableable {
+public class CompressorBlock extends BaseTileEntityBlock {
 	private static final DirectionProperty FACING = HorizontalDirectionalBlock.FACING;
 
 	public CompressorBlock() {
@@ -95,11 +93,6 @@ public class CompressorBlock extends BaseTileEntityBlock implements IEnableable 
 	@Override
 	protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
 		builder.add(FACING);
-	}
-
-	@Override
-	public boolean isEnabled() {
-		return ModConfigs.ENABLE_COMPRESSOR.get();
 	}
 
 	@Override

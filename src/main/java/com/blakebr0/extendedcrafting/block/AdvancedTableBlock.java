@@ -28,7 +28,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 
 import java.util.List;
 
-public class AdvancedTableBlock extends BaseTileEntityBlock implements IEnableable {
+public class AdvancedTableBlock extends BaseTileEntityBlock {
 	public static final VoxelShape ADVANCED_TABLE_SHAPE = new VoxelShapeBuilder()
 			.cuboid(2, 0, 2, 14, 2, 14)
 			.cuboid(3, 2, 3, 5, 10, 5)
@@ -81,10 +81,5 @@ public class AdvancedTableBlock extends BaseTileEntityBlock implements IEnableab
 	@Override
 	public void appendHoverText(ItemStack stack, BlockGetter level, List<Component> tooltip, TooltipFlag flag) {
 		tooltip.add(ModTooltips.TIER.args(2).build());
-	}
-
-	@Override
-	public boolean isEnabled() {
-		return ModConfigs.ENABLE_TABLES.get();
 	}
 }

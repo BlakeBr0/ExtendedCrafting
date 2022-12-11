@@ -15,6 +15,8 @@ public class TheUltimateBlockRenderer implements BlockEntityRenderer<TheUltimate
 
     @Override
     public void render(TheUltimateBlockTileEntity tile, float v, PoseStack matrix, MultiBufferSource buffer, int i, int i1) {
+        var minecraft = Minecraft.getInstance();
+
         var level = tile.getLevel();
         if (level == null)
             return;
@@ -26,7 +28,7 @@ public class TheUltimateBlockRenderer implements BlockEntityRenderer<TheUltimate
         matrix.pushPose();
         matrix.scale(1.0125f, 1.0125f, 1.0125f);
         matrix.translate(-0.005, -0.005, -0.005);
-        Minecraft.getInstance().getBlockRenderer().renderBatched(state, pos, level, matrix, vertex, false, level.getRandom(), ModelData.EMPTY, RenderType.solid());
+        minecraft.getBlockRenderer().renderBatched(state, pos, level, matrix, vertex, false, level.getRandom(), ModelData.EMPTY, RenderType.solid());
         matrix.popPose();
     }
 }

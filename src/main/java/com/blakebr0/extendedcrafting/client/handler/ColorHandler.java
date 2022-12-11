@@ -1,4 +1,4 @@
-package com.blakebr0.extendedcrafting.handler;
+package com.blakebr0.extendedcrafting.client.handler;
 
 import com.blakebr0.cucumber.helper.ColorHelper;
 import com.blakebr0.cucumber.iface.IColored;

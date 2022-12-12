@@ -11,7 +11,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 
 public class FluxAlternatorScreen extends BaseContainerScreen<FluxAlternatorContainer> {
-	public static final ResourceLocation BACKGROUND = new ResourceLocation(ExtendedCrafting.MOD_ID, "textures/gui/flux_alternator.png");
+	public static final ResourceLocation BACKGROUND = new ResourceLocation(ExtendedCrafting.MOD_ID, "textures/screen/flux_alternator.png");
 
 	public FluxAlternatorScreen(FluxAlternatorContainer container, Inventory inventory, Component title) {
 		super(container, inventory, title, BACKGROUND, 176, 194);

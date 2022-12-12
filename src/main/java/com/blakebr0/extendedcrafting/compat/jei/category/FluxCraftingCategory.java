@@ -25,7 +25,7 @@ import net.minecraft.world.item.ItemStack;
 import java.util.List;
 
 public class FluxCraftingCategory implements IRecipeCategory<IFluxCrafterRecipe> {
-	private static final ResourceLocation TEXTURE = new ResourceLocation(ExtendedCrafting.MOD_ID, "textures/gui/jei/flux_crafting.png");
+	private static final ResourceLocation TEXTURE = new ResourceLocation(ExtendedCrafting.MOD_ID, "textures/jei/flux_crafting.png");
 	public static final RecipeType<IFluxCrafterRecipe> RECIPE_TYPE = RecipeType.create(ExtendedCrafting.MOD_ID, "flux_crafting", IFluxCrafterRecipe.class);
 
 	private final IDrawable background;

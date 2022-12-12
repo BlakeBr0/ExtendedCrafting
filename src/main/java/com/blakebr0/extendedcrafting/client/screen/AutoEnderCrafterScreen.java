@@ -21,7 +21,7 @@ import net.minecraft.world.item.ItemStack;
 import java.util.List;
 
 public class AutoEnderCrafterScreen extends BaseContainerScreen<AutoEnderCrafterContainer> {
-	private static final ResourceLocation BACKGROUND = new ResourceLocation(ExtendedCrafting.MOD_ID, "textures/gui/auto_ender_crafter.png");
+	private static final ResourceLocation BACKGROUND = new ResourceLocation(ExtendedCrafting.MOD_ID, "textures/screen/auto_ender_crafter.png");
 	private AutoEnderCrafterTileEntity tile;
 
 	public AutoEnderCrafterScreen(AutoEnderCrafterContainer container, Inventory inventory, Component title) {

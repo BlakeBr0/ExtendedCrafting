@@ -26,7 +26,7 @@ import net.minecraft.world.item.ItemStack;
 import java.util.List;
 
 public class EliteTableCategory implements IRecipeCategory<ITableRecipe> {
-	private static final ResourceLocation TEXTURE = new ResourceLocation(ExtendedCrafting.MOD_ID, "textures/gui/jei/elite_crafting.png");
+	private static final ResourceLocation TEXTURE = new ResourceLocation(ExtendedCrafting.MOD_ID, "textures/jei/elite_crafting.png");
 	public static final RecipeType<ITableRecipe> RECIPE_TYPE = RecipeType.create(ExtendedCrafting.MOD_ID, "elite_crafting", ITableRecipe.class);
 
 	private final IDrawable background;

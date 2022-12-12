@@ -21,7 +21,7 @@ import net.minecraft.world.item.ItemStack;
 import java.util.List;
 
 public class AutoFluxCrafterScreen extends BaseContainerScreen<AutoFluxCrafterContainer> {
-	private static final ResourceLocation BACKGROUND = new ResourceLocation(ExtendedCrafting.MOD_ID, "textures/gui/auto_flux_crafter.png");
+	private static final ResourceLocation BACKGROUND = new ResourceLocation(ExtendedCrafting.MOD_ID, "textures/screen/auto_flux_crafter.png");
 	private AutoFluxCrafterTileEntity tile;
 
 	public AutoFluxCrafterScreen(AutoFluxCrafterContainer container, Inventory inventory, Component title) {

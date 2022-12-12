@@ -9,7 +9,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 
 public class EliteTableScreen extends BaseContainerScreen<EliteTableContainer> {
-	public static final ResourceLocation BACKGROUND = new ResourceLocation(ExtendedCrafting.MOD_ID, "textures/gui/elite_table.png");
+	public static final ResourceLocation BACKGROUND = new ResourceLocation(ExtendedCrafting.MOD_ID, "textures/screen/elite_table.png");
 
 	public EliteTableScreen(EliteTableContainer container, Inventory inventory, Component title) {
 		super(container, inventory, title, BACKGROUND, 200, 242);

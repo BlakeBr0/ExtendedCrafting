@@ -22,7 +22,7 @@ import net.minecraft.world.item.ItemStack;
 import java.util.List;
 
 public class EliteAutoTableScreen extends BaseContainerScreen<EliteAutoTableContainer> {
-	public static final ResourceLocation BACKGROUND = new ResourceLocation(ExtendedCrafting.MOD_ID, "textures/gui/elite_auto_table.png");
+	public static final ResourceLocation BACKGROUND = new ResourceLocation(ExtendedCrafting.MOD_ID, "textures/screen/elite_auto_table.png");
 	private AutoTableTileEntity tile;
 
 	public EliteAutoTableScreen(EliteAutoTableContainer container, Inventory inventory, Component title) {

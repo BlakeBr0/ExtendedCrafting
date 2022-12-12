@@ -22,7 +22,7 @@ import java.awt.*;
 import java.util.List;
 
 public class CombinationCraftingCategory implements IRecipeCategory<ICombinationRecipe> {
-	private static final ResourceLocation TEXTURE = new ResourceLocation(ExtendedCrafting.MOD_ID, "textures/gui/jei/combination_crafting.png");
+	private static final ResourceLocation TEXTURE = new ResourceLocation(ExtendedCrafting.MOD_ID, "textures/jei/combination_crafting.png");
 	public static final RecipeType<ICombinationRecipe> RECIPE_TYPE = RecipeType.create(ExtendedCrafting.MOD_ID, "combination", ICombinationRecipe.class);
 
 	private final IDrawable background;

@@ -26,7 +26,7 @@ import net.minecraft.world.item.ItemStack;
 import java.util.List;
 
 public class AdvancedTableCategory implements IRecipeCategory<ITableRecipe> {
-	private static final ResourceLocation TEXTURE = new ResourceLocation(ExtendedCrafting.MOD_ID, "textures/gui/jei/advanced_crafting.png");
+	private static final ResourceLocation TEXTURE = new ResourceLocation(ExtendedCrafting.MOD_ID, "textures/jei/advanced_crafting.png");
 	public static final RecipeType<ITableRecipe> RECIPE_TYPE = RecipeType.create(ExtendedCrafting.MOD_ID, "advanced_crafting", ITableRecipe.class);
 
 	private final IDrawable background;

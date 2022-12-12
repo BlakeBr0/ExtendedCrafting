@@ -1,36 +1,34 @@
 package com.blakebr0.extendedcrafting.container;
 
+import com.blakebr0.cucumber.container.BaseContainerMenu;
 import com.blakebr0.cucumber.inventory.BaseItemStackHandler;
 import com.blakebr0.extendedcrafting.container.inventory.ExtendedCraftingInventory;
 import com.blakebr0.extendedcrafting.container.slot.TableOutputSlot;
 import com.blakebr0.extendedcrafting.init.ModContainerTypes;
 import com.blakebr0.extendedcrafting.init.ModRecipeTypes;
 import com.blakebr0.extendedcrafting.tileentity.AdvancedTableTileEntity;
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.inventory.ResultContainer;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 
-import java.util.function.Function;
-
-public class AdvancedTableContainer extends AbstractContainerMenu {
-	private final Function<Player, Boolean> isUsableByPlayer;
-	private final Level world;
+public class AdvancedTableContainer extends BaseContainerMenu {
+	private final Level level;
 	private final Container result;
 
-	private AdvancedTableContainer(MenuType<?> type, int id, Inventory playerInventory) {
-		this(type, id, playerInventory, p -> false, AdvancedTableTileEntity.createInventoryHandler(null));
+	private AdvancedTableContainer(MenuType<?> type, int id, Inventory playerInventory, FriendlyByteBuf buffer) {
+		this(type, id, playerInventory, AdvancedTableTileEntity.createInventoryHandler().forContainer(), buffer.readBlockPos());
 	}
 
-	private AdvancedTableContainer(MenuType<?> type, int id, Inventory playerInventory, Function<Player, Boolean> isUsableByPlayer, BaseItemStackHandler inventory) {
-		super(type, id);
-		this.isUsableByPlayer = isUsableByPlayer;
-		this.world = playerInventory.player.level;
+	private AdvancedTableContainer(MenuType<?> type, int id, Inventory playerInventory, BaseItemStackHandler inventory, BlockPos pos) {
+		super(type, id, pos);
+		this.level = playerInventory.player.level;
 		this.result = new ResultContainer();
 
 		var matrix = new ExtendedCraftingInventory(this, inventory, 5);
@@ -59,7 +57,7 @@ public class AdvancedTableContainer extends AbstractContainerMenu {
 
 	@Override
 	public void slotsChanged(Container matrix) {
-		var recipe = this.world.getRecipeManager().getRecipeFor(ModRecipeTypes.TABLE.get(), matrix, this.world);
+		var recipe = this.level.getRecipeManager().getRecipeFor(ModRecipeTypes.TABLE.get(), matrix, this.level);
 
 		if (recipe.isPresent()) {
 			var result = recipe.get().assemble(matrix);
@@ -69,11 +67,6 @@ public class AdvancedTableContainer extends AbstractContainerMenu {
 		}
 
 		super.slotsChanged(matrix);
-	}
-
-	@Override
-	public boolean stillValid(Player player) {
-		return this.isUsableByPlayer.apply(player);
 	}
 
 	@Override
@@ -115,11 +108,11 @@ public class AdvancedTableContainer extends AbstractContainerMenu {
 		return itemstack;
 	}
 
-	public static AdvancedTableContainer create(int windowId, Inventory playerInventory) {
-		return new AdvancedTableContainer(ModContainerTypes.ADVANCED_TABLE.get(), windowId, playerInventory);
+	public static AdvancedTableContainer create(int windowId, Inventory playerInventory, FriendlyByteBuf buffer) {
+		return new AdvancedTableContainer(ModContainerTypes.ADVANCED_TABLE.get(), windowId, playerInventory, buffer);
 	}
 
-	public static AdvancedTableContainer create(int windowId, Inventory playerInventory, Function<Player, Boolean> isUsableByPlayer, BaseItemStackHandler inventory) {
-		return new AdvancedTableContainer(ModContainerTypes.ADVANCED_TABLE.get(), windowId, playerInventory, isUsableByPlayer, inventory);
+	public static AdvancedTableContainer create(int windowId, Inventory playerInventory, BaseItemStackHandler inventory, BlockPos pos) {
+		return new AdvancedTableContainer(ModContainerTypes.ADVANCED_TABLE.get(), windowId, playerInventory, inventory, pos);
 	}
 }

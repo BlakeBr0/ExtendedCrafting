@@ -35,7 +35,7 @@ public class UltimateAutoTableScreen extends BaseContainerScreen<UltimateAutoTab
 
 		int x = this.getGuiLeft();
 		int y = this.getGuiTop();
-		var pos = this.getMenu().getPos();
+		var pos = this.getMenu().getBlockPos();
 
 		this.addRenderableWidget(new ToggleTableRunningButton(x + 226, y + 114, pos, this::isRunning));
 
@@ -140,7 +140,7 @@ public class UltimateAutoTableScreen extends BaseContainerScreen<UltimateAutoTab
 		var level = this.getMinecraft().level;
 
 		if (level != null) {
-			var tile = level.getBlockEntity(this.getMenu().getPos());
+			var tile = level.getBlockEntity(this.getMenu().getBlockPos());
 
 			if (tile instanceof AutoTableTileEntity table)
 				return table;

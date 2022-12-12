@@ -19,7 +19,6 @@ import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.inventory.SimpleContainerData;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
@@ -100,7 +99,7 @@ public class CompressorTileEntity extends BaseInventoryTileEntity implements Men
 
 	@Override
 	public AbstractContainerMenu createMenu(int windowId, Inventory playerInventory, Player playerEntity) {
-		return CompressorContainer.create(windowId, playerInventory, this::isUsableByPlayer, this.inventory, new SimpleContainerData(0), this.getBlockPos());
+		return CompressorContainer.create(windowId, playerInventory, this.inventory, this.getBlockPos());
 	}
 
 	public static void tick(Level level, BlockPos pos, BlockState state, CompressorTileEntity tile) {
@@ -197,6 +196,10 @@ public class CompressorTileEntity extends BaseInventoryTileEntity implements Men
 		if (mark) {
 			tile.markDirtyAndDispatch();
 		}
+	}
+
+	public static BaseItemStackHandler createInventoryHandler() {
+		return createInventoryHandler(null);
 	}
 
 	public static BaseItemStackHandler createInventoryHandler(Runnable onContentsChanged) {

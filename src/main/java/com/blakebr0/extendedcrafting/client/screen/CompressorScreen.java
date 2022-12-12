@@ -32,7 +32,7 @@ public class CompressorScreen extends BaseContainerScreen<CompressorContainer> {
 
 		int x = this.getGuiLeft();
 		int y = this.getGuiTop();
-		var pos = this.getMenu().getPos();
+		var pos = this.getMenu().getBlockPos();
 
 		this.addRenderableWidget(new EjectModeSwitchButton(x + 69, y + 30, pos));
 		this.addRenderableWidget(new InputLimitSwitchButton(x + 91, y + 74, pos, this::isLimitingInput));
@@ -130,7 +130,7 @@ public class CompressorScreen extends BaseContainerScreen<CompressorContainer> {
 		var level = this.getMinecraft().level;
 
 		if (level != null) {
-			var tile = level.getBlockEntity(this.getMenu().getPos());
+			var tile = level.getBlockEntity(this.getMenu().getBlockPos());
 
 			if (tile instanceof CompressorTileEntity compressor)
 				return compressor;

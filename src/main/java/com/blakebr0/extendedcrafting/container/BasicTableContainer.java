@@ -1,5 +1,6 @@
 package com.blakebr0.extendedcrafting.container;
 
+import com.blakebr0.cucumber.container.BaseContainerMenu;
 import com.blakebr0.cucumber.inventory.BaseItemStackHandler;
 import com.blakebr0.extendedcrafting.config.ModConfigs;
 import com.blakebr0.extendedcrafting.container.inventory.ExtendedCraftingInventory;
@@ -7,10 +8,11 @@ import com.blakebr0.extendedcrafting.container.slot.TableOutputSlot;
 import com.blakebr0.extendedcrafting.init.ModContainerTypes;
 import com.blakebr0.extendedcrafting.init.ModRecipeTypes;
 import com.blakebr0.extendedcrafting.tileentity.BasicTableTileEntity;
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.inventory.ResultContainer;
@@ -19,22 +21,18 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
 
-import java.util.function.Function;
-
-public class BasicTableContainer extends AbstractContainerMenu {
-	private final Function<Player, Boolean> isUsableByPlayer;
-	private final Level world;
+public class BasicTableContainer extends BaseContainerMenu {
+	private final Level level;
 	private final Container result;
 	private boolean isVanillaRecipe = false;
 
-	private BasicTableContainer(MenuType<?> type, int id, Inventory playerInventory) {
-		this(type, id, playerInventory, p -> false, BasicTableTileEntity.createInventoryHandler(null));
+	private BasicTableContainer(MenuType<?> type, int id, Inventory playerInventory, FriendlyByteBuf buffer) {
+		this(type, id, playerInventory, BasicTableTileEntity.createInventoryHandler().forContainer(), buffer.readBlockPos());
 	}
 
-	private BasicTableContainer(MenuType<?> type, int id, Inventory playerInventory, Function<Player, Boolean> isUsableByPlayer, BaseItemStackHandler inventory) {
-		super(type, id);
-		this.isUsableByPlayer = isUsableByPlayer;
-		this.world = playerInventory.player.level;
+	private BasicTableContainer(MenuType<?> type, int id, Inventory playerInventory, BaseItemStackHandler inventory, BlockPos pos) {
+		super(type, id, pos);
+		this.level = playerInventory.player.level;
 		this.result = new ResultContainer();
 
 		var matrix = new ExtendedCraftingInventory(this, inventory, 3);
@@ -63,7 +61,7 @@ public class BasicTableContainer extends AbstractContainerMenu {
 
 	@Override
 	public void slotsChanged(Container matrix) {
-		var recipe = this.world.getRecipeManager().getRecipeFor(ModRecipeTypes.TABLE.get(), matrix, this.world);
+		var recipe = this.level.getRecipeManager().getRecipeFor(ModRecipeTypes.TABLE.get(), matrix, this.level);
 
 		this.isVanillaRecipe = false;
 
@@ -72,7 +70,7 @@ public class BasicTableContainer extends AbstractContainerMenu {
 
 			this.result.setItem(0, result);
 		} else if (ModConfigs.TABLE_USE_VANILLA_RECIPES.get()) {
-			var vanilla = this.world.getRecipeManager().getRecipeFor(RecipeType.CRAFTING, (CraftingContainer) matrix, this.world);
+			var vanilla = this.level.getRecipeManager().getRecipeFor(RecipeType.CRAFTING, (CraftingContainer) matrix, this.level);
 
 			if (vanilla.isPresent()) {
 				var result = vanilla.get().assemble((CraftingContainer) matrix);
@@ -87,11 +85,6 @@ public class BasicTableContainer extends AbstractContainerMenu {
 		}
 
 		super.slotsChanged(matrix);
-	}
-
-	@Override
-	public boolean stillValid(Player player) {
-		return this.isUsableByPlayer.apply(player);
 	}
 
 	@Override
@@ -137,11 +130,11 @@ public class BasicTableContainer extends AbstractContainerMenu {
 		return this.isVanillaRecipe;
 	}
 
-	public static BasicTableContainer create(int windowId, Inventory playerInventory) {
-		return new BasicTableContainer(ModContainerTypes.BASIC_TABLE.get(), windowId, playerInventory);
+	public static BasicTableContainer create(int windowId, Inventory playerInventory, FriendlyByteBuf buffer) {
+		return new BasicTableContainer(ModContainerTypes.BASIC_TABLE.get(), windowId, playerInventory, buffer);
 	}
 
-	public static BasicTableContainer create(int windowId, Inventory playerInventory, Function<Player, Boolean> isUsableByPlayer, BaseItemStackHandler inventory) {
-		return new BasicTableContainer(ModContainerTypes.BASIC_TABLE.get(), windowId, playerInventory, isUsableByPlayer, inventory);
+	public static BasicTableContainer create(int windowId, Inventory playerInventory, BaseItemStackHandler inventory, BlockPos pos) {
+		return new BasicTableContainer(ModContainerTypes.BASIC_TABLE.get(), windowId, playerInventory, inventory, pos);
 	}
 }

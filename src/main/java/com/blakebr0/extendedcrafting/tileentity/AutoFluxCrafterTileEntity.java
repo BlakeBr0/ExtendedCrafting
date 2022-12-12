@@ -50,7 +50,7 @@ public class AutoFluxCrafterTileEntity extends FluxCrafterTileEntity implements 
 
     @Override
     public AbstractContainerMenu createMenu(int windowId, Inventory playerInventory, Player player) {
-        return AutoFluxCrafterContainer.create(windowId, playerInventory, this::isUsableByPlayer, this.getInventory(), this.getBlockPos());
+        return AutoFluxCrafterContainer.create(windowId, playerInventory, this.getInventory(), this.getBlockPos());
     }
 
     @Override

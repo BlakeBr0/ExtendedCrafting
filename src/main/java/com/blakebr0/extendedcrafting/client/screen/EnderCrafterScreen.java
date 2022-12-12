@@ -49,7 +49,7 @@ public class EnderCrafterScreen extends BaseContainerScreen<EnderCrafterContaine
 		var level = this.getMinecraft().level;
 
 		if (level != null) {
-			var tile = level.getBlockEntity(this.getMenu().getPos());
+			var tile = level.getBlockEntity(this.getMenu().getBlockPos());
 
 			if (tile instanceof EnderCrafterTileEntity table)
 				return table;

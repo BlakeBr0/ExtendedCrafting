@@ -50,7 +50,7 @@ public class AutoEnderCrafterTileEntity extends EnderCrafterTileEntity implement
 
     @Override
     public AbstractContainerMenu createMenu(int windowId, Inventory playerInventory, Player player) {
-        return AutoEnderCrafterContainer.create(windowId, playerInventory, this::isUsableByPlayer, this.getInventory(), this.getBlockPos());
+        return AutoEnderCrafterContainer.create(windowId, playerInventory, this.getInventory(), this.getBlockPos());
     }
 
     @Override

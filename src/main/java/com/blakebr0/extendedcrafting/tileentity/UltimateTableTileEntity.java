@@ -37,12 +37,16 @@ public class UltimateTableTileEntity extends BaseInventoryTileEntity implements 
 
 	@Override
 	public AbstractContainerMenu createMenu(int windowId, Inventory playerInventory, Player player) {
-		return UltimateTableContainer.create(windowId, playerInventory, this::isUsableByPlayer, this.inventory);
+		return UltimateTableContainer.create(windowId, playerInventory, this.inventory, this.getBlockPos());
 	}
 
 	@Override
 	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
 		return !this.remove && cap == ForgeCapabilities.ITEM_HANDLER ? LazyOptional.empty() : super.getCapability(cap, side);
+	}
+
+	public static BaseItemStackHandler createInventoryHandler() {
+		return createInventoryHandler(null);
 	}
 
 	public static BaseItemStackHandler createInventoryHandler(Runnable onContentsChanged) {

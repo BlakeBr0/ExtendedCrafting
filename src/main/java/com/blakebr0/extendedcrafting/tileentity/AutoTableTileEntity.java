@@ -26,7 +26,6 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.CraftingContainer;
-import net.minecraft.world.inventory.SimpleContainerData;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.CraftingRecipe;
 import net.minecraft.world.item.crafting.RecipeType;
@@ -393,7 +392,7 @@ public abstract class AutoTableTileEntity extends BaseInventoryTileEntity implem
 
         @Override
         public AbstractContainerMenu createMenu(int windowId, Inventory playerInventory, Player player) {
-            return BasicAutoTableContainer.create(windowId, playerInventory, this::isUsableByPlayer, this.inventory, new SimpleContainerData(0), this.getBlockPos());
+            return BasicAutoTableContainer.create(windowId, playerInventory, this.inventory, this.getBlockPos());
         }
 
         @Override
@@ -414,6 +413,10 @@ public abstract class AutoTableTileEntity extends BaseInventoryTileEntity implem
         @Override
         public EnergyStorage getEnergy() {
             return this.energy;
+        }
+
+        public static BaseItemStackHandler createInventoryHandler() {
+            return createInventoryHandler(null);
         }
 
         public static BaseItemStackHandler createInventoryHandler(Runnable onContentsChanged) {
@@ -450,7 +453,7 @@ public abstract class AutoTableTileEntity extends BaseInventoryTileEntity implem
 
         @Override
         public AbstractContainerMenu createMenu(int windowId, Inventory playerInventory, Player player) {
-            return AdvancedAutoTableContainer.create(windowId, playerInventory, this::isUsableByPlayer, this.inventory, new SimpleContainerData(0), this.getBlockPos());
+            return AdvancedAutoTableContainer.create(windowId, playerInventory, this.inventory, this.getBlockPos());
         }
 
         @Override
@@ -471,6 +474,10 @@ public abstract class AutoTableTileEntity extends BaseInventoryTileEntity implem
         @Override
         public EnergyStorage getEnergy() {
             return this.energy;
+        }
+
+        public static BaseItemStackHandler createInventoryHandler() {
+            return createInventoryHandler(null);
         }
 
         public static BaseItemStackHandler createInventoryHandler(Runnable onContentsChanged) {
@@ -507,7 +514,7 @@ public abstract class AutoTableTileEntity extends BaseInventoryTileEntity implem
 
         @Override
         public AbstractContainerMenu createMenu(int windowId, Inventory playerInventory, Player player) {
-            return EliteAutoTableContainer.create(windowId, playerInventory, this::isUsableByPlayer, this.inventory, new SimpleContainerData(0), this.getBlockPos());
+            return EliteAutoTableContainer.create(windowId, playerInventory, this.inventory, this.getBlockPos());
         }
 
         @Override
@@ -528,6 +535,10 @@ public abstract class AutoTableTileEntity extends BaseInventoryTileEntity implem
         @Override
         public EnergyStorage getEnergy() {
             return this.energy;
+        }
+
+        public static BaseItemStackHandler createInventoryHandler() {
+            return createInventoryHandler(null);
         }
 
         public static BaseItemStackHandler createInventoryHandler(Runnable onContentsChanged) {
@@ -564,7 +575,7 @@ public abstract class AutoTableTileEntity extends BaseInventoryTileEntity implem
 
         @Override
         public AbstractContainerMenu createMenu(int windowId, Inventory playerInventory, Player player) {
-            return UltimateAutoTableContainer.create(windowId, playerInventory, this::isUsableByPlayer, this.inventory, new SimpleContainerData(0), this.getBlockPos());
+            return UltimateAutoTableContainer.create(windowId, playerInventory, this.inventory, this.getBlockPos());
         }
 
         @Override
@@ -585,6 +596,10 @@ public abstract class AutoTableTileEntity extends BaseInventoryTileEntity implem
         @Override
         public EnergyStorage getEnergy() {
             return this.energy;
+        }
+
+        public static BaseItemStackHandler createInventoryHandler() {
+            return createInventoryHandler(null);
         }
 
         public static BaseItemStackHandler createInventoryHandler(Runnable onContentsChanged) {

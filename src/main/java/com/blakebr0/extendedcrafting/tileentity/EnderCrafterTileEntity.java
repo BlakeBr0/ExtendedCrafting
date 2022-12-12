@@ -20,7 +20,6 @@ import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.inventory.SimpleContainerData;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -47,7 +46,7 @@ public class EnderCrafterTileEntity extends BaseInventoryTileEntity implements M
 		this.recipeInventory = BaseItemStackHandler.create(9);
 	}
 
-	@Override
+    @Override
 	public BaseItemStackHandler getInventory() {
 		return this.inventory;
 	}
@@ -73,7 +72,7 @@ public class EnderCrafterTileEntity extends BaseInventoryTileEntity implements M
 
 	@Override
 	public AbstractContainerMenu createMenu(int windowId, Inventory playerInventory, Player player) {
-		return EnderCrafterContainer.create(windowId, playerInventory, this::isUsableByPlayer, this.inventory, new SimpleContainerData(0), this.getBlockPos());
+		return EnderCrafterContainer.create(windowId, playerInventory, this.inventory, this.getBlockPos());
 	}
 
 	public static void tick(Level level, BlockPos pos, BlockState state, EnderCrafterTileEntity tile) {
@@ -137,6 +136,10 @@ public class EnderCrafterTileEntity extends BaseInventoryTileEntity implements M
 				tile.markDirtyAndDispatch();
 			}
 		}
+	}
+
+	public static BaseItemStackHandler createInventoryHandler() {
+		return createInventoryHandler(null);
 	}
 
 	public static BaseItemStackHandler createInventoryHandler(Runnable onContentsChanged) {

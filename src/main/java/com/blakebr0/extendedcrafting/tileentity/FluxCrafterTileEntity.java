@@ -18,7 +18,6 @@ import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.inventory.SimpleContainerData;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -71,7 +70,7 @@ public class FluxCrafterTileEntity extends BaseInventoryTileEntity implements Me
 
 	@Override
 	public AbstractContainerMenu createMenu(int windowId, Inventory playerInventory, Player player) {
-		return FluxCrafterContainer.create(windowId, playerInventory, this::isUsableByPlayer, this.inventory, new SimpleContainerData(0), this.getBlockPos());
+		return FluxCrafterContainer.create(windowId, playerInventory, this.inventory, this.getBlockPos());
 	}
 
 	public static void tick(Level level, BlockPos pos, BlockState state, FluxCrafterTileEntity tile) {
@@ -136,6 +135,10 @@ public class FluxCrafterTileEntity extends BaseInventoryTileEntity implements Me
 				tile.markDirtyAndDispatch();
 			}
 		}
+	}
+
+	public static BaseItemStackHandler createInventoryHandler() {
+		return createInventoryHandler(null);
 	}
 
 	public static BaseItemStackHandler createInventoryHandler(Runnable onContentsChanged) {

@@ -34,7 +34,7 @@ public class AutoFluxCrafterScreen extends BaseContainerScreen<AutoFluxCrafterCo
 
 		int x = this.getGuiLeft();
 		int y = this.getGuiTop();
-		var pos = this.getMenu().getPos();
+		var pos = this.getMenu().getBlockPos();
 
 		this.tile = this.getTileEntity();
 
@@ -125,7 +125,7 @@ public class AutoFluxCrafterScreen extends BaseContainerScreen<AutoFluxCrafterCo
 		var level = this.getMinecraft().level;
 
 		if (level != null) {
-			var tile = level.getBlockEntity(this.getMenu().getPos());
+			var tile = level.getBlockEntity(this.getMenu().getBlockPos());
 
 			if (tile instanceof AutoFluxCrafterTileEntity crafter)
 				return crafter;

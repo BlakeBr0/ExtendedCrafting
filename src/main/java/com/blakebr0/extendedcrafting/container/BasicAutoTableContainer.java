@@ -1,5 +1,6 @@
 package com.blakebr0.extendedcrafting.container;
 
+import com.blakebr0.cucumber.container.BaseContainerMenu;
 import com.blakebr0.cucumber.inventory.BaseItemStackHandler;
 import com.blakebr0.extendedcrafting.config.ModConfigs;
 import com.blakebr0.extendedcrafting.container.inventory.ExtendedCraftingInventory;
@@ -13,37 +14,26 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.inventory.ResultContainer;
-import net.minecraft.world.inventory.SimpleContainerData;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
 
-import java.util.function.Function;
-
-public class BasicAutoTableContainer extends AbstractContainerMenu {
-	private final Function<Player, Boolean> isUsableByPlayer;
-	private final ContainerData data;
-	private final BlockPos pos;
-	private final Level world;
+public class BasicAutoTableContainer extends BaseContainerMenu {
+	private final Level level;
 	private final Container result;
 	private boolean isVanillaRecipe = false;
 
 	private BasicAutoTableContainer(MenuType<?> type, int id, Inventory playerInventory, FriendlyByteBuf buffer) {
-		this(type, id, playerInventory, p -> false, AutoTableTileEntity.Basic.createInventoryHandler(null), new SimpleContainerData(6), buffer.readBlockPos());
+		this(type, id, playerInventory, AutoTableTileEntity.Basic.createInventoryHandler().forContainer(), buffer.readBlockPos());
 	}
 
-	private BasicAutoTableContainer(MenuType<?> type, int id, Inventory playerInventory, Function<Player, Boolean> isUsableByPlayer, BaseItemStackHandler inventory, ContainerData data, BlockPos pos) {
-		super(type, id);
-		this.isUsableByPlayer = isUsableByPlayer;
-		this.data = data;
-		this.pos = pos;
-		this.world = playerInventory.player.level;
+	private BasicAutoTableContainer(MenuType<?> type, int id, Inventory playerInventory, BaseItemStackHandler inventory, BlockPos pos) {
+		super(type, id, pos);
+		this.level = playerInventory.player.level;
 		this.result = new ResultContainer();
 
 		var matrix = new ExtendedCraftingInventory(this, inventory, 3, true);
@@ -70,12 +60,11 @@ public class BasicAutoTableContainer extends AbstractContainerMenu {
 		}
 
 		this.slotsChanged(matrix);
-		this.addDataSlots(data);
 	}
 
 	@Override
 	public void slotsChanged(Container matrix) {
-		var recipe = this.world.getRecipeManager().getRecipeFor(ModRecipeTypes.TABLE.get(), matrix, this.world);
+		var recipe = this.level.getRecipeManager().getRecipeFor(ModRecipeTypes.TABLE.get(), matrix, this.level);
 
 		this.isVanillaRecipe = false;
 
@@ -84,7 +73,7 @@ public class BasicAutoTableContainer extends AbstractContainerMenu {
 
 			this.result.setItem(0, result);
 		} else if (ModConfigs.TABLE_USE_VANILLA_RECIPES.get()) {
-			var vanilla = this.world.getRecipeManager().getRecipeFor(RecipeType.CRAFTING, (CraftingContainer) matrix, this.world);
+			var vanilla = this.level.getRecipeManager().getRecipeFor(RecipeType.CRAFTING, (CraftingContainer) matrix, this.level);
 
 			if (vanilla.isPresent()) {
 				var result = vanilla.get().assemble((CraftingContainer) matrix);
@@ -99,11 +88,6 @@ public class BasicAutoTableContainer extends AbstractContainerMenu {
 		}
 
 		super.slotsChanged(matrix);
-	}
-
-	@Override
-	public boolean stillValid(Player player) {
-		return this.isUsableByPlayer.apply(player);
 	}
 
 	@Override
@@ -145,10 +129,6 @@ public class BasicAutoTableContainer extends AbstractContainerMenu {
 		return itemstack;
 	}
 
-	public BlockPos getPos() {
-		return this.pos;
-	}
-
 	public boolean isVanillaRecipe() {
 		return this.isVanillaRecipe;
 	}
@@ -157,7 +137,7 @@ public class BasicAutoTableContainer extends AbstractContainerMenu {
 		return new BasicAutoTableContainer(ModContainerTypes.BASIC_AUTO_TABLE.get(), windowId, playerInventory, buffer);
 	}
 
-	public static BasicAutoTableContainer create(int windowId, Inventory playerInventory, Function<Player, Boolean> isUsableByPlayer, BaseItemStackHandler inventory, ContainerData data, BlockPos pos) {
-		return new BasicAutoTableContainer(ModContainerTypes.BASIC_AUTO_TABLE.get(), windowId, playerInventory, isUsableByPlayer, inventory, data, pos);
+	public static BasicAutoTableContainer create(int windowId, Inventory playerInventory, BaseItemStackHandler inventory, BlockPos pos) {
+		return new BasicAutoTableContainer(ModContainerTypes.BASIC_AUTO_TABLE.get(), windowId, playerInventory, inventory, pos);
 	}
 }

@@ -47,7 +47,7 @@ public class FluxAlternatorScreen extends BaseContainerScreen<FluxAlternatorCont
 		var level = this.getMinecraft().level;
 
 		if (level != null) {
-			var tile = level.getBlockEntity(this.getMenu().getPos());
+			var tile = level.getBlockEntity(this.getMenu().getBlockPos());
 
 			if (tile instanceof FluxAlternatorTileEntity alternator)
 				return alternator;

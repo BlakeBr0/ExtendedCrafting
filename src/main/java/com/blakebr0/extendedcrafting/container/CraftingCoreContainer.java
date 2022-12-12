@@ -1,33 +1,22 @@
 package com.blakebr0.extendedcrafting.container;
 
+import com.blakebr0.cucumber.container.BaseContainerMenu;
 import com.blakebr0.extendedcrafting.init.ModContainerTypes;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.inventory.MenuType;
-import net.minecraft.world.inventory.SimpleContainerData;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 
-import java.util.function.Function;
-
-public class CraftingCoreContainer extends AbstractContainerMenu {
-	private final Function<Player, Boolean> isUsableByPlayer;
-	private final ContainerData data;
-	private final BlockPos pos;
-
+public class CraftingCoreContainer extends BaseContainerMenu {
 	private CraftingCoreContainer(MenuType<?> type, int id, Inventory playerInventory, FriendlyByteBuf buffer) {
-		this(type, id, playerInventory, p -> false, new SimpleContainerData(7), buffer.readBlockPos());
+		this(type, id, playerInventory, buffer.readBlockPos());
 	}
 
-	private CraftingCoreContainer(MenuType<?> type, int id, Inventory playerInventory, Function<Player, Boolean> isUsableByPlayer, ContainerData data, BlockPos pos) {
-		super(type, id);
-		this.isUsableByPlayer = isUsableByPlayer;
-		this.data = data;
-		this.pos = pos;
+	private CraftingCoreContainer(MenuType<?> type, int id, Inventory playerInventory, BlockPos pos) {
+		super(type, id, pos);
 
 		for (int i = 0; i < 3; i++) {
 			for (int j = 0; j < 9; j++) {
@@ -38,8 +27,6 @@ public class CraftingCoreContainer extends AbstractContainerMenu {
 		for (int i = 0; i < 9; i++) {
 			this.addSlot(new Slot(playerInventory, i, 8 + i * 18, 170));
 		}
-
-		this.addDataSlots(data);
 	}
 
 	@Override
@@ -79,20 +66,11 @@ public class CraftingCoreContainer extends AbstractContainerMenu {
 		return itemstack;
 	}
 
-	@Override
-	public boolean stillValid(Player player) {
-		return this.isUsableByPlayer.apply(player);
-	}
-
 	public static CraftingCoreContainer create(int windowId, Inventory playerInventory, FriendlyByteBuf buffer) {
 		return new CraftingCoreContainer(ModContainerTypes.CRAFTING_CORE.get(), windowId, playerInventory, buffer);
 	}
 
-	public static CraftingCoreContainer create(int windowId, Inventory playerInventory, Function<Player, Boolean> isUsableByPlayer, ContainerData data, BlockPos pos) {
-		return new CraftingCoreContainer(ModContainerTypes.CRAFTING_CORE.get(), windowId, playerInventory, isUsableByPlayer, data, pos);
-	}
-
-	public BlockPos getPos() {
-		return this.pos;
+	public static CraftingCoreContainer create(int windowId, Inventory playerInventory, BlockPos pos) {
+		return new CraftingCoreContainer(ModContainerTypes.CRAFTING_CORE.get(), windowId, playerInventory, pos);
 	}
 }

@@ -1,25 +1,22 @@
 package com.blakebr0.extendedcrafting.container;
 
+import com.blakebr0.cucumber.container.BaseContainerMenu;
 import com.blakebr0.extendedcrafting.init.ModContainerTypes;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 
-public class FluxAlternatorContainer extends AbstractContainerMenu {
-	private final BlockPos pos;
-
+public class FluxAlternatorContainer extends BaseContainerMenu {
 	private FluxAlternatorContainer(MenuType<?> type, int id, Inventory playerInventory, FriendlyByteBuf buffer) {
 		this(type, id, playerInventory, buffer.readBlockPos());
 	}
 
 	private FluxAlternatorContainer(MenuType<?> type, int id, Inventory playerInventory, BlockPos pos) {
-		super(type, id);
-		this.pos = pos;
+		super(type, id, pos);
 
 		for (int i = 0; i < 3; i++) {
 			for (int j = 0; j < 9; j++) {
@@ -69,20 +66,11 @@ public class FluxAlternatorContainer extends AbstractContainerMenu {
 		return itemstack;
 	}
 
-	@Override
-	public boolean stillValid(Player player) {
-		return true;
-	}
-
 	public static FluxAlternatorContainer create(int windowId, Inventory playerInventory, FriendlyByteBuf buffer) {
 		return new FluxAlternatorContainer(ModContainerTypes.FLUX_ALTERNATOR.get(), windowId, playerInventory, buffer);
 	}
 
 	public static FluxAlternatorContainer create(int windowId, Inventory playerInventory, BlockPos pos) {
 		return new FluxAlternatorContainer(ModContainerTypes.FLUX_ALTERNATOR.get(), windowId, playerInventory, pos);
-	}
-
-	public BlockPos getPos() {
-		return this.pos;
 	}
 }

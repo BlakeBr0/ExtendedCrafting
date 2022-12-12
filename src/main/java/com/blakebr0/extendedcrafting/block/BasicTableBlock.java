@@ -6,6 +6,7 @@ import com.blakebr0.extendedcrafting.lib.ModTooltips;
 import com.blakebr0.extendedcrafting.tileentity.BasicTableTileEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.Containers;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -23,6 +24,7 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.network.NetworkHooks;
 
 import java.util.List;
 
@@ -50,8 +52,9 @@ public class BasicTableBlock extends BaseTileEntityBlock {
 		if (!level.isClientSide()) {
 			var tile = level.getBlockEntity(pos);
 
-			if (tile instanceof BasicTableTileEntity table)
-				player.openMenu(table);
+			if (tile instanceof BasicTableTileEntity table) {
+				NetworkHooks.openScreen((ServerPlayer) player, table, pos);
+			}
 		}
 
 		return InteractionResult.SUCCESS;

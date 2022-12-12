@@ -50,8 +50,9 @@ public class EliteTableBlock extends BaseTileEntityBlock {
 		if (!level.isClientSide()) {
 			var tile = level.getBlockEntity(pos);
 
-			if (tile instanceof EliteTableTileEntity table)
+			if (tile instanceof EliteTableTileEntity table) {
 				player.openMenu(table);
+			}
 		}
 
 		return InteractionResult.SUCCESS;

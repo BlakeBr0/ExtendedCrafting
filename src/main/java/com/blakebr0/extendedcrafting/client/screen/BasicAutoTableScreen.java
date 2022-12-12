@@ -39,13 +39,13 @@ public class BasicAutoTableScreen extends BaseContainerScreen<BasicAutoTableCont
 
 		this.addRenderableWidget(new ToggleTableRunningButton(x + 130, y + 59, pos, this::isRunning));
 
-		this.addRenderableWidget(new RecipeSelectButton(x + 132, y + 7, pos, 0, this.tile.getRecipeStorage(), this::onSelectButtonTooltip));
-		this.addRenderableWidget(new RecipeSelectButton(x + 145, y + 7, pos, 1, this.tile.getRecipeStorage(), this::onSelectButtonTooltip));
-		this.addRenderableWidget(new RecipeSelectButton(x + 158, y + 7, pos, 2, this.tile.getRecipeStorage(), this::onSelectButtonTooltip));
-
 		this.tile = this.getTileEntity();
 
 		if (this.tile != null) {
+			this.addRenderableWidget(new RecipeSelectButton(x + 132, y + 7, pos, 0, this.tile.getRecipeStorage(), this::onSelectButtonTooltip));
+			this.addRenderableWidget(new RecipeSelectButton(x + 145, y + 7, pos, 1, this.tile.getRecipeStorage(), this::onSelectButtonTooltip));
+			this.addRenderableWidget(new RecipeSelectButton(x + 158, y + 7, pos, 2, this.tile.getRecipeStorage(), this::onSelectButtonTooltip));
+
 			this.addRenderableWidget(new EnergyBarWidget(x + 7, y + 17, this.tile.getEnergy(), this));
 		}
 	}

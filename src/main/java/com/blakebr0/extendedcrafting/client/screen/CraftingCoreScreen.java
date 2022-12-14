@@ -14,7 +14,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.client.extensions.common.IClientItemExtensions;
 
 public class CraftingCoreScreen extends BaseContainerScreen<CraftingCoreContainer> {
-	private static final ResourceLocation BACKGROUND = new ResourceLocation(ExtendedCrafting.MOD_ID, "textures/screen/crafting_core.png");
+	private static final ResourceLocation BACKGROUND = new ResourceLocation(ExtendedCrafting.MOD_ID, "textures/gui/crafting_core.png");
 	private CraftingCoreTileEntity tile;
 
 	public CraftingCoreScreen(CraftingCoreContainer container, Inventory inventory, Component title) {

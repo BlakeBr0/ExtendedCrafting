@@ -19,7 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CompressorScreen extends BaseContainerScreen<CompressorContainer> {
-	public static final ResourceLocation BACKGROUND = new ResourceLocation(ExtendedCrafting.MOD_ID, "textures/screen/compressor.png");
+	public static final ResourceLocation BACKGROUND = new ResourceLocation(ExtendedCrafting.MOD_ID, "textures/gui/compressor.png");
 	private CompressorTileEntity tile;
 
 	public CompressorScreen(CompressorContainer container, Inventory inventory, Component title) {

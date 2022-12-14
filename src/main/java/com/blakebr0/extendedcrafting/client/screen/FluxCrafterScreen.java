@@ -10,7 +10,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 
 public class FluxCrafterScreen extends BaseContainerScreen<FluxCrafterContainer> {
-	private static final ResourceLocation BACKGROUND = new ResourceLocation(ExtendedCrafting.MOD_ID, "textures/screen/flux_crafter.png");
+	private static final ResourceLocation BACKGROUND = new ResourceLocation(ExtendedCrafting.MOD_ID, "textures/gui/flux_crafter.png");
 	private FluxCrafterTileEntity tile;
 
 	public FluxCrafterScreen(FluxCrafterContainer container, Inventory inventory, Component title) {

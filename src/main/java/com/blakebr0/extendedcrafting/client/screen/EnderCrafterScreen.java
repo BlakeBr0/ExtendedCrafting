@@ -10,7 +10,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 
 public class EnderCrafterScreen extends BaseContainerScreen<EnderCrafterContainer> {
-	private static final ResourceLocation BACKGROUND = new ResourceLocation(ExtendedCrafting.MOD_ID, "textures/screen/ender_crafter.png");
+	private static final ResourceLocation BACKGROUND = new ResourceLocation(ExtendedCrafting.MOD_ID, "textures/gui/ender_crafter.png");
 	private EnderCrafterTileEntity tile;
 
 	public EnderCrafterScreen(EnderCrafterContainer container, Inventory inventory, Component title) {

@@ -36,12 +36,14 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.energy.IEnergyStorage;
 import net.minecraftforge.items.IItemHandler;
 
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
 public abstract class AutoTableTileEntity extends BaseInventoryTileEntity implements MenuProvider {
+    private final LazyOptional<IEnergyStorage> energyCapability = LazyOptional.of(this::getEnergy);
     private WrappedRecipe recipe;
     private int progress;
     private boolean running = true;
@@ -72,7 +74,7 @@ public abstract class AutoTableTileEntity extends BaseInventoryTileEntity implem
     @Override
     public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
         if (!this.isRemoved() && cap == ForgeCapabilities.ENERGY) {
-            return ForgeCapabilities.ENERGY.orEmpty(cap, LazyOptional.of(this::getEnergy));
+            return ForgeCapabilities.ENERGY.orEmpty(cap, this.energyCapability);
         }
 
         return super.getCapability(cap, side);

@@ -28,11 +28,13 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.energy.IEnergyStorage;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public class CraftingCoreTileEntity extends BaseInventoryTileEntity implements MenuProvider {
+	private final LazyOptional<IEnergyStorage> energyCapability = LazyOptional.of(this::getEnergy);
 	private final BaseItemStackHandler inventory;
 	private final BaseItemStackHandler recipeInventory;
 	private final BaseEnergyStorage energy;
@@ -70,7 +72,7 @@ public class CraftingCoreTileEntity extends BaseInventoryTileEntity implements M
 	@Override
 	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
 		if (!this.isRemoved() && cap == ForgeCapabilities.ENERGY) {
-			return ForgeCapabilities.ENERGY.orEmpty(cap, LazyOptional.of(this::getEnergy));
+			return ForgeCapabilities.ENERGY.orEmpty(cap, this.energyCapability);
 		}
 
 		return super.getCapability(cap, side);

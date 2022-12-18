@@ -32,10 +32,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CompressorTileEntity extends BaseInventoryTileEntity implements MenuProvider {
+	private final LazyOptional<IEnergyStorage> energyCapability = LazyOptional.of(this::getEnergy);
 	private final BaseItemStackHandler inventory;
 	private final BaseItemStackHandler recipeInventory;
 	private final BaseEnergyStorage energy;
-	private final LazyOptional<IEnergyStorage> capability = LazyOptional.of(this::getEnergy);
 	private CompressorRecipe recipe;
 	private ItemStack materialStack = ItemStack.EMPTY;
 	private List<MaterialInput> inputs = NonNullList.create();
@@ -86,7 +86,7 @@ public class CompressorTileEntity extends BaseInventoryTileEntity implements Men
 	@Override
 	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
 		if (!this.isRemoved() && cap == ForgeCapabilities.ENERGY) {
-			return ForgeCapabilities.ENERGY.orEmpty(cap, this.capability);
+			return ForgeCapabilities.ENERGY.orEmpty(cap, this.energyCapability);
 		}
 
 		return super.getCapability(cap, side);

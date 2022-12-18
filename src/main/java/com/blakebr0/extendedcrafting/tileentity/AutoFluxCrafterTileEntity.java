@@ -21,9 +21,11 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.energy.IEnergyStorage;
 import net.minecraftforge.items.IItemHandler;
 
 public class AutoFluxCrafterTileEntity extends FluxCrafterTileEntity implements MenuProvider {
+    private final LazyOptional<IEnergyStorage> energyCapability = LazyOptional.of(this::getEnergy);
     private final BaseEnergyStorage energy;
     private final TableRecipeStorage recipeStorage;
 
@@ -55,7 +57,7 @@ public class AutoFluxCrafterTileEntity extends FluxCrafterTileEntity implements 
     @Override
     public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
         if (!this.isRemoved() && cap == ForgeCapabilities.ENERGY) {
-            return ForgeCapabilities.ENERGY.orEmpty(cap, LazyOptional.of(this::getEnergy));
+            return ForgeCapabilities.ENERGY.orEmpty(cap, this.energyCapability);
         }
 
         return super.getCapability(cap, side);

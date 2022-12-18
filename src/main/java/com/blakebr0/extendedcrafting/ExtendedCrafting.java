@@ -38,6 +38,7 @@ public final class ExtendedCrafting {
 
 		bus.register(this);
 		bus.register(new ModCreativeModeTabs());
+		bus.register(new ModRecipeTypes());
 
 		ModBlocks.REGISTRY.register(bus);
 		ModItems.REGISTRY.register(bus);

@@ -1,5 +1,11 @@
 {
-  "type": "crafting_shaped",
+  "type": "minecraft:crafting_shaped",
+  "conditions": [
+    {
+      "type": "cucumber:feature_flag",
+      "flag": "extendedcrafting:handheld_workbench"
+    }
+  ],
   "pattern": [
     " C",
     "S "

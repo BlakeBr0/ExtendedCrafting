@@ -1,7 +1,6 @@
 package com.blakebr0.extendedcrafting.init;
 
 import com.blakebr0.extendedcrafting.ExtendedCrafting;
-import com.blakebr0.extendedcrafting.crafting.condition.UltimateSingularityRecipeCondition;
 import com.blakebr0.extendedcrafting.crafting.recipe.CombinationRecipe;
 import com.blakebr0.extendedcrafting.crafting.recipe.CompressorRecipe;
 import com.blakebr0.extendedcrafting.crafting.recipe.ShapedEnderCrafterRecipe;
@@ -12,11 +11,8 @@ import com.blakebr0.extendedcrafting.crafting.recipe.ShapelessFluxCrafterRecipe;
 import com.blakebr0.extendedcrafting.crafting.recipe.ShapelessTableRecipe;
 import com.blakebr0.extendedcrafting.crafting.recipe.UltimateSingularityRecipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
-import net.minecraftforge.common.crafting.CraftingHelper;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraftforge.registries.RegisterEvent;
 import net.minecraftforge.registries.RegistryObject;
 
 import java.util.function.Supplier;
@@ -33,13 +29,6 @@ public final class ModRecipeSerializers {
     public static final RegistryObject<RecipeSerializer<?>> SHAPED_FLUX_CRAFTER = register("shaped_flux_crafter", ShapedFluxCrafterRecipe.Serializer::new);
     public static final RegistryObject<RecipeSerializer<?>> SHAPELESS_FLUX_CRAFTER = register("shapeless_flux_crafter", ShapelessFluxCrafterRecipe.Serializer::new);
     public static final RegistryObject<RecipeSerializer<?>> ULTIMATE_SINGULARITY = register("ultimate_singularity", UltimateSingularityRecipe.Serializer::new);
-
-    @SubscribeEvent
-    public void onRegisterSerializers(RegisterEvent event) {
-        event.register(ForgeRegistries.Keys.RECIPE_SERIALIZERS, registry -> {
-            CraftingHelper.register(UltimateSingularityRecipeCondition.Serializer.INSTANCE);
-        });
-    }
 
     private static RegistryObject<RecipeSerializer<?>> register(String name, Supplier<RecipeSerializer<?>> serializer) {
         return REGISTRY.register(name, serializer);

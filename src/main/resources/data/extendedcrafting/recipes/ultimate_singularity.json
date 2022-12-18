@@ -2,7 +2,8 @@
   "type": "extendedcrafting:ultimate_singularity",
   "conditions": [
     {
-      "type": "extendedcrafting:ultimate_singularity_recipe"
+      "type": "cucumber:feature_flag",
+      "flag": "extendedcrafting:ultimate_singularity_recipe"
     }
   ]
 }

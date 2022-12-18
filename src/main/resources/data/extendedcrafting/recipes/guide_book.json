@@ -1,5 +1,5 @@
 {
-  "type": "crafting_shapeless",
+  "type": "minecraft:crafting_shapeless",
   "conditions": [
     {
       "type": "forge:item_exists",

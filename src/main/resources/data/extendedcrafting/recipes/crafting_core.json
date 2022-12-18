@@ -1,9 +1,9 @@
 {
-  "type": "crafting_shaped",
+  "type": "minecraft:crafting_shaped",
   "conditions": [
     {
-      "type": "cucumber:enabled",
-      "item": "extendedcrafting:crafting_core"
+      "type": "cucumber:feature_flag",
+      "flag": "extendedcrafting:crafting_core"
     }
   ],
   "pattern": [

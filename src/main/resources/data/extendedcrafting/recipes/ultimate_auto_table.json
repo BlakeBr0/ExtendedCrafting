@@ -1,9 +1,13 @@
 {
-  "type": "crafting_shaped",
+  "type": "minecraft:crafting_shaped",
   "conditions": [
     {
-      "type": "cucumber:enabled",
-      "item": "extendedcrafting:ultimate_auto_table"
+      "type": "cucumber:feature_flag",
+      "flag": "extendedcrafting:tables"
+    },
+    {
+      "type": "cucumber:feature_flag",
+      "flag": "extendedcrafting:auto_tables"
     }
   ],
   "pattern": [

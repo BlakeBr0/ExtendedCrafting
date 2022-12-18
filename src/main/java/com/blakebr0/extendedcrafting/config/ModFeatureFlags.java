@@ -19,6 +19,7 @@ public final class ModFeatureFlags {
     public static final FeatureFlag RECIPE_MAKER_USE_NBT = FeatureFlag.create(new ResourceLocation(ExtendedCrafting.MOD_ID, "recipe_maker_use_nbt"), ModConfigs.RECIPE_MAKER_USE_NBT);
     public static final FeatureFlag RECIPE_MAKER_USE_TAGS = FeatureFlag.create(new ResourceLocation(ExtendedCrafting.MOD_ID, "recipe_maker_use_tags"), ModConfigs.RECIPE_MAKER_USE_TAGS);
     public static final FeatureFlag SINGULARITIES = FeatureFlag.create(new ResourceLocation(ExtendedCrafting.MOD_ID, "singularities"), ModConfigs.ENABLE_SINGULARITIES);
+    public static final FeatureFlag SINGULARITY_ULTIMATE_RECIPE = FeatureFlag.create(new ResourceLocation(ExtendedCrafting.MOD_ID, "ultimate_singularity_recipe"), ModConfigs.SINGULARITY_ULTIMATE_RECIPE);
     public static final FeatureFlag TABLES = FeatureFlag.create(new ResourceLocation(ExtendedCrafting.MOD_ID, "tables"), ModConfigs.ENABLE_TABLES);
     public static final FeatureFlag TABLE_USE_VANILLA_RECIPES = FeatureFlag.create(new ResourceLocation(ExtendedCrafting.MOD_ID, "table_use_vanilla_recipes"), ModConfigs.TABLE_USE_VANILLA_RECIPES);
 }

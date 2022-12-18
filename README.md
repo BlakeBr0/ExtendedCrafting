@@ -9,6 +9,7 @@ The official release builds can be downloaded from the following websites.
 
 - [Blake's Mods](https://blakesmods.com/extended-crafting/download)
 - [CurseForge](https://www.curseforge.com/minecraft/mc-mods/extended-crafting)
+- [Modrinth](https://modrinth.com/mod/extended-crafting)
 
 ## Development
 

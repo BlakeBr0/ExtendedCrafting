@@ -109,8 +109,7 @@ public final class ModCreativeModeTabs {
 
             builder.title(Component.translatable("itemGroup.extendedcrafting"))
                     .icon(() -> new ItemStack(ModItems.LUMINESSENCE.get()))
-                    .displayItems(displayItems)
-                    .build();
+                    .displayItems(displayItems);
         });
     }
 }

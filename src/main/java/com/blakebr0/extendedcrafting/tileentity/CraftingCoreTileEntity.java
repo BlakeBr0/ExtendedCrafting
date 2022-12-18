@@ -1,5 +1,6 @@
 package com.blakebr0.extendedcrafting.tileentity;
 
+import com.blakebr0.cucumber.energy.BaseEnergyStorage;
 import com.blakebr0.cucumber.helper.StackHelper;
 import com.blakebr0.cucumber.inventory.BaseItemStackHandler;
 import com.blakebr0.cucumber.tileentity.BaseInventoryTileEntity;
@@ -27,25 +28,23 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.energy.EnergyStorage;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public class CraftingCoreTileEntity extends BaseInventoryTileEntity implements MenuProvider {
 	private final BaseItemStackHandler inventory;
-	private final EnergyStorage energy;
 	private final BaseItemStackHandler recipeInventory;
+	private final BaseEnergyStorage energy;
 	private CombinationRecipe recipe;
 	private int progress;
-	private int oldEnergy;
 	private int pedestalCount;
 	private boolean haveItemsChanged = true;
 
 	public CraftingCoreTileEntity(BlockPos pos, BlockState state) {
 		super(ModTileEntities.CRAFTING_CORE.get(), pos, state);
 		this.inventory = createInventoryHandler(this::markDirtyAndDispatch);
-		this.energy = new EnergyStorage(ModConfigs.CRAFTING_CORE_POWER_CAPACITY.get());
+		this.energy = new BaseEnergyStorage(ModConfigs.CRAFTING_CORE_POWER_CAPACITY.get(), this::markDirtyAndDispatch);
 		this.recipeInventory = BaseItemStackHandler.create(49);
 	}
 
@@ -145,12 +144,6 @@ public class CraftingCoreTileEntity extends BaseInventoryTileEntity implements M
 			}
 		}
 
-		if (tile.oldEnergy != tile.energy.getEnergyStored()) {
-			tile.oldEnergy = tile.energy.getEnergyStored();
-			if (!mark)
-				mark = true;
-		}
-
 		if (mark) {
 			tile.markDirtyAndDispatch();
 		}
@@ -162,7 +155,7 @@ public class CraftingCoreTileEntity extends BaseInventoryTileEntity implements M
 		});
 	}
 
-	public EnergyStorage getEnergy() {
+	public BaseEnergyStorage getEnergy() {
 		return this.energy;
 	}
 

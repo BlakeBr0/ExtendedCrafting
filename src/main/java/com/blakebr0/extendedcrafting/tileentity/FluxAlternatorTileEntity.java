@@ -1,5 +1,6 @@
 package com.blakebr0.extendedcrafting.tileentity;
 
+import com.blakebr0.cucumber.energy.BaseEnergyStorage;
 import com.blakebr0.cucumber.tileentity.BaseTileEntity;
 import com.blakebr0.cucumber.util.Localizable;
 import com.blakebr0.extendedcrafting.config.ModConfigs;
@@ -13,20 +14,17 @@ import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.energy.EnergyStorage;
 
 public class FluxAlternatorTileEntity extends BaseTileEntity implements MenuProvider {
-    private final EnergyStorage energy;
-    private int oldEnergy;
+    private final BaseEnergyStorage energy;
 
     public FluxAlternatorTileEntity(BlockPos pos, BlockState state) {
         super(ModTileEntities.FLUX_ALTERNATOR.get(), pos, state);
-        this.energy = new EnergyStorage(ModConfigs.FLUX_ALTERNATOR_POWER_CAPACITY.get());
+        this.energy = new BaseEnergyStorage(ModConfigs.FLUX_ALTERNATOR_POWER_CAPACITY.get(), this::markDirtyAndDispatch);
     }
 
     @Override
@@ -60,15 +58,7 @@ public class FluxAlternatorTileEntity extends BaseTileEntity implements MenuProv
         return super.getCapability(cap, side);
     }
 
-    public EnergyStorage getEnergy() {
+    public BaseEnergyStorage getEnergy() {
         return this.energy;
-    }
-
-    // TODO: ideally this gets removed
-    public static void tick(Level level, BlockPos pos, BlockState state, FluxAlternatorTileEntity tile) {
-        if (tile.oldEnergy != tile.energy.getEnergyStored()) {
-            tile.oldEnergy = tile.energy.getEnergyStored();
-            tile.markDirtyAndDispatch();
-        }
     }
 }

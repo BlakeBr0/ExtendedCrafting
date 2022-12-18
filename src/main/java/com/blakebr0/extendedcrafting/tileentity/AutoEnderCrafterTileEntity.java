@@ -1,5 +1,6 @@
 package com.blakebr0.extendedcrafting.tileentity;
 
+import com.blakebr0.cucumber.energy.BaseEnergyStorage;
 import com.blakebr0.cucumber.helper.StackHelper;
 import com.blakebr0.cucumber.inventory.BaseItemStackHandler;
 import com.blakebr0.extendedcrafting.config.ModConfigs;
@@ -20,17 +21,15 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.energy.EnergyStorage;
 import net.minecraftforge.items.IItemHandler;
 
 public class AutoEnderCrafterTileEntity extends EnderCrafterTileEntity implements MenuProvider {
-    private final EnergyStorage energy;
+    private final BaseEnergyStorage energy;
     private final TableRecipeStorage recipeStorage;
-    private int oldEnergy;
 
     public AutoEnderCrafterTileEntity(BlockPos pos, BlockState state) {
         super(ModTileEntities.AUTO_ENDER_CRAFTER.get(), pos, state);
-        this.energy = new EnergyStorage(ModConfigs.AUTO_ENDER_CRAFTER_POWER_CAPACITY.get());
+        this.energy = new BaseEnergyStorage(ModConfigs.AUTO_ENDER_CRAFTER_POWER_CAPACITY.get(), this::markDirtyAndDispatch);
         this.recipeStorage = new TableRecipeStorage(10);
     }
 
@@ -85,11 +84,6 @@ public class AutoEnderCrafterTileEntity extends EnderCrafterTileEntity implement
                 });
             }
         }
-
-        if (tile.oldEnergy != tile.energy.getEnergyStored()) {
-            tile.oldEnergy = tile.energy.getEnergyStored();
-            tile.markDirtyAndDispatch();
-        }
     }
 
     public void selectRecipe(int index) {
@@ -132,7 +126,7 @@ public class AutoEnderCrafterTileEntity extends EnderCrafterTileEntity implement
         return this.recipeStorage;
     }
 
-    public EnergyStorage getEnergy() {
+    public BaseEnergyStorage getEnergy() {
         return this.energy;
     }
 

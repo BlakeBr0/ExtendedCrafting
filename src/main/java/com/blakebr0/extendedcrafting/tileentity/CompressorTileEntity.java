@@ -1,5 +1,6 @@
 package com.blakebr0.extendedcrafting.tileentity;
 
+import com.blakebr0.cucumber.energy.BaseEnergyStorage;
 import com.blakebr0.cucumber.helper.StackHelper;
 import com.blakebr0.cucumber.inventory.BaseItemStackHandler;
 import com.blakebr0.cucumber.tileentity.BaseInventoryTileEntity;
@@ -25,7 +26,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.energy.EnergyStorage;
 import net.minecraftforge.energy.IEnergyStorage;
 
 import java.util.ArrayList;
@@ -34,7 +34,7 @@ import java.util.List;
 public class CompressorTileEntity extends BaseInventoryTileEntity implements MenuProvider {
 	private final BaseItemStackHandler inventory;
 	private final BaseItemStackHandler recipeInventory;
-	private final EnergyStorage energy;
+	private final BaseEnergyStorage energy;
 	private final LazyOptional<IEnergyStorage> capability = LazyOptional.of(this::getEnergy);
 	private CompressorRecipe recipe;
 	private ItemStack materialStack = ItemStack.EMPTY;
@@ -49,7 +49,7 @@ public class CompressorTileEntity extends BaseInventoryTileEntity implements Men
 		super(ModTileEntities.COMPRESSOR.get(), pos, state);
 		this.inventory = createInventoryHandler(null);
 		this.recipeInventory = BaseItemStackHandler.create(2);
-		this.energy = new EnergyStorage(ModConfigs.COMPRESSOR_POWER_CAPACITY.get());
+		this.energy = new BaseEnergyStorage(ModConfigs.COMPRESSOR_POWER_CAPACITY.get(), this::markDirtyAndDispatch);
 	}
 
 	@Override
@@ -209,7 +209,7 @@ public class CompressorTileEntity extends BaseInventoryTileEntity implements Men
 		});
 	}
 
-	public EnergyStorage getEnergy() {
+	public BaseEnergyStorage getEnergy() {
 		return this.energy;
 	}
 

@@ -59,9 +59,4 @@ public class AutoFluxCrafterBlock extends BaseTileEntityBlock {
 	protected <T extends BlockEntity> BlockEntityTicker<T> getServerTicker(Level level, BlockState state, BlockEntityType<T> type) {
 		return createTicker(type, ModTileEntities.AUTO_FLUX_CRAFTER.get(), AutoFluxCrafterTileEntity::tick);
 	}
-
-	@Override
-	protected <T extends BlockEntity> BlockEntityTicker<T> getClientTicker(Level level, BlockState state, BlockEntityType<T> type) {
-		return createTicker(type, ModTileEntities.AUTO_FLUX_CRAFTER.get(), AutoFluxCrafterTileEntity::tick);
-	}
 }

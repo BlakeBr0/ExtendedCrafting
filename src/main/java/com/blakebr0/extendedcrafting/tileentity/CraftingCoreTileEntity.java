@@ -90,60 +90,51 @@ public class CraftingCoreTileEntity extends BaseInventoryTileEntity implements M
 
 	public static void tick(Level level, BlockPos pos, BlockState state, CraftingCoreTileEntity tile) {
 		var mark = false;
+		var recipe = tile.getActiveRecipe();
 
-		var pedestalsWithItems = tile.getPedestalsWithItems();
-		var stacks = pedestalsWithItems.values().toArray(new ItemStack[0]);
+		if (recipe != null) {
+			if (tile.energy.getEnergyStored() > 0) {
+				boolean done = tile.process(recipe);
+				var pedestalsWithItems = tile.getPedestalsWithItems();
 
-		tile.updateRecipeInventory(stacks);
+				if (done) {
+					for (var pedestalPos : pedestalsWithItems.keySet()) {
+						var pedestalTile = level.getBlockEntity(pedestalPos);
 
-		if (tile.haveItemsChanged && (tile.recipe == null || !tile.recipe.matches(tile.recipeInventory))) {
-			tile.recipe = (CombinationRecipe) level.getRecipeManager().getRecipeFor(ModRecipeTypes.COMBINATION.get(), tile.recipeInventory.toIInventory(), level).orElse(null);
-		}
+						if (pedestalTile instanceof PedestalTileEntity pedestal) {
+							var inventory = pedestal.getInventory();
 
-		if (!level.isClientSide()) {
-			if (tile.recipe != null) {
-				if (tile.energy.getEnergyStored() > 0) {
-					boolean done = tile.process(tile.recipe);
+							inventory.setStackInSlot(0, StackHelper.shrink(inventory.getStackInSlot(0), 1, true));
+							pedestal.markDirtyAndDispatch();
 
-					if (done) {
+							tile.spawnParticles(ParticleTypes.SMOKE, pedestalPos, 1.1, 20);
+						}
+					}
+
+					tile.spawnParticles(ParticleTypes.END_ROD, pos, 1.1, 50);
+					tile.inventory.setStackInSlot(0, recipe.assemble(tile.recipeInventory));
+					tile.progress = 0;
+
+					mark = true;
+				} else {
+					tile.spawnParticles(ParticleTypes.ENTITY_EFFECT, pos, 1.15, 2);
+
+					if (tile.shouldSpawnItemParticles()) {
 						for (var pedestalPos : pedestalsWithItems.keySet()) {
 							var pedestalTile = level.getBlockEntity(pedestalPos);
 
 							if (pedestalTile instanceof PedestalTileEntity pedestal) {
 								var inventory = pedestal.getInventory();
+								var stack = inventory.getStackInSlot(0);
 
-								inventory.setStackInSlot(0, StackHelper.shrink(inventory.getStackInSlot(0), 1, true));
-								pedestal.markDirtyAndDispatch();
-
-								tile.spawnParticles(ParticleTypes.SMOKE, pedestalPos, 1.1, 20);
-							}
-						}
-
-						tile.spawnParticles(ParticleTypes.END_ROD, pos, 1.1, 50);
-						tile.inventory.setStackInSlot(0, tile.recipe.assemble(tile.recipeInventory));
-						tile.progress = 0;
-
-						mark = true;
-					} else {
-						tile.spawnParticles(ParticleTypes.ENTITY_EFFECT, pos, 1.15, 2);
-
-						if (tile.shouldSpawnItemParticles()) {
-							for (var pedestalPos : pedestalsWithItems.keySet()) {
-								var pedestalTile = level.getBlockEntity(pedestalPos);
-
-								if (pedestalTile instanceof PedestalTileEntity pedestal) {
-									var inventory = pedestal.getInventory();
-									var stack = inventory.getStackInSlot(0);
-
-									tile.spawnItemParticles(pedestalPos, stack);
-								}
+								tile.spawnItemParticles(pedestalPos, stack);
 							}
 						}
 					}
 				}
-			} else {
-				tile.progress = 0;
 			}
+		} else {
+			tile.progress = 0;
 		}
 
 		if (mark) {
@@ -162,6 +153,22 @@ public class CraftingCoreTileEntity extends BaseInventoryTileEntity implements M
 	}
 
 	public CombinationRecipe getActiveRecipe() {
+		if (this.level == null)
+			return null;
+
+		var pedestalsWithItems = this.getPedestalsWithItems();
+		var stacks = pedestalsWithItems.values().toArray(new ItemStack[0]);
+
+		this.updateRecipeInventory(stacks);
+
+		if (this.haveItemsChanged && (this.recipe == null || !this.recipe.matches(this.recipeInventory))) {
+			var recipe = level.getRecipeManager()
+					.getRecipeFor(ModRecipeTypes.COMBINATION.get(), this.recipeInventory.toIInventory(), level)
+					.orElse(null);
+
+			this.recipe = recipe instanceof CombinationRecipe ? (CombinationRecipe) recipe : null;
+		}
+
 		return this.recipe;
 	}
 

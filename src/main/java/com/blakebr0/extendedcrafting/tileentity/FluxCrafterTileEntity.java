@@ -75,53 +75,38 @@ public class FluxCrafterTileEntity extends BaseInventoryTileEntity implements Me
 
 	public static void tick(Level level, BlockPos pos, BlockState state, FluxCrafterTileEntity tile) {
 		var mark = false;
+		var recipe = tile.getActiveRecipe();
 
-		tile.updateRecipeInventory();
+		if (recipe != null) {
+			var result = recipe.assemble(tile.recipeInventory.toIInventory());
+			var output = tile.inventory.getStackInSlot(9);
 
-		var recipeInventory = tile.recipeInventory.toIInventory();
+			if (StackHelper.canCombineStacks(result, output)) {
+				var alternators = tile.getAlternators();
+				int alternatorCount = alternators.size();
 
-		if (tile.isGridChanged && (tile.recipe == null || !tile.recipe.matches(recipeInventory, level))) {
-			tile.recipe = level.getRecipeManager().getRecipeFor(ModRecipeTypes.FLUX_CRAFTER.get(), recipeInventory, level).orElse(null);
-		}
+				if (alternatorCount > 0) {
+					tile.progress(alternatorCount);
 
-		if (!level.isClientSide()) {
-			if (tile.recipe != null) {
-				var result = tile.recipe.assemble(recipeInventory);
-				var output = tile.inventory.getStackInSlot(9);
-
-				if (StackHelper.canCombineStacks(result, output)) {
-					var alternators = tile.getAlternators();
-					int alternatorCount = alternators.size();
-
-					if (alternatorCount > 0) {
-						tile.progress(alternatorCount);
-
-						for (var alternator : alternators) {
-							var alternatorPos = alternator.getBlockPos();
-							if (level.isEmptyBlock(alternatorPos.above())) {
-								tile.spawnDustParticles(alternatorPos, 1, 1);
-							}
-
-							alternator.getEnergy().extractEnergy(tile.recipe.getPowerRate(), false);
+					for (var alternator : alternators) {
+						var alternatorPos = alternator.getBlockPos();
+						if (level.isEmptyBlock(alternatorPos.above())) {
+							tile.spawnDustParticles(alternatorPos, 1, 1);
 						}
 
-						if (tile.progress >= tile.progressReq) {
-							for (int i = 0; i < tile.inventory.getSlots() - 1; i++) {
-								tile.inventory.setStackInSlot(i, StackHelper.shrink(tile.inventory.getStackInSlot(i), 1, false));
-							}
+						alternator.getEnergy().extractEnergy(recipe.getPowerRate(), false);
+					}
 
-							tile.updateResult(result);
-							tile.progress = 0;
+					if (tile.progress >= tile.progressReq) {
+						for (int i = 0; i < tile.inventory.getSlots() - 1; i++) {
+							tile.inventory.setStackInSlot(i, StackHelper.shrink(tile.inventory.getStackInSlot(i), 1, false));
 						}
 
-						mark = true;
+						tile.updateResult(result);
+						tile.progress = 0;
 					}
-				} else {
-					if (tile.progress > 0 || tile.progressReq > 0) {
-						tile.reset();
 
-						mark = true;
-					}
+					mark = true;
 				}
 			} else {
 				if (tile.progress > 0 || tile.progressReq > 0) {
@@ -130,10 +115,16 @@ public class FluxCrafterTileEntity extends BaseInventoryTileEntity implements Me
 					mark = true;
 				}
 			}
+		} else {
+			if (tile.progress > 0 || tile.progressReq > 0) {
+				tile.reset();
 
-			if (mark) {
-				tile.markDirtyAndDispatch();
+				mark = true;
 			}
+		}
+
+		if (mark) {
+			tile.markDirtyAndDispatch();
 		}
 	}
 
@@ -223,6 +214,19 @@ public class FluxCrafterTileEntity extends BaseInventoryTileEntity implements Me
 	}
 
 	public IFluxCrafterRecipe getActiveRecipe() {
+		if (this.level == null)
+			return null;
+
+		this.updateRecipeInventory();
+
+		var recipeInventory = this.recipeInventory.toIInventory();
+
+		if (this.isGridChanged && (this.recipe == null || !this.recipe.matches(recipeInventory, level))) {
+			this.recipe = level.getRecipeManager()
+					.getRecipeFor(ModRecipeTypes.FLUX_CRAFTER.get(), recipeInventory, level)
+					.orElse(null);
+		}
+
 		return this.recipe;
 	}
 }

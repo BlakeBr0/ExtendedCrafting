@@ -92,9 +92,4 @@ public class UltimateAutoTableBlock extends BaseTileEntityBlock {
     protected <T extends BlockEntity> BlockEntityTicker<T> getServerTicker(Level level, BlockState state, BlockEntityType<T> type) {
         return createTicker(type, ModTileEntities.ULTIMATE_AUTO_TABLE.get(), AutoTableTileEntity::tick);
     }
-
-    @Override
-    protected <T extends BlockEntity> BlockEntityTicker<T> getClientTicker(Level level, BlockState state, BlockEntityType<T> type) {
-        return createTicker(type, ModTileEntities.ULTIMATE_AUTO_TABLE.get(), AutoTableTileEntity::tick);
-    }
 }

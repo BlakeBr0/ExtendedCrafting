@@ -104,93 +104,76 @@ public class CompressorTileEntity extends BaseInventoryTileEntity implements Men
 
 	public static void tick(Level level, BlockPos pos, BlockState state, CompressorTileEntity tile) {
 		var mark = false;
+		var recipe = tile.getActiveRecipe();
 		var output = tile.inventory.getStackInSlot(0);
 		var input = tile.inventory.getStackInSlot(1);
-		var catalyst = tile.inventory.getStackInSlot(2);
 
-		tile.recipeInventory.setStackInSlot(0, tile.materialStack);
-		tile.recipeInventory.setStackInSlot(1, catalyst);
+		if (!input.isEmpty()) {
+			if (tile.materialStack.isEmpty() || tile.materialCount <= 0) {
+				tile.materialStack = input.copy();
+				mark = true;
+			}
 
-		if (tile.recipe == null || !tile.recipe.matches(tile.recipeInventory)) {
-			tile.recipe = (CompressorRecipe) level.getRecipeManager()
-					.getRecipeFor(ModRecipeTypes.COMPRESSOR.get(), tile.recipeInventory.toIInventory(), level)
-					.orElse(null);
-		}
-
-		if (!level.isClientSide()) {
-			if (!input.isEmpty()) {
-				if (tile.materialStack.isEmpty() || tile.materialCount <= 0) {
-					tile.materialStack = input.copy();
+			if (!tile.inputLimit || (recipe != null && tile.materialCount < recipe.getInputCount())) {
+				var index = tile.canInsertItem(input);
+				if (index > -1) {
+					tile.insertItem(index, input);
 					mark = true;
 				}
-
-				if (!tile.inputLimit || (tile.recipe != null && tile.materialCount < tile.recipe.getInputCount())) {
-					var index = tile.canInsertItem(input);
-					if (index > -1) {
-						tile.insertItem(index, input);
-						mark = true;
-					}
-				}
 			}
+		}
 
-			if (tile.recipe != null && tile.getEnergy().getEnergyStored() > 0) {
-				if (tile.materialCount >= tile.recipe.getInputCount()) {
-					if (tile.progress >= tile.recipe.getPowerCost()) {
-						var result = tile.recipe.assemble(tile.inventory);
+		if (recipe != null && tile.getEnergy().getEnergyStored() > 0) {
+			if (tile.materialCount >= recipe.getInputCount()) {
+				if (tile.progress >= recipe.getPowerCost()) {
+					var result = recipe.assemble(tile.inventory);
 
-						if (StackHelper.canCombineStacks(result, output)) {
-							tile.updateResult(result);
-							tile.progress = 0;
-							tile.materialCount -= tile.recipe.getInputCount();
+					if (StackHelper.canCombineStacks(result, output)) {
+						tile.updateResult(result);
+						tile.progress = 0;
+						tile.materialCount -= recipe.getInputCount();
 
-							if (tile.materialCount <= 0) {
-								tile.materialStack = ItemStack.EMPTY;
-							}
-						}
-					} else {
-						tile.process(tile.recipe);
-						mark = true;
-					}
-				}
-			}
-
-			if (tile.ejecting) {
-				var newestInput = tile.getNewestInput();
-				var newestStack = newestInput.stack;
-
-				if (tile.materialCount > 0 && !newestStack.isEmpty() && (output.isEmpty() || StackHelper.areStacksEqual(newestStack, output))) {
-					int addCount = Math.min(newestInput.count, newestStack.getMaxStackSize() - output.getCount());
-					if (addCount > 0) {
-						var toAdd = StackHelper.withSize(newestStack, addCount, false);
-
-						tile.updateResult(toAdd);
-						tile.materialCount -= addCount;
-
-						newestInput.count -= addCount;
-
-						if (newestInput.count <= 0) {
-							tile.inputs.remove(tile.inputs.size() - 1);
-						}
-
-						if (tile.materialCount < 1) {
+						if (tile.materialCount <= 0) {
 							tile.materialStack = ItemStack.EMPTY;
-							tile.ejecting = false;
 						}
-
-						if (tile.progress > 0)
-							tile.progress = 0;
-
-						if (!mark)
-							mark = true;
 					}
+				} else {
+					tile.process(recipe);
+					mark = true;
 				}
 			}
 		}
 
-		if (tile.oldEnergy != tile.energy.getEnergyStored()) {
-			tile.oldEnergy = tile.energy.getEnergyStored();
-			if (!mark)
-				mark = true;
+		if (tile.ejecting) {
+			var newestInput = tile.getNewestInput();
+			var newestStack = newestInput.stack;
+
+			if (tile.materialCount > 0 && !newestStack.isEmpty() && (output.isEmpty() || StackHelper.areStacksEqual(newestStack, output))) {
+				int addCount = Math.min(newestInput.count, newestStack.getMaxStackSize() - output.getCount());
+				if (addCount > 0) {
+					var toAdd = StackHelper.withSize(newestStack, addCount, false);
+
+					tile.updateResult(toAdd);
+					tile.materialCount -= addCount;
+
+					newestInput.count -= addCount;
+
+					if (newestInput.count <= 0) {
+						tile.inputs.remove(tile.inputs.size() - 1);
+					}
+
+					if (tile.materialCount < 1) {
+						tile.materialStack = ItemStack.EMPTY;
+						tile.ejecting = false;
+					}
+
+					if (tile.progress > 0)
+						tile.progress = 0;
+
+					if (!mark)
+						mark = true;
+				}
+			}
 		}
 
 		if (mark) {
@@ -254,6 +237,22 @@ public class CompressorTileEntity extends BaseInventoryTileEntity implements Men
 	}
 
 	public CompressorRecipe getActiveRecipe() {
+		if (this.level == null)
+			return null;
+
+		var catalyst = this.inventory.getStackInSlot(2);
+
+		this.recipeInventory.setStackInSlot(0, this.materialStack);
+		this.recipeInventory.setStackInSlot(1, catalyst);
+
+		if (this.recipe == null || !this.recipe.matches(this.recipeInventory)) {
+			var recipe = level.getRecipeManager()
+					.getRecipeFor(ModRecipeTypes.COMPRESSOR.get(), this.recipeInventory.toIInventory(), level)
+					.orElse(null);
+
+			this.recipe = recipe instanceof CompressorRecipe ? (CompressorRecipe) recipe : null;
+		}
+
 		return this.recipe;
 	}
 

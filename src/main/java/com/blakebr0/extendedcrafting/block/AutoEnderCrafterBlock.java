@@ -59,9 +59,4 @@ public class AutoEnderCrafterBlock extends BaseTileEntityBlock {
 	protected <T extends BlockEntity> BlockEntityTicker<T> getServerTicker(Level level, BlockState state, BlockEntityType<T> type) {
 		return createTicker(type, ModTileEntities.AUTO_ENDER_CRAFTER.get(), AutoEnderCrafterTileEntity::tick);
 	}
-
-	@Override
-	protected <T extends BlockEntity> BlockEntityTicker<T> getClientTicker(Level level, BlockState state, BlockEntityType<T> type) {
-		return createTicker(type, ModTileEntities.AUTO_ENDER_CRAFTER.get(), AutoEnderCrafterTileEntity::tick);
-	}
 }

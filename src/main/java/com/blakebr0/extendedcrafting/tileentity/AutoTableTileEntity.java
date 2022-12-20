@@ -85,60 +85,42 @@ public abstract class AutoTableTileEntity extends BaseInventoryTileEntity implem
         var energy = tile.getEnergy();
 
         if (tile.running) {
-            tile.updateRecipeInventory();
+            var recipe = tile.getActiveRecipe();
 
-            var recipeInventory = tile.getRecipeInventory().toIInventory();
+            if (recipe != null) {
+                var recipeInventory = tile.getRecipeInventory().toIInventory();
+                var inventory = tile.getInventory();
+                var result = recipe.getCraftingResult(recipeInventory);
+                int outputSlot = inventory.getSlots() - 1;
+                var output = inventory.getStackInSlot(outputSlot);
+                int powerRate = ModConfigs.AUTO_TABLE_POWER_RATE.get();
 
-            if (tile.isGridChanged && (tile.recipe == null || !tile.recipe.matches(recipeInventory, level))) {
-                var recipe = level.getRecipeManager().getRecipeFor(ModRecipeTypes.TABLE.get(), recipeInventory, level).orElse(null);
+                if (StackHelper.canCombineStacks(result, output) && energy.getEnergyStored() >= powerRate) {
+                    tile.progress++;
+                    energy.extractEnergy(powerRate, false);
 
-                tile.recipe = recipe != null ? new WrappedRecipe(recipe) : null;
+                    if (tile.progress >= tile.getProgressRequired()) {
+                        var remaining = recipe.getRemainingItems(recipeInventory);
 
-                if (tile.recipe == null && ModConfigs.TABLE_USE_VANILLA_RECIPES.get() && tile instanceof Basic) {
-                    var craftingInventory = new ExtendedCraftingInventory(EmptyContainer.INSTANCE, tile.getRecipeInventory(), 3);
-                    var vanilla = level.getRecipeManager().getRecipeFor(RecipeType.CRAFTING, craftingInventory, level).orElse(null);
-
-                    tile.recipe = vanilla != null ? new WrappedRecipe(vanilla, craftingInventory) : null;
-                }
-
-                tile.isGridChanged = false;
-            }
-
-            if (!level.isClientSide()) {
-                if (tile.recipe != null) {
-                    var inventory = tile.getInventory();
-                    var result = tile.recipe.getCraftingResult(recipeInventory);
-                    int outputSlot = inventory.getSlots() - 1;
-                    var output = inventory.getStackInSlot(outputSlot);
-                    int powerRate = ModConfigs.AUTO_TABLE_POWER_RATE.get();
-
-                    if (StackHelper.canCombineStacks(result, output) && energy.getEnergyStored() >= powerRate) {
-                        tile.progress++;
-                        energy.extractEnergy(powerRate, false);
-
-                        if (tile.progress >= tile.getProgressRequired()) {
-                            var remaining = tile.recipe.getRemainingItems(recipeInventory);
-
-                            for (int i = 0; i < recipeInventory.getContainerSize(); i++) {
-                                if (!remaining.get(i).isEmpty()) {
-                                    inventory.setStackInSlot(i, remaining.get(i));
-                                } else {
-                                    inventory.setStackInSlot(i, StackHelper.shrink(inventory.getStackInSlot(i), 1, false));
-                                }
+                        for (int i = 0; i < recipeInventory.getContainerSize(); i++) {
+                            if (!remaining.get(i).isEmpty()) {
+                                inventory.setStackInSlot(i, remaining.get(i));
+                            } else {
+                                inventory.setStackInSlot(i, StackHelper.shrink(inventory.getStackInSlot(i), 1, false));
                             }
-
-                            tile.updateResult(result, outputSlot);
-                            tile.progress = 0;
-                            tile.isGridChanged = true;
                         }
 
-                        mark = true;
-                    }
-                } else {
-                    if (tile.progress > 0) {
+                        tile.updateResult(result, outputSlot);
                         tile.progress = 0;
-                        mark = true;
+                        tile.isGridChanged = true;
                     }
+
+                    mark = true;
+                }
+            } else {
+                if (tile.progress > 0) {
+                    tile.progress = 0;
+                    mark = true;
                 }
             }
         } else {
@@ -149,7 +131,8 @@ public abstract class AutoTableTileEntity extends BaseInventoryTileEntity implem
         }
 
         int insertPowerRate = ModConfigs.AUTO_TABLE_INSERT_POWER_RATE.get();
-        if (!level.isClientSide() && tile.getEnergy().getEnergyStored() >= insertPowerRate) {
+
+        if (tile.getEnergy().getEnergyStored() >= insertPowerRate) {
             int selected = tile.getRecipeStorage().getSelected();
             if (selected != -1) {
                 tile.getAboveInventory().ifPresent(handler -> {
@@ -228,6 +211,32 @@ public abstract class AutoTableTileEntity extends BaseInventoryTileEntity implem
     public void deleteRecipe(int index) {
         this.getRecipeStorage().unsetRecipe(index);
         this.markDirtyAndDispatch();
+    }
+
+    public WrappedRecipe getActiveRecipe() {
+        if (this.level == null)
+            return null;
+
+        this.updateRecipeInventory();
+
+        var recipeInventory = this.getRecipeInventory().toIInventory();
+
+        if (this.isGridChanged && (this.recipe == null || !this.recipe.matches(recipeInventory, level))) {
+            var recipe = level.getRecipeManager().getRecipeFor(ModRecipeTypes.TABLE.get(), recipeInventory, level).orElse(null);
+
+            this.recipe = recipe != null ? new WrappedRecipe(recipe) : null;
+
+            if (this.recipe == null && ModConfigs.TABLE_USE_VANILLA_RECIPES.get() && this instanceof Basic) {
+                var craftingInventory = new ExtendedCraftingInventory(EmptyContainer.INSTANCE, this.getRecipeInventory(), 3);
+                var vanilla = level.getRecipeManager().getRecipeFor(RecipeType.CRAFTING, craftingInventory, level).orElse(null);
+
+                this.recipe = vanilla != null ? new WrappedRecipe(vanilla, craftingInventory) : null;
+            }
+
+            this.isGridChanged = false;
+        }
+
+        return this.recipe;
     }
 
     public abstract int getProgressRequired();

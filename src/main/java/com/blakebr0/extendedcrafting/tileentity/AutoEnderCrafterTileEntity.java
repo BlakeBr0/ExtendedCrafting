@@ -67,7 +67,8 @@ public class AutoEnderCrafterTileEntity extends EnderCrafterTileEntity implement
         EnderCrafterTileEntity.tick(level, pos, state, tile);
 
         int insertPowerRate = ModConfigs.AUTO_ENDER_CRAFTER_INSERT_POWER_RATE.get();
-        if (!level.isClientSide() && tile.getEnergy().getEnergyStored() >= insertPowerRate) {
+
+        if (tile.getEnergy().getEnergyStored() >= insertPowerRate) {
             int selected = tile.getRecipeStorage().getSelected();
             if (selected != -1) {
                 tile.getAboveInventory().ifPresent(handler -> {

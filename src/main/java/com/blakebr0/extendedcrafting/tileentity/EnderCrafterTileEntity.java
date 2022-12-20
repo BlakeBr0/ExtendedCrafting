@@ -77,51 +77,35 @@ public class EnderCrafterTileEntity extends BaseInventoryTileEntity implements M
 
 	public static void tick(Level level, BlockPos pos, BlockState state, EnderCrafterTileEntity tile) {
 		var mark = false;
+		var recipe = tile.getActiveRecipe();
 
-		tile.updateRecipeInventory();
+		if (recipe != null) {
+			var result = recipe.assemble(tile.recipeInventory.toIInventory());
+			var output = tile.inventory.getStackInSlot(9);
 
-		var recipeInventory = tile.recipeInventory.toIInventory();
+			if (StackHelper.canCombineStacks(result, output)) {
+				var alternators = tile.getAlternatorPositions();
+				int alternatorCount = alternators.size();
 
-		if (tile.isGridChanged && (tile.recipe == null || !tile.recipe.matches(recipeInventory, level))) {
-			tile.recipe = level.getRecipeManager().getRecipeFor(ModRecipeTypes.ENDER_CRAFTER.get(), recipeInventory, level).orElse(null);
-		}
+				if (alternatorCount > 0) {
+					tile.progress(alternatorCount, recipe.getCraftingTime());
 
-		if (!level.isClientSide()) {
-			if (tile.recipe != null) {
-				var result = tile.recipe.assemble(recipeInventory);
-				var output = tile.inventory.getStackInSlot(9);
-
-				if (StackHelper.canCombineStacks(result, output)) {
-					var alternators = tile.getAlternatorPositions();
-					int alternatorCount = alternators.size();
-
-					if (alternatorCount > 0) {
-						tile.progress(alternatorCount, tile.recipe.getCraftingTime());
-
-						for (var alternatorPos : alternators) {
-							if (level.isEmptyBlock(alternatorPos.above())) {
-								tile.spawnParticles(ParticleTypes.PORTAL, alternatorPos, 1, 1);
-							}
+					for (var alternatorPos : alternators) {
+						if (level.isEmptyBlock(alternatorPos.above())) {
+							tile.spawnParticles(ParticleTypes.PORTAL, alternatorPos, 1, 1);
 						}
-
-						if (tile.progress >= tile.progressReq) {
-							for (int i = 0; i < tile.inventory.getSlots() - 1; i++) {
-								tile.inventory.setStackInSlot(i, StackHelper.shrink(tile.inventory.getStackInSlot(i), 1, false));
-							}
-
-							tile.updateResult(result);
-							tile.progress = 0;
-						}
-
-						mark = true;
 					}
-				} else {
-					if (tile.progress > 0 || tile.progressReq > 0) {
+
+					if (tile.progress >= tile.progressReq) {
+						for (int i = 0; i < tile.inventory.getSlots() - 1; i++) {
+							tile.inventory.setStackInSlot(i, StackHelper.shrink(tile.inventory.getStackInSlot(i), 1, false));
+						}
+
+						tile.updateResult(result);
 						tile.progress = 0;
-						tile.progressReq = 0;
-
-						mark = true;
 					}
+
+					mark = true;
 				}
 			} else {
 				if (tile.progress > 0 || tile.progressReq > 0) {
@@ -131,10 +115,17 @@ public class EnderCrafterTileEntity extends BaseInventoryTileEntity implements M
 					mark = true;
 				}
 			}
+		} else {
+			if (tile.progress > 0 || tile.progressReq > 0) {
+				tile.progress = 0;
+				tile.progressReq = 0;
 
-			if (mark) {
-				tile.markDirtyAndDispatch();
+				mark = true;
 			}
+		}
+
+		if (mark) {
+			tile.markDirtyAndDispatch();
 		}
 	}
 
@@ -222,6 +213,19 @@ public class EnderCrafterTileEntity extends BaseInventoryTileEntity implements M
 	}
 
 	public IEnderCrafterRecipe getActiveRecipe() {
+		if (this.level == null)
+			return null;
+
+		this.updateRecipeInventory();
+
+		var recipeInventory = this.recipeInventory.toIInventory();
+
+		if (this.isGridChanged && (this.recipe == null || !this.recipe.matches(recipeInventory, level))) {
+			this.recipe = level.getRecipeManager()
+					.getRecipeFor(ModRecipeTypes.ENDER_CRAFTER.get(), recipeInventory, level)
+					.orElse(null);
+		}
+
 		return this.recipe;
 	}
 }

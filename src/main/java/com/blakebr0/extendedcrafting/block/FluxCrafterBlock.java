@@ -59,9 +59,4 @@ public class FluxCrafterBlock extends BaseTileEntityBlock {
 	protected <T extends BlockEntity> BlockEntityTicker<T> getServerTicker(Level level, BlockState state, BlockEntityType<T> type) {
 		return createTicker(type, ModTileEntities.FLUX_CRAFTER.get(), FluxCrafterTileEntity::tick);
 	}
-
-	@Override
-	protected <T extends BlockEntity> BlockEntityTicker<T> getClientTicker(Level level, BlockState state, BlockEntityType<T> type) {
-		return createTicker(type, ModTileEntities.FLUX_CRAFTER.get(), FluxCrafterTileEntity::tick);
-	}
 }

@@ -2,6 +2,7 @@ package com.blakebr0.extendedcrafting.container;
 
 import com.blakebr0.cucumber.container.BaseContainerMenu;
 import com.blakebr0.cucumber.inventory.BaseItemStackHandler;
+import com.blakebr0.cucumber.inventory.slot.BaseItemStackHandlerSlot;
 import com.blakebr0.cucumber.inventory.slot.OutputSlot;
 import com.blakebr0.extendedcrafting.container.slot.CatalystSlot;
 import com.blakebr0.extendedcrafting.init.ModContainerTypes;
@@ -13,17 +14,16 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.items.SlotItemHandler;
 
 public class CompressorContainer extends BaseContainerMenu {
 	private CompressorContainer(MenuType<?> type, int id, Inventory playerInventory, FriendlyByteBuf buffer) {
-		this(type, id, playerInventory, CompressorTileEntity.createInventoryHandler().forContainer(), buffer.readBlockPos());
+		this(type, id, playerInventory, CompressorTileEntity.createInventoryHandler(), buffer.readBlockPos());
 	}
 
 	private CompressorContainer(MenuType<?> type, int id, Inventory playerInventory, BaseItemStackHandler inventory, BlockPos pos) {
 		super(type, id, pos);
 		this.addSlot(new OutputSlot(inventory, 0, 135, 48));
-		this.addSlot(new SlotItemHandler(inventory, 1, 65, 48));
+		this.addSlot(new BaseItemStackHandlerSlot(inventory, 1, 65, 48));
 		this.addSlot(new CatalystSlot(inventory, 2, 38, 48));
 
 		for (int i = 0; i < 3; i++) {

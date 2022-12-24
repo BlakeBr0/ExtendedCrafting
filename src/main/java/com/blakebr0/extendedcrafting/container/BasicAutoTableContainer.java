@@ -28,7 +28,7 @@ public class BasicAutoTableContainer extends BaseContainerMenu {
 	private boolean isVanillaRecipe = false;
 
 	private BasicAutoTableContainer(MenuType<?> type, int id, Inventory playerInventory, FriendlyByteBuf buffer) {
-		this(type, id, playerInventory, AutoTableTileEntity.Basic.createInventoryHandler().forContainer(), buffer.readBlockPos());
+		this(type, id, playerInventory, AutoTableTileEntity.Basic.createInventoryHandler(), buffer.readBlockPos());
 	}
 
 	private BasicAutoTableContainer(MenuType<?> type, int id, Inventory playerInventory, BaseItemStackHandler inventory, BlockPos pos) {

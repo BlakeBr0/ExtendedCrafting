@@ -24,7 +24,7 @@ public class UltimateAutoTableContainer extends BaseContainerMenu {
 	private final Container result;
 
 	private UltimateAutoTableContainer(MenuType<?> type, int id, Inventory playerInventory, FriendlyByteBuf buffer) {
-		this(type, id, playerInventory, AutoTableTileEntity.Ultimate.createInventoryHandler().forContainer(), buffer.readBlockPos());
+		this(type, id, playerInventory, AutoTableTileEntity.Ultimate.createInventoryHandler(), buffer.readBlockPos());
 	}
 
 	private UltimateAutoTableContainer(MenuType<?> type, int id, Inventory playerInventory, BaseItemStackHandler inventory, BlockPos pos) {

@@ -23,7 +23,7 @@ public class EliteTableContainer extends BaseContainerMenu {
 	private final Container result;
 
 	private EliteTableContainer(MenuType<?> type, int id, Inventory playerInventory, FriendlyByteBuf buffer) {
-		this(type, id, playerInventory, EliteTableTileEntity.createInventoryHandler().forContainer(), buffer.readBlockPos());
+		this(type, id, playerInventory, EliteTableTileEntity.createInventoryHandler(), buffer.readBlockPos());
 	}
 
 	private EliteTableContainer(MenuType<?> type, int id, Inventory playerInventory, BaseItemStackHandler inventory, BlockPos pos) {

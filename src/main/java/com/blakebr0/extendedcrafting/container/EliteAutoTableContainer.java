@@ -24,7 +24,7 @@ public class EliteAutoTableContainer extends BaseContainerMenu {
 	private final Container result;
 
 	private EliteAutoTableContainer(MenuType<?> type, int id, Inventory playerInventory, FriendlyByteBuf buffer) {
-		this(type, id, playerInventory, AutoTableTileEntity.Elite.createInventoryHandler().forContainer(), buffer.readBlockPos());
+		this(type, id, playerInventory, AutoTableTileEntity.Elite.createInventoryHandler(), buffer.readBlockPos());
 	}
 
 	private EliteAutoTableContainer(MenuType<?> type, int id, Inventory playerInventory, BaseItemStackHandler inventory, BlockPos pos) {

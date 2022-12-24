@@ -23,7 +23,7 @@ public class AdvancedTableContainer extends BaseContainerMenu {
 	private final Container result;
 
 	private AdvancedTableContainer(MenuType<?> type, int id, Inventory playerInventory, FriendlyByteBuf buffer) {
-		this(type, id, playerInventory, AdvancedTableTileEntity.createInventoryHandler().forContainer(), buffer.readBlockPos());
+		this(type, id, playerInventory, AdvancedTableTileEntity.createInventoryHandler(), buffer.readBlockPos());
 	}
 
 	private AdvancedTableContainer(MenuType<?> type, int id, Inventory playerInventory, BaseItemStackHandler inventory, BlockPos pos) {

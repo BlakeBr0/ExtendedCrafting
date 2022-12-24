@@ -16,7 +16,7 @@ import net.minecraft.world.item.ItemStack;
 
 public class AutoEnderCrafterContainer extends BaseContainerMenu {
 	private AutoEnderCrafterContainer(MenuType<?> type, int id, Inventory playerInventory, FriendlyByteBuf buffer) {
-		this(type, id, playerInventory, EnderCrafterTileEntity.createInventoryHandler().forContainer(), buffer.readBlockPos());
+		this(type, id, playerInventory, EnderCrafterTileEntity.createInventoryHandler(), buffer.readBlockPos());
 	}
 
 	private AutoEnderCrafterContainer(MenuType<?> type, int id, Inventory playerInventory, BaseItemStackHandler inventory, BlockPos pos) {

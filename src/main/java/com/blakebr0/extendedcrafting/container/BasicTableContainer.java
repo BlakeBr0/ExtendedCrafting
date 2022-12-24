@@ -27,7 +27,7 @@ public class BasicTableContainer extends BaseContainerMenu {
 	private boolean isVanillaRecipe = false;
 
 	private BasicTableContainer(MenuType<?> type, int id, Inventory playerInventory, FriendlyByteBuf buffer) {
-		this(type, id, playerInventory, BasicTableTileEntity.createInventoryHandler().forContainer(), buffer.readBlockPos());
+		this(type, id, playerInventory, BasicTableTileEntity.createInventoryHandler(), buffer.readBlockPos());
 	}
 
 	private BasicTableContainer(MenuType<?> type, int id, Inventory playerInventory, BaseItemStackHandler inventory, BlockPos pos) {

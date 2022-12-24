@@ -23,7 +23,7 @@ public class UltimateTableContainer extends BaseContainerMenu {
 	private final Container result;
 
 	private UltimateTableContainer(MenuType<?> type, int id, Inventory playerInventory, FriendlyByteBuf buffer) {
-		this(type, id, playerInventory, UltimateTableTileEntity.createInventoryHandler().forContainer(), buffer.readBlockPos());
+		this(type, id, playerInventory, UltimateTableTileEntity.createInventoryHandler(), buffer.readBlockPos());
 	}
 
 	private UltimateTableContainer(MenuType<?> type, int id, Inventory playerInventory, BaseItemStackHandler inventory, BlockPos pos) {

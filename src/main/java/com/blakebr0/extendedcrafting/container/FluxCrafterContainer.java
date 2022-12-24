@@ -16,7 +16,7 @@ import net.minecraft.world.item.ItemStack;
 
 public class FluxCrafterContainer extends BaseContainerMenu {
 	private FluxCrafterContainer(MenuType<?> type, int id, Inventory playerInventory, FriendlyByteBuf buffer) {
-		this(type, id, playerInventory, FluxCrafterTileEntity.createInventoryHandler().forContainer(), buffer.readBlockPos());
+		this(type, id, playerInventory, FluxCrafterTileEntity.createInventoryHandler(), buffer.readBlockPos());
 	}
 
 	private FluxCrafterContainer(MenuType<?> type, int id, Inventory playerInventory, BaseItemStackHandler inventory, BlockPos pos) {

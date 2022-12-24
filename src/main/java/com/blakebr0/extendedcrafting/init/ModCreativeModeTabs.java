@@ -26,7 +26,7 @@ public final class ModCreativeModeTabs {
                 output.accept(ModBlocks.ENDER_INGOT_BLOCK);
                 output.accept(ModBlocks.ENHANCED_ENDER_INGOT_BLOCK);
                 output.accept(ModBlocks.CRYSTALTINE_BLOCK);
-                output.accept(ModBlocks.ULTIMATE_TABLE);
+                output.accept(ModBlocks.THE_ULTIMATE_BLOCK);
                 output.accept(ModBlocks.NETHER_STAR_BLOCK);
                 output.accept(ModBlocks.FLUX_STAR_BLOCK);
                 output.accept(ModBlocks.ENDER_STAR_BLOCK);

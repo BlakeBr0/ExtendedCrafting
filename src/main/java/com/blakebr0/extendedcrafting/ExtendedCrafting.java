@@ -1,6 +1,7 @@
 package com.blakebr0.extendedcrafting;
 
 import com.blakebr0.cucumber.helper.ConfigHelper;
+import com.blakebr0.extendedcrafting.client.ModRecipeBookCategories;
 import com.blakebr0.extendedcrafting.client.handler.ColorHandler;
 import com.blakebr0.extendedcrafting.config.ModConfigs;
 import com.blakebr0.extendedcrafting.crafting.DynamicRecipeManager;
@@ -38,7 +39,6 @@ public final class ExtendedCrafting {
 
 		bus.register(this);
 		bus.register(new ModCreativeModeTabs());
-		bus.register(new ModRecipeTypes());
 
 		ModBlocks.REGISTRY.register(bus);
 		ModItems.REGISTRY.register(bus);
@@ -49,6 +49,7 @@ public final class ExtendedCrafting {
 
 		DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
 			bus.register(new ColorHandler());
+			bus.register(new ModRecipeBookCategories());
 		});
 
 		ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, ModConfigs.CLIENT);

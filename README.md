@@ -1,7 +1,24 @@
-# Extended Crafting [![](http://cf.way2muchnoise.eu/full_268387_downloads.svg)](https://minecraft.curseforge.com/projects/extended-crafting)
-Adds some new ways to craft items, as well as extra crafting items and utilities.
+# Extended Crafting
 
-[Documentation](https://blakesmods.com/docs/extendedcrafting)
+<p align="left">
+    <a href="https://blakesmods.com/extended-crafting" alt="Downloads">
+        <img src="https://img.shields.io/endpoint?url=https://api.blakesmods.com/v2/badges/extendedcrafting/downloads&style=for-the-badge" />
+    </a>
+    <a href="https://blakesmods.com/extended-crafting" alt="Latest Version">
+        <img src="https://img.shields.io/endpoint?url=https://api.blakesmods.com/v2/badges/extendedcrafting/version&style=for-the-badge" />
+    </a>
+    <a href="https://blakesmods.com/extended-crafting" alt="Minecraft Version">
+        <img src="https://img.shields.io/endpoint?url=https://api.blakesmods.com/v2/badges/extendedcrafting/mc_version&style=for-the-badge" />
+    </a>
+    <a href="https://blakesmods.com/docs/extendedcrafting" alt="Docs">
+        <img src="https://img.shields.io/static/v1?label=docs&message=view&color=brightgreen&style=for-the-badge" />
+    </a>
+    <a href="https://blakesmods.com/wiki/extendedcrafting" alt="Wiki">
+        <img src="https://img.shields.io/static/v1?label=wiki&message=view&color=brightgreen&style=for-the-badge" />
+    </a>
+</p>
+
+Adds some new ways to craft items, as well as extra crafting items and utilities.
 
 ## Download
 

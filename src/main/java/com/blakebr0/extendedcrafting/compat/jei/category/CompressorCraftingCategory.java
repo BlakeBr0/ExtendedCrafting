@@ -78,6 +78,6 @@ public class CompressorCraftingCategory implements IRecipeCategory<ICompressorRe
 
 		builder.addSlot(RecipeIngredientRole.INPUT, 58, 31).addIngredients(inputs.get(0));
 		builder.addSlot(RecipeIngredientRole.INPUT, 31, 31).addIngredients(catalyst);
-		builder.addSlot(RecipeIngredientRole.INPUT, 128, 31).addItemStack(output);
+		builder.addSlot(RecipeIngredientRole.OUTPUT, 128, 31).addItemStack(output);
 	}
 }

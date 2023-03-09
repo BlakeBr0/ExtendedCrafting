@@ -1,5 +1,11 @@
 {
   "type": "crafting_shaped",
+  "conditions": [
+    {
+      "type": "cucumber:enabled",
+      "item": "extendedcrafting:handheld_table"
+    }
+  ],
   "pattern": [
     " C",
     "S "

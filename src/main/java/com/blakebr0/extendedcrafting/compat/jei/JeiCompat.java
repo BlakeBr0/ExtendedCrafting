@@ -62,7 +62,7 @@ import java.util.stream.Stream;
 @JeiPlugin
 public final class JeiCompat implements IModPlugin {
 	public static final ResourceLocation UID = new ResourceLocation(ExtendedCrafting.MOD_ID, "jei_plugin");
-	public static final ResourceLocation ICONS = new ResourceLocation(ExtendedCrafting.MOD_ID, "textures/gui/jei/icons.png");
+	public static final ResourceLocation ICONS = new ResourceLocation(ExtendedCrafting.MOD_ID, "textures/jei/icons.png");
 
 	@Override
 	public ResourceLocation getPluginUid() {

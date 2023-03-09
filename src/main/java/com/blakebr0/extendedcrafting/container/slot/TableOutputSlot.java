@@ -11,6 +11,7 @@ import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraftforge.common.ForgeHooks;
 
 public class TableOutputSlot extends Slot {
     private final AbstractContainerMenu container;
@@ -39,11 +40,15 @@ public class TableOutputSlot extends Slot {
 
         NonNullList<ItemStack> remaining;
 
+        ForgeHooks.setCraftingPlayer(player);
+
         if (isVanilla) {
             remaining = player.level.getRecipeManager().getRemainingItemsFor(RecipeType.CRAFTING, (CraftingContainer) this.matrix, player.level);
         } else {
             remaining = player.level.getRecipeManager().getRemainingItemsFor(RecipeTypes.TABLE, this.matrix, player.level);
         }
+
+        ForgeHooks.setCraftingPlayer(null);
 
         for (int i = 0; i < remaining.size(); i++) {
             var slotStack = this.matrix.getItem(i);

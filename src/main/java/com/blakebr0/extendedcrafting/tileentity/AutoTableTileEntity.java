@@ -334,7 +334,7 @@ public abstract class AutoTableTileEntity extends BaseInventoryTileEntity implem
             }
         }
 
-        this.isGridChanged = isGridChanged;
+        this.isGridChanged |= isGridChanged;
 
 		if (slotToPut > -1) {
 		    int insertPowerRate = ModConfigs.AUTO_TABLE_INSERT_POWER_RATE.get();

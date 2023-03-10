@@ -335,7 +335,7 @@ public abstract class AutoTableTileEntity extends BaseInventoryTileEntity implem
             }
         }
 
-        this.isGridChanged = isGridChanged;
+        this.isGridChanged |= isGridChanged;
 
 		if (slotToPut > -1) {
 		    int insertPowerRate = ModConfigs.AUTO_TABLE_INSERT_POWER_RATE.get();
@@ -357,7 +357,7 @@ public abstract class AutoTableTileEntity extends BaseInventoryTileEntity implem
 
         public WrappedRecipe(CraftingRecipe recipe, CraftingContainer craftingInventory) {
             this.resultFunc = inventory -> recipe.assemble(craftingInventory);
-            this.matchesFunc = (inventory, world) -> recipe.matches(craftingInventory, world);
+            this.matchesFunc = (inventory, level) -> recipe.matches(craftingInventory, level);
             this.remainingItemsFunc = inventory -> recipe.getRemainingItems(craftingInventory);
         }
 
@@ -371,8 +371,8 @@ public abstract class AutoTableTileEntity extends BaseInventoryTileEntity implem
             return this.resultFunc.apply(inventory);
         }
 
-        public boolean matches(Container inventory, Level world) {
-            return this.matchesFunc.apply(inventory, world);
+        public boolean matches(Container inventory, Level level) {
+            return this.matchesFunc.apply(inventory, level);
         }
 
         public NonNullList<ItemStack> getRemainingItems(Container inventory) {

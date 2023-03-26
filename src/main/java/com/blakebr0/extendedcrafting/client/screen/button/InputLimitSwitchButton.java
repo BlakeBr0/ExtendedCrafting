@@ -20,7 +20,7 @@ public class InputLimitSwitchButton extends IconButton {
     }
 
     @Override
-    protected int getYImage(boolean isHovered) {
-        return isHovered ? this.isLimitingInput.get() ? 1 : 0 : 10;
+    protected int getYImage() {
+        return this.isHovered ? this.isLimitingInput.get() ? 1 : 0 : 10;
     }
 }

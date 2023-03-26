@@ -126,7 +126,7 @@ public class CompressorTileEntity extends BaseInventoryTileEntity implements Men
 		if (recipe != null && tile.getEnergy().getEnergyStored() > 0) {
 			if (tile.materialCount >= recipe.getInputCount()) {
 				if (tile.progress >= recipe.getPowerCost()) {
-					var result = recipe.assemble(tile.inventory);
+					var result = recipe.assemble(tile.inventory, level.registryAccess());
 
 					if (StackHelper.canCombineStacks(result, output)) {
 						tile.updateResult(result);

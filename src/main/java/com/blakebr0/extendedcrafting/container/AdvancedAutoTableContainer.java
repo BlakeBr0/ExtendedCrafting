@@ -20,7 +20,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 
 public class AdvancedAutoTableContainer extends BaseContainerMenu {
-	private final Level world;
+	private final Level level;
 	private final Container result;
 
 	private AdvancedAutoTableContainer(MenuType<?> type, int id, Inventory playerInventory, FriendlyByteBuf buffer) {
@@ -29,7 +29,7 @@ public class AdvancedAutoTableContainer extends BaseContainerMenu {
 
 	private AdvancedAutoTableContainer(MenuType<?> type, int id, Inventory playerInventory, BaseItemStackHandler inventory, BlockPos pos) {
 		super(type, id, pos);
-		this.world = playerInventory.player.level;
+		this.level = playerInventory.player.level;
 		this.result = new ResultContainer();
 
 		var matrix = new ExtendedCraftingInventory(this, inventory, 5, true);
@@ -60,10 +60,10 @@ public class AdvancedAutoTableContainer extends BaseContainerMenu {
 
 	@Override
 	public void slotsChanged(Container matrix) {
-		var recipe = this.world.getRecipeManager().getRecipeFor(ModRecipeTypes.TABLE.get(), matrix, this.world);
+		var recipe = this.level.getRecipeManager().getRecipeFor(ModRecipeTypes.TABLE.get(), matrix, this.level);
 
 		if (recipe.isPresent()) {
-			var result = recipe.get().assemble(matrix);
+			var result = recipe.get().assemble(matrix, this.level.registryAccess());
 			this.result.setItem(0, result);
 		} else {
 			this.result.setItem(0, ItemStack.EMPTY);

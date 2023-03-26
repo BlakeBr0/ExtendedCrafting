@@ -7,6 +7,7 @@ import com.blakebr0.extendedcrafting.init.ModRecipeSerializers;
 import com.blakebr0.extendedcrafting.init.ModRecipeTypes;
 import com.google.gson.JsonObject;
 import net.minecraft.core.NonNullList;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
@@ -42,7 +43,7 @@ public class ShapelessEnderCrafterRecipe implements ISpecialRecipe, IEnderCrafte
 	}
 
 	@Override
-	public ItemStack getResultItem() {
+	public ItemStack getResultItem(RegistryAccess access) {
 		return this.output;
 	}
 
@@ -72,12 +73,12 @@ public class ShapelessEnderCrafterRecipe implements ISpecialRecipe, IEnderCrafte
 	}
 
 	@Override
-	public ItemStack assemble(IItemHandler inventory) {
+	public ItemStack assemble(IItemHandler inventory, RegistryAccess access) {
 		return this.output.copy();
 	}
 
 	@Override
-	public ItemStack assemble(Container inv) {
+	public ItemStack assemble(Container inventory, RegistryAccess access) {
 		return this.output.copy();
 	}
 

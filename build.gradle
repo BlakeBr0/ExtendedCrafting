@@ -31,7 +31,7 @@ repositories {
 }
 
 minecraft {
-    mappings channel: 'official', version: '1.19.3'
+    mappings channel: 'official', version: '1.19.4'
 
     accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
 
@@ -143,10 +143,12 @@ publishing {
 }
 
 task addTestDatapacks(type: Copy) {
-    file('run/saves').eachDir {dir ->
-        project.copy {
-            from 'src/test/resources/datapacks'
-            into file(dir.path + '/datapacks')
+    if (file('run/saves').exists()) {
+        file('run/saves').eachDir { dir ->
+            project.copy {
+                from 'src/test/resources/datapacks'
+                into file(dir.path + '/datapacks')
+            }
         }
     }
 

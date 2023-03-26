@@ -54,7 +54,9 @@ public class JadeCompat implements IWailaPlugin {
 				var recipe = core.getActiveRecipe();
 
 				if (recipe != null) {
-					var output = recipe.getResultItem();
+					var level = accessor.getLevel();
+					var output = recipe.getResultItem(level.registryAccess());
+
 					tooltip.add(ModTooltips.CRAFTING.args(output.getCount(), output.getHoverName()).build());
 				}
 			}
@@ -168,7 +170,9 @@ public class JadeCompat implements IWailaPlugin {
 				var recipe = crafter.getActiveRecipe();
 
 				if (recipe != null) {
-					var output = recipe.getResultItem();
+					var level = accessor.getLevel();
+					var output = recipe.getResultItem(level.registryAccess());
+
 					tooltip.add(ModTooltips.CRAFTING.args(output.getCount(), output.getHoverName()).build());
 				}
 			}
@@ -186,7 +190,9 @@ public class JadeCompat implements IWailaPlugin {
 				var recipe = crafter.getActiveRecipe();
 
 				if (recipe != null) {
-					var output = recipe.getResultItem();
+					var level = accessor.getLevel();
+					var output = recipe.getResultItem(level.registryAccess());
+
 					tooltip.add(ModTooltips.CRAFTING.args(output.getCount(), output.getHoverName()).build());
 				}
 			}
@@ -204,7 +210,9 @@ public class JadeCompat implements IWailaPlugin {
 				var recipe = crafter.getActiveRecipe();
 
 				if (recipe != null) {
-					var output = recipe.getResultItem();
+					var level = accessor.getLevel();
+					var output = recipe.getResultItem(level.registryAccess());
+
 					tooltip.add(ModTooltips.CRAFTING.args(output.getCount(), output.getHoverName()).build());
 				}
 			}
@@ -222,7 +230,9 @@ public class JadeCompat implements IWailaPlugin {
 				var recipe = compressor.getActiveRecipe();
 
 				if (recipe != null) {
-					var output = recipe.getResultItem();
+					var level = accessor.getLevel();
+					var output = recipe.getResultItem(level.registryAccess());
+
 					tooltip.add(ModTooltips.CRAFTING.args(output.getCount(), output.getHoverName()).build());
 				}
 			}

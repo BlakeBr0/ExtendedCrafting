@@ -18,6 +18,7 @@ import mezz.jei.api.recipe.RecipeIngredientRole;
 import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.recipe.category.IRecipeCategory;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
@@ -70,8 +71,12 @@ public class FluxCraftingCategory implements IRecipeCategory<IFluxCrafterRecipe>
 
 	@Override
 	public void setRecipe(IRecipeLayoutBuilder builder, IFluxCrafterRecipe recipe, IFocusGroup focuses) {
+		var level = Minecraft.getInstance().level;
+
+		assert level != null;
+
 		var inputs = recipe.getIngredients();
-		var output = recipe.getResultItem();
+		var output = recipe.getResultItem(level.registryAccess());
 
 		if (recipe instanceof ShapedFluxCrafterRecipe shaped) {
 			int stackIndex = 0;

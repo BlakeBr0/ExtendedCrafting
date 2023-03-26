@@ -60,7 +60,7 @@ public class AdvancedTableContainer extends BaseContainerMenu {
 		var recipe = this.level.getRecipeManager().getRecipeFor(ModRecipeTypes.TABLE.get(), matrix, this.level);
 
 		if (recipe.isPresent()) {
-			var result = recipe.get().assemble(matrix);
+			var result = recipe.get().assemble(matrix, this.level.registryAccess());
 			this.result.setItem(0, result);
 		} else {
 			this.result.setItem(0, ItemStack.EMPTY);

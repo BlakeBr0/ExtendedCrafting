@@ -14,7 +14,7 @@ public class EjectModeSwitchButton extends IconButton {
     }
 
     @Override
-    protected int getYImage(boolean isHovered) {
-        return isHovered ? 0 : 10;
+    protected int getYImage() {
+        return this.isHovered ? 0 : 10;
     }
 }

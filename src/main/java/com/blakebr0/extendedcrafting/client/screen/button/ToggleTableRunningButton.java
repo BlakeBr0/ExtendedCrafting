@@ -20,7 +20,7 @@ public class ToggleTableRunningButton extends IconButton {
     }
 
     @Override
-    protected int getYImage(boolean isHovered) {
+    protected int getYImage() {
         return !this.isRunning.get() ? 0 : 10;
     }
 }

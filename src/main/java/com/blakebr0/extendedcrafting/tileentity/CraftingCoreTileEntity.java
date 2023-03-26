@@ -112,7 +112,7 @@ public class CraftingCoreTileEntity extends BaseInventoryTileEntity implements M
 					}
 
 					tile.spawnParticles(ParticleTypes.END_ROD, pos, 1.1, 50);
-					tile.inventory.setStackInSlot(0, recipe.assemble(tile.recipeInventory));
+					tile.inventory.setStackInSlot(0, recipe.assemble(tile.recipeInventory, level.registryAccess()));
 					tile.progress = 0;
 
 					mark = true;

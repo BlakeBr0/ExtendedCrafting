@@ -12,11 +12,11 @@ import net.minecraft.core.NonNullList;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.Recipe;
+import net.minecraftforge.server.ServerLifecycleHooks;
 import org.openzen.zencode.java.ZenCodeType;
 
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 import java.util.stream.Collectors;
 
 @ZenCodeType.Name("mods.extendedcrafting.CombinationCrafting")
@@ -27,7 +27,7 @@ public final class CombinationCrafting {
 		CraftTweakerAPI.apply(new IRuntimeAction() {
 			@Override
 			public void apply() {
-				CombinationRecipe recipe = new CombinationRecipe(new ResourceLocation("crafttweaker", id), toIngredientsList(inputs), output.getInternal(), cost);
+				var recipe = new CombinationRecipe(new ResourceLocation("crafttweaker", id), toIngredientsList(inputs), output.getInternal(), cost);
 				RecipeHelper.addRecipe(recipe);
 			}
 
@@ -43,7 +43,7 @@ public final class CombinationCrafting {
 		CraftTweakerAPI.apply(new IRuntimeAction() {
 			@Override
 			public void apply() {
-				CombinationRecipe recipe = new CombinationRecipe(new ResourceLocation("crafttweaker", id), toIngredientsList(inputs), output.getInternal(), cost, perTick);
+				var recipe = new CombinationRecipe(new ResourceLocation("crafttweaker", id), toIngredientsList(inputs), output.getInternal(), cost, perTick);
 				RecipeHelper.addRecipe(recipe);
 			}
 
@@ -59,10 +59,11 @@ public final class CombinationCrafting {
 		CraftTweakerAPI.apply(new IRuntimeAction() {
 			@Override
 			public void apply() {
-				List<ResourceLocation> recipes = RecipeHelper.getRecipes()
+				var access = ServerLifecycleHooks.getCurrentServer().registryAccess();
+				var recipes = RecipeHelper.getRecipes()
                         .getOrDefault(ModRecipeTypes.COMBINATION.get(), new HashMap<>())
                         .values().stream()
-                        .filter(r -> r.getResultItem().sameItem(stack.getInternal()))
+                        .filter(r -> r.getResultItem(access).sameItem(stack.getInternal()))
                         .map(Recipe::getId)
                         .toList();
 

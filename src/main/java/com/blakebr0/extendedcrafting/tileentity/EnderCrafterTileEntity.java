@@ -80,7 +80,7 @@ public class EnderCrafterTileEntity extends BaseInventoryTileEntity implements M
 		var recipe = tile.getActiveRecipe();
 
 		if (recipe != null) {
-			var result = recipe.assemble(tile.recipeInventory.toIInventory());
+			var result = recipe.assemble(tile.recipeInventory.toIInventory(), level.registryAccess());
 			var output = tile.inventory.getStackInSlot(9);
 
 			if (StackHelper.canCombineStacks(result, output)) {

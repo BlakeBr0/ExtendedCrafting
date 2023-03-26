@@ -9,6 +9,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
 import net.minecraft.core.NonNullList;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
@@ -44,17 +45,17 @@ public class ShapedEnderCrafterRecipe implements ISpecialRecipe, IEnderCrafterRe
 	}
 
 	@Override
-	public ItemStack getResultItem() {
+	public ItemStack getResultItem(RegistryAccess access) {
 		return this.output;
 	}
 
 	@Override
-	public ItemStack assemble(IItemHandler inventory) {
+	public ItemStack assemble(IItemHandler inventory, RegistryAccess access) {
 		return this.output.copy();
 	}
 
 	@Override
-	public ItemStack assemble(Container inv) {
+	public ItemStack assemble(Container inventory, RegistryAccess access) {
 		return this.output.copy();
 	}
 

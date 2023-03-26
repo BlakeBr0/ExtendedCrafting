@@ -5,10 +5,10 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.ItemDisplayContext;
 
 public class CraftingCoreRenderer implements BlockEntityRenderer<CraftingCoreTileEntity> {
 	public CraftingCoreRenderer(BlockEntityRendererProvider.Context dispatcher) { }
@@ -26,7 +26,7 @@ public class CraftingCoreRenderer implements BlockEntityRenderer<CraftingCoreTil
 			double tick = System.currentTimeMillis() / 800.0D;
 			matrix.translate(0.0D, Math.sin(tick % (2 * Math.PI)) * 0.065D, 0.0D);
 			matrix.mulPose(Axis.YP.rotationDegrees((float) ((tick * 40.0D) % 360)));
-			minecraft.getItemRenderer().renderStatic(stack, ItemTransforms.TransformType.GROUND, i, i1, matrix, buffer, 0);
+			minecraft.getItemRenderer().renderStatic(stack, ItemDisplayContext.GROUND, i, i1, matrix, buffer, minecraft.level, 0);
 			matrix.popPose();
 		}
 	}

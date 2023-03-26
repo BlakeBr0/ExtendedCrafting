@@ -69,14 +69,14 @@ public class BasicAutoTableContainer extends BaseContainerMenu {
 		this.isVanillaRecipe = false;
 
 		if (recipe.isPresent()) {
-			var result = recipe.get().assemble(matrix);
+			var result = recipe.get().assemble(matrix, this.level.registryAccess());
 
 			this.result.setItem(0, result);
 		} else if (ModConfigs.TABLE_USE_VANILLA_RECIPES.get()) {
 			var vanilla = this.level.getRecipeManager().getRecipeFor(RecipeType.CRAFTING, (CraftingContainer) matrix, this.level);
 
 			if (vanilla.isPresent()) {
-				var result = vanilla.get().assemble((CraftingContainer) matrix);
+				var result = vanilla.get().assemble((CraftingContainer) matrix, this.level.registryAccess());
 
 				this.isVanillaRecipe = true;
 				this.result.setItem(0, result);

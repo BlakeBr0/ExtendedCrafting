@@ -113,7 +113,7 @@ public class AutoEnderCrafterTileEntity extends EnderCrafterTileEntity implement
         var recipe = level.getRecipeManager().getRecipeFor(ModRecipeTypes.ENDER_CRAFTER.get(), recipeIInventory, level).orElse(null);
 
         if (recipe != null) {
-            result = recipe.assemble(recipeIInventory);
+            result = recipe.assemble(recipeIInventory, level.registryAccess());
         }
 
         this.getRecipeStorage().setRecipe(index, newRecipeInventory, result);

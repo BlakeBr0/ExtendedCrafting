@@ -27,8 +27,8 @@ public class RecipeSelectButton extends IconButton {
     }
 
     @Override
-    protected int getYImage(boolean isHovered) {
-        return isHovered ? 2 : this.isSelected() ? 0 : 1;
+    protected int getYImage() {
+        return this.isHovered ? 2 : this.isSelected() ? 0 : 1;
     }
 
     public int getIndex() {

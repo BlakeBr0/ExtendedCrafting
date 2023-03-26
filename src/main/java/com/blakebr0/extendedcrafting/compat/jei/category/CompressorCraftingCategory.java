@@ -16,6 +16,7 @@ import mezz.jei.api.recipe.RecipeIngredientRole;
 import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.recipe.category.IRecipeCategory;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
@@ -72,9 +73,13 @@ public class CompressorCraftingCategory implements IRecipeCategory<ICompressorRe
 
 	@Override
 	public void setRecipe(IRecipeLayoutBuilder builder, ICompressorRecipe recipe, IFocusGroup focuses) {
+		var level = Minecraft.getInstance().level;
+
+		assert level != null;
+
 		var inputs = recipe.getIngredients();
 		var catalyst = recipe.getCatalyst();
-		var output = recipe.getResultItem();
+		var output = recipe.getResultItem(level.registryAccess());
 
 		builder.addSlot(RecipeIngredientRole.INPUT, 58, 31).addIngredients(inputs.get(0));
 		builder.addSlot(RecipeIngredientRole.INPUT, 31, 31).addIngredients(catalyst);

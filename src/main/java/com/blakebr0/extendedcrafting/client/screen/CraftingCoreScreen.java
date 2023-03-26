@@ -5,7 +5,6 @@ import com.blakebr0.cucumber.client.screen.widget.EnergyBarWidget;
 import com.blakebr0.extendedcrafting.ExtendedCrafting;
 import com.blakebr0.extendedcrafting.container.CraftingCoreContainer;
 import com.blakebr0.extendedcrafting.tileentity.CraftingCoreTileEntity;
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -84,32 +83,26 @@ public class CraftingCoreScreen extends BaseContainerScreen<CraftingCoreContaine
 		if (this.hasRecipe()) {
 			if (this.getProgress() > 0 && this.getEnergyRate() > 0) {
 				int i2 = this.getProgressBarScaled();
-				this.blit(matrix, x + 116, y + 47, 194, 0, i2 + 1, 16);
+				blit(matrix, x + 116, y + 47, 194, 0, i2 + 1, 16);
 			}
 
 			var output = this.getRecipeOutput();
 
-			this.drawItemStack(output, x + 148, y + 47);
+			this.drawItemStack(matrix, output, x + 148, y + 47);
 
 			if (isHoveringSlot(x + 148, y + 47, mouseX, mouseY)) {
-				renderSlotHighlight(matrix, x + 148, y + 47, this.getBlitOffset());
+				renderSlotHighlight(matrix, x + 148, y + 47, 100);
 			}
 		}
 	}
 	
-	private void drawItemStack(ItemStack stack, int x, int y) {
-		PoseStack posestack = RenderSystem.getModelViewStack();
-		posestack.translate(0.0D, 0.0D, 32.0D);
-		RenderSystem.applyModelViewMatrix();
-		this.setBlitOffset(200);
-		this.itemRenderer.blitOffset = 200.0F;
-		net.minecraft.client.gui.Font font = IClientItemExtensions.of(stack).getFont(stack, IClientItemExtensions.FontContext.ITEM_COUNT);
+	private void drawItemStack(PoseStack matrix, ItemStack stack, int x, int y) {
+		matrix.translate(0.0D, 0.0D, 32.0D);
 
+		var font = IClientItemExtensions.of(stack).getFont(stack, IClientItemExtensions.FontContext.ITEM_COUNT);
 		if (font == null) font = this.font;
-		this.itemRenderer.renderAndDecorateItem(stack, x, y);
+		this.itemRenderer.renderAndDecorateItem(matrix, stack, x, y);
 //		this.itemRenderer.renderGuiItemDecorations(font, stack, x, y - (this.draggingItem.isEmpty() ? 0 : 8), "");
-		this.setBlitOffset(0);
-		this.itemRenderer.blitOffset = 0.0F;
 	}
 
 	private CraftingCoreTileEntity getTileEntity() {
@@ -136,10 +129,14 @@ public class CraftingCoreScreen extends BaseContainerScreen<CraftingCoreContaine
 		if (this.tile == null)
 			return ItemStack.EMPTY;
 
+		var level = this.tile.getLevel();
+		if (level == null)
+			return ItemStack.EMPTY;
+
 		var recipe = this.tile.getActiveRecipe();
 
 		if (recipe != null) {
-			return recipe.getResultItem();
+			return recipe.getResultItem(level.registryAccess());
 		}
 
 		return ItemStack.EMPTY;

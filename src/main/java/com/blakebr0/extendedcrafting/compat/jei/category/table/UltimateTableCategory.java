@@ -19,6 +19,7 @@ import mezz.jei.api.recipe.RecipeIngredientRole;
 import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.recipe.category.IRecipeCategory;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
@@ -86,8 +87,12 @@ public class UltimateTableCategory implements IRecipeCategory<ITableRecipe> {
 
 	@Override
 	public void setRecipe(IRecipeLayoutBuilder builder, ITableRecipe recipe, IFocusGroup focuses) {
+		var level = Minecraft.getInstance().level;
+
+		assert level != null;
+
 		var inputs = recipe.getIngredients();
-		var output = recipe.getResultItem();
+		var output = recipe.getResultItem(level.registryAccess());
 
 		if (recipe instanceof ShapedTableRecipe shaped) {
 			int heightOffset = Math.floorDiv(9 - shaped.getHeight(), 2);

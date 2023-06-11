@@ -6,7 +6,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.material.Material;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
@@ -28,7 +27,7 @@ public class FrameBlock extends BaseBlock {
             .build();
 
     public FrameBlock() {
-        super(Material.STONE, SoundType.STONE, 5.0F, 10.0F, true);
+        super(SoundType.STONE, 5.0F, 10.0F, true);
     }
 
     @Override

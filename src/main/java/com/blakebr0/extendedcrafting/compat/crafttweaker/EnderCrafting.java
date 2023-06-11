@@ -95,7 +95,7 @@ public final class EnderCrafting {
 				var recipes = RecipeHelper.getRecipes()
                         .getOrDefault(ModRecipeTypes.ENDER_CRAFTER.get(), new HashMap<>())
                         .values().stream()
-                        .filter(r -> r.getResultItem(access).sameItem(stack.getInternal()))
+                        .filter(r -> r.getResultItem(access).is(stack.getInternal().getItem()))
                         .map(Recipe::getId)
                         .toList();
 

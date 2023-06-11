@@ -5,7 +5,7 @@ import com.blakebr0.cucumber.client.screen.widget.EnergyBarWidget;
 import com.blakebr0.extendedcrafting.ExtendedCrafting;
 import com.blakebr0.extendedcrafting.container.FluxAlternatorContainer;
 import com.blakebr0.extendedcrafting.tileentity.FluxAlternatorTileEntity;
-import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
@@ -26,21 +26,21 @@ public class FluxAlternatorScreen extends BaseContainerScreen<FluxAlternatorCont
 		var tile = this.getTileEntity();
 
 		if (tile != null) {
-			this.addRenderableWidget(new EnergyBarWidget(x + 7, y + 17, tile.getEnergy(), this));
+			this.addRenderableWidget(new EnergyBarWidget(x + 7, y + 17, tile.getEnergy()));
 		}
 	}
 
 	@Override
-	protected void renderLabels(PoseStack stack, int mouseX, int mouseY) {
+	protected void renderLabels(GuiGraphics gfx, int mouseX, int mouseY) {
 		var title = this.getTitle().getString();
 
-		this.font.draw(stack, title, (float) (this.imageWidth / 2 - this.font.width(title) / 2), 6.0F, 4210752);
-		this.font.draw(stack, this.playerInventoryTitle, 8.0F, this.imageHeight - 94.0F, 4210752);
+		gfx.drawString(this.font, title, (this.imageWidth / 2 - this.font.width(title) / 2), 6, 4210752);
+		gfx.drawString(this.font, this.playerInventoryTitle, 8, this.imageHeight - 94, 4210752);
 	}
 
 	@Override
-	protected void renderBg(PoseStack matrix, float partialTicks, int mouseX, int mouseY) {
-		this.renderDefaultBg(matrix, partialTicks, mouseX, mouseY);
+	protected void renderBg(GuiGraphics gfx, float partialTicks, int mouseX, int mouseY) {
+		this.renderDefaultBg(gfx, partialTicks, mouseX, mouseY);
 	}
 
 	private FluxAlternatorTileEntity getTileEntity() {

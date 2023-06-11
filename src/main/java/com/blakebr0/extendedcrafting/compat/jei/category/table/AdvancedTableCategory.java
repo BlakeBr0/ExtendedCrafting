@@ -8,7 +8,6 @@ import com.blakebr0.extendedcrafting.crafting.recipe.ShapedTableRecipe;
 import com.blakebr0.extendedcrafting.crafting.recipe.ShapelessTableRecipe;
 import com.blakebr0.extendedcrafting.init.ModBlocks;
 import com.blakebr0.extendedcrafting.lib.ModTooltips;
-import com.mojang.blaze3d.vertex.PoseStack;
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
@@ -20,6 +19,7 @@ import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.recipe.category.IRecipeCategory;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
@@ -61,16 +61,18 @@ public class AdvancedTableCategory implements IRecipeCategory<ITableRecipe> {
 	}
 
 	@Override
-	public void draw(ITableRecipe recipe, IRecipeSlotsView slots, PoseStack stack, double mouseX, double mouseY) {
-		stack.pushPose();
-		stack.scale(0.5F, 0.5F, 0.5F);
+	public void draw(ITableRecipe recipe, IRecipeSlotsView slots, GuiGraphics gfx, double mouseX, double mouseY) {
+		var matrix = gfx.pose();
+
+		matrix.pushPose();
+		matrix.scale(0.5F, 0.5F, 0.5F);
 
 		var shapeless = recipe instanceof ShapelessTableRecipe;
 
 		if (recipe.hasRequiredTier())
-			this.required.draw(stack, shapeless ? 265 : 285, 0);
+			this.required.draw(gfx, shapeless ? 265 : 285, 0);
 
-		stack.popPose();
+		matrix.popPose();
 	}
 
 	@Override

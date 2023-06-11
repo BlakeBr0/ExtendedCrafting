@@ -28,7 +28,7 @@ public class UltimateTableContainer extends BaseContainerMenu {
 
 	private UltimateTableContainer(MenuType<?> type, int id, Inventory playerInventory, BaseItemStackHandler inventory, BlockPos pos) {
 		super(type, id, pos);
-		this.level = playerInventory.player.level;
+		this.level = playerInventory.player.level();
 		this.result = new ResultContainer();
 
 		var matrix = new ExtendedCraftingInventory(this, inventory, 9);

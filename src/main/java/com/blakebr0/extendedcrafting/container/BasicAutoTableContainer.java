@@ -33,7 +33,7 @@ public class BasicAutoTableContainer extends BaseContainerMenu {
 
 	private BasicAutoTableContainer(MenuType<?> type, int id, Inventory playerInventory, BaseItemStackHandler inventory, BlockPos pos) {
 		super(type, id, pos);
-		this.level = playerInventory.player.level;
+		this.level = playerInventory.player.level();
 		this.result = new ResultContainer();
 
 		var matrix = new ExtendedCraftingInventory(this, inventory, 3, true);

@@ -11,8 +11,9 @@ import com.blakebr0.extendedcrafting.container.AdvancedAutoTableContainer;
 import com.blakebr0.extendedcrafting.lib.ModTooltips;
 import com.blakebr0.extendedcrafting.tileentity.AutoTableTileEntity;
 import com.google.common.collect.Lists;
-import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -46,61 +47,63 @@ public class AdvancedAutoTableScreen extends BaseContainerScreen<AdvancedAutoTab
 			this.addRenderableWidget(new RecipeSelectButton(x + 155, y + 7, pos, 1, this.tile.getRecipeStorage(), this::onSelectButtonTooltip));
 			this.addRenderableWidget(new RecipeSelectButton(x + 168, y + 7, pos, 2, this.tile.getRecipeStorage(), this::onSelectButtonTooltip));
 
-			this.addRenderableWidget(new EnergyBarWidget(x + 7, y + 23, this.tile.getEnergy(), this));
+			this.addRenderableWidget(new EnergyBarWidget(x + 7, y + 23, this.tile.getEnergy()));
 		}
 	}
 
 	@Override
-	protected void renderTooltip(PoseStack stack, int mouseX, int mouseY) {
+	protected void renderTooltip(GuiGraphics gfx, int mouseX, int mouseY) {
 		int x = this.getGuiLeft();
 		int y = this.getGuiTop();
 
-		super.renderTooltip(stack, mouseX, mouseY);
+		super.renderTooltip(gfx, mouseX, mouseY);
 
 		if (mouseX > x + 155 && mouseX < x + 168 && mouseY > y + 62 && mouseY < y + 78) {
-			this.renderTooltip(stack, ModTooltips.TOGGLE_AUTO_CRAFTING.color(ChatFormatting.WHITE).build(), mouseX, mouseY);
+			gfx.renderTooltip(this.font, ModTooltips.TOGGLE_AUTO_CRAFTING.color(ChatFormatting.WHITE).build(), mouseX, mouseY);
 		}
 	}
 
 	@Override
-	protected void renderLabels(PoseStack stack, int mouseX, int mouseY) {
+	protected void renderLabels(GuiGraphics gfx, int mouseX, int mouseY) {
 		var title = this.getTitle().getString();
 
-		this.font.draw(stack, title, 25.0F, 6.0F, 4210752);
-		this.font.draw(stack, this.playerInventoryTitle, 13.0F, this.imageHeight - 94.0F, 4210752);
+		gfx.drawString(this.font, title, 25, 6, 4210752);
+		gfx.drawString(this.font, this.playerInventoryTitle, 13, this.imageHeight - 94, 4210752);
 	}
 
 	@Override
-	protected void renderBg(PoseStack stack, float partialTicks, int mouseX, int mouseY) {
-		super.renderDefaultBg(stack, partialTicks, mouseX, mouseY);
+	protected void renderBg(GuiGraphics gfx, float partialTicks, int mouseX, int mouseY) {
+		super.renderDefaultBg(gfx, partialTicks, mouseX, mouseY);
 
 		int x = this.getGuiLeft();
 		int y = this.getGuiTop();
 
 		if (this.isRunning()) {
 			int i2 = this.getProgressBarScaled();
-			this.blit(stack, x + 154, y + 61, 204, 0, 13, i2);
+			gfx.blit(BACKGROUND, x + 154, y + 61, 204, 0, 13, i2);
 		}
 
 		var recipe = this.getSelectedRecipe();
 
 		if (recipe != null) {
+			var itemRenderer = Minecraft.getInstance().getItemRenderer();
+
 			for (int i = 0; i < 5; i++) {
 				for (int j = 0; j < 5; j++) {
 					int index = (i * 5) + j;
 					var item = recipe.getStackInSlot(index);
 
-					GhostItemRenderer.renderItemIntoGui(item, x + 26 + (j * 18), y + 18 + (i * 18), this.itemRenderer);
+					GhostItemRenderer.renderItemIntoGui(item, x + 26 + (j * 18), y + 18 + (i * 18), itemRenderer);
 				}
 			}
 
 			var output = recipe.getStackInSlot(recipe.getSlots() - 1);
 
-			GhostItemRenderer.renderItemIntoGui(output, x + 154, y + 37, this.itemRenderer);
+			GhostItemRenderer.renderItemIntoGui(output, x + 154, y + 37, itemRenderer);
 		}
 	}
 
-	private void onSelectButtonTooltip(Button button, PoseStack matrix, int mouseX, int mouseY) {
+	private void onSelectButtonTooltip(Button button, GuiGraphics gfx, int mouseX, int mouseY) {
 		var index = ((RecipeSelectButton) button).getIndex();
 		var isSelected = ((RecipeSelectButton) button).isSelected();
 		var recipe = this.getRecipeInfo(index);
@@ -132,7 +135,7 @@ public class AdvancedAutoTableScreen extends BaseContainerScreen<AdvancedAutoTab
 				}
 			}
 
-			this.renderComponentTooltip(matrix, tooltip, mouseX, mouseY);
+			gfx.renderComponentTooltip(this.font, tooltip, mouseX, mouseY);
 		}
 	}
 

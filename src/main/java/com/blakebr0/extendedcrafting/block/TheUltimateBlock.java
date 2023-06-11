@@ -7,11 +7,10 @@ import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.material.Material;
 
 public class TheUltimateBlock extends BaseTileEntityBlock {
     public TheUltimateBlock() {
-        super(Material.METAL, SoundType.METAL, 5.0F, 10.0F, true);
+        super(SoundType.METAL, 5.0F, 10.0F, true);
     }
 
     @Override

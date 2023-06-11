@@ -42,10 +42,12 @@ public class TableOutputSlot extends Slot {
 
         ForgeHooks.setCraftingPlayer(player);
 
+        var level = player.level();
+
         if (isVanilla) {
-            remaining = player.level.getRecipeManager().getRemainingItemsFor(RecipeType.CRAFTING, (CraftingContainer) this.matrix, player.level);
+            remaining = level.getRecipeManager().getRemainingItemsFor(RecipeType.CRAFTING, (CraftingContainer) this.matrix, level);
         } else {
-            remaining = player.level.getRecipeManager().getRemainingItemsFor(ModRecipeTypes.TABLE.get(), this.matrix, player.level);
+            remaining = level.getRecipeManager().getRemainingItemsFor(ModRecipeTypes.TABLE.get(), this.matrix, level);
         }
 
         ForgeHooks.setCraftingPlayer(null);
@@ -62,7 +64,7 @@ public class TableOutputSlot extends Slot {
             if (!remainingStack.isEmpty()) {
                 if (slotStack.isEmpty()) {
                     this.matrix.setItem(i, remainingStack);
-                } else if (ItemStack.isSame(slotStack, remainingStack) && ItemStack.tagMatches(slotStack, remainingStack)) {
+                } else if (ItemStack.isSameItemSameTags(slotStack, remainingStack)) {
                     remainingStack.grow(slotStack.getCount());
                     this.matrix.setItem(i, remainingStack);
                 } else if (!player.getInventory().add(remainingStack)) {

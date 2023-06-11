@@ -3,10 +3,10 @@ package com.blakebr0.extendedcrafting.container.inventory;
 import com.blakebr0.cucumber.inventory.BaseItemStackHandler;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.inventory.CraftingContainer;
+import net.minecraft.world.inventory.TransientCraftingContainer;
 import net.minecraft.world.item.ItemStack;
 
-public class ExtendedCraftingInventory extends CraftingContainer {
+public class ExtendedCraftingInventory extends TransientCraftingContainer {
     private final AbstractContainerMenu container;
     private final BaseItemStackHandler inventory;
     private final boolean autoTable;

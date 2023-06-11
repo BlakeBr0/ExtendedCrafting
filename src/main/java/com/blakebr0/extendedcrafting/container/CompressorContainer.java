@@ -54,7 +54,7 @@ public class CompressorContainer extends BaseContainerMenu {
 				slot.onQuickCraft(itemstack1, itemstack);
 			} else {
 				ItemStack inputStack = this.slots.get(1).getItem();
-                if (inputStack.isEmpty() || (inputStack.sameItem(itemstack1) && inputStack.getCount() < inputStack.getMaxStackSize())) {
+                if (inputStack.isEmpty() || (inputStack.is(itemstack1.getItem()) && inputStack.getCount() < inputStack.getMaxStackSize())) {
 					if (!this.moveItemStackTo(itemstack1, 1, 2, false)) {
 						return ItemStack.EMPTY;
 					}

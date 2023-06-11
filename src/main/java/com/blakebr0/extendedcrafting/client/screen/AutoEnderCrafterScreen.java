@@ -10,8 +10,9 @@ import com.blakebr0.extendedcrafting.container.AutoEnderCrafterContainer;
 import com.blakebr0.extendedcrafting.lib.ModTooltips;
 import com.blakebr0.extendedcrafting.tileentity.AutoEnderCrafterTileEntity;
 import com.google.common.collect.Lists;
-import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -43,49 +44,51 @@ public class AutoEnderCrafterScreen extends BaseContainerScreen<AutoEnderCrafter
 			this.addRenderableWidget(new RecipeSelectButton(x + 145, y + 7, pos, 1,  33, this.tile.getRecipeStorage(), this::onSelectButtonTooltip));
 			this.addRenderableWidget(new RecipeSelectButton(x + 158, y + 7, pos, 2,  33, this.tile.getRecipeStorage(), this::onSelectButtonTooltip));
 
-			this.addRenderableWidget(new EnergyBarWidget(x + 7, y + 17, this.tile.getEnergy(), this));
+			this.addRenderableWidget(new EnergyBarWidget(x + 7, y + 17, this.tile.getEnergy()));
 		}
 	}
 
 	@Override
-	protected void renderLabels(PoseStack stack, int mouseX, int mouseY) {
+	protected void renderLabels(GuiGraphics gfx, int mouseX, int mouseY) {
 		var title = this.getTitle().getString();
 
-		this.font.draw(stack, title, 32.0F, 6.0F, 4210752);
-		this.font.draw(stack, this.playerInventoryTitle, 8.0F, this.imageHeight - 94.0F, 4210752);
+		gfx.drawString(this.font, title, 32, 6, 4210752);
+		gfx.drawString(this.font, this.playerInventoryTitle, 8, this.imageHeight - 94, 4210752);
 	}
 
 	@Override
-	protected void renderBg(PoseStack stack, float partialTicks, int mouseX, int mouseY) {
-		super.renderDefaultBg(stack, partialTicks, mouseX, mouseY);
+	protected void renderBg(GuiGraphics gfx, float partialTicks, int mouseX, int mouseY) {
+		super.renderDefaultBg(gfx, partialTicks, mouseX, mouseY);
 
 		int x = this.getGuiLeft();
 		int y = this.getGuiTop();
 
 		if (this.getProgress() > 0) {
 			int i2 = this.getProgressBarScaled();
-			this.blit(stack, x + 92, y + 48, 194, 0, i2 + 1, 16);
+			gfx.blit(BACKGROUND, x + 92, y + 48, 194, 0, i2 + 1, 16);
 		}
 
 		var recipe = this.getSelectedRecipe();
 
 		if (recipe != null) {
+			var itemRenderer = Minecraft.getInstance().getItemRenderer();
+
 			for (int i = 0; i < 3; i++) {
 				for (int j = 0; j < 3; j++) {
 					int index = (i * 3) + j;
 					var item = recipe.getStackInSlot(index);
 
-					GhostItemRenderer.renderItemIntoGui(item, x + 33 + (j * 18), y + 30 + (i * 18), this.itemRenderer);
+					GhostItemRenderer.renderItemIntoGui(item, x + 33 + (j * 18), y + 30 + (i * 18), itemRenderer);
 				}
 			}
 
 			var output = recipe.getStackInSlot(recipe.getSlots() - 1);
 
-			GhostItemRenderer.renderItemIntoGui(output, x + 127, y + 48, this.itemRenderer);
+			GhostItemRenderer.renderItemIntoGui(output, x + 127, y + 48, itemRenderer);
 		}
 	}
 
-	private void onSelectButtonTooltip(Button button, PoseStack matrix, int mouseX, int mouseY) {
+	private void onSelectButtonTooltip(Button button, GuiGraphics gfx, int mouseX, int mouseY) {
 		var index = ((RecipeSelectButton) button).getIndex();
 		var isSelected = ((RecipeSelectButton) button).isSelected();
 		var recipe = this.getRecipeInfo(index);
@@ -117,7 +120,7 @@ public class AutoEnderCrafterScreen extends BaseContainerScreen<AutoEnderCrafter
 				}
 			}
 
-			this.renderComponentTooltip(matrix, tooltip, mouseX, mouseY);
+			gfx.renderComponentTooltip(this.font, tooltip, mouseX, mouseY);
 		}
 	}
 

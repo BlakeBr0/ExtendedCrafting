@@ -7,7 +7,6 @@ import com.blakebr0.extendedcrafting.crafting.recipe.ShapedEnderCrafterRecipe;
 import com.blakebr0.extendedcrafting.crafting.recipe.ShapelessEnderCrafterRecipe;
 import com.blakebr0.extendedcrafting.init.ModBlocks;
 import com.blakebr0.extendedcrafting.lib.ModTooltips;
-import com.mojang.blaze3d.vertex.PoseStack;
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
@@ -20,6 +19,7 @@ import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.recipe.category.IRecipeCategory;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
@@ -64,8 +64,8 @@ public class EnderCrafterCategory implements IRecipeCategory<IEnderCrafterRecipe
 	}
 
 	@Override
-	public void draw(IEnderCrafterRecipe recipe, IRecipeSlotsView slots, PoseStack stack, double mouseX, double mouseY) {
-		this.arrow.draw(stack, 61, 19);
+	public void draw(IEnderCrafterRecipe recipe, IRecipeSlotsView slots, GuiGraphics gfx, double mouseX, double mouseY) {
+		this.arrow.draw(gfx, 61, 19);
 	}
 
 	@Override

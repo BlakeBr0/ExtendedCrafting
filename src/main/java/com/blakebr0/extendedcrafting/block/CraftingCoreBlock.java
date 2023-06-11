@@ -23,7 +23,6 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.material.Material;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
@@ -40,7 +39,7 @@ public class CraftingCoreBlock extends BaseTileEntityBlock {
 			.build();
 
 	public CraftingCoreBlock() {
-		super(Material.METAL, SoundType.METAL, 5.0F, 10.0F, true);
+		super(SoundType.METAL, 5.0F, 10.0F, true);
 	}
 
 	@Override

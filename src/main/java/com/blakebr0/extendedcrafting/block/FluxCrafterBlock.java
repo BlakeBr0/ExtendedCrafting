@@ -15,13 +15,12 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.material.Material;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.network.NetworkHooks;
 
 public class FluxCrafterBlock extends BaseTileEntityBlock {
 	public FluxCrafterBlock() {
-		super(Material.METAL, SoundType.METAL, 6.0F, 12.0F, true);
+		super(SoundType.METAL, 6.0F, 12.0F, true);
 	}
 
 	@Override

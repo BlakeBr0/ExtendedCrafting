@@ -8,15 +8,14 @@ import com.blakebr0.extendedcrafting.client.screen.button.InputLimitSwitchButton
 import com.blakebr0.extendedcrafting.container.CompressorContainer;
 import com.blakebr0.extendedcrafting.lib.ModTooltips;
 import com.blakebr0.extendedcrafting.tileentity.CompressorTileEntity;
-import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Inventory;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class CompressorScreen extends BaseContainerScreen<CompressorContainer> {
 	public static final ResourceLocation BACKGROUND = new ResourceLocation(ExtendedCrafting.MOD_ID, "textures/gui/compressor.png");
@@ -40,19 +39,19 @@ public class CompressorScreen extends BaseContainerScreen<CompressorContainer> {
 		this.tile = this.getTileEntity();
 
 		if (this.tile != null) {
-			this.addRenderableWidget(new EnergyBarWidget(x + 7, y + 17, this.tile.getEnergy(), this));
+			this.addRenderableWidget(new EnergyBarWidget(x + 7, y + 17, this.tile.getEnergy()));
 		}
 	}
 
 	@Override
-	public void render(PoseStack matrix, int mouseX, int mouseY, float partialTicks) {
+	public void render(GuiGraphics gfx, int mouseX, int mouseY, float partialTicks) {
 		int x = this.getGuiLeft();
 		int y = this.getGuiTop();
 
-		super.render(matrix, mouseX, mouseY, partialTicks);
+		super.render(gfx, mouseX, mouseY, partialTicks);
 
 		if (mouseX > x + 60 && mouseX < x + 85 && mouseY > y + 74 && mouseY < y + 83) {
-			List<Component> tooltip = new ArrayList<>();
+			var tooltip = new ArrayList<Component>();
 
 			if (this.getMaterialCount() < 1) {
 				tooltip.add(ModTooltips.EMPTY.color(ChatFormatting.WHITE).build());
@@ -74,37 +73,37 @@ public class CompressorScreen extends BaseContainerScreen<CompressorContainer> {
 				}
 			}
 
-			this.renderComponentTooltip(matrix, tooltip, mouseX, mouseY);
+			gfx.renderComponentTooltip(this.font, tooltip, mouseX, mouseY);
 		}
 
 		if (mouseX > x + 68 && mouseX < x + 79 && mouseY > y + 28 && mouseY < y + 39) {
 			if (this.isEjecting()) {
-				this.renderTooltip(matrix, ModTooltips.EJECTING.color(ChatFormatting.WHITE).build(), mouseX, mouseY);
+				gfx.renderTooltip(this.font, ModTooltips.EJECTING.color(ChatFormatting.WHITE).build(), mouseX, mouseY);
 			} else {
-				this.renderTooltip(matrix, ModTooltips.EJECT.color(ChatFormatting.WHITE).build(), mouseX, mouseY);
+				gfx.renderTooltip(this.font, ModTooltips.EJECT.color(ChatFormatting.WHITE).build(), mouseX, mouseY);
 			}
 		}
 
 		if (mouseX > x + 90 && mouseX < x + 98 && mouseY > y + 73 && mouseY < y + 84) {
 			if (this.isLimitingInput()) {
-				this.renderTooltip(matrix, ModTooltips.LIMITED_INPUT.color(ChatFormatting.WHITE).build(), mouseX, mouseY);
+				gfx.renderTooltip(this.font, ModTooltips.LIMITED_INPUT.color(ChatFormatting.WHITE).build(), mouseX, mouseY);
 			} else {
-				this.renderTooltip(matrix, ModTooltips.UNLIMITED_INPUT.color(ChatFormatting.WHITE).build(), mouseX, mouseY);
+				gfx.renderTooltip(this.font, ModTooltips.UNLIMITED_INPUT.color(ChatFormatting.WHITE).build(), mouseX, mouseY);
 			}
 		}
 	}
 
 	@Override
-	protected void renderLabels(PoseStack stack, int mouseX, int mouseY) {
+	protected void renderLabels(GuiGraphics gfx, int mouseX, int mouseY) {
 		var title = this.getTitle().getString();
 
-		this.font.draw(stack, title, (float) (this.imageWidth / 2 - this.font.width(title) / 2), 6.0F, 4210752);
-		this.font.draw(stack, this.playerInventoryTitle, 8.0F, this.imageHeight - 94.0F, 4210752);
+		gfx.drawString(this.font, title, (this.imageWidth / 2 - this.font.width(title) / 2), 6, 4210752);
+		gfx.drawString(this.font, this.playerInventoryTitle, 8, this.imageHeight - 94, 4210752);
 	}
 
 	@Override
-	protected void renderBg(PoseStack stack, float partialTicks, int mouseX, int mouseY) {
-		super.renderDefaultBg(stack, partialTicks, mouseX, mouseY);
+	protected void renderBg(GuiGraphics gfx, float partialTicks, int mouseX, int mouseY) {
+		super.renderDefaultBg(gfx, partialTicks, mouseX, mouseY);
 
 		int x = this.getGuiLeft();
 		int y = this.getGuiTop();
@@ -112,17 +111,17 @@ public class CompressorScreen extends BaseContainerScreen<CompressorContainer> {
 		if (this.hasRecipe()) {
 			if (this.getMaterialCount() > 0 && this.getMaterialsRequired() > 0) {
 				int i2 = this.getMaterialBarScaled(26);
-				this.blit(stack, x + 60, y + 74, 194, 19, i2 + 1, 10);
+				gfx.blit(BACKGROUND, x + 60, y + 74, 194, 19, i2 + 1, 10);
 			}
 
 			if (this.getProgress() > 0 && this.getEnergyRequired() > 0) {
 				int i2 = this.getProgressBarScaled(24);
-				this.blit(stack, x + 96, y + 47, 194, 0, i2 + 1, 16);
+				gfx.blit(BACKGROUND, x + 96, y + 47, 194, 0, i2 + 1, 16);
 			}
 		}
 
 		if (this.isLimitingInput()) {
-			this.blit(stack, x + 90, y + 74, 203, 56, 9, 10);
+			gfx.blit(BACKGROUND, x + 90, y + 74, 203, 56, 9, 10);
 		}
 	}
 

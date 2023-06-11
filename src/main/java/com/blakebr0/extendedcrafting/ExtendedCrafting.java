@@ -38,10 +38,10 @@ public final class ExtendedCrafting {
 		var bus = FMLJavaModLoadingContext.get().getModEventBus();
 
 		bus.register(this);
-		bus.register(new ModCreativeModeTabs());
 
 		ModBlocks.REGISTRY.register(bus);
 		ModItems.REGISTRY.register(bus);
+		ModCreativeModeTabs.REGISTRY.register(bus);
 		ModTileEntities.REGISTRY.register(bus);
 		ModContainerTypes.REGISTRY.register(bus);
 		ModRecipeTypes.REGISTRY.register(bus);

@@ -63,7 +63,7 @@ public final class CombinationCrafting {
 				var recipes = RecipeHelper.getRecipes()
                         .getOrDefault(ModRecipeTypes.COMBINATION.get(), new HashMap<>())
                         .values().stream()
-                        .filter(r -> r.getResultItem(access).sameItem(stack.getInternal()))
+                        .filter(r -> r.getResultItem(access).is(stack.getInternal().getItem()))
                         .map(Recipe::getId)
                         .toList();
 

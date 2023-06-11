@@ -6,7 +6,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.material.Material;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
@@ -18,7 +17,7 @@ public class EnderAlternatorBlock extends BaseBlock {
 			.build();
 
 	public EnderAlternatorBlock() {
-		super(Material.METAL, SoundType.METAL, 5.0F, 10.0F, true);
+		super(SoundType.METAL, 5.0F, 10.0F, true);
 	}
 
 	@Override

@@ -19,8 +19,8 @@ public class EliteTableScreen extends BaseContainerScreen<EliteTableContainer> {
 	protected void renderLabels(GuiGraphics gfx, int mouseX, int mouseY) {
 		var title = this.getTitle().getString();
 
-		gfx.drawString(this.font, title, 8, 6, 4210752);
-		gfx.drawString(this.font, this.playerInventoryTitle, 20, this.imageHeight - 94, 4210752);
+		gfx.drawString(this.font, title, 8, 6, 4210752, false);
+		gfx.drawString(this.font, this.playerInventoryTitle, 20, this.imageHeight - 94, 4210752, false);
 	}
 
 	@Override

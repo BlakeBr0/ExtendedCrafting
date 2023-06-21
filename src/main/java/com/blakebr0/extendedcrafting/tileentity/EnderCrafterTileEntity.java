@@ -8,8 +8,11 @@ import com.blakebr0.extendedcrafting.api.crafting.IEnderCrafterRecipe;
 import com.blakebr0.extendedcrafting.block.EnderAlternatorBlock;
 import com.blakebr0.extendedcrafting.config.ModConfigs;
 import com.blakebr0.extendedcrafting.container.EnderCrafterContainer;
+import com.blakebr0.extendedcrafting.container.inventory.ExtendedCraftingInventory;
+import com.blakebr0.extendedcrafting.crafting.TableRecipeStorage;
 import com.blakebr0.extendedcrafting.init.ModRecipeTypes;
 import com.blakebr0.extendedcrafting.init.ModTileEntities;
+import com.blakebr0.extendedcrafting.util.EmptyContainer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
@@ -20,6 +23,7 @@ import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.inventory.SimpleContainerData;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -88,7 +92,8 @@ public class EnderCrafterTileEntity extends BaseInventoryTileEntity implements M
 		}
 
 		if (!level.isClientSide()) {
-			if (tile.recipe != null) {
+			var selectedRecipe = tile.getSelectedRecipeGrid();
+			if (tile.recipe != null && (selectedRecipe == null || tile.recipe.matches(selectedRecipe, level))) {
 				var result = tile.recipe.assemble(recipeInventory);
 				var output = tile.inventory.getStackInSlot(9);
 
@@ -218,6 +223,23 @@ public class EnderCrafterTileEntity extends BaseInventoryTileEntity implements M
 
 	public BaseItemStackHandler getRecipeInventory() {
 		return this.recipeInventory;
+	}
+
+	// to be overridden by the auto version
+	public TableRecipeStorage getRecipeStorage() {
+		return null;
+	}
+
+	private CraftingContainer getSelectedRecipeGrid() {
+		var storage = this.getRecipeStorage();
+		if (storage != null) {
+			var grid = storage.getSelectedRecipeGrid();
+			if (grid != null) {
+				return new ExtendedCraftingInventory(EmptyContainer.INSTANCE, storage.getSelectedRecipeGrid(), 3);
+			}
+		}
+
+		return null;
 	}
 
 	public IEnderCrafterRecipe getActiveRecipe() {

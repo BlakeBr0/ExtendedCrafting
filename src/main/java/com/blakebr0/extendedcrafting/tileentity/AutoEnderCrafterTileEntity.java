@@ -63,6 +63,11 @@ public class AutoEnderCrafterTileEntity extends EnderCrafterTileEntity implement
         return super.getCapability(cap, side);
     }
 
+    @Override
+    public TableRecipeStorage getRecipeStorage() {
+        return this.recipeStorage;
+    }
+
     public static void tick(Level level, BlockPos pos, BlockState state, AutoEnderCrafterTileEntity tile) {
         EnderCrafterTileEntity.tick(level, pos, state, tile);
 
@@ -127,10 +132,6 @@ public class AutoEnderCrafterTileEntity extends EnderCrafterTileEntity implement
     public void deleteRecipe(int index) {
         this.getRecipeStorage().unsetRecipe(index);
         this.markDirtyAndDispatch();
-    }
-
-    public TableRecipeStorage getRecipeStorage() {
-        return this.recipeStorage;
     }
 
     public EnergyStorage getEnergy() {

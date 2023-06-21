@@ -14,6 +14,7 @@ import com.blakebr0.extendedcrafting.container.inventory.ExtendedCraftingInvento
 import com.blakebr0.extendedcrafting.crafting.TableRecipeStorage;
 import com.blakebr0.extendedcrafting.init.ModRecipeTypes;
 import com.blakebr0.extendedcrafting.init.ModTileEntities;
+import com.blakebr0.extendedcrafting.util.EmptyContainer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
@@ -118,7 +119,8 @@ public abstract class AutoTableTileEntity extends BaseInventoryTileEntity implem
             }
 
             if (!level.isClientSide()) {
-                if (tile.recipe != null) {
+                var selectedRecipe = tile.getRecipeStorage().getSelectedRecipeGrid();
+                if (tile.recipe != null  && (selectedRecipe == null || tile.recipe.matchesSavedRecipe(selectedRecipe, level))) {
                     var inventory = tile.getInventory();
                     var result = tile.recipe.getCraftingResult(recipeInventory);
                     int outputSlot = inventory.getSlots() - 1;
@@ -353,17 +355,20 @@ public abstract class AutoTableTileEntity extends BaseInventoryTileEntity implem
     public static class WrappedRecipe {
         private final Function<Container, ItemStack> resultFunc;
         private final BiFunction<Container, Level, Boolean> matchesFunc;
+        private final BiFunction<CraftingContainer, Level, Boolean> matchesSavedRecipeFunc;
         private final Function<Container, NonNullList<ItemStack>> remainingItemsFunc;
 
         public WrappedRecipe(CraftingRecipe recipe, CraftingContainer craftingInventory) {
             this.resultFunc = inventory -> recipe.assemble(craftingInventory);
             this.matchesFunc = (inventory, level) -> recipe.matches(craftingInventory, level);
+            this.matchesSavedRecipeFunc = recipe::matches;
             this.remainingItemsFunc = inventory -> recipe.getRemainingItems(craftingInventory);
         }
 
         public WrappedRecipe(ITableRecipe recipe) {
             this.resultFunc = recipe::assemble;
             this.matchesFunc = recipe::matches;
+            this.matchesSavedRecipeFunc = recipe::matches;
             this.remainingItemsFunc = recipe::getRemainingItems;
         }
 
@@ -373,6 +378,11 @@ public abstract class AutoTableTileEntity extends BaseInventoryTileEntity implem
 
         public boolean matches(Container inventory, Level level) {
             return this.matchesFunc.apply(inventory, level);
+        }
+
+        public boolean matchesSavedRecipe(BaseItemStackHandler inventory, Level level) {
+            var size = (int) Math.sqrt(inventory.getSlots());
+            return this.matchesSavedRecipeFunc.apply(new ExtendedCraftingInventory(EmptyContainer.INSTANCE, inventory, size), level);
         }
 
         public NonNullList<ItemStack> getRemainingItems(Container inventory) {

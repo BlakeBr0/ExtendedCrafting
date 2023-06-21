@@ -63,6 +63,11 @@ public class AutoFluxCrafterTileEntity extends FluxCrafterTileEntity implements 
         return super.getCapability(cap, side);
     }
 
+    @Override
+    public TableRecipeStorage getRecipeStorage() {
+        return this.recipeStorage;
+    }
+
     public static void tick(Level level, BlockPos pos, BlockState state, AutoFluxCrafterTileEntity tile) {
         FluxCrafterTileEntity.tick(level, pos, state, tile);
 
@@ -127,10 +132,6 @@ public class AutoFluxCrafterTileEntity extends FluxCrafterTileEntity implements 
     public void deleteRecipe(int index) {
         this.getRecipeStorage().unsetRecipe(index);
         this.markDirtyAndDispatch();
-    }
-
-    public TableRecipeStorage getRecipeStorage() {
-        return this.recipeStorage;
     }
 
     public EnergyStorage getEnergy() {

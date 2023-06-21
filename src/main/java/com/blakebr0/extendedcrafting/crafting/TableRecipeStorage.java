@@ -10,6 +10,7 @@ public class TableRecipeStorage {
     private final BaseItemStackHandler[] recipes = new BaseItemStackHandler[3];
     private final int slots;
     private int selected = -1;
+    private BaseItemStackHandler selectedRecipeGrid = null;
 
     public TableRecipeStorage(int slots) {
         this.slots = slots;
@@ -32,6 +33,8 @@ public class TableRecipeStorage {
             selected = -1;
 
         this.selected = selected;
+
+        this.updateSelectedRecipeGrid();
     }
 
     public BaseItemStackHandler getRecipe(int index) {
@@ -66,8 +69,9 @@ public class TableRecipeStorage {
 
         this.recipes[index] = BaseItemStackHandler.create(this.slots);
 
-        if (index == this.selected)
-            this.selected = -1;
+        if (index == this.selected) {
+            this.setSelected(-1);
+        }
     }
 
     public BaseItemStackHandler[] getRecipes() {
@@ -79,6 +83,10 @@ public class TableRecipeStorage {
             return null;
 
         return this.recipes[this.selected];
+    }
+
+    public BaseItemStackHandler getSelectedRecipeGrid() {
+        return this.selectedRecipeGrid;
     }
 
     public CompoundTag serializeNBT() {
@@ -104,5 +112,22 @@ public class TableRecipeStorage {
         }
 
         this.selected = tag.getInt("Selected");
+
+        this.updateSelectedRecipeGrid();
+    }
+
+    private void updateSelectedRecipeGrid() {
+        if (this.selected > -1) {
+            var recipe = this.recipes[this.selected];
+            var grid = BaseItemStackHandler.create(this.slots - 1);
+
+            for (int i = 0; i < this.slots - 1; i++) {
+                grid.setStackInSlot(i, recipe.getStackInSlot(i));
+            }
+
+            this.selectedRecipeGrid = grid;
+        } else {
+            this.selectedRecipeGrid = null;
+        }
     }
 }

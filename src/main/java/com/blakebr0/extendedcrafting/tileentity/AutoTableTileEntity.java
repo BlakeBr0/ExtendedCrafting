@@ -86,8 +86,9 @@ public abstract class AutoTableTileEntity extends BaseInventoryTileEntity implem
 
         if (tile.running) {
             var recipe = tile.getActiveRecipe();
+            var selectedRecipe = tile.getRecipeStorage().getSelectedRecipeGrid();
 
-            if (recipe != null) {
+            if (recipe != null && (selectedRecipe == null || recipe.matchesSavedRecipe(selectedRecipe, level))) {
                 var recipeInventory = tile.getRecipeInventory().toIInventory();
                 var inventory = tile.getInventory();
                 var result = recipe.getCraftingResult(recipeInventory);
@@ -343,17 +344,20 @@ public abstract class AutoTableTileEntity extends BaseInventoryTileEntity implem
     public static class WrappedRecipe {
         private final Function<Container, ItemStack> resultFunc;
         private final BiFunction<Container, Level, Boolean> matchesFunc;
+        private final BiFunction<CraftingContainer, Level, Boolean> matchesSavedRecipeFunc;
         private final Function<Container, NonNullList<ItemStack>> remainingItemsFunc;
 
         public WrappedRecipe(CraftingRecipe recipe, CraftingContainer craftingInventory) {
             this.resultFunc = inventory -> recipe.assemble(craftingInventory);
             this.matchesFunc = (inventory, level) -> recipe.matches(craftingInventory, level);
+            this.matchesSavedRecipeFunc = recipe::matches;
             this.remainingItemsFunc = inventory -> recipe.getRemainingItems(craftingInventory);
         }
 
         public WrappedRecipe(ITableRecipe recipe) {
             this.resultFunc = recipe::assemble;
             this.matchesFunc = recipe::matches;
+            this.matchesSavedRecipeFunc = recipe::matches;
             this.remainingItemsFunc = recipe::getRemainingItems;
         }
 
@@ -363,6 +367,11 @@ public abstract class AutoTableTileEntity extends BaseInventoryTileEntity implem
 
         public boolean matches(Container inventory, Level level) {
             return this.matchesFunc.apply(inventory, level);
+        }
+
+        public boolean matchesSavedRecipe(BaseItemStackHandler inventory, Level level) {
+            var size = (int) Math.sqrt(inventory.getSlots());
+            return this.matchesSavedRecipeFunc.apply(new ExtendedCraftingInventory(EmptyContainer.INSTANCE, inventory, size), level);
         }
 
         public NonNullList<ItemStack> getRemainingItems(Container inventory) {

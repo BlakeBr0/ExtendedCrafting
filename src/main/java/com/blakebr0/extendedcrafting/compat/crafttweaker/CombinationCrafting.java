@@ -1,6 +1,7 @@
 package com.blakebr0.extendedcrafting.compat.crafttweaker;
 
 import com.blakebr0.cucumber.helper.RecipeHelper;
+import com.blakebr0.extendedcrafting.ExtendedCrafting;
 import com.blakebr0.extendedcrafting.crafting.recipe.CombinationRecipe;
 import com.blakebr0.extendedcrafting.init.ModRecipeTypes;
 import com.blamejared.crafttweaker.api.CraftTweakerAPI;
@@ -28,12 +29,18 @@ public final class CombinationCrafting {
 			@Override
 			public void apply() {
 				var recipe = new CombinationRecipe(new ResourceLocation("crafttweaker", id), toIngredientsList(inputs), output.getInternal(), cost);
+
 				RecipeHelper.addRecipe(recipe);
 			}
 
 			@Override
 			public String describe() {
 				return "Adding Combination Crafting recipe for " + output.getCommandString();
+			}
+
+			@Override
+			public String systemName() {
+				return ExtendedCrafting.MOD_ID;
 			}
 		});
 	}
@@ -44,12 +51,18 @@ public final class CombinationCrafting {
 			@Override
 			public void apply() {
 				var recipe = new CombinationRecipe(new ResourceLocation("crafttweaker", id), toIngredientsList(inputs), output.getInternal(), cost, perTick);
+
 				RecipeHelper.addRecipe(recipe);
 			}
 
 			@Override
 			public String describe() {
 				return "Adding Combination Crafting recipe for " + output.getCommandString();
+			}
+
+			@Override
+			public String systemName() {
+				return ExtendedCrafting.MOD_ID;
 			}
 		});
 	}
@@ -75,6 +88,11 @@ public final class CombinationCrafting {
 			@Override
 			public String describe() {
 				return "Removing Combination Crafting recipes for " + stack.getCommandString();
+			}
+
+			@Override
+			public String systemName() {
+				return ExtendedCrafting.MOD_ID;
 			}
 		});
 	}

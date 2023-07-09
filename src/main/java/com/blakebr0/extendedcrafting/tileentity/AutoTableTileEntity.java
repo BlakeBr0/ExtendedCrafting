@@ -309,7 +309,10 @@ public abstract class AutoTableTileEntity extends BaseInventoryTileEntity implem
         int slotToPut = -1;
         boolean isGridChanged = false;
 
-        for (int i = 0; i < inventory.getSlots(); i++) {
+        // last slot in the inventory is the output slot
+        var slots = inventory.getSlots() - 1;
+
+        for (int i = 0; i < slots; i++) {
             var slot = inventory.getStackInSlot(i);
             var recipeStack = recipe.getStackInSlot(i);
 

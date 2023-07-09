@@ -1,6 +1,7 @@
 package com.blakebr0.extendedcrafting.compat.crafttweaker;
 
 import com.blakebr0.cucumber.helper.RecipeHelper;
+import com.blakebr0.extendedcrafting.ExtendedCrafting;
 import com.blakebr0.extendedcrafting.crafting.recipe.ShapedTableRecipe;
 import com.blakebr0.extendedcrafting.crafting.recipe.ShapelessTableRecipe;
 import com.blakebr0.extendedcrafting.init.ModRecipeTypes;
@@ -35,7 +36,7 @@ public final class TableCrafting {
 	@ZenCodeType.Method
 	public static void addShaped(String id, int tier, IItemStack output, IIngredient[][] inputs) {
 		if (tier > 4 || tier < 0) {
-			CraftTweakerAPI.LOGGER.error("Unable to assign a tier to the Table Recipe for stack " + output.getCommandString() + ". Tier cannot be greater than 4 or less than 0.");
+			CraftTweakerAPI.getLogger(ExtendedCrafting.MOD_ID).error("Unable to assign a tier to the Table Recipe for stack " + output.getCommandString() + ". Tier cannot be greater than 4 or less than 0.");
 		}
 
 		CraftTweakerAPI.apply(new IRuntimeAction() {
@@ -79,6 +80,11 @@ public final class TableCrafting {
 			public String describe() {
 				return "Adding Shaped Table recipe for " + output.getCommandString();
 			}
+
+			@Override
+			public String systemName() {
+				return ExtendedCrafting.MOD_ID;
+			}
 		});
 	}
 
@@ -90,7 +96,7 @@ public final class TableCrafting {
 	@ZenCodeType.Method
 	public static void addShapeless(String id, int tier, IItemStack output, IIngredient[] inputs) {
 		if (tier > 4 || tier < 0) {
-			CraftTweakerAPI.LOGGER.error("Unable to assign a tier to the Table Recipe for stack " + output.getCommandString() + ". Tier cannot be greater than 4 or less than 0.");
+			CraftTweakerAPI.getLogger(ExtendedCrafting.MOD_ID).error("Unable to assign a tier to the Table Recipe for stack " + output.getCommandString() + ". Tier cannot be greater than 4 or less than 0.");
 		}
 
 		CraftTweakerAPI.apply(new IRuntimeAction() {
@@ -121,6 +127,11 @@ public final class TableCrafting {
 			public String describe() {
 				return "Adding Shapeless Table Crafting recipe for " + output.getCommandString();
 			}
+
+			@Override
+			public String systemName() {
+				return ExtendedCrafting.MOD_ID;
+			}
 		});
 	}
 
@@ -145,6 +156,11 @@ public final class TableCrafting {
 			@Override
 			public String describe() {
 				return "Removing Table Crafting recipes for " + stack.getCommandString();
+			}
+
+			@Override
+			public String systemName() {
+				return ExtendedCrafting.MOD_ID;
 			}
 		});
 	}

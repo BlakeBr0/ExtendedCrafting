@@ -1,6 +1,7 @@
 package com.blakebr0.extendedcrafting.compat.crafttweaker;
 
 import com.blakebr0.cucumber.helper.RecipeHelper;
+import com.blakebr0.extendedcrafting.ExtendedCrafting;
 import com.blakebr0.extendedcrafting.crafting.recipe.CompressorRecipe;
 import com.blakebr0.extendedcrafting.init.ModRecipeTypes;
 import com.blamejared.crafttweaker.api.CraftTweakerAPI;
@@ -31,6 +32,11 @@ public final class CompressionCrafting {
 			public String describe() {
 				return "Adding Compression Crafting recipe for " + output.getCommandString();
 			}
+
+			@Override
+			public String systemName() {
+				return ExtendedCrafting.MOD_ID;
+			}
 		});
 	}
 
@@ -46,6 +52,11 @@ public final class CompressionCrafting {
 			@Override
 			public String describe() {
 				return "Adding Compression Crafting recipe for " + output.getCommandString();
+			}
+
+			@Override
+			public String systemName() {
+				return ExtendedCrafting.MOD_ID;
 			}
 		});
 	}
@@ -70,6 +81,11 @@ public final class CompressionCrafting {
 			@Override
 			public String describe() {
 				return "Removing Compression Crafting recipes for " + stack.getCommandString();
+			}
+
+			@Override
+			public String systemName() {
+				return ExtendedCrafting.MOD_ID;
 			}
 		});
 	}

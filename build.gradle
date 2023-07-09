@@ -94,7 +94,7 @@ dependencies {
     }
 
     implementation fg.deobf("curse.maven:jade-324717:${jade_version}")
-    compileOnly fg.deobf("com.blamejared.crafttweaker:CraftTweaker-forge-${crafttweaker_version}")
+    implementation fg.deobf("com.blamejared.crafttweaker:CraftTweaker-forge-${crafttweaker_version}")
 
     runtimeOnly fg.deobf("vazkii.patchouli:Patchouli:${patchouli_version}")
     runtimeOnly fg.deobf("mezz.jei:jei-${jei_mc_version}-forge:${jei_version}")

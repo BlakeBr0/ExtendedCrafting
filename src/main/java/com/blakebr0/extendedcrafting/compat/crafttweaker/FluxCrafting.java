@@ -1,6 +1,7 @@
 package com.blakebr0.extendedcrafting.compat.crafttweaker;
 
 import com.blakebr0.cucumber.helper.RecipeHelper;
+import com.blakebr0.extendedcrafting.ExtendedCrafting;
 import com.blakebr0.extendedcrafting.config.ModConfigs;
 import com.blakebr0.extendedcrafting.crafting.recipe.ShapedFluxCrafterRecipe;
 import com.blakebr0.extendedcrafting.crafting.recipe.ShapelessFluxCrafterRecipe;
@@ -60,6 +61,11 @@ public final class FluxCrafting {
             public String describe() {
                 return "Adding Shaped Flux Crafting recipe for " + output.getCommandString();
             }
+
+            @Override
+            public String systemName() {
+                return ExtendedCrafting.MOD_ID;
+            }
         });
     }
 
@@ -81,6 +87,11 @@ public final class FluxCrafting {
             @Override
             public String describe() {
                 return "Adding Shapeless Flux Crafter recipe for " + output.getCommandString();
+            }
+
+            @Override
+            public String systemName() {
+                return ExtendedCrafting.MOD_ID;
             }
         });
     }
@@ -105,6 +116,11 @@ public final class FluxCrafting {
             @Override
             public String describe() {
                 return "Removing Flux Crafter recipes for " + stack.getCommandString();
+            }
+
+            @Override
+            public String systemName() {
+                return ExtendedCrafting.MOD_ID;
             }
         });
     }

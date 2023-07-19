@@ -6,6 +6,7 @@ import com.blakebr0.extendedcrafting.lib.ModTooltips;
 import com.blakebr0.extendedcrafting.tileentity.EliteTableTileEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.Containers;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -50,7 +51,7 @@ public class EliteTableBlock extends BaseTileEntityBlock {
 			var tile = level.getBlockEntity(pos);
 
 			if (tile instanceof EliteTableTileEntity table) {
-				player.openMenu(table);
+				NetworkHooks.openScreen((ServerPlayer) player, table, pos);
 			}
 		}
 

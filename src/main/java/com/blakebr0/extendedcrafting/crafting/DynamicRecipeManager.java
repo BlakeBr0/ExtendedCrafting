@@ -1,6 +1,6 @@
 package com.blakebr0.extendedcrafting.crafting;
 
-import com.blakebr0.cucumber.event.RegisterRecipesEvent;
+import com.blakebr0.cucumber.event.RecipeManagerLoadingEvent;
 import com.blakebr0.extendedcrafting.ExtendedCrafting;
 import com.blakebr0.extendedcrafting.config.ModConfigs;
 import com.blakebr0.extendedcrafting.crafting.recipe.CompressorRecipe;
@@ -16,12 +16,14 @@ public final class DynamicRecipeManager {
     private static final DynamicRecipeManager INSTANCE = new DynamicRecipeManager();
 
     @SubscribeEvent
-    public void onRegisterRecipes(RegisterRecipesEvent event) {
+    public void onRecipeManagerLoading(RecipeManagerLoadingEvent event) {
+        SingularityRegistry.getInstance().loadSingularities();
+
         for (var singularity : SingularityRegistry.getInstance().getSingularities()) {
             var compressorRecipe = makeSingularityRecipe(singularity);
 
             if (compressorRecipe != null)
-                event.register(compressorRecipe);
+                event.addRecipe(compressorRecipe);
         }
     }
 

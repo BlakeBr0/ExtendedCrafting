@@ -12,7 +12,6 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraftforge.event.OnDatapackSyncEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.loading.FMLPaths;
@@ -49,10 +48,6 @@ public final class SingularityRegistry {
         } else {
             NetworkHandler.INSTANCE.send(PacketDistributor.ALL.noArg(), message);
         }
-    }
-
-    public void onResourceManagerReload(ResourceManager manager) {
-        this.loadSingularities();
     }
 
     public void loadSingularities() {

@@ -1,6 +1,5 @@
 package com.blakebr0.extendedcrafting.init;
 
-import com.blakebr0.extendedcrafting.singularity.SingularityRegistry;
 import com.blakebr0.extendedcrafting.util.IngredientListCache;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.server.packs.resources.ResourceManagerReloadListener;
@@ -11,7 +10,6 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 public final class ModReloadListeners implements ResourceManagerReloadListener {
     @Override
     public void onResourceManagerReload(ResourceManager manager) {
-        SingularityRegistry.getInstance().onResourceManagerReload(manager);
         IngredientListCache.getInstance().onResourceManagerReload(manager);
     }
 

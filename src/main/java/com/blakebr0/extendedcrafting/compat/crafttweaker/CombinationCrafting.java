@@ -1,100 +1,54 @@
 package com.blakebr0.extendedcrafting.compat.crafttweaker;
 
-import com.blakebr0.cucumber.helper.RecipeHelper;
-import com.blakebr0.extendedcrafting.ExtendedCrafting;
+import com.blakebr0.extendedcrafting.api.crafting.ICombinationRecipe;
 import com.blakebr0.extendedcrafting.crafting.recipe.CombinationRecipe;
 import com.blakebr0.extendedcrafting.init.ModRecipeTypes;
 import com.blamejared.crafttweaker.api.CraftTweakerAPI;
-import com.blamejared.crafttweaker.api.action.base.IRuntimeAction;
+import com.blamejared.crafttweaker.api.CraftTweakerConstants;
+import com.blamejared.crafttweaker.api.action.recipe.ActionAddRecipe;
+import com.blamejared.crafttweaker.api.action.recipe.ActionRemoveRecipe;
 import com.blamejared.crafttweaker.api.annotation.ZenRegister;
 import com.blamejared.crafttweaker.api.ingredient.IIngredient;
 import com.blamejared.crafttweaker.api.item.IItemStack;
+import com.blamejared.crafttweaker.api.recipe.manager.base.IRecipeManager;
 import net.minecraft.core.NonNullList;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraft.world.item.crafting.Recipe;
-import net.minecraftforge.server.ServerLifecycleHooks;
+import net.minecraft.world.item.crafting.RecipeType;
 import org.openzen.zencode.java.ZenCodeType;
 
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.stream.Collectors;
 
 @ZenCodeType.Name("mods.extendedcrafting.CombinationCrafting")
 @ZenRegister
-public final class CombinationCrafting {
-	@ZenCodeType.Method
-	public static void addRecipe(String id, IItemStack output, int cost, IIngredient[] inputs) {
-		CraftTweakerAPI.apply(new IRuntimeAction() {
-			@Override
-			public void apply() {
-				var recipe = new CombinationRecipe(new ResourceLocation("crafttweaker", id), toIngredientsList(inputs), output.getInternal(), cost);
+public final class CombinationCrafting implements IRecipeManager<ICombinationRecipe> {
+	private static final CombinationCrafting INSTANCE = new CombinationCrafting();
 
-				RecipeHelper.addRecipe(recipe);
-			}
-
-			@Override
-			public String describe() {
-				return "Adding Combination Crafting recipe for " + output.getCommandString();
-			}
-
-			@Override
-			public String systemName() {
-				return ExtendedCrafting.MOD_ID;
-			}
-		});
+	@Override
+	public RecipeType<ICombinationRecipe> getRecipeType() {
+		return ModRecipeTypes.COMBINATION.get();
 	}
 
 	@ZenCodeType.Method
-	public static void addRecipe(String id, IItemStack output, int cost, IIngredient[] inputs, int perTick) {
-		CraftTweakerAPI.apply(new IRuntimeAction() {
-			@Override
-			public void apply() {
-				var recipe = new CombinationRecipe(new ResourceLocation("crafttweaker", id), toIngredientsList(inputs), output.getInternal(), cost, perTick);
+	public static void addRecipe(String name, IItemStack output, int cost, IIngredient[] inputs) {
+		var id = CraftTweakerConstants.rl(INSTANCE.fixRecipeName(name));
+		var recipe = new CombinationRecipe(id, toIngredientsList(inputs), output.getInternal(), cost);
 
-				RecipeHelper.addRecipe(recipe);
-			}
+		CraftTweakerAPI.apply(new ActionAddRecipe<>(INSTANCE, recipe));
+	}
 
-			@Override
-			public String describe() {
-				return "Adding Combination Crafting recipe for " + output.getCommandString();
-			}
+	@ZenCodeType.Method
+	public static void addRecipe(String name, IItemStack output, int cost, IIngredient[] inputs, int perTick) {
+		var id = CraftTweakerConstants.rl(INSTANCE.fixRecipeName(name));
+		var recipe = new CombinationRecipe(id, toIngredientsList(inputs), output.getInternal(), cost, perTick);
 
-			@Override
-			public String systemName() {
-				return ExtendedCrafting.MOD_ID;
-			}
-		});
+		CraftTweakerAPI.apply(new ActionAddRecipe<>(INSTANCE, recipe));
 	}
 
 	@ZenCodeType.Method
 	public static void remove(IItemStack stack) {
-		CraftTweakerAPI.apply(new IRuntimeAction() {
-			@Override
-			public void apply() {
-				var access = ServerLifecycleHooks.getCurrentServer().registryAccess();
-				var recipes = RecipeHelper.getRecipes()
-                        .getOrDefault(ModRecipeTypes.COMBINATION.get(), new HashMap<>())
-                        .values().stream()
-                        .filter(r -> r.getResultItem(access).is(stack.getInternal().getItem()))
-                        .map(Recipe::getId)
-                        .toList();
-
-				recipes.forEach(r -> {
-					RecipeHelper.getRecipes().get(ModRecipeTypes.COMBINATION.get()).remove(r);
-				});
-			}
-
-			@Override
-			public String describe() {
-				return "Removing Combination Crafting recipes for " + stack.getCommandString();
-			}
-
-			@Override
-			public String systemName() {
-				return ExtendedCrafting.MOD_ID;
-			}
-		});
+		CraftTweakerAPI.apply(new ActionRemoveRecipe<>(INSTANCE, recipe -> recipe.getResultItem(RegistryAccess.EMPTY).is(stack.getInternal().getItem())));
 	}
 
 	private static NonNullList<Ingredient> toIngredientsList(IIngredient... ingredients) {

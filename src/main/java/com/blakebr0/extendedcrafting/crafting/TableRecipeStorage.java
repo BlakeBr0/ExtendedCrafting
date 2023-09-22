@@ -6,6 +6,9 @@ import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.world.item.ItemStack;
 
+import java.util.Arrays;
+import java.util.stream.IntStream;
+
 public class TableRecipeStorage {
     private final BaseItemStackHandler[] recipes = new BaseItemStackHandler[3];
     private final int slots;
@@ -51,6 +54,10 @@ public class TableRecipeStorage {
         return !this.recipes[index].getStacks().stream().allMatch(ItemStack::isEmpty);
     }
 
+    public boolean hasRecipes() {
+        return IntStream.range(0, this.recipes.length).anyMatch(this::hasRecipe);
+    }
+
     public void setRecipe(int index, BaseItemStackHandler inventory, ItemStack output) {
         var recipe = BaseItemStackHandler.create(this.slots);
 
@@ -76,6 +83,10 @@ public class TableRecipeStorage {
 
     public BaseItemStackHandler[] getRecipes() {
         return this.recipes;
+    }
+
+    public int getRecipeCount() {
+        return Arrays.stream(this.recipes).mapToInt(recipe -> recipe.getStacks().stream().allMatch(ItemStack::isEmpty) ? 0 : 1).sum();
     }
 
     public BaseItemStackHandler getSelectedRecipe() {

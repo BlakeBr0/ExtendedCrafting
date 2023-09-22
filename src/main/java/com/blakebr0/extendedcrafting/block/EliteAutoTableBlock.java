@@ -1,6 +1,7 @@
 package com.blakebr0.extendedcrafting.block;
 
 import com.blakebr0.cucumber.block.BaseTileEntityBlock;
+import com.blakebr0.cucumber.helper.NBTHelper;
 import com.blakebr0.cucumber.util.VoxelShapeBuilder;
 import com.blakebr0.extendedcrafting.init.ModTileEntities;
 import com.blakebr0.extendedcrafting.lib.ModTooltips;
@@ -11,6 +12,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.Containers;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
@@ -77,6 +79,19 @@ public class EliteAutoTableBlock extends BaseTileEntityBlock {
     }
 
     @Override
+    public void setPlacedBy(Level level, BlockPos pos, BlockState state, LivingEntity entity, ItemStack stack) {
+        if (NBTHelper.hasKey(stack, "RecipeStorage")) {
+            var tile = level.getBlockEntity(pos);
+
+            if (tile instanceof AutoTableTileEntity.Elite table) {
+                var storage = stack.getTag().getCompound("RecipeStorage");
+
+                table.getRecipeStorage().deserializeNBT(storage);
+            }
+        }
+    }
+
+    @Override
     public VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
         return ELITE_AUTO_TABLE_SHAPE;
     }
@@ -85,6 +100,12 @@ public class EliteAutoTableBlock extends BaseTileEntityBlock {
     @Override
     public void appendHoverText(ItemStack stack, BlockGetter level, List<Component> tooltip, TooltipFlag flag) {
         tooltip.add(ModTooltips.TIER.args(3).build());
+
+        var recipes = NBTHelper.getInt(stack, "RecipeCount");
+
+        if (recipes > 0) {
+            tooltip.add(ModTooltips.RECIPE_COUNT.args(recipes).build());
+        }
     }
 
     @Override

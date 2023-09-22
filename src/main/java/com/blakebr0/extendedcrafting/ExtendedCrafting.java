@@ -8,6 +8,7 @@ import com.blakebr0.extendedcrafting.crafting.DynamicRecipeManager;
 import com.blakebr0.extendedcrafting.init.ModBlocks;
 import com.blakebr0.extendedcrafting.init.ModContainerTypes;
 import com.blakebr0.extendedcrafting.init.ModCreativeModeTabs;
+import com.blakebr0.extendedcrafting.init.ModLootItemFunctionTypes;
 import com.blakebr0.extendedcrafting.init.ModItems;
 import com.blakebr0.extendedcrafting.init.ModRecipeSerializers;
 import com.blakebr0.extendedcrafting.init.ModRecipeTypes;
@@ -42,6 +43,7 @@ public final class ExtendedCrafting {
 		ModBlocks.REGISTRY.register(bus);
 		ModItems.REGISTRY.register(bus);
 		ModCreativeModeTabs.REGISTRY.register(bus);
+		ModLootItemFunctionTypes.REGISTRY.register(bus);
 		ModTileEntities.REGISTRY.register(bus);
 		ModContainerTypes.REGISTRY.register(bus);
 		ModRecipeTypes.REGISTRY.register(bus);

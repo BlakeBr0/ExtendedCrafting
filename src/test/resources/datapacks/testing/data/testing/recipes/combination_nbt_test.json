@@ -1,0 +1,41 @@
+{
+  "type": "extendedcrafting:combination",
+  "powerCost": 400000,
+  "input": {
+    "type": "forge:nbt",
+    "item": "extendedcrafting:recipe_maker",
+    "nbt": {
+      "Shapeless": true,
+      "Type": "Datapack"
+    }
+  },
+  "ingredients": [
+    {
+      "item": "minecraft:iron_ingot"
+    },
+    {
+      "item": "minecraft:iron_ingot"
+    },
+    {
+      "item": "minecraft:iron_ingot"
+    },
+    {
+      "item": "minecraft:iron_ingot"
+    },
+    {
+      "item": "minecraft:iron_ingot"
+    },
+    {
+      "item": "minecraft:iron_ingot"
+    },
+    {
+      "item": "minecraft:iron_ingot"
+    },
+    {
+      "item": "minecraft:iron_ingot"
+    }
+  ],
+  "result": {
+    "item": "minecraft:stone"
+  }
+}

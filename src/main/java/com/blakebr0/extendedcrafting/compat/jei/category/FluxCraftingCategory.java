@@ -81,11 +81,13 @@ public class FluxCraftingCategory implements IRecipeCategory<IFluxCrafterRecipe>
 		if (recipe instanceof ShapedFluxCrafterRecipe shaped) {
 			int stackIndex = 0;
 
-			for (int i = 0; i < shaped.getHeight(); i++) {
-				for (int j = 0; j < shaped.getWidth(); j++) {
-					builder.addSlot(RecipeIngredientRole.INPUT, j * 18 + 26, i * 18 + 13).addIngredients(inputs.get(stackIndex));
+			for (int i = 0; i < 3; i++) {
+				for (int j = 0; j < 3; j++) {
+					var slot = builder.addSlot(RecipeIngredientRole.INPUT, j * 18 + 1, i * 18 + 1);
 
-					stackIndex++;
+					if (i < shaped.getHeight() && j < shaped.getWidth()) {
+						slot.addIngredients(inputs.get(stackIndex++));
+					}
 				}
 			}
 		} else if (recipe instanceof ShapelessFluxCrafterRecipe) {

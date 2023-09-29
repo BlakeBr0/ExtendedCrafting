@@ -91,7 +91,7 @@ public class FluxCraftingCategory implements IRecipeCategory<IFluxCrafterRecipe>
 		} else if (recipe instanceof ShapelessFluxCrafterRecipe) {
 			for (int i = 0; i < 3; i++) {
 				for (int j = 0; j < 3; j++) {
-					int index = j + (i * 9);
+					int index = j + (i * 3);
 
 					if (index < inputs.size()) {
 						builder.addSlot(RecipeIngredientRole.INPUT, j * 18 + 26, i * 18 + 13).addIngredients(inputs.get(index));

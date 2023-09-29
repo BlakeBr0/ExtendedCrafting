@@ -5,15 +5,17 @@ import com.blakebr0.cucumber.inventory.BaseItemStackHandler;
 import com.blakebr0.cucumber.tileentity.BaseInventoryTileEntity;
 import com.blakebr0.cucumber.util.Localizable;
 import com.blakebr0.extendedcrafting.api.crafting.IFluxCrafterRecipe;
+import com.blakebr0.extendedcrafting.block.FluxAlternatorBlock;
 import com.blakebr0.extendedcrafting.container.FluxCrafterContainer;
 import com.blakebr0.extendedcrafting.container.inventory.ExtendedCraftingInventory;
 import com.blakebr0.extendedcrafting.crafting.TableRecipeStorage;
 import com.blakebr0.extendedcrafting.init.ModRecipeTypes;
 import com.blakebr0.extendedcrafting.init.ModTileEntities;
+import com.blakebr0.extendedcrafting.util.AlternatorParticleOffsets;
 import com.blakebr0.extendedcrafting.util.EmptyContainer;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.particles.DustParticleOptions;
-import net.minecraft.core.particles.ParticleOptions;
+import net.minecraft.core.Direction;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
@@ -103,9 +105,11 @@ public class FluxCrafterTileEntity extends BaseInventoryTileEntity implements Me
 						tile.progress(alternatorCount);
 
 						for (var alternator : alternators) {
+							var direction = alternator.getBlockState().getValue(FluxAlternatorBlock.FACING);
 							var alternatorPos = alternator.getBlockPos();
-							if (level.isEmptyBlock(alternatorPos.above())) {
-								tile.spawnDustParticles(alternatorPos, 1, 1);
+
+							if (level.isEmptyBlock(alternatorPos.relative(direction))) {
+								tile.sendAlernatorParticles(alternatorPos, direction);
 							}
 
 							alternator.getEnergy().extractEnergy(tile.recipe.getPowerRate(), false);
@@ -213,17 +217,18 @@ public class FluxCrafterTileEntity extends BaseInventoryTileEntity implements Me
 		this.progressReq = 0;
 	}
 
-	private <T extends ParticleOptions> void spawnDustParticles(BlockPos pos, double yOffset, int count) {
+	private void sendAlernatorParticles(BlockPos pos, Direction direction) {
 		if (this.getLevel() == null || this.getLevel().isClientSide())
 			return;
 
 		var level = (ServerLevel) this.getLevel();
+		var offsets = AlternatorParticleOffsets.fromDirection(direction);
 
-		double x = pos.getX() + 0.5D;
-		double y = pos.getY() + yOffset;
-		double z = pos.getZ() + 0.5D;
+		double x = pos.getX() + offsets.x;
+		double y = pos.getY() + offsets.y;
+		double z = pos.getZ() + offsets.z;
 
-		level.sendParticles(new DustParticleOptions(DustParticleOptions.REDSTONE_PARTICLE_COLOR, 1.0f), x, y, z, count, 0, 0, 0, 0.1D);
+		level.sendParticles(ParticleTypes.PORTAL, x, y, z, 1, 0, 0, 0, 0.1D);
 	}
 
 	private void onContentsChanged() {

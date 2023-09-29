@@ -1,7 +1,10 @@
 {
   "variants": {
-    "": {
-      "model": "extendedcrafting:block/ender_alternator"
-    }
+    "facing=up": { "model": "extendedcrafting:block/ender_alternator" },
+    "facing=down": { "model": "extendedcrafting:block/ender_alternator", "x": 180 },
+    "facing=north": { "model": "extendedcrafting:block/ender_alternator", "x": 90 },
+    "facing=south": { "model": "extendedcrafting:block/ender_alternator", "x": 270 },
+    "facing=west":  { "model": "extendedcrafting:block/ender_alternator", "x": 90, "y": 270 },
+    "facing=east":  { "model": "extendedcrafting:block/ender_alternator", "x": 270, "y": 270 }
   }
 }

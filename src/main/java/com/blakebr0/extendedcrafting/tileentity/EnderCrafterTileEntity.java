@@ -12,9 +12,10 @@ import com.blakebr0.extendedcrafting.container.inventory.ExtendedCraftingInvento
 import com.blakebr0.extendedcrafting.crafting.TableRecipeStorage;
 import com.blakebr0.extendedcrafting.init.ModRecipeTypes;
 import com.blakebr0.extendedcrafting.init.ModTileEntities;
+import com.blakebr0.extendedcrafting.util.AlternatorParticleOffsets;
 import com.blakebr0.extendedcrafting.util.EmptyContainer;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.particles.ParticleOptions;
+import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -96,8 +97,11 @@ public class EnderCrafterTileEntity extends BaseInventoryTileEntity implements M
 					tile.progress(alternatorCount, recipe.getCraftingTime());
 
 					for (var alternatorPos : alternators) {
-						if (level.isEmptyBlock(alternatorPos.above())) {
-							tile.spawnParticles(ParticleTypes.PORTAL, alternatorPos, 1, 1);
+						var alternator = level.getBlockState(alternatorPos);
+						var direction = alternator.getValue(EnderAlternatorBlock.FACING);
+
+						if (level.isEmptyBlock(alternatorPos.relative(direction))) {
+							tile.sendAlernatorParticles(alternatorPos, direction);
 						}
 					}
 
@@ -187,17 +191,18 @@ public class EnderCrafterTileEntity extends BaseInventoryTileEntity implements M
 		this.progressReq = (int) Math.max(timeReq - (timeReq * (effectiveness * alternators)), 20);
 	}
 
-	private <T extends ParticleOptions> void spawnParticles(T particle, BlockPos pos, double yOffset, int count) {
+	private void sendAlernatorParticles(BlockPos pos, Direction direction) {
 		if (this.getLevel() == null || this.getLevel().isClientSide())
 			return;
 
 		var level = (ServerLevel) this.getLevel();
+		var offsets = AlternatorParticleOffsets.fromDirection(direction);
 
-		double x = pos.getX() + 0.5D;
-		double y = pos.getY() + yOffset;
-		double z = pos.getZ() + 0.5D;
+		double x = pos.getX() + offsets.x;
+		double y = pos.getY() + offsets.y;
+		double z = pos.getZ() + offsets.z;
 
-		level.sendParticles(particle, x, y, z, count, 0, 0, 0, 0.1D);
+		level.sendParticles(ParticleTypes.PORTAL, x, y, z, 1, 0, 0, 0, 0.1D);
 	}
 
 	private void onContentsChanged() {

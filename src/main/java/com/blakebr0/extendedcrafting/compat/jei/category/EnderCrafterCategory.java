@@ -99,7 +99,7 @@ public class EnderCrafterCategory implements IRecipeCategory<IEnderCrafterRecipe
 		} else if (recipe instanceof ShapelessEnderCrafterRecipe) {
 			for (int i = 0; i < 3; i++) {
 				for (int j = 0; j < 3; j++) {
-					int index = j + (i * 9);
+					int index = j + (i * 3);
 
 					if (index < inputs.size()) {
 						builder.addSlot(RecipeIngredientRole.INPUT, j * 18 + 1, i * 18 + 1).addIngredients(inputs.get(index));

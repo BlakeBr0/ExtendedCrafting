@@ -101,11 +101,13 @@ public class AdvancedTableCategory implements IRecipeCategory<ITableRecipe> {
 			int widthOffset = Math.floorDiv(5 - shaped.getWidth(), 2);
 			int stackIndex = 0;
 
-			for (int i = heightOffset; i < shaped.getHeight() + heightOffset; i++) {
-				for (int j = widthOffset; j < shaped.getWidth() + widthOffset; j++) {
-					builder.addSlot(RecipeIngredientRole.INPUT, j * 18 + 1, i * 18 + 1).addIngredients(inputs.get(stackIndex));
+			for (int i = 0; i < 5; i++) {
+				for (int j = 0; j < 5; j++) {
+					var slot = builder.addSlot(RecipeIngredientRole.INPUT, j * 18 + 1, i * 18 + 1);
 
-					stackIndex++;
+					if (i >= heightOffset && i < shaped.getHeight() + heightOffset && j >= widthOffset && j < shaped.getWidth() + widthOffset) {
+						slot.addIngredients(inputs.get(stackIndex++));
+					}
 				}
 			}
 		} else if (recipe instanceof ShapelessTableRecipe) {

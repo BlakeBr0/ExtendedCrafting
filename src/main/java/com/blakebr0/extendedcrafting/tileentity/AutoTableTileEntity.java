@@ -86,6 +86,16 @@ public abstract class AutoTableTileEntity extends BaseInventoryTileEntity implem
     }
 
     @Override
+    public void onLoad() {
+        super.onLoad();
+
+        // on load we will re-validate the recipe outputs to ensure they are still correct
+        if (this.level != null && !this.level.isClientSide()) {
+            this.getRecipeStorage().onLoad(this.level, ModRecipeTypes.TABLE.get());
+        }
+    }
+
+    @Override
     public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
         if (!this.isRemoved() && cap == CapabilityEnergy.ENERGY) {
             return CapabilityEnergy.ENERGY.orEmpty(cap, LazyOptional.of(this::getEnergy));

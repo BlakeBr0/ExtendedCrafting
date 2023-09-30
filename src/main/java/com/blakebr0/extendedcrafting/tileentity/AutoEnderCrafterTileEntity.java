@@ -50,6 +50,16 @@ public class AutoEnderCrafterTileEntity extends EnderCrafterTileEntity implement
     }
 
     @Override
+    public void onLoad() {
+        super.onLoad();
+
+        // on load we will re-validate the recipe outputs to ensure they are still correct
+        if (this.level != null && !this.level.isClientSide()) {
+            this.getRecipeStorage().onLoad(this.level, ModRecipeTypes.ENDER_CRAFTER.get());
+        }
+    }
+
+    @Override
     public AbstractContainerMenu createMenu(int windowId, Inventory playerInventory, Player player) {
         return AutoEnderCrafterContainer.create(windowId, playerInventory, this::isUsableByPlayer, this.getInventory(), this.getBlockPos());
     }

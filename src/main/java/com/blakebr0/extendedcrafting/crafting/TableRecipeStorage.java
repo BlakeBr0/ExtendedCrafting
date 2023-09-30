@@ -1,10 +1,16 @@
 package com.blakebr0.extendedcrafting.crafting;
 
 import com.blakebr0.cucumber.inventory.BaseItemStackHandler;
+import com.blakebr0.extendedcrafting.container.inventory.ExtendedCraftingInventory;
+import com.blakebr0.extendedcrafting.util.EmptyContainer;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
+import net.minecraft.world.Container;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.level.Level;
 
 public class TableRecipeStorage {
     private final BaseItemStackHandler[] recipes = new BaseItemStackHandler[3];
@@ -116,18 +122,38 @@ public class TableRecipeStorage {
         this.updateSelectedRecipeGrid();
     }
 
+    public void onLoad(Level level, RecipeType<? extends Recipe<Container>> type) {
+        for (int i = 0; i < this.recipes.length; i++) {
+            if (this.hasRecipe(i)) {
+                var recipe = this.recipes[i];
+                var grid = this.createRecipeGrid(recipe);
+                var inventory = new ExtendedCraftingInventory(EmptyContainer.INSTANCE, grid, 3);
+                var result = level.getRecipeManager().getRecipeFor(type, inventory, level)
+                        .map(r -> r.assemble(inventory))
+                        .orElse(ItemStack.EMPTY);
+
+                recipe.setStackInSlot(this.slots - 1, result);
+            }
+        }
+    }
+
     private void updateSelectedRecipeGrid() {
         if (this.selected > -1) {
             var recipe = this.recipes[this.selected];
-            var grid = BaseItemStackHandler.create(this.slots - 1);
 
-            for (int i = 0; i < this.slots - 1; i++) {
-                grid.setStackInSlot(i, recipe.getStackInSlot(i));
-            }
-
-            this.selectedRecipeGrid = grid;
+            this.selectedRecipeGrid = this.createRecipeGrid(recipe);
         } else {
             this.selectedRecipeGrid = null;
         }
+    }
+
+    private BaseItemStackHandler createRecipeGrid(BaseItemStackHandler recipe) {
+        var grid = BaseItemStackHandler.create(this.slots - 1);
+
+        for (int i = 0; i < this.slots - 1; i++) {
+            grid.setStackInSlot(i, recipe.getStackInSlot(i));
+        }
+
+        return grid;
     }
 }

@@ -4,7 +4,7 @@ mods.extendedcrafting.EnderCrafting.addShaped("test_shapedsgdfs", <item:minecraf
   [<item:minecraft:diamond>, <item:minecraft:air>]
 ], 500);
 
-mods.extendedcrafting.EnderCrafting.addShapeless("test_shapelessasd", <item:minecraft:cobblestone>, [
+mods.extendedcrafting.EnderCrafting.addShapeless("test_shapelessasd", <item:minecraft:stone>, [
   <item:minecraft:diamond>, <item:minecraft:diamond>, <item:minecraft:diamond>, <item:minecraft:diamond>, <item:minecraft:gold_ingot>, <item:minecraft:diamond>
 ]);
 

@@ -100,7 +100,7 @@ public class FluxCrafterTileEntity extends BaseInventoryTileEntity implements Me
 						var alternatorPos = alternator.getBlockPos();
 
 						if (level.isEmptyBlock(alternatorPos.relative(direction))) {
-							tile.sendAlernatorParticles(alternatorPos, direction);
+							tile.sendAlternatorParticles(alternatorPos, direction);
 						}
 
 						alternator.getEnergy().extractEnergy(recipe.getPowerRate(), false);
@@ -209,7 +209,7 @@ public class FluxCrafterTileEntity extends BaseInventoryTileEntity implements Me
 		this.progressReq = 0;
 	}
 
-	private void sendAlernatorParticles(BlockPos pos, Direction direction) {
+	private void sendAlternatorParticles(BlockPos pos, Direction direction) {
 		if (this.getLevel() == null || this.getLevel().isClientSide())
 			return;
 

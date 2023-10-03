@@ -101,7 +101,7 @@ public class EnderCrafterTileEntity extends BaseInventoryTileEntity implements M
 						var direction = alternator.getValue(EnderAlternatorBlock.FACING);
 
 						if (level.isEmptyBlock(alternatorPos.relative(direction))) {
-							tile.sendAlernatorParticles(alternatorPos, direction);
+							tile.sendAlternatorParticles(alternatorPos, direction);
 						}
 					}
 
@@ -191,7 +191,7 @@ public class EnderCrafterTileEntity extends BaseInventoryTileEntity implements M
 		this.progressReq = (int) Math.max(timeReq - (timeReq * (effectiveness * alternators)), 20);
 	}
 
-	private void sendAlernatorParticles(BlockPos pos, Direction direction) {
+	private void sendAlternatorParticles(BlockPos pos, Direction direction) {
 		if (this.getLevel() == null || this.getLevel().isClientSide())
 			return;
 

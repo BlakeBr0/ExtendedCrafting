@@ -42,7 +42,6 @@ public class CompressorTileEntity extends BaseInventoryTileEntity implements Men
 	private int materialCount;
 	private int progress;
 	private boolean ejecting = false;
-	private int oldEnergy;
 	private boolean inputLimit = true;
 
 	public CompressorTileEntity(BlockPos pos, BlockState state) {
@@ -133,9 +132,13 @@ public class CompressorTileEntity extends BaseInventoryTileEntity implements Men
 						tile.progress = 0;
 						tile.materialCount -= recipe.getInputCount();
 
+						tile.consumeInputs(recipe.getInputCount());
+
 						if (tile.materialCount <= 0) {
 							tile.materialStack = ItemStack.EMPTY;
 						}
+
+						mark = true;
 					}
 				} else {
 					tile.process(recipe);
@@ -322,14 +325,14 @@ public class CompressorTileEntity extends BaseInventoryTileEntity implements Men
 		}
 
 		if (this.inputs.isEmpty() || this.inputs.size() == index) {
-			this.inputs.add(new MaterialInput(stack.copy(), stack.getCount()));
+			this.inputs.add(new MaterialInput(stack.copy(), consumeAmount));
 		} else {
 			var input = this.inputs.get(index);
 
 			if (StackHelper.areStacksEqual(stack, input.stack)) {
-				input.count += stack.getCount();
+				input.count += consumeAmount;
 			} else {
-				this.inputs.add(new MaterialInput(stack.copy(), stack.getCount()));
+				this.inputs.add(new MaterialInput(stack.copy(), consumeAmount));
 			}
 		}
 
@@ -340,6 +343,19 @@ public class CompressorTileEntity extends BaseInventoryTileEntity implements Men
 
 	private MaterialInput getNewestInput() {
 		return this.inputs.get(this.inputs.size() - 1);
+	}
+
+	private void consumeInputs(int amount) {
+		for (int i = this.inputs.size() - 1; i > -1; i--) {
+			var input = this.inputs.get(i);
+			if (input.count > amount) {
+				input.count -= amount;
+				break;
+			} else {
+				amount -= input.count;
+				this.inputs.remove(i);
+			}
+		}
 	}
 
 	private static List<MaterialInput> loadMaterialInputs(CompoundTag tag) {

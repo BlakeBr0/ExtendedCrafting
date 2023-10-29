@@ -22,7 +22,7 @@ public class UltimateTableTileEntity extends BaseInventoryTileEntity implements 
 
 	public UltimateTableTileEntity(BlockPos pos, BlockState state) {
 		super(ModTileEntities.ULTIMATE_TABLE.get(), pos, state);
-		this.inventory = createInventoryHandler(this::markDirtyAndDispatch);
+		this.inventory = createInventoryHandler(this::setChangedAndDispatch);
 	}
 
 	@Override

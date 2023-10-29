@@ -3,11 +3,12 @@ package com.blakebr0.extendedcrafting.tileentity;
 import com.blakebr0.cucumber.energy.BaseEnergyStorage;
 import com.blakebr0.cucumber.helper.StackHelper;
 import com.blakebr0.cucumber.inventory.BaseItemStackHandler;
+import com.blakebr0.cucumber.inventory.CachedRecipe;
 import com.blakebr0.cucumber.tileentity.BaseInventoryTileEntity;
 import com.blakebr0.cucumber.util.Localizable;
+import com.blakebr0.extendedcrafting.api.crafting.ICombinationRecipe;
 import com.blakebr0.extendedcrafting.config.ModConfigs;
 import com.blakebr0.extendedcrafting.container.CraftingCoreContainer;
-import com.blakebr0.extendedcrafting.crafting.recipe.CombinationRecipe;
 import com.blakebr0.extendedcrafting.init.ModRecipeTypes;
 import com.blakebr0.extendedcrafting.init.ModTileEntities;
 import net.minecraft.core.BlockPos;
@@ -38,16 +39,17 @@ public class CraftingCoreTileEntity extends BaseInventoryTileEntity implements M
 	private final BaseItemStackHandler inventory;
 	private final BaseItemStackHandler recipeInventory;
 	private final BaseEnergyStorage energy;
-	private CombinationRecipe recipe;
+	private final CachedRecipe<ICombinationRecipe> recipe;
 	private int progress;
 	private int pedestalCount;
 	private boolean haveItemsChanged = true;
 
 	public CraftingCoreTileEntity(BlockPos pos, BlockState state) {
 		super(ModTileEntities.CRAFTING_CORE.get(), pos, state);
-		this.inventory = createInventoryHandler(this::markDirtyAndDispatch);
-		this.energy = new BaseEnergyStorage(ModConfigs.CRAFTING_CORE_POWER_CAPACITY.get(), this::markDirtyAndDispatch);
+		this.inventory = createInventoryHandler(this::setChangedFast);
+		this.energy = new BaseEnergyStorage(ModConfigs.CRAFTING_CORE_POWER_CAPACITY.get(), this::setChangedFast);
 		this.recipeInventory = BaseItemStackHandler.create(49);
+		this.recipe = new CachedRecipe<>(ModRecipeTypes.COMBINATION.get());
 	}
 
 	@Override
@@ -89,7 +91,6 @@ public class CraftingCoreTileEntity extends BaseInventoryTileEntity implements M
 	}
 
 	public static void tick(Level level, BlockPos pos, BlockState state, CraftingCoreTileEntity tile) {
-		var mark = false;
 		var recipe = tile.getActiveRecipe();
 
 		if (recipe != null) {
@@ -105,17 +106,15 @@ public class CraftingCoreTileEntity extends BaseInventoryTileEntity implements M
 							var inventory = pedestal.getInventory();
 
 							inventory.setStackInSlot(0, StackHelper.shrink(inventory.getStackInSlot(0), 1, true));
-							pedestal.markDirtyAndDispatch();
 
 							tile.spawnParticles(ParticleTypes.SMOKE, pedestalPos, 1.1, 20);
 						}
 					}
 
 					tile.spawnParticles(ParticleTypes.END_ROD, pos, 1.1, 50);
-					tile.inventory.setStackInSlot(0, recipe.assemble(tile.recipeInventory, level.registryAccess()));
+					tile.inventory.setStackInSlot(0, recipe.assemble(tile.recipeInventory.asRecipeWrapper(), level.registryAccess()));
 					tile.progress = 0;
-
-					mark = true;
+					tile.setChangedFast();
 				} else {
 					tile.spawnParticles(ParticleTypes.ENTITY_EFFECT, pos, 1.15, 2);
 
@@ -134,12 +133,13 @@ public class CraftingCoreTileEntity extends BaseInventoryTileEntity implements M
 				}
 			}
 		} else {
-			tile.progress = 0;
+			if (tile.progress > 0) {
+				tile.progress = 0;
+				tile.setChangedFast();
+			}
 		}
 
-		if (mark) {
-			tile.markDirtyAndDispatch();
-		}
+		tile.dispatchIfChanged();
 	}
 
 	public static BaseItemStackHandler createInventoryHandler(Runnable onContentsChanged) {
@@ -152,7 +152,7 @@ public class CraftingCoreTileEntity extends BaseInventoryTileEntity implements M
 		return this.energy;
 	}
 
-	public CombinationRecipe getActiveRecipe() {
+	public ICombinationRecipe getActiveRecipe() {
 		if (this.level == null)
 			return null;
 
@@ -161,27 +161,23 @@ public class CraftingCoreTileEntity extends BaseInventoryTileEntity implements M
 
 		this.updateRecipeInventory(stacks);
 
-		if (this.haveItemsChanged && (this.recipe == null || !this.recipe.matches(this.recipeInventory))) {
-			var recipe = level.getRecipeManager()
-					.getRecipeFor(ModRecipeTypes.COMBINATION.get(), this.recipeInventory.toIInventory(), level)
-					.orElse(null);
-
-			this.recipe = recipe instanceof CombinationRecipe ? (CombinationRecipe) recipe : null;
+		if (!this.haveItemsChanged) {
+			return this.recipe.get();
 		}
 
-		return this.recipe;
+		return this.recipe.checkAndGet(this.recipeInventory, this.level);
 	}
 
 	public boolean hasRecipe() {
-		return this.recipe != null;
+		return this.recipe.exists();
 	}
 
 	public int getEnergyRequired() {
-		return this.hasRecipe() ? this.recipe.getPowerCost() : 0;
+		return this.hasRecipe() ? this.recipe.get().getPowerCost() : 0;
 	}
 
 	public int getEnergyRate() {
-		return this.hasRecipe() ? this.recipe.getPowerRate() : 0;
+		return this.hasRecipe() ? this.recipe.get().getPowerRate() : 0;
 	}
 
 	public int getProgress() {
@@ -218,7 +214,7 @@ public class CraftingCoreTileEntity extends BaseInventoryTileEntity implements M
 		}
 	}
 
-	private boolean process(CombinationRecipe recipe) {
+	private boolean process(ICombinationRecipe recipe) {
 		int extract = recipe.getPowerRate();
 		int difference = recipe.getPowerCost() - this.progress;
 		if (difference < recipe.getPowerRate())
@@ -292,8 +288,8 @@ public class CraftingCoreTileEntity extends BaseInventoryTileEntity implements M
 	}
 
 	private boolean shouldSpawnItemParticles() {
-		int powerCost = this.recipe.getPowerCost();
-		int powerRate = this.recipe.getPowerRate();
+		int powerCost = this.recipe.get().getPowerCost();
+		int powerRate = this.recipe.get().getPowerRate();
 		int endingPower = powerRate * 40;
 
 		return this.progress > (powerCost - endingPower);

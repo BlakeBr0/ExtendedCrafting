@@ -22,7 +22,7 @@ public class AdvancedTableTileEntity extends BaseInventoryTileEntity implements 
 
     public AdvancedTableTileEntity(BlockPos pos, BlockState state) {
         super(ModTileEntities.ADVANCED_TABLE.get(), pos, state);
-        this.inventory = createInventoryHandler(this::markDirtyAndDispatch);
+        this.inventory = createInventoryHandler(this::setChangedAndDispatch);
     }
 
     @Override

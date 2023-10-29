@@ -2,6 +2,7 @@ package com.blakebr0.extendedcrafting.tileentity;
 
 import com.blakebr0.cucumber.helper.StackHelper;
 import com.blakebr0.cucumber.inventory.BaseItemStackHandler;
+import com.blakebr0.cucumber.inventory.CachedRecipe;
 import com.blakebr0.cucumber.tileentity.BaseInventoryTileEntity;
 import com.blakebr0.cucumber.util.Localizable;
 import com.blakebr0.extendedcrafting.api.crafting.IEnderCrafterRecipe;
@@ -35,8 +36,7 @@ import java.util.List;
 
 public class EnderCrafterTileEntity extends BaseInventoryTileEntity implements MenuProvider {
 	private final BaseItemStackHandler inventory;
-	private final BaseItemStackHandler recipeInventory;
-	private IEnderCrafterRecipe recipe;
+	private final CachedRecipe<IEnderCrafterRecipe> recipe;
 	private int progress;
 	private int progressReq;
 	protected boolean isGridChanged = true;
@@ -48,7 +48,7 @@ public class EnderCrafterTileEntity extends BaseInventoryTileEntity implements M
 	public EnderCrafterTileEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
 		super(type, pos, state);
 		this.inventory = createInventoryHandler(this::onContentsChanged);
-		this.recipeInventory = BaseItemStackHandler.create(9);
+		this.recipe = new CachedRecipe<>(ModRecipeTypes.ENDER_CRAFTER.get());
 	}
 
     @Override
@@ -81,12 +81,11 @@ public class EnderCrafterTileEntity extends BaseInventoryTileEntity implements M
 	}
 
 	public static void tick(Level level, BlockPos pos, BlockState state, EnderCrafterTileEntity tile) {
-		var mark = false;
 		var recipe = tile.getActiveRecipe();
 		var selectedRecipe = tile.getSelectedRecipeGrid();
 
 		if (recipe != null && (selectedRecipe == null || recipe.matches(selectedRecipe, level))) {
-			var result = recipe.assemble(tile.recipeInventory.toIInventory(), level.registryAccess());
+			var result = recipe.assemble(tile.inventory.toRecipeInventory(0, 9), level.registryAccess());
 			var output = tile.inventory.getStackInSlot(9);
 
 			if (StackHelper.canCombineStacks(result, output)) {
@@ -114,14 +113,14 @@ public class EnderCrafterTileEntity extends BaseInventoryTileEntity implements M
 						tile.progress = 0;
 					}
 
-					mark = true;
+					tile.setChangedFast();
 				}
 			} else {
 				if (tile.progress > 0 || tile.progressReq > 0) {
 					tile.progress = 0;
 					tile.progressReq = 0;
 
-					mark = true;
+					tile.setChangedFast();
 				}
 			}
 		} else {
@@ -129,13 +128,11 @@ public class EnderCrafterTileEntity extends BaseInventoryTileEntity implements M
 				tile.progress = 0;
 				tile.progressReq = 0;
 
-				mark = true;
+				tile.setChangedFast();
 			}
 		}
 
-		if (mark) {
-			tile.markDirtyAndDispatch();
-		}
+		tile.dispatchIfChanged();
 	}
 
 	public static BaseItemStackHandler createInventoryHandler() {
@@ -156,13 +153,6 @@ public class EnderCrafterTileEntity extends BaseInventoryTileEntity implements M
 			this.inventory.setStackInSlot(9, stack);
 		} else {
 			this.inventory.setStackInSlot(9, StackHelper.grow(result, stack.getCount()));
-		}
-	}
-
-	private void updateRecipeInventory() {
-		for (int i = 0; i < 9; i++) {
-			ItemStack stack = this.inventory.getStackInSlot(i);
-			this.recipeInventory.setStackInSlot(i, stack);
 		}
 	}
 
@@ -207,7 +197,7 @@ public class EnderCrafterTileEntity extends BaseInventoryTileEntity implements M
 
 	private void onContentsChanged() {
 		this.isGridChanged = true;
-		this.markDirtyAndDispatch();
+		this.setChangedFast();
 	}
 
 	public int getProgress() {
@@ -216,10 +206,6 @@ public class EnderCrafterTileEntity extends BaseInventoryTileEntity implements M
 
 	public int getProgressRequired() {
 		return this.progressReq;
-	}
-
-	public BaseItemStackHandler getRecipeInventory() {
-		return this.recipeInventory;
 	}
 
 	// to be overridden by the auto version
@@ -243,16 +229,10 @@ public class EnderCrafterTileEntity extends BaseInventoryTileEntity implements M
 		if (this.level == null)
 			return null;
 
-		this.updateRecipeInventory();
-
-		var recipeInventory = this.recipeInventory.toIInventory();
-
-		if (this.isGridChanged && (this.recipe == null || !this.recipe.matches(recipeInventory, level))) {
-			this.recipe = level.getRecipeManager()
-					.getRecipeFor(ModRecipeTypes.ENDER_CRAFTER.get(), recipeInventory, level)
-					.orElse(null);
+		if (!this.isGridChanged) {
+			return this.recipe.get();
 		}
 
-		return this.recipe;
+		return this.recipe.checkAndGet(this.inventory.toRecipeInventory(0, 9), this.level);
 	}
 }

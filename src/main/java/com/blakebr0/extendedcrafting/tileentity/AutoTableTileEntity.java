@@ -3,6 +3,7 @@ package com.blakebr0.extendedcrafting.tileentity;
 import com.blakebr0.cucumber.energy.BaseEnergyStorage;
 import com.blakebr0.cucumber.helper.StackHelper;
 import com.blakebr0.cucumber.inventory.BaseItemStackHandler;
+import com.blakebr0.cucumber.inventory.RecipeInventory;
 import com.blakebr0.cucumber.tileentity.BaseInventoryTileEntity;
 import com.blakebr0.cucumber.util.Localizable;
 import com.blakebr0.extendedcrafting.api.crafting.ITableRecipe;
@@ -76,7 +77,7 @@ public abstract class AutoTableTileEntity extends BaseInventoryTileEntity implem
     public void onLoad() {
         super.onLoad();
 
-        // on load we will re-validate the recipe outputs to ensure they are still correct
+        // on load, we will re-validate the recipe outputs to ensure they are still correct
         if (this.level != null && !this.level.isClientSide()) {
             this.getRecipeStorage().onLoad(this.level, ModRecipeTypes.TABLE.get());
         }
@@ -92,7 +93,6 @@ public abstract class AutoTableTileEntity extends BaseInventoryTileEntity implem
     }
 
     public static void tick(Level level, BlockPos pos, BlockState state, AutoTableTileEntity tile) {
-        var mark = false;
         var energy = tile.getEnergy();
 
         if (tile.running) {
@@ -100,7 +100,7 @@ public abstract class AutoTableTileEntity extends BaseInventoryTileEntity implem
             var selectedRecipe = tile.getRecipeStorage().getSelectedRecipeGrid();
 
             if (recipe != null && (selectedRecipe == null || recipe.matchesSavedRecipe(selectedRecipe, level))) {
-                var recipeInventory = tile.getRecipeInventory().toIInventory();
+                var recipeInventory = tile.getRecipeInventory();
                 var inventory = tile.getInventory();
                 var result = recipe.getCraftingResult(recipeInventory, level.registryAccess());
                 int outputSlot = inventory.getSlots() - 1;
@@ -127,18 +127,18 @@ public abstract class AutoTableTileEntity extends BaseInventoryTileEntity implem
                         tile.isGridChanged = true;
                     }
 
-                    mark = true;
+                    tile.setChangedFast();
                 }
             } else {
                 if (tile.progress > 0) {
                     tile.progress = 0;
-                    mark = true;
+                    tile.setChangedFast();
                 }
             }
         } else {
             if (tile.progress > 0) {
                 tile.progress = 0;
-                mark = true;
+                tile.setChangedFast();
             }
         }
 
@@ -164,9 +164,7 @@ public abstract class AutoTableTileEntity extends BaseInventoryTileEntity implem
             }
         }
 
-        if (mark) {
-            tile.markDirtyAndDispatch();
-        }
+        tile.dispatchIfChanged();
     }
 
     public int getProgress() {
@@ -179,12 +177,12 @@ public abstract class AutoTableTileEntity extends BaseInventoryTileEntity implem
 
     public void toggleRunning() {
         this.running = !this.running;
-        this.markDirtyAndDispatch();
+        this.setChangedAndDispatch();
     }
 
     public void selectRecipe(int index) {
         this.getRecipeStorage().setSelected(index);
-        this.markDirtyAndDispatch();
+        this.setChangedAndDispatch();
     }
 
     public void saveRecipe(int index) {
@@ -192,23 +190,17 @@ public abstract class AutoTableTileEntity extends BaseInventoryTileEntity implem
         if (level == null)
             return;
 
-        this.updateRecipeInventory();
-
-        var recipeInventory = this.getRecipeInventory();
-        var recipeIInventory = recipeInventory.toIInventory();
-        var newRecipeInventory = BaseItemStackHandler.create(recipeInventory.getSlots());
-
-        for (int i = 0; i < recipeInventory.getSlots(); i++) {
-            newRecipeInventory.setStackInSlot(i, recipeInventory.getStackInSlot(i).copy());
-        }
+        var inventory = this.getRecipeInventory();
+        var recipe = level.getRecipeManager()
+                .getRecipeFor(ModRecipeTypes.TABLE.get(), inventory, level)
+                .orElse(null);
 
         var result = ItemStack.EMPTY;
-        var recipe = level.getRecipeManager().getRecipeFor(ModRecipeTypes.TABLE.get(), recipeIInventory, level).orElse(null);
 
         if (recipe != null) {
-            result = recipe.assemble(recipeIInventory, level.registryAccess());
+            result = recipe.assemble(inventory, level.registryAccess());
         } else {
-            var craftingInventory = new ExtendedCraftingInventory(EmptyContainer.INSTANCE, recipeInventory, 3);
+            var craftingInventory = new ExtendedCraftingInventory(EmptyContainer.INSTANCE, getBaseItemStackHandlerForRecipeInventory(inventory), 3);
             var vanilla = level.getRecipeManager().getRecipeFor(RecipeType.CRAFTING, craftingInventory, level).orElse(null);
 
             if (vanilla != null) {
@@ -216,31 +208,33 @@ public abstract class AutoTableTileEntity extends BaseInventoryTileEntity implem
             }
         }
 
-        this.getRecipeStorage().setRecipe(index, newRecipeInventory, result);
-        this.markDirtyAndDispatch();
+        this.getRecipeStorage().setRecipe(index, inventory, result);
+        this.setChangedAndDispatch();
     }
 
     public void deleteRecipe(int index) {
         this.getRecipeStorage().unsetRecipe(index);
-        this.markDirtyAndDispatch();
+        this.setChangedAndDispatch();
+    }
+
+    public RecipeInventory getRecipeInventory() {
+        return this.getInventory().toRecipeInventory(0, this.getInventory().getSlots() - 1);
     }
 
     public WrappedRecipe getActiveRecipe() {
         if (this.level == null)
             return null;
 
-        this.updateRecipeInventory();
+        var inventory = this.getRecipeInventory();
 
-        var recipeInventory = this.getRecipeInventory().toIInventory();
-
-        if (this.isGridChanged && (this.recipe == null || !this.recipe.matches(recipeInventory, level))) {
-            var recipe = level.getRecipeManager().getRecipeFor(ModRecipeTypes.TABLE.get(), recipeInventory, level).orElse(null);
+        if (this.isGridChanged && (this.recipe == null || !this.recipe.matches(inventory, this.level))) {
+            var recipe = level.getRecipeManager().getRecipeFor(ModRecipeTypes.TABLE.get(), inventory, this.level).orElse(null);
 
             this.recipe = recipe != null ? new WrappedRecipe(recipe) : null;
 
             if (this.recipe == null && ModConfigs.TABLE_USE_VANILLA_RECIPES.get() && this instanceof Basic) {
-                var craftingInventory = new ExtendedCraftingInventory(EmptyContainer.INSTANCE, this.getRecipeInventory(), 3);
-                var vanilla = level.getRecipeManager().getRecipeFor(RecipeType.CRAFTING, craftingInventory, level).orElse(null);
+                var craftingInventory = new ExtendedCraftingInventory(EmptyContainer.INSTANCE, getBaseItemStackHandlerForRecipeInventory(inventory), 3);
+                var vanilla = this.level.getRecipeManager().getRecipeFor(RecipeType.CRAFTING, craftingInventory, this.level).orElse(null);
 
                 this.recipe = vanilla != null ? new WrappedRecipe(vanilla, craftingInventory) : null;
             }
@@ -253,26 +247,13 @@ public abstract class AutoTableTileEntity extends BaseInventoryTileEntity implem
 
     public abstract int getProgressRequired();
 
-    public abstract BaseItemStackHandler getRecipeInventory();
-
     public abstract TableRecipeStorage getRecipeStorage();
 
     public abstract BaseEnergyStorage getEnergy();
 
     protected void onContentsChanged() {
         this.isGridChanged = true;
-        this.markDirtyAndDispatch();
-    }
-
-    private void updateRecipeInventory() {
-        var inventory = this.getInventory();
-
-        this.getRecipeInventory().setSize(inventory.getSlots() - 1);
-
-        for (int i = 0; i < inventory.getSlots() - 1; i++) {
-            var stack = inventory.getStackInSlot(i);
-            this.getRecipeInventory().setStackInSlot(i, stack);
-        }
+        this.setChangedFast();
     }
 
     private void updateResult(ItemStack stack, int slot) {
@@ -355,6 +336,16 @@ public abstract class AutoTableTileEntity extends BaseInventoryTileEntity implem
 		return false;
 	}
 
+    private BaseItemStackHandler getBaseItemStackHandlerForRecipeInventory(RecipeInventory inventory) {
+        var handler = BaseItemStackHandler.create(inventory.getContainerSize());
+
+        for (int i = 0; i < inventory.getContainerSize(); i++) {
+            handler.setStackInSlot(i, inventory.getItem(i));
+        }
+
+        return handler;
+    }
+
     public static class WrappedRecipe {
         private final BiFunction<Container, RegistryAccess, ItemStack> resultFunc;
         private final BiFunction<Container, Level, Boolean> matchesFunc;
@@ -395,16 +386,14 @@ public abstract class AutoTableTileEntity extends BaseInventoryTileEntity implem
 
     public static class Basic extends AutoTableTileEntity {
         private final BaseItemStackHandler inventory;
-        private final BaseItemStackHandler recipeInventory;
         private final BaseEnergyStorage energy;
         private final TableRecipeStorage recipeStorage;
 
         public Basic(BlockPos pos, BlockState state) {
             super(ModTileEntities.BASIC_AUTO_TABLE.get(), pos, state);
             this.inventory = createInventoryHandler(this::onContentsChanged);
-            this.recipeInventory = BaseItemStackHandler.create(9);
             this.recipeStorage = new TableRecipeStorage(10);
-            this.energy = new BaseEnergyStorage(ModConfigs.AUTO_TABLE_POWER_CAPACITY.get(), this::markDirtyAndDispatch);
+            this.energy = new BaseEnergyStorage(ModConfigs.AUTO_TABLE_POWER_CAPACITY.get(), this::setChangedFast);
         }
 
         @Override
@@ -425,11 +414,6 @@ public abstract class AutoTableTileEntity extends BaseInventoryTileEntity implem
         @Override
         public int getProgressRequired() {
             return 20;
-        }
-
-        @Override
-        public BaseItemStackHandler getRecipeInventory() {
-            return this.recipeInventory;
         }
 
         @Override
@@ -456,16 +440,14 @@ public abstract class AutoTableTileEntity extends BaseInventoryTileEntity implem
 
     public static class Advanced extends AutoTableTileEntity {
         private final BaseItemStackHandler inventory;
-        private final BaseItemStackHandler recipeInventory;
         private final BaseEnergyStorage energy;
         private final TableRecipeStorage recipeStorage;
 
         public Advanced(BlockPos pos, BlockState state) {
             super(ModTileEntities.ADVANCED_AUTO_TABLE.get(), pos, state);
             this.inventory = createInventoryHandler(this::onContentsChanged);
-            this.recipeInventory = BaseItemStackHandler.create(25);
             this.recipeStorage = new TableRecipeStorage(26);
-            this.energy = new BaseEnergyStorage(ModConfigs.AUTO_TABLE_POWER_CAPACITY.get() * 2, this::markDirtyAndDispatch);
+            this.energy = new BaseEnergyStorage(ModConfigs.AUTO_TABLE_POWER_CAPACITY.get() * 2, this::setChangedFast);
         }
 
         @Override
@@ -486,11 +468,6 @@ public abstract class AutoTableTileEntity extends BaseInventoryTileEntity implem
         @Override
         public int getProgressRequired() {
             return 40;
-        }
-
-        @Override
-        public BaseItemStackHandler getRecipeInventory() {
-            return this.recipeInventory;
         }
 
         @Override
@@ -517,16 +494,14 @@ public abstract class AutoTableTileEntity extends BaseInventoryTileEntity implem
 
     public static class Elite extends AutoTableTileEntity {
         private final BaseItemStackHandler inventory;
-        private final BaseItemStackHandler recipeInventory;
         private final BaseEnergyStorage energy;
         private final TableRecipeStorage recipeStorage;
 
         public Elite(BlockPos pos, BlockState state) {
             super(ModTileEntities.ELITE_AUTO_TABLE.get(), pos, state);
             this.inventory = createInventoryHandler(this::onContentsChanged);
-            this.recipeInventory = BaseItemStackHandler.create(49);
             this.recipeStorage = new TableRecipeStorage(50);
-            this.energy = new BaseEnergyStorage(ModConfigs.AUTO_TABLE_POWER_CAPACITY.get() * 4, this::markDirtyAndDispatch);
+            this.energy = new BaseEnergyStorage(ModConfigs.AUTO_TABLE_POWER_CAPACITY.get() * 4, this::setChangedFast);
         }
 
         @Override
@@ -547,11 +522,6 @@ public abstract class AutoTableTileEntity extends BaseInventoryTileEntity implem
         @Override
         public int getProgressRequired() {
             return 60;
-        }
-
-        @Override
-        public BaseItemStackHandler getRecipeInventory() {
-            return this.recipeInventory;
         }
 
         @Override
@@ -578,16 +548,14 @@ public abstract class AutoTableTileEntity extends BaseInventoryTileEntity implem
 
     public static class Ultimate extends AutoTableTileEntity {
         private final BaseItemStackHandler inventory;
-        private final BaseItemStackHandler recipeInventory;
         private final BaseEnergyStorage energy;
         private final TableRecipeStorage recipeStorage;
 
         public Ultimate(BlockPos pos, BlockState state) {
             super(ModTileEntities.ULTIMATE_AUTO_TABLE.get(), pos, state);
             this.inventory = createInventoryHandler(this::onContentsChanged);
-            this.recipeInventory = BaseItemStackHandler.create(81);
             this.recipeStorage = new TableRecipeStorage(82);
-            this.energy = new BaseEnergyStorage(ModConfigs.AUTO_TABLE_POWER_CAPACITY.get() * 8, this::markDirtyAndDispatch);
+            this.energy = new BaseEnergyStorage(ModConfigs.AUTO_TABLE_POWER_CAPACITY.get() * 8, this::setChangedFast);
         }
 
         @Override
@@ -608,11 +576,6 @@ public abstract class AutoTableTileEntity extends BaseInventoryTileEntity implem
         @Override
         public int getProgressRequired() {
             return 80;
-        }
-
-        @Override
-        public BaseItemStackHandler getRecipeInventory() {
-            return this.recipeInventory;
         }
 
         @Override

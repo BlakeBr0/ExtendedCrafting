@@ -2,6 +2,7 @@ package com.blakebr0.extendedcrafting.tileentity;
 
 import com.blakebr0.cucumber.helper.StackHelper;
 import com.blakebr0.cucumber.inventory.BaseItemStackHandler;
+import com.blakebr0.cucumber.inventory.CachedRecipe;
 import com.blakebr0.cucumber.tileentity.BaseInventoryTileEntity;
 import com.blakebr0.cucumber.util.Localizable;
 import com.blakebr0.extendedcrafting.api.crafting.IFluxCrafterRecipe;
@@ -34,8 +35,7 @@ import java.util.List;
 
 public class FluxCrafterTileEntity extends BaseInventoryTileEntity implements MenuProvider {
 	private final BaseItemStackHandler inventory;
-	private final BaseItemStackHandler recipeInventory;
-	private IFluxCrafterRecipe recipe;
+	private final CachedRecipe<IFluxCrafterRecipe> recipe;
 	private int progress;
 	private int progressReq;
 	protected boolean isGridChanged = true;
@@ -47,7 +47,7 @@ public class FluxCrafterTileEntity extends BaseInventoryTileEntity implements Me
 	public FluxCrafterTileEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
 		super(type, pos, state);
 		this.inventory = createInventoryHandler(this::onContentsChanged);
-		this.recipeInventory = BaseItemStackHandler.create(9);
+		this.recipe = new CachedRecipe<>(ModRecipeTypes.FLUX_CRAFTER.get());
 	}
 
 	@Override
@@ -80,12 +80,11 @@ public class FluxCrafterTileEntity extends BaseInventoryTileEntity implements Me
 	}
 
 	public static void tick(Level level, BlockPos pos, BlockState state, FluxCrafterTileEntity tile) {
-		var mark = false;
 		var recipe = tile.getActiveRecipe();
 		var selectedRecipe = tile.getSelectedRecipeGrid();
 
 		if (recipe != null && (selectedRecipe == null || recipe.matches(selectedRecipe, level))) {
-			var result = recipe.assemble(tile.recipeInventory.toIInventory(), level.registryAccess());
+			var result = recipe.assemble(tile.inventory.toRecipeInventory(0, 9), level.registryAccess());
 			var output = tile.inventory.getStackInSlot(9);
 
 			if (StackHelper.canCombineStacks(result, output)) {
@@ -115,26 +114,22 @@ public class FluxCrafterTileEntity extends BaseInventoryTileEntity implements Me
 						tile.progress = 0;
 					}
 
-					mark = true;
+					tile.setChangedFast();
 				}
 			} else {
 				if (tile.progress > 0 || tile.progressReq > 0) {
 					tile.reset();
-
-					mark = true;
+					tile.setChangedFast();
 				}
 			}
 		} else {
 			if (tile.progress > 0 || tile.progressReq > 0) {
 				tile.reset();
-
-				mark = true;
+				tile.setChangedFast();
 			}
 		}
 
-		if (mark) {
-			tile.markDirtyAndDispatch();
-		}
+		tile.dispatchIfChanged();
 	}
 
 	public static BaseItemStackHandler createInventoryHandler() {
@@ -175,13 +170,6 @@ public class FluxCrafterTileEntity extends BaseInventoryTileEntity implements Me
 		}
 	}
 
-	private void updateRecipeInventory() {
-		for (int i = 0; i < 9; i++) {
-			ItemStack stack = this.inventory.getStackInSlot(i);
-			this.recipeInventory.setStackInSlot(i, stack);
-		}
-	}
-
 	private List<FluxAlternatorTileEntity> getAlternators() {
 		List<FluxAlternatorTileEntity> alternators = new ArrayList<>();
 		var level = this.getLevel();
@@ -191,7 +179,7 @@ public class FluxCrafterTileEntity extends BaseInventoryTileEntity implements Me
 
 			BlockPos.betweenClosedStream(pos.offset(-3, -3, -3), pos.offset(3, 3, 3)).forEach(aoePos -> {
 				var tile = level.getBlockEntity(aoePos);
-				if (tile instanceof FluxAlternatorTileEntity alternator && alternator.getEnergy().getEnergyStored() >= this.recipe.getPowerRate())
+				if (tile instanceof FluxAlternatorTileEntity alternator && alternator.getEnergy().getEnergyStored() >= this.recipe.get().getPowerRate())
 					alternators.add(alternator);
 			});
 		}
@@ -200,8 +188,8 @@ public class FluxCrafterTileEntity extends BaseInventoryTileEntity implements Me
 	}
 
 	private void progress(int alternators) {
-		this.progress += this.recipe.getPowerRate() * alternators;
-		this.progressReq = this.recipe.getPowerRequired();
+		this.progress += this.recipe.get().getPowerRate() * alternators;
+		this.progressReq = this.recipe.get().getPowerRequired();
 	}
 
 	private void reset() {
@@ -225,7 +213,7 @@ public class FluxCrafterTileEntity extends BaseInventoryTileEntity implements Me
 
 	private void onContentsChanged() {
 		this.isGridChanged = true;
-		this.markDirtyAndDispatch();
+		this.setChangedFast();
 	}
 
 	public int getProgress() {
@@ -236,24 +224,14 @@ public class FluxCrafterTileEntity extends BaseInventoryTileEntity implements Me
 		return this.progressReq;
 	}
 
-	public BaseItemStackHandler getRecipeInventory() {
-		return this.recipeInventory;
-	}
-
 	public IFluxCrafterRecipe getActiveRecipe() {
 		if (this.level == null)
 			return null;
 
-		this.updateRecipeInventory();
-
-		var recipeInventory = this.recipeInventory.toIInventory();
-
-		if (this.isGridChanged && (this.recipe == null || !this.recipe.matches(recipeInventory, level))) {
-			this.recipe = level.getRecipeManager()
-					.getRecipeFor(ModRecipeTypes.FLUX_CRAFTER.get(), recipeInventory, level)
-					.orElse(null);
+		if (!this.isGridChanged) {
+			return this.recipe.get();
 		}
 
-		return this.recipe;
+		return this.recipe.checkAndGet(this.inventory.toRecipeInventory(0, 9), this.level);
 	}
 }

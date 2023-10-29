@@ -11,7 +11,7 @@ public class PedestalTileEntity extends BaseInventoryTileEntity {
 
 	public PedestalTileEntity(BlockPos pos, BlockState state) {
 		super(ModTileEntities.PEDESTAL.get(), pos, state);
-		this.inventory = createInventoryHandler(this::markDirtyAndDispatch);
+		this.inventory = createInventoryHandler(this::setChangedAndDispatch);
 	}
 
 	@Override

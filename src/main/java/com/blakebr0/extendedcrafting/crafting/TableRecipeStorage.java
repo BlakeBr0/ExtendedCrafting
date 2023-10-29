@@ -64,11 +64,11 @@ public class TableRecipeStorage {
         return IntStream.range(0, this.recipes.length).anyMatch(this::hasRecipe);
     }
 
-    public void setRecipe(int index, BaseItemStackHandler inventory, ItemStack output) {
+    public void setRecipe(int index, Container inventory, ItemStack output) {
         var recipe = BaseItemStackHandler.create(this.slots);
 
         for (int i = 0; i < this.slots - 1; i++) {
-            recipe.setStackInSlot(i, inventory.getStackInSlot(i));
+            recipe.setStackInSlot(i, inventory.getItem(i).copy());
         }
 
         recipe.setStackInSlot(this.slots - 1, output);

@@ -31,7 +31,7 @@ public class AutoFluxCrafterTileEntity extends FluxCrafterTileEntity implements 
 
     public AutoFluxCrafterTileEntity(BlockPos pos, BlockState state) {
         super(ModTileEntities.AUTO_FLUX_CRAFTER.get(), pos, state);
-        this.energy = new BaseEnergyStorage(ModConfigs.AUTO_FLUX_CRAFTER_POWER_CAPACITY.get(), this::markDirtyAndDispatch);
+        this.energy = new BaseEnergyStorage(ModConfigs.AUTO_FLUX_CRAFTER_POWER_CAPACITY.get(), this::setChangedFast);
         this.recipeStorage = new TableRecipeStorage(10);
     }
 
@@ -53,7 +53,7 @@ public class AutoFluxCrafterTileEntity extends FluxCrafterTileEntity implements 
     public void onLoad() {
         super.onLoad();
 
-        // on load we will re-validate the recipe outputs to ensure they are still correct
+        // on load, we will re-validate the recipe outputs to ensure they are still correct
         if (this.level != null && !this.level.isClientSide()) {
             this.getRecipeStorage().onLoad(this.level, ModRecipeTypes.FLUX_CRAFTER.get());
         }
@@ -106,7 +106,7 @@ public class AutoFluxCrafterTileEntity extends FluxCrafterTileEntity implements 
 
     public void selectRecipe(int index) {
         this.getRecipeStorage().setSelected(index);
-        this.markDirtyAndDispatch();
+        this.setChangedAndDispatch();
     }
 
     public void saveRecipe(int index) {
@@ -114,45 +114,28 @@ public class AutoFluxCrafterTileEntity extends FluxCrafterTileEntity implements 
         if (level == null)
             return;
 
-        this.updateRecipeInventory();
-
-        var recipeInventory = this.getRecipeInventory();
-        var recipeIInventory = recipeInventory.toIInventory();
-        var newRecipeInventory = BaseItemStackHandler.create(recipeInventory.getSlots());
-
-        for (int i = 0; i < recipeInventory.getSlots(); i++) {
-            newRecipeInventory.setStackInSlot(i, recipeInventory.getStackInSlot(i).copy());
-        }
+        var inventory = this.getInventory().toRecipeInventory(0, 9);
+        var recipe = level.getRecipeManager()
+                .getRecipeFor(ModRecipeTypes.FLUX_CRAFTER.get(), inventory, level)
+                .orElse(null);
 
         var result = ItemStack.EMPTY;
-        var recipe = level.getRecipeManager().getRecipeFor(ModRecipeTypes.FLUX_CRAFTER.get(), recipeIInventory, level).orElse(null);
 
         if (recipe != null) {
-            result = recipe.assemble(recipeIInventory, level.registryAccess());
+            result = recipe.assemble(inventory, level.registryAccess());
         }
 
-        this.getRecipeStorage().setRecipe(index, newRecipeInventory, result);
-        this.markDirtyAndDispatch();
+        this.getRecipeStorage().setRecipe(index, inventory, result);
+        this.setChangedAndDispatch();
     }
 
     public void deleteRecipe(int index) {
         this.getRecipeStorage().unsetRecipe(index);
-        this.markDirtyAndDispatch();
+        this.setChangedAndDispatch();
     }
 
     public BaseEnergyStorage getEnergy() {
         return this.energy;
-    }
-
-    private void updateRecipeInventory() {
-        var inventory = this.getInventory();
-
-        this.getRecipeInventory().setSize(inventory.getSlots() - 1);
-
-        for (int i = 0; i < inventory.getSlots() - 1; i++) {
-            var stack = inventory.getStackInSlot(i);
-            this.getRecipeInventory().setStackInSlot(i, stack);
-        }
     }
 
     private void addStackToSlot(ItemStack stack, int slot) {

@@ -26,7 +26,7 @@ public class FluxAlternatorTileEntity extends BaseTileEntity implements MenuProv
 
     public FluxAlternatorTileEntity(BlockPos pos, BlockState state) {
         super(ModTileEntities.FLUX_ALTERNATOR.get(), pos, state);
-        this.energy = new BaseEnergyStorage(ModConfigs.FLUX_ALTERNATOR_POWER_CAPACITY.get(), this::markDirtyAndDispatch);
+        this.energy = new BaseEnergyStorage(ModConfigs.FLUX_ALTERNATOR_POWER_CAPACITY.get(), this::setChangedAndDispatch);
     }
 
     @Override

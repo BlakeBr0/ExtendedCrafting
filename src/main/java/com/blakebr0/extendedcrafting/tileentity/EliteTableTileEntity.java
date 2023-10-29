@@ -22,7 +22,7 @@ public class EliteTableTileEntity extends BaseInventoryTileEntity implements Men
 
 	public EliteTableTileEntity(BlockPos pos, BlockState state) {
 		super(ModTileEntities.ELITE_TABLE.get(), pos, state);
-		this.inventory = createInventoryHandler(this::markDirtyAndDispatch);
+		this.inventory = createInventoryHandler(this::setChangedAndDispatch);
 	}
 
 	@Override

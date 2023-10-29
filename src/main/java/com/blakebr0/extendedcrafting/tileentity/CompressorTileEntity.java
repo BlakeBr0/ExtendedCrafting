@@ -3,11 +3,12 @@ package com.blakebr0.extendedcrafting.tileentity;
 import com.blakebr0.cucumber.energy.BaseEnergyStorage;
 import com.blakebr0.cucumber.helper.StackHelper;
 import com.blakebr0.cucumber.inventory.BaseItemStackHandler;
+import com.blakebr0.cucumber.inventory.CachedRecipe;
 import com.blakebr0.cucumber.tileentity.BaseInventoryTileEntity;
 import com.blakebr0.cucumber.util.Localizable;
+import com.blakebr0.extendedcrafting.api.crafting.ICompressorRecipe;
 import com.blakebr0.extendedcrafting.config.ModConfigs;
 import com.blakebr0.extendedcrafting.container.CompressorContainer;
-import com.blakebr0.extendedcrafting.crafting.recipe.CompressorRecipe;
 import com.blakebr0.extendedcrafting.init.ModRecipeTypes;
 import com.blakebr0.extendedcrafting.init.ModTileEntities;
 import net.minecraft.core.BlockPos;
@@ -36,7 +37,7 @@ public class CompressorTileEntity extends BaseInventoryTileEntity implements Men
 	private final BaseItemStackHandler inventory;
 	private final BaseItemStackHandler recipeInventory;
 	private final BaseEnergyStorage energy;
-	private CompressorRecipe recipe;
+	private final CachedRecipe<ICompressorRecipe> recipe;
 	private ItemStack materialStack = ItemStack.EMPTY;
 	private List<MaterialInput> inputs = NonNullList.create();
 	private int materialCount;
@@ -48,7 +49,8 @@ public class CompressorTileEntity extends BaseInventoryTileEntity implements Men
 		super(ModTileEntities.COMPRESSOR.get(), pos, state);
 		this.inventory = createInventoryHandler(null);
 		this.recipeInventory = BaseItemStackHandler.create(2);
-		this.energy = new BaseEnergyStorage(ModConfigs.COMPRESSOR_POWER_CAPACITY.get(), this::markDirtyAndDispatch);
+		this.energy = new BaseEnergyStorage(ModConfigs.COMPRESSOR_POWER_CAPACITY.get(), this::setChangedFast);
+		this.recipe = new CachedRecipe<>(ModRecipeTypes.COMPRESSOR.get());
 	}
 
 	@Override
@@ -102,7 +104,6 @@ public class CompressorTileEntity extends BaseInventoryTileEntity implements Men
 	}
 
 	public static void tick(Level level, BlockPos pos, BlockState state, CompressorTileEntity tile) {
-		var mark = false;
 		var recipe = tile.getActiveRecipe();
 		var output = tile.inventory.getStackInSlot(0);
 		var input = tile.inventory.getStackInSlot(1);
@@ -110,14 +111,14 @@ public class CompressorTileEntity extends BaseInventoryTileEntity implements Men
 		if (!input.isEmpty()) {
 			if (tile.materialStack.isEmpty() || tile.materialCount <= 0) {
 				tile.materialStack = input.copy();
-				mark = true;
+				tile.setChangedFast();
 			}
 
 			if (!tile.inputLimit || (recipe != null && tile.materialCount < recipe.getInputCount())) {
 				var index = tile.canInsertItem(input);
 				if (index > -1) {
 					tile.insertItem(index, input);
-					mark = true;
+					tile.setChangedFast();
 				}
 			}
 		}
@@ -125,7 +126,7 @@ public class CompressorTileEntity extends BaseInventoryTileEntity implements Men
 		if (recipe != null && tile.getEnergy().getEnergyStored() > 0) {
 			if (tile.materialCount >= recipe.getInputCount()) {
 				if (tile.progress >= recipe.getPowerCost()) {
-					var result = recipe.assemble(tile.inventory, level.registryAccess());
+					var result = recipe.assemble(tile.recipeInventory.asRecipeWrapper(), level.registryAccess());
 
 					if (StackHelper.canCombineStacks(result, output)) {
 						tile.updateResult(result);
@@ -138,11 +139,11 @@ public class CompressorTileEntity extends BaseInventoryTileEntity implements Men
 							tile.materialStack = ItemStack.EMPTY;
 						}
 
-						mark = true;
+						tile.setChangedFast();
 					}
 				} else {
 					tile.process(recipe);
-					mark = true;
+					tile.setChangedFast();
 				}
 			}
 		}
@@ -173,15 +174,12 @@ public class CompressorTileEntity extends BaseInventoryTileEntity implements Men
 					if (tile.progress > 0)
 						tile.progress = 0;
 
-					if (!mark)
-						mark = true;
+					tile.setChangedFast();
 				}
 			}
 		}
 
-		if (mark) {
-			tile.markDirtyAndDispatch();
-		}
+		tile.dispatchIfChanged();
 	}
 
 	public static BaseItemStackHandler createInventoryHandler() {
@@ -218,7 +216,7 @@ public class CompressorTileEntity extends BaseInventoryTileEntity implements Men
 	public void toggleEjecting() {
 		if (this.materialCount > 0) {
 			this.ejecting = !this.ejecting;
-			this.markDirtyAndDispatch();
+			this.setChangedAndDispatch();
 		}
 	}
 
@@ -228,7 +226,7 @@ public class CompressorTileEntity extends BaseInventoryTileEntity implements Men
 
 	public void toggleInputLimit() {
 		this.inputLimit = !this.inputLimit;
-		this.markDirtyAndDispatch();
+		this.setChangedAndDispatch();
 	}
 
 	public int getProgress() {
@@ -236,10 +234,10 @@ public class CompressorTileEntity extends BaseInventoryTileEntity implements Men
 	}
 
 	public boolean hasRecipe() {
-		return this.recipe != null;
+		return this.recipe.exists();
 	}
 
-	public CompressorRecipe getActiveRecipe() {
+	public ICompressorRecipe getActiveRecipe() {
 		if (this.level == null)
 			return null;
 
@@ -248,27 +246,19 @@ public class CompressorTileEntity extends BaseInventoryTileEntity implements Men
 		this.recipeInventory.setStackInSlot(0, this.materialStack);
 		this.recipeInventory.setStackInSlot(1, catalyst);
 
-		if (this.recipe == null || !this.recipe.matches(this.recipeInventory)) {
-			var recipe = level.getRecipeManager()
-					.getRecipeFor(ModRecipeTypes.COMPRESSOR.get(), this.recipeInventory.toIInventory(), level)
-					.orElse(null);
-
-			this.recipe = recipe instanceof CompressorRecipe ? (CompressorRecipe) recipe : null;
-		}
-
-		return this.recipe;
+		return this.recipe.checkAndGet(this.recipeInventory, this.level);
 	}
 
 	public int getEnergyRequired() {
 		if (this.hasRecipe())
-			return this.recipe.getPowerCost();
+			return this.recipe.get().getPowerCost();
 
 		return 0;
 	}
 
 	public int getMaterialsRequired() {
 		if (this.hasRecipe())
-			return this.recipe.getInputCount();
+			return this.recipe.get().getInputCount();
 
 		return 0;
 	}
@@ -277,7 +267,7 @@ public class CompressorTileEntity extends BaseInventoryTileEntity implements Men
 		return this.inputs;
 	}
 
-	private void process(CompressorRecipe recipe) {
+	private void process(ICompressorRecipe recipe) {
 		int extract = recipe.getPowerRate();
 		int difference = recipe.getPowerCost() - this.progress;
 		if (difference < extract)
@@ -309,8 +299,8 @@ public class CompressorTileEntity extends BaseInventoryTileEntity implements Men
 		}
 
 		// if there's a valid recipe, we can start allowing item variants
-		if (size < 100 && this.recipe != null) {
-			var recipeStack = this.recipe.getIngredients().get(0);
+		if (size < 100 && this.recipe.exists()) {
+			var recipeStack = this.recipe.get().getIngredients().get(0);
 			if (recipeStack.test(stack))
 				return size;
 		}
@@ -321,7 +311,7 @@ public class CompressorTileEntity extends BaseInventoryTileEntity implements Men
 	private void insertItem(int index, ItemStack stack) {
 		int consumeAmount = stack.getCount();
 		if (this.inputLimit) {
-			consumeAmount = Math.min(consumeAmount, this.recipe.getInputCount() - this.materialCount);
+			consumeAmount = Math.min(consumeAmount, this.recipe.get().getInputCount() - this.materialCount);
 		}
 
 		if (this.inputs.isEmpty() || this.inputs.size() == index) {

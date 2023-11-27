@@ -25,3 +25,4 @@ Please add your logs and scripts (if applicable).
  - Cucumber:
  - Extended Crafting:
  - CraftTweaker (if applicable):
+ - Singleplayer or Multiplayer:

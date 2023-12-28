@@ -95,23 +95,9 @@ public final class TableCrafting {
 		CraftTweakerAPI.apply(new IRuntimeAction() {
 			@Override
 			public void apply() {
-				Map<Integer, Function<ItemStack, ItemStack>> transformers = new HashMap<>();
-
-				for (int i = 0; i < inputs.length; i++) {
-					var iing = inputs[i];
-					var ing = iing.asVanillaIngredient();
-
-					if (ing != Ingredient.EMPTY) {
-						transformers.put(i, stack -> {
-							var istack = iing.getRemainingItem(new MCItemStack(stack));
-							return istack.getInternal();
-						});
-					}
-				}
-
 				var recipe = new ShapelessTableRecipe(new ResourceLocation("crafttweaker", id), toIngredientsList(inputs), output.getInternal(), clampTier(tier));
 
-				recipe.setTransformers(transformers);
+				recipe.setTransformer((slot, stack) -> inputs[slot].getRemainingItem(new MCItemStack(stack)).getInternal());
 
 				RecipeHelper.addRecipe(recipe);
 			}

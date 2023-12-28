@@ -101,23 +101,9 @@ public final class TableCrafting implements IRecipeManager<ITableRecipe> {
 			CraftTweakerAPI.getLogger(ExtendedCrafting.MOD_ID).error("Unable to assign a tier to the Table Recipe for stack " + output.getCommandString() + ". Tier cannot be greater than 4 or less than 0.");
 		}
 
-		Map<Integer, Function<ItemStack, ItemStack>> transformers = new HashMap<>();
-
-		for (int i = 0; i < inputs.length; i++) {
-			var iing = inputs[i];
-			var ing = iing.asVanillaIngredient();
-
-			if (ing != Ingredient.EMPTY) {
-				transformers.put(i, stack -> {
-					var istack = iing.getRemainingItem(new MCItemStack(stack));
-					return istack.getInternal();
-				});
-			}
-		}
-
 		var recipe = new ShapelessTableRecipe(id, toIngredientsList(inputs), output.getInternal(), tier);
 
-		recipe.setTransformers(transformers);
+		recipe.setTransformer((slot, stack) -> inputs[slot].getRemainingItem(new MCItemStack(stack)).getInternal());
 
 		CraftTweakerAPI.apply(new ActionAddRecipe<>(INSTANCE, recipe));
 	}

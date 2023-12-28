@@ -19,7 +19,7 @@ mods.extendedcrafting.TableCrafting.addShaped("test_shaped4weet", 1, <item:minec
 //]);
 
 mods.extendedcrafting.TableCrafting.addShapeless("aab3beed-286c-47de-b0c2-a116bf5ada6f", 0, <item:minecraft:potato>, [
-	<item:extendedcrafting:recipe_maker>.withTag({Shapeless: 1 as byte, Type: "CraftTweaker" as string}), <item:extendedcrafting:ender_star>, <item:minecraft:gold_ingot>, <item:minecraft:gold_ingot>, <item:minecraft:gold_ingot>, <item:minecraft:coal>, <item:minecraft:gold_ingot>, <item:minecraft:gold_ingot>, <item:minecraft:gold_ingot>, <item:minecraft:gold_ingot>, <item:minecraft:gold_ingot>, <item:minecraft:gold_ingot>, <item:extendedcrafting:ender_alternator>
+	<item:extendedcrafting:recipe_maker>.withTag({Shapeless: 1 as byte, Type: "CraftTweaker" as string}), <item:extendedcrafting:ender_star>.reuse(), <item:minecraft:gold_ingot>, <item:minecraft:gold_ingot>, <item:minecraft:gold_ingot>, <item:minecraft:coal>, <item:minecraft:gold_ingot>, <item:minecraft:gold_ingot>, <item:minecraft:gold_ingot>, <item:minecraft:gold_ingot>, <item:minecraft:gold_ingot>, <item:minecraft:gold_ingot>, <item:extendedcrafting:ender_alternator>
 ]);
 
 mods.extendedcrafting.TableCrafting.addShapeless("aab3beed-286c-47de-b0c2-a116badsf5ada6f", 0, <item:minecraft:carrot>, [

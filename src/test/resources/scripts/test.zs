@@ -15,8 +15,14 @@ mods.extendedcrafting.EnderCrafting.addShapeless("test_shapelessasd", <item:mine
 
 mods.extendedcrafting.TableCrafting.addShaped("test_shaped4weet", 1, <item:minecraft:stick>, [
   [<tag:items:forge:gems/diamond>, <item:minecraft:air>],
-  [<item:minecraft:diamond>, <item:minecraft:diamond>],
+  [<item:minecraft:diamond>.reuse(), <item:minecraft:diamond>],
   [<item:minecraft:diamond>, <item:minecraft:air>]
+]);
+
+mods.extendedcrafting.TableCrafting.addShaped("test_shaped4weet23", 0, <item:minecraft:carrot>, [
+  [<tag:items:forge:ingots/iron>, <item:minecraft:air>],
+  [<item:minecraft:iron_ingot>.reuse(), <item:minecraft:iron_ingot>],
+  [<item:minecraft:iron_ingot>, <item:minecraft:air>]
 ]);
 
 //mods.extendedcrafting.TableCrafting.remove(<item:extendedcrafting:crystaltine_ingot>);

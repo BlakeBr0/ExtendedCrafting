@@ -1,6 +1,7 @@
 package com.blakebr0.extendedcrafting.crafting.recipe;
 
 import com.blakebr0.cucumber.crafting.ISpecialRecipe;
+import com.blakebr0.cucumber.util.TriFunction;
 import com.blakebr0.extendedcrafting.api.crafting.ITableRecipe;
 import com.blakebr0.extendedcrafting.init.ModRecipeSerializers;
 import com.blakebr0.extendedcrafting.init.ModRecipeTypes;
@@ -21,9 +22,6 @@ import net.minecraft.world.level.Level;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.wrapper.InvWrapper;
 
-import java.util.Map;
-import java.util.function.Function;
-
 public class ShapedTableRecipe implements ISpecialRecipe, ITableRecipe {
 	private final ResourceLocation recipeId;
 	private final NonNullList<Ingredient> inputs;
@@ -31,7 +29,7 @@ public class ShapedTableRecipe implements ISpecialRecipe, ITableRecipe {
 	private final int width;
 	private final int height;
 	private final int tier;
-	private Map<Integer, Function<ItemStack, ItemStack>> transformers;
+	private TriFunction<Integer, Integer, ItemStack, ItemStack> transformer;
 
 	public ShapedTableRecipe(ResourceLocation recipeId, int width, int height, NonNullList<Ingredient> inputs, ItemStack output) {
 		this(recipeId, width, height, inputs, output, 0);
@@ -113,18 +111,45 @@ public class ShapedTableRecipe implements ISpecialRecipe, ITableRecipe {
 	}
 
 	@Override
-	public NonNullList<ItemStack> getRemainingItems(Container inv) {
-		if (this.transformers != null) {
-			var remaining = NonNullList.withSize(inv.getContainerSize(), ItemStack.EMPTY);
+	public NonNullList<ItemStack> getRemainingItems(IItemHandler inventory) {
+		if (this.transformer != null) {
+			var remaining = NonNullList.withSize(inventory.getSlots(), ItemStack.EMPTY);
+			int size = (int) Math.sqrt(inventory.getSlots());
 
-			this.transformers.forEach((i, stack) -> {
-				remaining.set(i, stack.apply(inv.getItem(i)));
-			});
+			for (int i = 0; i <= size - this.width; i++) {
+				for (int j = 0; j <= size - this.height; j++) {
+					if (this.checkMatch(inventory, i, j, true)) {
+						for (int k = 0; k < this.height; k++) {
+							for (int l = 0; l < this.width; l++) {
+								int index = (this.width - 1 - l) + i + (k + j) * size;
+								var stack = inventory.getStackInSlot(index);
+
+								remaining.set(index, this.transformer.apply(l, k, stack));
+							}
+						}
+
+						break;
+					}
+
+					if (this.checkMatch(inventory, i, j, false)) {
+						for (int k = 0; k < this.height; k++) {
+							for (int l = 0; l < this.width; l++) {
+								int index = l + i + (k + j) * size;
+								var stack = inventory.getStackInSlot(index);
+
+								remaining.set(index, this.transformer.apply(l, k, stack));
+							}
+						}
+
+						break;
+					}
+				}
+			}
 
 			return remaining;
 		}
 
-		return ISpecialRecipe.super.getRemainingItems(inv);
+		return ISpecialRecipe.super.getRemainingItems(inventory);
 	}
 
 	@Override
@@ -198,8 +223,8 @@ public class ShapedTableRecipe implements ISpecialRecipe, ITableRecipe {
 		return astring;
 	}
 
-	public void setTransformers(Map<Integer, Function<ItemStack, ItemStack>> transformers) {
-		this.transformers = transformers;
+	public void setTransformer(TriFunction<Integer, Integer, ItemStack, ItemStack> transformer) {
+		this.transformer = transformer;
 	}
 
 	public static class Serializer implements RecipeSerializer<ShapedTableRecipe> {

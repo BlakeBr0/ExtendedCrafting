@@ -49,7 +49,7 @@ public final class TableCrafting {
 				}
 
 				var ingredients = NonNullList.withSize(height * width, Ingredient.EMPTY);
-				Map<Integer, Function<ItemStack, ItemStack>> transformers = new HashMap<>();
+
 
 				for (int a = 0; a < height; a++) {
 					for (int b = 0; b < inputs[a].length; b++) {
@@ -57,19 +57,13 @@ public final class TableCrafting {
 						var ing = iing.asVanillaIngredient();
 						int i = a * width + b;
 						ingredients.set(i, ing);
+}
 
-						if (ing != Ingredient.EMPTY) {
-							transformers.put(i, stack -> {
-								var istack = iing.getRemainingItem(new MCItemStack(stack));
-								return istack.getInternal();
-							});
-						}
-					}
 				}
 
 				var recipe = new ShapedTableRecipe(new ResourceLocation("crafttweaker", id), width, height, ingredients, output.getInternal(), clampTier(tier));
 
-				recipe.setTransformers(transformers);
+				recipe.setTransformer((x, y, stack) -> inputs[y][x].getRemainingItem(new MCItemStack(stack)).getInternal());
 
 				RecipeHelper.addRecipe(recipe);
 			}

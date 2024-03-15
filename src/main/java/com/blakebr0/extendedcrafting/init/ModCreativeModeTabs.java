@@ -108,6 +108,8 @@ public final class ModCreativeModeTabs {
                         output.accept(SingularityUtils.getItemForSingularity(singularity), ModFeatureFlags.SINGULARITIES);
                     }
                 }
+
+                output.accept(ModItems.ULTIMATE_SINGULARITY, ModFeatureFlags.SINGULARITIES);
             }))
             .build());
 }

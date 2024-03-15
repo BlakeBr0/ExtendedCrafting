@@ -137,6 +137,7 @@ public class CompressorTileEntity extends BaseInventoryTileEntity implements Men
 
 						if (tile.materialCount <= 0) {
 							tile.materialStack = ItemStack.EMPTY;
+							tile.ejecting = false;
 						}
 
 						tile.setChangedFast();
@@ -148,7 +149,7 @@ public class CompressorTileEntity extends BaseInventoryTileEntity implements Men
 			}
 		}
 
-		if (tile.ejecting) {
+		if (tile.ejecting && !tile.inputs.isEmpty()) {
 			var newestInput = tile.getNewestInput();
 			var newestStack = newestInput.stack;
 

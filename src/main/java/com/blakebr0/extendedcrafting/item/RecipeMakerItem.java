@@ -387,7 +387,7 @@ public class RecipeMakerItem extends BaseItem {
 
 		var result = new JsonObject();
 
-		result.addProperty("item", "");
+		result.addProperty("id", "");
 		object.add("result", result);
 
 		return GSON.toJson(object);
@@ -440,7 +440,7 @@ public class RecipeMakerItem extends BaseItem {
 
 		var result = new JsonObject();
 
-		result.addProperty("item", "");
+		result.addProperty("id", "");
 		object.add("result", result);
 
 		return GSON.toJson(object);
@@ -489,7 +489,7 @@ public class RecipeMakerItem extends BaseItem {
 
 		var result = new JsonObject();
 
-		result.addProperty("item", "");
+		result.addProperty("id", "");
 		object.add("result", result);
 
 		return GSON.toJson(object);

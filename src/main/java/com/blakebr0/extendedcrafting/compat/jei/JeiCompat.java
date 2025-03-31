@@ -53,6 +53,7 @@ import mezz.jei.api.registration.IRecipeCategoryRegistration;
 import mezz.jei.api.registration.IRecipeRegistration;
 import mezz.jei.api.registration.IRecipeTransferRegistration;
 import mezz.jei.api.registration.ISubtypeRegistration;
+import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeHolder;
@@ -103,35 +104,40 @@ public final class JeiCompat implements IModPlugin {
 
     @Override
     public void registerRecipes(IRecipeRegistration registration) {
-        if (ModConfigs.ENABLE_CRAFTING_CORE.get()) {
-            registration.addRecipes(CombinationCraftingCategory.RECIPE_TYPE, RecipeHelper.byTypeValues(ModRecipeTypes.COMBINATION.get()));
-        }
+        var level = Minecraft.getInstance().level;
+        if (level != null) {
+            var manager = level.getRecipeManager();
 
-        if (ModConfigs.ENABLE_TABLES.get()) {
-            var recipes = Stream.of(1, 2, 3, 4).collect(Collectors.toMap(tier -> tier, tier ->
-                    RecipeHelper.byType(ModRecipeTypes.TABLE.get())
-                            .stream()
-                            .map(RecipeHolder::value)
-                            .filter(recipe -> recipe.hasRequiredTier() ? tier == recipe.getTier() : tier >= recipe.getTier())
-                            .toList()
-            ));
+            if (ModConfigs.ENABLE_CRAFTING_CORE.get()) {
+                registration.addRecipes(CombinationCraftingCategory.RECIPE_TYPE, RecipeHelper.byTypeValues(manager, ModRecipeTypes.COMBINATION.get()));
+            }
 
-            registration.addRecipes(BasicTableCategory.RECIPE_TYPE, recipes.getOrDefault(1, new ArrayList<>()));
-            registration.addRecipes(AdvancedTableCategory.RECIPE_TYPE, recipes.getOrDefault(2, new ArrayList<>()));
-            registration.addRecipes(EliteTableCategory.RECIPE_TYPE, recipes.getOrDefault(3, new ArrayList<>()));
-            registration.addRecipes(UltimateTableCategory.RECIPE_TYPE, recipes.getOrDefault(4, new ArrayList<>()));
-        }
+            if (ModConfigs.ENABLE_TABLES.get()) {
+                var recipes = Stream.of(1, 2, 3, 4).collect(Collectors.toMap(tier -> tier, tier ->
+                        RecipeHelper.byType(manager, ModRecipeTypes.TABLE.get())
+                                .stream()
+                                .map(RecipeHolder::value)
+                                .filter(recipe -> recipe.hasRequiredTier() ? tier == recipe.getTier() : tier >= recipe.getTier())
+                                .toList()
+                ));
 
-        if (ModConfigs.ENABLE_COMPRESSOR.get()) {
-            registration.addRecipes(CompressorCraftingCategory.RECIPE_TYPE, RecipeHelper.byTypeValues(ModRecipeTypes.COMPRESSOR.get()));
-        }
+                registration.addRecipes(BasicTableCategory.RECIPE_TYPE, recipes.getOrDefault(1, new ArrayList<>()));
+                registration.addRecipes(AdvancedTableCategory.RECIPE_TYPE, recipes.getOrDefault(2, new ArrayList<>()));
+                registration.addRecipes(EliteTableCategory.RECIPE_TYPE, recipes.getOrDefault(3, new ArrayList<>()));
+                registration.addRecipes(UltimateTableCategory.RECIPE_TYPE, recipes.getOrDefault(4, new ArrayList<>()));
+            }
 
-        if (ModConfigs.ENABLE_ENDER_CRAFTER.get()) {
-            registration.addRecipes(EnderCrafterCategory.RECIPE_TYPE, RecipeHelper.byTypeValues(ModRecipeTypes.ENDER_CRAFTER.get()));
-        }
+            if (ModConfigs.ENABLE_COMPRESSOR.get()) {
+                registration.addRecipes(CompressorCraftingCategory.RECIPE_TYPE, RecipeHelper.byTypeValues(manager, ModRecipeTypes.COMPRESSOR.get()));
+            }
 
-        if (ModConfigs.ENABLE_FLUX_CRAFTER.get()) {
-            registration.addRecipes(FluxCraftingCategory.RECIPE_TYPE, RecipeHelper.byTypeValues(ModRecipeTypes.FLUX_CRAFTER.get()));
+            if (ModConfigs.ENABLE_ENDER_CRAFTER.get()) {
+                registration.addRecipes(EnderCrafterCategory.RECIPE_TYPE, RecipeHelper.byTypeValues(manager, ModRecipeTypes.ENDER_CRAFTER.get()));
+            }
+
+            if (ModConfigs.ENABLE_FLUX_CRAFTER.get()) {
+                registration.addRecipes(FluxCraftingCategory.RECIPE_TYPE, RecipeHelper.byTypeValues(manager, ModRecipeTypes.FLUX_CRAFTER.get()));
+            }
         }
     }
 

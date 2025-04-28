@@ -196,8 +196,10 @@ public class EnderCrafterTileEntity extends BaseInventoryTileEntity implements M
 	}
 
 	private void onContentsChanged() {
-		this.isGridChanged = true;
-		this.setChangedFast();
+		if (!this.isGridChanged) {
+			this.isGridChanged = true;
+			this.setChanged();
+		}
 	}
 
 	public int getProgress() {

@@ -212,8 +212,10 @@ public class FluxCrafterTileEntity extends BaseInventoryTileEntity implements Me
 	}
 
 	private void onContentsChanged(int slot) {
-		this.isGridChanged = true;
-		this.setChangedFast();
+		if (!this.isGridChanged) {
+			this.isGridChanged = true;
+			this.setChanged();
+		}
 	}
 
 	public int getProgress() {

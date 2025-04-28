@@ -1,6 +1,7 @@
 package com.blakebr0.extendedcrafting.block;
 
 import com.blakebr0.cucumber.block.BaseTileEntityBlock;
+import com.blakebr0.cucumber.helper.BlockHelper;
 import com.blakebr0.cucumber.util.VoxelShapeBuilder;
 import com.blakebr0.extendedcrafting.init.ModDataComponentTypes;
 import com.blakebr0.extendedcrafting.init.ModTileEntities;
@@ -100,6 +101,16 @@ public class BasicAutoTableBlock extends BaseTileEntityBlock {
         if (storage != null && storage.recipeCount() > 0) {
             tooltip.add(ModTooltips.RECIPE_COUNT.args(storage.recipeCount()).build());
         }
+    }
+
+    @Override
+    protected boolean hasAnalogOutputSignal(BlockState state) {
+        return true;
+    }
+
+    @Override
+    protected int getAnalogOutputSignal(BlockState state, Level level, BlockPos pos) {
+        return BlockHelper.getRedstoneSignalFromInventory(level.getBlockEntity(pos));
     }
 
     @Override

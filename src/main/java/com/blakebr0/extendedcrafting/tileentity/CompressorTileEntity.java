@@ -44,7 +44,7 @@ public class CompressorTileEntity extends BaseInventoryTileEntity implements Men
 
 	public CompressorTileEntity(BlockPos pos, BlockState state) {
 		super(ModTileEntities.COMPRESSOR.get(), pos, state);
-		this.inventory = createInventoryHandler(null);
+		this.inventory = createInventoryHandler((slot) -> this.setChanged());
 		this.recipeInventory = BaseItemStackHandler.create(2);
 		this.energy = new BaseEnergyStorage(ModConfigs.COMPRESSOR_POWER_CAPACITY.get(), this::setChangedFast);
 		this.recipe = new CachedRecipe<>(ModRecipeTypes.COMPRESSOR.get());

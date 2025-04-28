@@ -46,7 +46,7 @@ public class CraftingCoreTileEntity extends BaseInventoryTileEntity implements M
 
 	public CraftingCoreTileEntity(BlockPos pos, BlockState state) {
 		super(ModTileEntities.CRAFTING_CORE.get(), pos, state);
-		this.inventory = createInventoryHandler((slot) -> this.setChangedFast());
+		this.inventory = createInventoryHandler((slot) -> this.setChanged());
 		this.energy = new BaseEnergyStorage(ModConfigs.CRAFTING_CORE_POWER_CAPACITY.get(), this::setChangedFast);
 		this.recipeInventory = BaseItemStackHandler.create(49);
 		this.recipe = new CachedRecipe<>(ModRecipeTypes.COMBINATION.get());

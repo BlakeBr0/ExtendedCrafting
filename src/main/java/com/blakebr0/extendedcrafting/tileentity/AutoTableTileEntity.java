@@ -280,8 +280,10 @@ public abstract class AutoTableTileEntity extends BaseInventoryTileEntity implem
     public abstract int getTier();
 
     protected void onContentsChanged(int slot) {
-        this.isGridChanged = true;
-        this.setChangedFast();
+        if (!this.isGridChanged) {
+            this.isGridChanged = true;
+            this.setChanged();
+        }
     }
 
     private void updateResult(ItemStack stack, int slot) {

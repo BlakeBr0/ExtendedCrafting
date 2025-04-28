@@ -1,6 +1,7 @@
 package com.blakebr0.extendedcrafting.block;
 
 import com.blakebr0.cucumber.block.BaseTileEntityBlock;
+import com.blakebr0.cucumber.helper.BlockHelper;
 import com.blakebr0.extendedcrafting.init.ModTileEntities;
 import com.blakebr0.extendedcrafting.tileentity.FluxCrafterTileEntity;
 import net.minecraft.core.BlockPos;
@@ -51,6 +52,16 @@ public class FluxCrafterBlock extends BaseTileEntityBlock {
 		}
 
 		super.onRemove(state, level, pos, newState, isMoving);
+	}
+
+	@Override
+	protected boolean hasAnalogOutputSignal(BlockState state) {
+		return true;
+	}
+
+	@Override
+	protected int getAnalogOutputSignal(BlockState state, Level level, BlockPos pos) {
+		return BlockHelper.getRedstoneSignalFromInventory(level.getBlockEntity(pos));
 	}
 
 	@Override

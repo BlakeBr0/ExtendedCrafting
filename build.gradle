@@ -6,7 +6,7 @@ plugins {
     id 'net.neoforged.moddev' version '1.0.14'
 }
 
-version = '1.21.1-7.0.4'
+version = '1.21.1-7.0.5'
 group = 'com.blakebr0.extendedcrafting'
 
 base {

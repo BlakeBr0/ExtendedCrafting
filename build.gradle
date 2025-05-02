@@ -3,7 +3,7 @@ plugins {
     id 'eclipse'
     id 'idea'
     id 'maven-publish'
-    id 'net.neoforged.moddev' version '1.0.14'
+    id 'net.neoforged.moddev' version '2.0.83'
 }
 
 version = '1.21.1-7.0.5'
@@ -17,9 +17,8 @@ java.toolchain.languageVersion = JavaLanguageVersion.of(21)
 
 println "Java: ${System.getProperty 'java.version'}, JVM: ${System.getProperty 'java.vm.version'} (${System.getProperty 'java.vendor'}), Arch: ${System.getProperty 'os.arch'}"
 
-boolean isWorkspace = findProject(':Cucumber') != null
-
 repositories {
+    mavenLocal()
     maven { url 'https://maven.blakesmods.com' }
     maven { url 'https://maven.blamejared.com' }
     maven {
@@ -60,18 +59,13 @@ neoForge {
         configureEach {
             systemProperty 'forge.logging.markers', 'REGISTRIES'
             logLevel = org.slf4j.event.Level.DEBUG
+            ideName = "ExtendedCrafting - ${it.ideName.get()}"
         }
     }
 
     mods {
         extendedcrafting {
             sourceSet(sourceSets.main)
-        }
-
-        if (isWorkspace) {
-            cucumber {
-                sourceSet(project(':Cucumber').sourceSets.main)
-            }
         }
     }
 }
@@ -81,14 +75,7 @@ configurations {
 }
 
 dependencies {
-    if (isWorkspace) {
-        implementation(project(':Cucumber')) {
-            transitive = false
-        }
-    } else {
-        implementation "com.blakebr0.cucumber:Cucumber:${cucumber_version}"
-    }
-
+    implementation "com.blakebr0.cucumber:Cucumber:${cucumber_version}"
     implementation "curse.maven:jade-324717:${jade_version}"
     implementation "com.blamejared.crafttweaker:CraftTweaker-neoforge-${crafttweaker_version}"
 

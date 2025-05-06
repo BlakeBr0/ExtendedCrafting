@@ -29,6 +29,27 @@ repositories {
     }
 }
 
+tasks.register('syncTestDatapacks', Sync) {
+    if (file('run/saves').exists()) {
+        file('run/saves').eachDir { dir ->
+            project.sync {
+                from 'src/test/resources/datapacks'
+                into file(dir.path + '/datapacks')
+            }
+        }
+    }
+
+    project.sync {
+        from 'src/test/resources/datapacks'
+        into file('run/world/datapacks')
+    }
+}
+
+tasks.register('syncTestScripts', Sync) {
+    from 'src/test/resources/scripts'
+    into file('run/scripts')
+}
+
 neoForge {
     version = neo_version
 
@@ -61,6 +82,8 @@ neoForge {
             systemProperty 'terminal.jline', 'true'
             logLevel = org.slf4j.event.Level.DEBUG
             ideName = "ExtendedCrafting - ${it.ideName.get()}"
+            taskBefore tasks.named('syncTestDatapacks')
+            taskBefore tasks.named('syncTestScripts')
         }
     }
 
@@ -132,27 +155,3 @@ idea {
         downloadJavadoc = true
     }
 }
-
-tasks.register('addTestDatapacks', Copy) {
-    if (file('run/saves').exists()) {
-        file('run/saves').eachDir { dir ->
-            project.copy {
-                from 'src/test/resources/datapacks'
-                into file(dir.path + '/datapacks')
-            }
-        }
-    }
-
-    project.copy {
-        from 'src/test/resources/datapacks'
-        into file('run/world/datapacks')
-    }
-}
-
-tasks.register('addTestScripts', Copy) {
-    from 'src/test/resources/scripts'
-
-    into file('run/scripts')
-}
-
-tasks.processResources.finalizedBy('addTestDatapacks', 'addTestScripts')

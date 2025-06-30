@@ -228,13 +228,11 @@ public class EnderCrafterTileEntity extends BaseInventoryTileEntity implements M
 	}
 
 	public IEnderCrafterRecipe getActiveRecipe() {
-		if (this.level == null)
-			return null;
-
-		if (!this.isGridChanged) {
-			return this.recipe.get();
+		if (this.isGridChanged) {
+			this.isGridChanged = false;
+			return this.recipe.checkAndGet(this.inventory.toCraftingInput(3, 3, 0, 9), this.level);
 		}
 
-		return this.recipe.checkAndGet(this.inventory.toCraftingInput(3, 3, 0, 9), this.level);
+		return this.recipe.get();
 	}
 }

@@ -57,6 +57,10 @@ public class EliteTableContainer extends BaseContainerMenu {
 
 	@Override
 	public void slotsChanged(Container matrix) {
+        if (this.level.isClientSide) {
+            return;
+        }
+
 		var inventory = this.matrix.asCraftInput();
 		var recipe = this.level.getRecipeManager().getRecipeFor(ModRecipeTypes.TABLE.get(), inventory, this.level);
 

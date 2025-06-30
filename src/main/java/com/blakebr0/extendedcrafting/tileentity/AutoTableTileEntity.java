@@ -111,10 +111,14 @@ public abstract class AutoTableTileEntity extends BaseInventoryTileEntity implem
                                 var size = (recipeInventory.tier() * 2) + 1;
                                 var index = l + recipeInventory.left() + (k + recipeInventory.top()) * size;
                                 var remainingStack = remaining.get(l + k * recipeInventory.width());
-                                if (!remainingStack.isEmpty()) {
-                                    inventory.setStackInSlot(index, remainingStack);
-                                } else {
-                                    inventory.setStackInSlot(index, StackHelper.shrink(inventory.getStackInSlot(index), 1, false));
+                                var currentStack = inventory.getStackInSlot(index);
+
+                                inventory.setStackInSlot(index, StackHelper.shrink(currentStack, 1, false));
+
+                                currentStack = inventory.getStackInSlot(index);
+
+                                if (StackHelper.canCombineStacks(remainingStack, currentStack)) {
+                                    inventory.setStackInSlot(index, StackHelper.combineStacks(inventory.getStackInSlot(index), remainingStack));
                                 }
                             }
                         }

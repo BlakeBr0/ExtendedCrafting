@@ -61,6 +61,9 @@ public class BasicTableContainer extends BaseContainerMenu {
 
 	@Override
 	public void slotsChanged(Container matrix) {
+		if (this.level.isClientSide) {
+			return;
+		}
 		var recipe = this.level.getRecipeManager().getRecipeFor(ModRecipeTypes.TABLE.get(), matrix, this.level);
 
 		this.isVanillaRecipe = false;

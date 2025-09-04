@@ -23,10 +23,11 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.RecipeHolder;
 
-public class FluxCraftingCategory implements IRecipeCategory<IFluxCrafterRecipe> {
+public class FluxCraftingCategory implements IRecipeCategory<RecipeHolder<IFluxCrafterRecipe>> {
 	private static final ResourceLocation TEXTURE = ExtendedCrafting.resource("textures/jei/flux_crafting.png");
-	public static final RecipeType<IFluxCrafterRecipe> RECIPE_TYPE = RecipeType.create(ExtendedCrafting.MOD_ID, "flux_crafting", IFluxCrafterRecipe.class);
+	public static final RecipeType<RecipeHolder<IFluxCrafterRecipe>> RECIPE_TYPE = RecipeType.createRecipeHolderType(ExtendedCrafting.resource("flux_crafting"));
 
 	private final IDrawable background;
 	private final IDrawable icon;
@@ -37,7 +38,7 @@ public class FluxCraftingCategory implements IRecipeCategory<IFluxCrafterRecipe>
 	}
 
 	@Override
-	public RecipeType<IFluxCrafterRecipe> getRecipeType() {
+	public RecipeType<RecipeHolder<IFluxCrafterRecipe>> getRecipeType() {
 		return RECIPE_TYPE;
 	}
 
@@ -57,7 +58,9 @@ public class FluxCraftingCategory implements IRecipeCategory<IFluxCrafterRecipe>
 	}
 
 	@Override
-	public void getTooltip(ITooltipBuilder tooltip, IFluxCrafterRecipe recipe, IRecipeSlotsView recipeSlotsView, double mouseX, double mouseY) {
+	public void getTooltip(ITooltipBuilder tooltip, RecipeHolder<IFluxCrafterRecipe> recipeHolder, IRecipeSlotsView recipeSlotsView, double mouseX, double mouseY) {
+        var recipe = recipeHolder.value();
+        
 		if (mouseX > 1 && mouseX < 14 && mouseY > 1 && mouseY < 78) {
 			tooltip.add(Formatting.energy(recipe.getPowerRequired()));
 			tooltip.add(ModTooltips.PER_ALTERNATOR.args(Formatting.energyPerTick(recipe.getPowerRate())).color(ChatFormatting.WHITE).build());
@@ -65,7 +68,8 @@ public class FluxCraftingCategory implements IRecipeCategory<IFluxCrafterRecipe>
 	}
 
 	@Override
-	public void setRecipe(IRecipeLayoutBuilder builder, IFluxCrafterRecipe recipe, IFocusGroup focuses) {
+	public void setRecipe(IRecipeLayoutBuilder builder, RecipeHolder<IFluxCrafterRecipe> recipeHolder, IFocusGroup focuses) {
+        var recipe = recipeHolder.value();
 		var level = Minecraft.getInstance().level;
 
 		assert level != null;

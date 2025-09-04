@@ -21,10 +21,11 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.RecipeHolder;
 
-public class CompressorCraftingCategory implements IRecipeCategory<ICompressorRecipe> {
+public class CompressorCraftingCategory implements IRecipeCategory<RecipeHolder<ICompressorRecipe>> {
 	private static final ResourceLocation TEXTURE = ExtendedCrafting.resource("textures/jei/compressor.png");
-	public static final RecipeType<ICompressorRecipe> RECIPE_TYPE = RecipeType.create(ExtendedCrafting.MOD_ID, "compressor", ICompressorRecipe.class);
+	public static final RecipeType<RecipeHolder<ICompressorRecipe>> RECIPE_TYPE = RecipeType.createRecipeHolderType(ExtendedCrafting.resource("compressor"));
 
 	private final IDrawable background;
 	private final IDrawable icon;
@@ -35,7 +36,7 @@ public class CompressorCraftingCategory implements IRecipeCategory<ICompressorRe
 	}
 
 	@Override
-	public RecipeType<ICompressorRecipe> getRecipeType() {
+	public RecipeType<RecipeHolder<ICompressorRecipe>> getRecipeType() {
 		return RECIPE_TYPE;
 	}
 
@@ -55,7 +56,9 @@ public class CompressorCraftingCategory implements IRecipeCategory<ICompressorRe
 	}
 
 	@Override
-	public void getTooltip(ITooltipBuilder tooltip, ICompressorRecipe recipe, IRecipeSlotsView slots, double mouseX, double mouseY) {
+	public void getTooltip(ITooltipBuilder tooltip, RecipeHolder<ICompressorRecipe> recipeHolder, IRecipeSlotsView slots, double mouseX, double mouseY) {
+        var recipe = recipeHolder.value();
+
 		if (mouseX > 1 && mouseX < 14 && mouseY > 1 && mouseY < 78) {
 			tooltip.add(Formatting.energy(recipe.getPowerCost()));
 			tooltip.add(Formatting.energyPerTick(recipe.getPowerRate()));
@@ -67,7 +70,8 @@ public class CompressorCraftingCategory implements IRecipeCategory<ICompressorRe
 	}
 
 	@Override
-	public void setRecipe(IRecipeLayoutBuilder builder, ICompressorRecipe recipe, IFocusGroup focuses) {
+	public void setRecipe(IRecipeLayoutBuilder builder, RecipeHolder<ICompressorRecipe> recipeHolder, IFocusGroup focuses) {
+        var recipe = recipeHolder.value();
 		var level = Minecraft.getInstance().level;
 
 		assert level != null;

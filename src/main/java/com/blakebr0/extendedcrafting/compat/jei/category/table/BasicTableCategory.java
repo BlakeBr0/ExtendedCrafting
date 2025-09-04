@@ -24,10 +24,11 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.RecipeHolder;
 
-public class BasicTableCategory implements IRecipeCategory<ITableRecipe> {
+public class BasicTableCategory implements IRecipeCategory<RecipeHolder<ITableRecipe>> {
 	private static final ResourceLocation TEXTURE = ExtendedCrafting.resource("textures/jei/basic_crafting.png");
-	public static final RecipeType<ITableRecipe> RECIPE_TYPE = RecipeType.create(ExtendedCrafting.MOD_ID, "basic_crafting", ITableRecipe.class);
+	public static final RecipeType<RecipeHolder<ITableRecipe>> RECIPE_TYPE = RecipeType.createRecipeHolderType(ExtendedCrafting.resource("basic_crafting"));
 
 	private final IDrawable background;
 	private final IDrawable icon;
@@ -40,7 +41,7 @@ public class BasicTableCategory implements IRecipeCategory<ITableRecipe> {
 	}
 
 	@Override
-	public RecipeType<ITableRecipe> getRecipeType() {
+	public RecipeType<RecipeHolder<ITableRecipe>> getRecipeType() {
 		return RECIPE_TYPE;
 	}
 
@@ -60,7 +61,8 @@ public class BasicTableCategory implements IRecipeCategory<ITableRecipe> {
 	}
 
 	@Override
-	public void draw(ITableRecipe recipe, IRecipeSlotsView slots, GuiGraphics gfx, double mouseX, double mouseY) {
+	public void draw(RecipeHolder<ITableRecipe> recipeHolder, IRecipeSlotsView slots, GuiGraphics gfx, double mouseX, double mouseY) {
+        var recipe = recipeHolder.value();
 		var matrix = gfx.pose();
 
 		matrix.pushPose();
@@ -75,7 +77,8 @@ public class BasicTableCategory implements IRecipeCategory<ITableRecipe> {
 	}
 
 	@Override
-	public void getTooltip(ITooltipBuilder tooltip, ITableRecipe recipe, IRecipeSlotsView slots, double mouseX, double mouseY) {
+	public void getTooltip(ITooltipBuilder tooltip, RecipeHolder<ITableRecipe> recipeHolder, IRecipeSlotsView slots, double mouseX, double mouseY) {
+        var recipe = recipeHolder.value();
 		var shapeless = recipe instanceof ShapelessTableRecipe;
 		int sX = (shapeless ? 197 : 217) / 2, sY = 0;
 
@@ -85,7 +88,8 @@ public class BasicTableCategory implements IRecipeCategory<ITableRecipe> {
 	}
 
 	@Override
-	public void setRecipe(IRecipeLayoutBuilder builder, ITableRecipe recipe, IFocusGroup focuses) {
+	public void setRecipe(IRecipeLayoutBuilder builder, RecipeHolder<ITableRecipe> recipeHolder, IFocusGroup focuses) {
+        var recipe = recipeHolder.value();
 		var level = Minecraft.getInstance().level;
 
 		assert level != null;

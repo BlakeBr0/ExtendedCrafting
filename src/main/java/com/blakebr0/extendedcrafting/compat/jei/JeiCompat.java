@@ -109,15 +109,14 @@ public final class JeiCompat implements IModPlugin {
             var manager = level.getRecipeManager();
 
             if (ModConfigs.ENABLE_CRAFTING_CORE.get()) {
-                registration.addRecipes(CombinationCraftingCategory.RECIPE_TYPE, RecipeHelper.byTypeValues(manager, ModRecipeTypes.COMBINATION.get()));
+                registration.addRecipes(CombinationCraftingCategory.RECIPE_TYPE, RecipeHelper.byType(manager, ModRecipeTypes.COMBINATION.get()).stream().toList());
             }
 
             if (ModConfigs.ENABLE_TABLES.get()) {
                 var recipes = Stream.of(1, 2, 3, 4).collect(Collectors.toMap(tier -> tier, tier ->
                         RecipeHelper.byType(manager, ModRecipeTypes.TABLE.get())
                                 .stream()
-                                .map(RecipeHolder::value)
-                                .filter(recipe -> recipe.hasRequiredTier() ? tier == recipe.getTier() : tier >= recipe.getTier())
+                                .filter(recipe -> recipe.value().hasRequiredTier() ? tier == recipe.value().getTier() : tier >= recipe.value().getTier())
                                 .toList()
                 ));
 
@@ -128,15 +127,15 @@ public final class JeiCompat implements IModPlugin {
             }
 
             if (ModConfigs.ENABLE_COMPRESSOR.get()) {
-                registration.addRecipes(CompressorCraftingCategory.RECIPE_TYPE, RecipeHelper.byTypeValues(manager, ModRecipeTypes.COMPRESSOR.get()));
+                registration.addRecipes(CompressorCraftingCategory.RECIPE_TYPE, RecipeHelper.byType(manager, ModRecipeTypes.COMPRESSOR.get()).stream().toList());
             }
 
             if (ModConfigs.ENABLE_ENDER_CRAFTER.get()) {
-                registration.addRecipes(EnderCrafterCategory.RECIPE_TYPE, RecipeHelper.byTypeValues(manager, ModRecipeTypes.ENDER_CRAFTER.get()));
+                registration.addRecipes(EnderCrafterCategory.RECIPE_TYPE, RecipeHelper.byType(manager, ModRecipeTypes.ENDER_CRAFTER.get()).stream().toList());
             }
 
             if (ModConfigs.ENABLE_FLUX_CRAFTER.get()) {
-                registration.addRecipes(FluxCraftingCategory.RECIPE_TYPE, RecipeHelper.byTypeValues(manager, ModRecipeTypes.FLUX_CRAFTER.get()));
+                registration.addRecipes(FluxCraftingCategory.RECIPE_TYPE, RecipeHelper.byType(manager, ModRecipeTypes.FLUX_CRAFTER.get()).stream().toList());
             }
         }
     }

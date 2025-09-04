@@ -19,12 +19,13 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.RecipeHolder;
 
 import java.awt.*;
 
-public class CombinationCraftingCategory implements IRecipeCategory<ICombinationRecipe> {
+public class CombinationCraftingCategory implements IRecipeCategory<RecipeHolder<ICombinationRecipe>> {
 	private static final ResourceLocation TEXTURE = ExtendedCrafting.resource("textures/jei/combination_crafting.png");
-	public static final RecipeType<ICombinationRecipe> RECIPE_TYPE = RecipeType.create(ExtendedCrafting.MOD_ID, "combination", ICombinationRecipe.class);
+	public static final RecipeType<RecipeHolder<ICombinationRecipe>> RECIPE_TYPE = RecipeType.createRecipeHolderType(ExtendedCrafting.resource("combination"));
 
 	private final IDrawable background;
 	private final IDrawable icon;
@@ -34,12 +35,12 @@ public class CombinationCraftingCategory implements IRecipeCategory<ICombination
 		this.icon = helper.createDrawableIngredient(VanillaTypes.ITEM_STACK, new ItemStack(ModBlocks.CRAFTING_CORE.get()));
 	}
 
-	@Override
-	public RecipeType<ICombinationRecipe> getRecipeType() {
-		return RECIPE_TYPE;
-	}
+    @Override
+    public RecipeType<RecipeHolder<ICombinationRecipe>> getRecipeType() {
+        return RECIPE_TYPE;
+    }
 
-	@Override
+    @Override
 	public Component getTitle() {
 		return Localizable.of("jei.category.extendedcrafting.combination").build();
 	}
@@ -54,8 +55,10 @@ public class CombinationCraftingCategory implements IRecipeCategory<ICombination
 		return this.icon;
 	}
 
-	@Override
-	public void getTooltip(ITooltipBuilder tooltip, ICombinationRecipe recipe, IRecipeSlotsView slots, double mouseX, double mouseY) {
+    @Override
+	public void getTooltip(ITooltipBuilder tooltip, RecipeHolder<ICombinationRecipe> recipeHolder, IRecipeSlotsView slots, double mouseX, double mouseY) {
+        var recipe = recipeHolder.value();
+
 		if (mouseX > 1 && mouseX < 14 && mouseY > 9 && mouseY < 86) {
 			tooltip.add(Formatting.energy(recipe.getPowerCost()));
 			tooltip.add(Formatting.energyPerTick(recipe.getPowerRate()));
@@ -67,7 +70,8 @@ public class CombinationCraftingCategory implements IRecipeCategory<ICombination
 	}
 
 	@Override
-	public void setRecipe(IRecipeLayoutBuilder builder, ICombinationRecipe recipe, IFocusGroup focuses) {
+	public void setRecipe(IRecipeLayoutBuilder builder, RecipeHolder<ICombinationRecipe> recipeHolder, IFocusGroup focuses) {
+        var recipe = recipeHolder.value();
 		var level = Minecraft.getInstance().level;
 
 		assert level != null;

@@ -24,10 +24,11 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.RecipeHolder;
 
-public class EnderCrafterCategory implements IRecipeCategory<IEnderCrafterRecipe> {
+public class EnderCrafterCategory implements IRecipeCategory<RecipeHolder<IEnderCrafterRecipe>> {
 	private static final ResourceLocation TEXTURE = ExtendedCrafting.resource("textures/jei/ender_crafting.png");
-	public static final RecipeType<IEnderCrafterRecipe> RECIPE_TYPE = RecipeType.create(ExtendedCrafting.MOD_ID, "ender_crafting", IEnderCrafterRecipe.class);
+	public static final RecipeType<RecipeHolder<IEnderCrafterRecipe>> RECIPE_TYPE = RecipeType.createRecipeHolderType(ExtendedCrafting.resource("ender_crafting"));
 
 	private final IDrawable background;
 	private final IDrawableAnimated arrow;
@@ -43,7 +44,7 @@ public class EnderCrafterCategory implements IRecipeCategory<IEnderCrafterRecipe
 	}
 
 	@Override
-	public RecipeType<IEnderCrafterRecipe> getRecipeType() {
+	public RecipeType<RecipeHolder<IEnderCrafterRecipe>> getRecipeType() {
 		return RECIPE_TYPE;
 	}
 
@@ -63,19 +64,22 @@ public class EnderCrafterCategory implements IRecipeCategory<IEnderCrafterRecipe
 	}
 
 	@Override
-	public void draw(IEnderCrafterRecipe recipe, IRecipeSlotsView slots, GuiGraphics gfx, double mouseX, double mouseY) {
+	public void draw(RecipeHolder<IEnderCrafterRecipe> recipe, IRecipeSlotsView slots, GuiGraphics gfx, double mouseX, double mouseY) {
 		this.arrow.draw(gfx, 61, 19);
 	}
 
 	@Override
-	public void getTooltip(ITooltipBuilder tooltip, IEnderCrafterRecipe recipe, IRecipeSlotsView slots, double mouseX, double mouseY) {
+	public void getTooltip(ITooltipBuilder tooltip, RecipeHolder<IEnderCrafterRecipe> recipeHolder, IRecipeSlotsView slots, double mouseX, double mouseY) {
+        var recipe = recipeHolder.value();
+
 		if (mouseX > 60 && mouseX < 83 && mouseY > 19 && mouseY < 34) {
 			tooltip.add(ModTooltips.SECONDS.args(recipe.getCraftingTime()).color(ChatFormatting.WHITE).build());
 		}
 	}
 
 	@Override
-	public void setRecipe(IRecipeLayoutBuilder builder, IEnderCrafterRecipe recipe, IFocusGroup focuses) {
+	public void setRecipe(IRecipeLayoutBuilder builder, RecipeHolder<IEnderCrafterRecipe> recipeHolder, IFocusGroup focuses) {
+        var recipe = recipeHolder.value();
 		var level = Minecraft.getInstance().level;
 
 		assert level != null;

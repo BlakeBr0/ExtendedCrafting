@@ -34,8 +34,3 @@ license="MIT"
         versionRange="[${cucumber_version},)"
         ordering="NONE"
         side="BOTH"
-    [[dependencies.extendedcrafting]]
-        modId="jei"
-        mandatory=false
-        versionRange="[19.16.5.185,)"
-        ordering="NONE"

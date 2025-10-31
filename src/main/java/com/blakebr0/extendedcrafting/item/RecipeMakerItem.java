@@ -453,9 +453,23 @@ public class RecipeMakerItem extends BaseItem {
 		object.addProperty("type", "extendedcrafting:combination");
 		object.addProperty("power_cost", 100000);
 
-		var input = core.getInventory().getStackInSlot(0);
+        {
+            var stack = core.getInventory().getStackInSlot(0);
 
-		object.add("input", ItemStack.OPTIONAL_CODEC.encodeStart(JsonOps.INSTANCE, input).getOrThrow());
+            Ingredient ingredient;
+            var components = stack.getComponentsPatch()
+                    .split()
+                    .added()
+                    .filter(Predicate.not(DataComponentType::isTransient));
+
+            if (ModConfigs.RECIPE_MAKER_USE_DATA_COMPONENTS.get() && !components.isEmpty()) {
+                ingredient = DataComponentIngredient.of(false, components, stack.getItem());
+            } else {
+                ingredient = Ingredient.of(stack);
+            }
+
+            object.add("input", Ingredient.CODEC.encodeStart(JsonOps.INSTANCE, ingredient).getOrThrow());
+        }
 
 		var ingredients = new JsonArray();
 		var stacks = core.getPedestalsWithItems().values().stream().filter(s -> !s.isEmpty()).toArray(ItemStack[]::new);

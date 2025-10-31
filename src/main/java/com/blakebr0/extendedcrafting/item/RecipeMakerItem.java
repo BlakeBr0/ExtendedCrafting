@@ -19,12 +19,15 @@ import com.blakebr0.extendedcrafting.tileentity.UltimateTableTileEntity;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.mojang.serialization.DynamicOps;
 import com.mojang.serialization.JsonOps;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.RegistryOps;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
@@ -86,9 +89,11 @@ public class RecipeMakerItem extends BaseItem {
 							: makeShapedCraftTweakerTableRecipe(inventory, table);
 
 				} else {
+                    var ops = RegistryOps.create(JsonOps.INSTANCE, level.registryAccess());
+
 					string = isShapeless(stack)
-							? makeShapelessDatapackTableRecipe(inventory, table)
-							: makeShapedDatapackTableRecipe(inventory, table);
+							? makeShapelessDatapackTableRecipe(inventory, table, ops)
+							: makeShapedDatapackTableRecipe(inventory, table, ops);
 
 					if ("TOO MANY ITEMS".equals(string)) {
 						player.sendSystemMessage(Localizable.of("message.extendedcrafting.max_unique_items_exceeded").args(KEYS.length).build());
@@ -110,9 +115,10 @@ public class RecipeMakerItem extends BaseItem {
 		} else if (tile instanceof CraftingCoreTileEntity core) {
 			if (level.isClientSide()) {
 				var type = getType(stack);
+                var ops = RegistryOps.create(JsonOps.INSTANCE, level.registryAccess());
 				var string = "CraftTweaker".equals(type)
 						? makeCraftTweakerCombinationRecipe(core)
-						: makeDatapackCombinationRecipe(core);
+						: makeDatapackCombinationRecipe(core, ops);
 
 				setClipboard(string);
 
@@ -313,7 +319,7 @@ public class RecipeMakerItem extends BaseItem {
 	}
 
 	// Create a shaped Datapack recipe for a Table, Flux Crafter or Ender Crafter
-	private static String makeShapedDatapackTableRecipe(IItemHandler inventory, TableType type) {
+	private static String makeShapedDatapackTableRecipe(IItemHandler inventory, TableType type, DynamicOps<JsonElement> ops) {
 		var object = new JsonObject();
 
 		object.addProperty("type", type.shapedRecipeType);
@@ -380,7 +386,7 @@ public class RecipeMakerItem extends BaseItem {
 		var key = new JsonObject();
 
 		for (var entry : keys) {
-			key.add(entry.getValue().toString(), Ingredient.CODEC.encodeStart(JsonOps.INSTANCE, entry.getKey()).getOrThrow());
+			key.add(entry.getValue().toString(), Ingredient.CODEC.encodeStart(ops, entry.getKey()).getOrThrow());
 		}
 
 		object.add("key", key);
@@ -394,7 +400,7 @@ public class RecipeMakerItem extends BaseItem {
 	}
 
 	// Create a shapeless Datapack recipe for a Table Flux Crafter or Ender Crafter
-	private static String makeShapelessDatapackTableRecipe(IItemHandler inventory, TableType type) {
+	private static String makeShapelessDatapackTableRecipe(IItemHandler inventory, TableType type, DynamicOps<JsonElement> ops) {
 		var object = new JsonObject();
 
 		object.addProperty("type", type.shapelessRecipeType);
@@ -431,7 +437,7 @@ public class RecipeMakerItem extends BaseItem {
 						ingredient = Ingredient.of(stack);
 					}
 
-					ingredients.add(Ingredient.CODEC.encodeStart(JsonOps.INSTANCE, ingredient).getOrThrow());
+					ingredients.add(Ingredient.CODEC.encodeStart(ops, ingredient).getOrThrow());
 				}
 			}
 		}
@@ -447,7 +453,7 @@ public class RecipeMakerItem extends BaseItem {
 	}
 
 	// Create a Datapack recipe for a combination crafting recipe
-	private static String makeDatapackCombinationRecipe(CraftingCoreTileEntity core) {
+	private static String makeDatapackCombinationRecipe(CraftingCoreTileEntity core, DynamicOps<JsonElement> ops) {
 		var object = new JsonObject();
 
 		object.addProperty("type", "extendedcrafting:combination");
@@ -468,7 +474,7 @@ public class RecipeMakerItem extends BaseItem {
                 ingredient = Ingredient.of(stack);
             }
 
-            object.add("input", Ingredient.CODEC.encodeStart(JsonOps.INSTANCE, ingredient).getOrThrow());
+            object.add("input", Ingredient.CODEC.encodeStart(ops, ingredient).getOrThrow());
         }
 
 		var ingredients = new JsonArray();
@@ -495,7 +501,7 @@ public class RecipeMakerItem extends BaseItem {
 					ingredient = Ingredient.of(stack);
 				}
 
-				ingredients.add(Ingredient.CODEC.encodeStart(JsonOps.INSTANCE, ingredient).getOrThrow());
+				ingredients.add(Ingredient.CODEC.encodeStart(ops, ingredient).getOrThrow());
 			}
 		}
 

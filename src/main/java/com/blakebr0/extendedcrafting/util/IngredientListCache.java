@@ -1,5 +1,6 @@
 package com.blakebr0.extendedcrafting.util;
 
+import it.unimi.dsi.fastutil.Function;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.minecraft.core.NonNullList;
 import net.minecraft.network.chat.Component;
@@ -15,6 +16,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.function.Supplier;
 
 public class IngredientListCache {
     private static final IngredientListCache INSTANCE = new IngredientListCache();
@@ -24,8 +26,8 @@ public class IngredientListCache {
         this.lists = new Object2ObjectOpenHashMap<>();
     }
 
-    public List<Component> getIngredientsList(Recipe<?> recipe) {
-        return this.lists.computeIfAbsent(recipe, r -> createIngredientsList(recipe.getIngredients()))
+    public List<Component> getIngredientsList(Recipe<?> recipe, Supplier<NonNullList<Ingredient>> ingredients) {
+        return this.lists.computeIfAbsent(recipe, r -> createIngredientsList(ingredients.get()))
                 .stream()
                 .map(l -> {
                     var index = (System.currentTimeMillis() / 2000L) % l.size();

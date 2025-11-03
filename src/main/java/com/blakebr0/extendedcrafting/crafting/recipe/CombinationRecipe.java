@@ -154,7 +154,12 @@ public class CombinationRecipe implements ICombinationRecipe {
 
 	@Override
 	public List<Component> getInputsList() {
-		return IngredientListCache.getInstance().getIngredientsList(this);
+		return IngredientListCache.getInstance().getIngredientsList(this, () -> {
+            var ingredients = NonNullList.<Ingredient>create();
+            ingredients.add(this.input);
+            ingredients.addAll(this.inputs);
+            return ingredients;
+        });
 	}
 
     public void setTransformer(BiFunction<Integer, ItemStack, ItemStack> transformer) {

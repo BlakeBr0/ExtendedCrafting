@@ -23,6 +23,7 @@ import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.common.util.RecipeMatcher;
 
 import java.util.List;
+import java.util.function.BiFunction;
 
 public class CombinationRecipe implements ICombinationRecipe {
 	private final ItemStack result;
@@ -30,6 +31,8 @@ public class CombinationRecipe implements ICombinationRecipe {
 	private final NonNullList<Ingredient> inputs;
 	private final int powerCost;
 	private final int powerRate;
+    // for CraftTweaker recipes
+    private BiFunction<Integer, ItemStack, ItemStack> transformer;
 
 	public CombinationRecipe(Ingredient input, NonNullList<Ingredient> inputs, ItemStack result, int powerCost, int powerRate) {
 		this.input = input;
@@ -96,6 +99,44 @@ public class CombinationRecipe implements ICombinationRecipe {
 		return true;
 	}
 
+    @Override
+    public NonNullList<ItemStack> getRemainingItems(CraftingInput inventory) {
+        var remaining = NonNullList.withSize(inventory.size(), ItemStack.EMPTY);
+
+        for (int i = 0; i < remaining.size(); ++i) {
+            var item = inventory.getItem(i);
+            if (item.hasCraftingRemainingItem()) {
+                remaining.set(i, item.getCraftingRemainingItem());
+            }
+        }
+
+        if (this.transformer != null) {
+            var used = new boolean[remaining.size()];
+            var inputs = NonNullList.<Ingredient>create();
+
+            inputs.add(this.input);
+            inputs.addAll(this.inputs);
+
+            for (int i = 0; i < remaining.size(); i++) {
+                var stack = inventory.getItem(i);
+                for (int j = 0; j < inputs.size(); j++) {
+                    var input = inputs.get(j);
+
+                    if (!used[j] && input.test(stack)) {
+                        var ingredient = this.transformer.apply(j, stack);
+
+                        used[j] = true;
+                        remaining.set(i, ingredient);
+
+                        break;
+                    }
+                }
+            }
+        }
+
+        return remaining;
+    }
+
 	@Override
 	public Ingredient getInput() {
 		return this.input;
@@ -115,6 +156,10 @@ public class CombinationRecipe implements ICombinationRecipe {
 	public List<Component> getInputsList() {
 		return IngredientListCache.getInstance().getIngredientsList(this);
 	}
+
+    public void setTransformer(BiFunction<Integer, ItemStack, ItemStack> transformer) {
+        this.transformer = transformer;
+    }
 
 	public static class Serializer implements RecipeSerializer<CombinationRecipe> {
 		public static final MapCodec<CombinationRecipe> CODEC = RecordCodecBuilder.mapCodec(builder ->

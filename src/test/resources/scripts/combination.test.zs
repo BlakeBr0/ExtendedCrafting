@@ -5,6 +5,10 @@
 	<item:minecraft:hopper>, <item:minecraft:hopper>, <item:minecraft:hopper>, <item:minecraft:hopper>, <item:minecraft:hopper>
 ], 100000);
 
+<recipetype:extendedcrafting:combination>.addRecipe("test_combination_transformer", <item:minecraft:cobblestone>, <item:minecraft:carrot>, [
+	<item:minecraft:hopper>.reuse(), <item:minecraft:iron_ingot>, <item:minecraft:gold_ingot>
+], 100000);
+
 var recipes = <recipetype:extendedcrafting:combination>.allRecipes;
 
 println("There are " + recipes.length + " combination crafting recipes");

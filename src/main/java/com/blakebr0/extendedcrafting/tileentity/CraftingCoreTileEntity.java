@@ -32,7 +32,7 @@ import net.minecraft.world.item.crafting.CraftingInput;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class CraftingCoreTileEntity extends BaseInventoryTileEntity implements MenuProvider {
@@ -90,20 +90,26 @@ public class CraftingCoreTileEntity extends BaseInventoryTileEntity implements M
 				var pedestalsWithItems = tile.getPedestalsWithItems();
 
 				if (done) {
+                    var input = tile.toCraftingInput();
+                    var remaining = recipe.getRemainingItems(input);
+                    int index = 1; // 0 is the center item
+
 					for (var pedestalPos : pedestalsWithItems.keySet()) {
 						var pedestalTile = level.getBlockEntity(pedestalPos);
 
 						if (pedestalTile instanceof PedestalTileEntity pedestal) {
 							var inventory = pedestal.getInventory();
 
-							inventory.setStackInSlot(0, StackHelper.shrink(inventory.getStackInSlot(0), 1, true));
+							inventory.setStackInSlot(0, remaining.get(index));
 
 							tile.spawnParticles(ParticleTypes.SMOKE, pedestalPos, 1.1, 20);
 						}
+
+                        index++;
 					}
 
 					tile.spawnParticles(ParticleTypes.END_ROD, pos, 1.1, 50);
-					tile.inventory.setStackInSlot(0, recipe.assemble(tile.toCraftingInput(), level.registryAccess()));
+					tile.inventory.setStackInSlot(0, recipe.assemble(input, level.registryAccess()));
 					tile.progress = 0;
 					tile.setChangedFast();
 				} else {
@@ -218,7 +224,7 @@ public class CraftingCoreTileEntity extends BaseInventoryTileEntity implements M
 	}
 
 	public Map<BlockPos, ItemStack> getPedestalsWithItems() {
-		Map<BlockPos, ItemStack> pedestals = new HashMap<>();
+		Map<BlockPos, ItemStack> pedestals = new LinkedHashMap<>();
 		var world = this.getLevel();
 
 		int pedestalCount = 0;

@@ -10,6 +10,7 @@ import com.blamejared.crafttweaker.api.action.recipe.ActionAddRecipe;
 import com.blamejared.crafttweaker.api.annotation.ZenRegister;
 import com.blamejared.crafttweaker.api.ingredient.IIngredient;
 import com.blamejared.crafttweaker.api.item.IItemStack;
+import com.blamejared.crafttweaker.api.item.MCItemStack;
 import com.blamejared.crafttweaker.api.recipe.manager.base.IRecipeManager;
 import net.minecraft.core.NonNullList;
 import net.minecraft.world.item.crafting.Ingredient;
@@ -37,6 +38,10 @@ public final class CombinationCrafting implements IRecipeManager<ICombinationRec
 	public void addRecipe(String name, IItemStack output, IIngredient input, IIngredient[] inputs, int cost, int perTick) {
 		var id = CraftTweakerConstants.rl(this.fixRecipeName(name));
 		var recipe = new CombinationRecipe(input.asVanillaIngredient(), toIngredientsList(inputs), output.getInternal(), cost, perTick);
+
+        recipe.setTransformer((slot, stack) -> slot == 0
+                ? input.getRemainingItem(new MCItemStack(stack)).getInternal()
+                : inputs[slot - 1].getRemainingItem(new MCItemStack(stack)).getInternal());
 
 		CraftTweakerAPI.apply(new ActionAddRecipe<>(this, new RecipeHolder<>(id, recipe)));
 	}

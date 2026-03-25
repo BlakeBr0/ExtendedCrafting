@@ -3,7 +3,7 @@ plugins {
     id 'eclipse'
     id 'idea'
     id 'maven-publish'
-    id 'net.neoforged.moddev' version '2.0.83'
+    id 'net.neoforged.moddev' version '2.0.141'
 }
 
 version = '1.21.1-7.0.8'
@@ -13,7 +13,7 @@ base {
     archivesName = 'ExtendedCrafting'
 }
 
-java.toolchain.languageVersion = JavaLanguageVersion.of(21)
+java.toolchain.languageVersion = JavaLanguageVersion.of(25)
 
 println "Java: ${System.getProperty 'java.version'}, JVM: ${System.getProperty 'java.vm.version'} (${System.getProperty 'java.vendor'}), Arch: ${System.getProperty 'os.arch'}"
 
@@ -53,11 +53,6 @@ tasks.register('syncTestScripts', Sync) {
 neoForge {
     version = neo_version
 
-    parchment {
-        mappingsVersion = parchment_mappings_version
-        minecraftVersion = parchment_minecraft_version
-    }
-
     runs {
         client {
             client()
@@ -65,16 +60,6 @@ neoForge {
 
         server {
             server()
-        }
-
-        gameTestServer {
-            type = "gameTestServer"
-        }
-
-        data {
-            data()
-
-            // programArguments.addAll '--mod', project.mod_id, '--all', '--output', file('src/generated/resources/').getAbsolutePath(), '--existing', file('src/main/resources/').getAbsolutePath()
         }
 
         configureEach {
@@ -110,6 +95,9 @@ dependencies {
     compileOnly "mezz.jei:jei-${jei_mc_version}-neoforge-api:${jei_version}"
 }
 
+java.withSourcesJar()
+java.withJavadocJar()
+
 tasks.withType(ProcessResources).configureEach {
     var replaceProperties = [
             mod_version            : version.split('-').last(),
@@ -125,7 +113,7 @@ tasks.withType(ProcessResources).configureEach {
 publishing {
     publications {
         maven(MavenPublication) {
-            artifact jar
+            from components.java
         }
     }
 

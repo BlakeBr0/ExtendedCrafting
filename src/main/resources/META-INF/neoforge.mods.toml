@@ -1,5 +1,3 @@
-modLoader="javafml"
-loaderVersion="[4,)"
 license="MIT"
 
 [[mods]]
@@ -7,7 +5,7 @@ license="MIT"
     modId="extendedcrafting"
     version="${mod_version}"
     displayName="Extended Crafting"
-    updateJSONURL="https://api.blakesmods.com/v2/mods/extendedcrafting/1.21/updates"
+    updateJSONURL="https://api.blakesmods.com/v2/mods/extendedcrafting/26.1/updates"
     displayURL="https://blakesmods.com/extended-crafting"
     # logoFile="examplemod.png"
     authors="BlakeBr0"
@@ -19,13 +17,13 @@ license="MIT"
     [[dependencies.extendedcrafting]]
         modId="neoforge"
         mandatory=true
-        versionRange="[21.0.0-beta,)"
+        versionRange="[26.1.0.0-beta,)"
         ordering="NONE"
         side="BOTH"
     [[dependencies.extendedcrafting]]
         modId="minecraft"
         mandatory=true
-        versionRange="[1.21,1.21.1)"
+        versionRange="[26.1)"
         ordering="NONE"
         side="BOTH"
     [[dependencies.extendedcrafting]]

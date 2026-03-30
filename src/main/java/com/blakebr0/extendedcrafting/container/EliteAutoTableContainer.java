@@ -1,7 +1,7 @@
 package com.blakebr0.extendedcrafting.container;
 
 import com.blakebr0.cucumber.container.BaseContainerMenu;
-import com.blakebr0.cucumber.inventory.BaseItemStackHandler;
+import com.blakebr0.cucumber.inventory.CItemStacksHandler;
 import com.blakebr0.extendedcrafting.container.inventory.ExtendedCraftingInventory;
 import com.blakebr0.extendedcrafting.container.slot.AutoTableOutputSlot;
 import com.blakebr0.extendedcrafting.container.slot.TableOutputSlot;
@@ -10,6 +10,7 @@ import com.blakebr0.extendedcrafting.init.ModRecipeTypes;
 import com.blakebr0.extendedcrafting.tileentity.AutoTableTileEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -28,7 +29,7 @@ public class EliteAutoTableContainer extends BaseContainerMenu {
 		this(type, id, playerInventory, AutoTableTileEntity.Elite.createInventoryHandler(), buffer.readBlockPos());
 	}
 
-	private EliteAutoTableContainer(MenuType<?> type, int id, Inventory playerInventory, BaseItemStackHandler inventory, BlockPos pos) {
+	private EliteAutoTableContainer(MenuType<?> type, int id, Inventory playerInventory, CItemStacksHandler inventory, BlockPos pos) {
 		super(type, id, pos);
 		this.level = playerInventory.player.level();
 		this.result = new ResultContainer();
@@ -60,15 +61,15 @@ public class EliteAutoTableContainer extends BaseContainerMenu {
 
 	@Override
 	public void slotsChanged(Container matrix) {
-        if (this.level.isClientSide) {
+        if (this.level.isClientSide()) {
             return;
         }
 
 		var inventory = this.matrix.asCraftInput();
-		var recipe = this.level.getRecipeManager().getRecipeFor(ModRecipeTypes.TABLE.get(), inventory, this.level);
+		var recipe = ((ServerLevel) this.level).recipeAccess().getRecipeFor(ModRecipeTypes.TABLE.get(), inventory, this.level);
 
 		if (recipe.isPresent()) {
-			var result = recipe.get().value().assemble(inventory, this.level.registryAccess());
+			var result = recipe.get().value().assemble(inventory);
 			this.result.setItem(0, result);
 		} else {
 			this.result.setItem(0, ItemStack.EMPTY);
@@ -120,7 +121,7 @@ public class EliteAutoTableContainer extends BaseContainerMenu {
 		return new EliteAutoTableContainer(ModMenuTypes.ELITE_AUTO_TABLE.get(), windowId, playerInventory, buffer);
 	}
 
-	public static EliteAutoTableContainer create(int windowId, Inventory playerInventory, BaseItemStackHandler inventory, BlockPos pos) {
+	public static EliteAutoTableContainer create(int windowId, Inventory playerInventory, CItemStacksHandler inventory, BlockPos pos) {
 		return new EliteAutoTableContainer(ModMenuTypes.ELITE_AUTO_TABLE.get(), windowId, playerInventory, inventory, pos);
 	}
 }

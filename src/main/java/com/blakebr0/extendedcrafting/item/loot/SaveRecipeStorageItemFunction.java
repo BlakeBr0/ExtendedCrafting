@@ -57,7 +57,7 @@ public class SaveRecipeStorageItemFunction implements LootItemFunction {
 
     private static void save(ItemStack stack, TableRecipeStorage storage, Level level) {
         var count = storage.getRecipeCount();
-        var data = storage.serializeNBT(level.registryAccess());
+        var data = storage.serialize(level.registryAccess());
         stack.set(ModDataComponentTypes.TABLE_RECIPE_STORAGE, new TableRecipeStorageComponent(count, data));
     }
 }

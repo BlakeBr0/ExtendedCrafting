@@ -5,9 +5,10 @@ import com.blakebr0.cucumber.helper.BlockHelper;
 import com.blakebr0.extendedcrafting.init.ModTileEntities;
 import com.blakebr0.extendedcrafting.tileentity.FluxCrafterTileEntity;
 import net.minecraft.core.BlockPos;
-import net.minecraft.world.Containers;
+import net.minecraft.core.Direction;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.ItemInteractionResult;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -19,8 +20,8 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 
 public class FluxCrafterBlock extends BaseTileEntityBlock {
-	public FluxCrafterBlock() {
-		super(SoundType.METAL, 6.0F, 12.0F, true);
+	public FluxCrafterBlock(Identifier id) {
+		super(id, SoundType.METAL, 6.0F, 12.0F, true);
 	}
 
 	@Override
@@ -29,7 +30,7 @@ public class FluxCrafterBlock extends BaseTileEntityBlock {
 	}
 
 	@Override
-	protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
+	protected InteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
 		if (!level.isClientSide()) {
 			var tile = level.getBlockEntity(pos);
 
@@ -38,20 +39,7 @@ public class FluxCrafterBlock extends BaseTileEntityBlock {
 			}
 		}
 
-		return ItemInteractionResult.SUCCESS;
-	}
-
-	@Override
-	public void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean isMoving) {
-		if (state.getBlock() != newState.getBlock()) {
-			var tile = level.getBlockEntity(pos);
-
-			if (tile instanceof FluxCrafterTileEntity table) {
-				Containers.dropContents(level, pos, table.getInventory().getStacks());
-			}
-		}
-
-		super.onRemove(state, level, pos, newState, isMoving);
+		return InteractionResult.SUCCESS;
 	}
 
 	@Override
@@ -60,7 +48,7 @@ public class FluxCrafterBlock extends BaseTileEntityBlock {
 	}
 
 	@Override
-	protected int getAnalogOutputSignal(BlockState state, Level level, BlockPos pos) {
+	protected int getAnalogOutputSignal(BlockState state, Level level, BlockPos pos, Direction direction) {
 		return BlockHelper.getRedstoneSignalFromInventory(level.getBlockEntity(pos));
 	}
 

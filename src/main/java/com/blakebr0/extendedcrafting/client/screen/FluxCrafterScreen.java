@@ -6,11 +6,11 @@ import com.blakebr0.extendedcrafting.container.FluxCrafterContainer;
 import com.blakebr0.extendedcrafting.tileentity.FluxCrafterTileEntity;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Inventory;
 
 public class FluxCrafterScreen extends BaseContainerScreen<FluxCrafterContainer> {
-	private static final ResourceLocation BACKGROUND = ExtendedCrafting.resource("textures/gui/flux_crafter.png");
+	private static final Identifier BACKGROUND = ExtendedCrafting.resource("textures/gui/flux_crafter.png");
 	private FluxCrafterTileEntity tile;
 
 	public FluxCrafterScreen(FluxCrafterContainer container, Inventory inventory, Component title) {

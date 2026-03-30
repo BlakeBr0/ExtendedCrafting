@@ -88,7 +88,6 @@
   "tooltip.extendedcrafting.mode": "모드: %s",
   "tooltip.extendedcrafting.num_items": "아이템 %s개",
   "tooltip.extendedcrafting.requires_table": "%s티어 조합대가 필요합니다.",
-  "tooltip.extendedcrafting.items_required": "필요한 아이템:",
   "tooltip.extendedcrafting.singularity_id": "특이점 ID: %s",
   "tooltip.extendedcrafting.added_by": "추가됨: %s",
 
@@ -120,6 +119,5 @@
   "singularity.extendedcrafting.nickel": "니켈",
   "singularity.extendedcrafting.electrum": "호박금",
   "singularity.extendedcrafting.invar": "불변강",
-  "singularity.extendedcrafting.uranium": "우라늄",
   "singularity.extendedcrafting.platinum": "백금"
 }

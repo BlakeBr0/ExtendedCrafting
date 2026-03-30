@@ -21,12 +21,12 @@ import mezz.jei.api.recipe.category.IRecipeCategory;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeHolder;
 
 public class FluxCraftingCategory implements IRecipeCategory<RecipeHolder<IFluxCrafterRecipe>> {
-	private static final ResourceLocation TEXTURE = ExtendedCrafting.resource("textures/jei/flux_crafting.png");
+	private static final Identifier TEXTURE = ExtendedCrafting.resource("textures/jei/flux_crafting.png");
 	public static final RecipeType<RecipeHolder<IFluxCrafterRecipe>> RECIPE_TYPE = RecipeType.createRecipeHolderType(ExtendedCrafting.resource("flux_crafting"));
 
 	private final IDrawable background;

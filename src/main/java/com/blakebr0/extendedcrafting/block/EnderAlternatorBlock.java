@@ -4,6 +4,7 @@ import com.blakebr0.cucumber.block.BaseBlock;
 import com.blakebr0.cucumber.util.VoxelShapeBuilder;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.Block;
@@ -13,7 +14,7 @@ import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.minecraft.world.level.block.state.properties.DirectionProperty;
+import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
@@ -25,10 +26,10 @@ public class EnderAlternatorBlock extends BaseBlock {
 	private static final VoxelShape SHAPE_EAST = VoxelShapeBuilder.builder().cuboid(10, 0, 0, 16, 16, 16).cuboid(0, 4, 4, 16, 12, 12).build();
 	private static final VoxelShape SHAPE_WEST = VoxelShapeBuilder.builder().cuboid(0, 0, 0, 6, 16, 16).cuboid(6, 4, 4, 16, 12, 12).build();
 
-	public static final DirectionProperty FACING = BlockStateProperties.FACING;
+	public static final EnumProperty<Direction> FACING = BlockStateProperties.FACING;
 
-	public EnderAlternatorBlock() {
-		super(SoundType.METAL, 5.0F, 10.0F, true);
+	public EnderAlternatorBlock(Identifier id) {
+		super(id, SoundType.METAL, 5.0F, 10.0F, true);
 		this.registerDefaultState(this.getStateDefinition().any().setValue(FACING, Direction.UP));
 	}
 

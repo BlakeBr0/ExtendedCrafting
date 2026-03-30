@@ -6,11 +6,11 @@ import com.blakebr0.extendedcrafting.container.EnderCrafterContainer;
 import com.blakebr0.extendedcrafting.tileentity.EnderCrafterTileEntity;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Inventory;
 
 public class EnderCrafterScreen extends BaseContainerScreen<EnderCrafterContainer> {
-	private static final ResourceLocation BACKGROUND = ExtendedCrafting.resource("textures/gui/ender_crafter.png");
+	private static final Identifier BACKGROUND = ExtendedCrafting.resource("textures/gui/ender_crafter.png");
 	private EnderCrafterTileEntity tile;
 
 	public EnderCrafterScreen(EnderCrafterContainer container, Inventory inventory, Component title) {

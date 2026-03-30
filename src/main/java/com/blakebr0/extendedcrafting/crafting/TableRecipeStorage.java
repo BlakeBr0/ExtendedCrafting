@@ -1,28 +1,27 @@
 package com.blakebr0.extendedcrafting.crafting;
 
-import com.blakebr0.cucumber.inventory.BaseItemStackHandler;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
-import net.minecraft.nbt.Tag;
+import com.blakebr0.cucumber.inventory.CItemStacksHandler;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.CraftingInput;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
+import net.neoforged.neoforge.common.util.ValueIOSerializable;
 
 import java.util.Arrays;
 import java.util.function.Function;
 import java.util.stream.IntStream;
 
-public class TableRecipeStorage {
-    private final BaseItemStackHandler[] recipes = new BaseItemStackHandler[3];
+public class TableRecipeStorage implements ValueIOSerializable {
+    private final CItemStacksHandler[] recipes = new CItemStacksHandler[3];
     private final int slots;
     private int selected = -1;
-    private BaseItemStackHandler selectedRecipeGrid = null;
+    private CItemStacksHandler selectedRecipeGrid = null;
 
     public TableRecipeStorage(int slots) {
         this.slots = slots;
 
         for (int i = 0; i < this.recipes.length; i++) {
-            this.recipes[i] = BaseItemStackHandler.create(slots);
+            this.recipes[i] = CItemStacksHandler.create(slots);
         }
     }
 
@@ -43,7 +42,7 @@ public class TableRecipeStorage {
         this.updateSelectedRecipeGrid();
     }
 
-    public BaseItemStackHandler getRecipe(int index) {
+    public CItemStacksHandler getRecipe(int index) {
         if (index < 0 || index >= this.recipes.length)
             return null;
 
@@ -61,8 +60,8 @@ public class TableRecipeStorage {
         return IntStream.range(0, this.recipes.length).anyMatch(this::hasRecipe);
     }
 
-    public void setRecipe(int index, BaseItemStackHandler inventory, ItemStack output) {
-        var recipe = BaseItemStackHandler.create(this.slots);
+    public void setRecipe(int index, CItemStacksHandler inventory, ItemStack output) {
+        var recipe = CItemStacksHandler.create(this.slots);
 
         for (int i = 0; i < this.slots - 1; i++) {
             recipe.setStackInSlot(i, inventory.getStackInSlot(i).copy());
@@ -77,14 +76,14 @@ public class TableRecipeStorage {
         if (index < 0 || index >= this.recipes.length)
             return;
 
-        this.recipes[index] = BaseItemStackHandler.create(this.slots);
+        this.recipes[index] = CItemStacksHandler.create(this.slots);
 
         if (index == this.selected) {
             this.setSelected(-1);
         }
     }
 
-    public BaseItemStackHandler[] getRecipes() {
+    public CItemStacksHandler[] getRecipes() {
         return this.recipes;
     }
 
@@ -92,42 +91,41 @@ public class TableRecipeStorage {
         return Arrays.stream(this.recipes).mapToInt(recipe -> recipe.getStacks().stream().allMatch(ItemStack::isEmpty) ? 0 : 1).sum();
     }
 
-    public BaseItemStackHandler getSelectedRecipe() {
+    public CItemStacksHandler getSelectedRecipe() {
         if (this.selected < 0 || this.selected > this.recipes.length)
             return null;
 
         return this.recipes[this.selected];
     }
 
-    public BaseItemStackHandler getSelectedRecipeGrid() {
+    public CItemStacksHandler getSelectedRecipeGrid() {
         return this.selectedRecipeGrid;
     }
 
-    public CompoundTag serializeNBT(HolderLookup.Provider lookup) {
-        var recipes = new ListTag();
-
-        for (int i = 0; i < this.recipes.length; i++) {
-            recipes.add(i, this.recipes[i].serializeNBT(lookup));
-        }
-
-        var tag = new CompoundTag();
-
-        tag.put("Recipes", recipes);
-        tag.putInt("Selected", this.selected);
-
-        return tag;
-    }
-
-    public void deserializeNBT(HolderLookup.Provider lookup, CompoundTag tag) {
-        var recipes = tag.getList("Recipes", Tag.TAG_COMPOUND);
+    @Override
+    public void deserialize(ValueInput input) {
+        var child = input.childOrEmpty("RecipeStorage");
+        var recipes = input.childrenListOrEmpty("Recipes").stream().toList();
 
         for (int i = 0; i < recipes.size(); i++) {
-            this.recipes[i].deserializeNBT(lookup, recipes.getCompound(i));
+            this.recipes[i].deserialize(recipes.get(i));
         }
 
-        this.selected = tag.getInt("Selected");
+        this.selected = child.getIntOr("Selected", 0);
 
         this.updateSelectedRecipeGrid();
+    }
+
+    @Override
+    public void serialize(ValueOutput output) {
+        var child = output.child("RecipeStorage");
+        var recipes = output.childrenList("Recipes");
+
+        for (var recipe : this.recipes) {
+            recipe.serialize(recipes.addChild());
+        }
+
+        child.putInt("Selected", this.selected);
     }
 
     public void validate(Function<CraftingInput, ItemStack> validator) {
@@ -135,10 +133,10 @@ public class TableRecipeStorage {
             if (this.hasRecipe(i)) {
                 var recipe = this.recipes[i];
                 var grid = this.createRecipeGrid(recipe);
-                var size = (int) Math.sqrt(recipe.getSlots());
+                var size = (int) Math.sqrt(recipe.size());
                 var inventory = CraftingInput.of(size, size, grid.getStacks());
 
-                recipe.setStackInSlot(this.slots - 1, validator.apply(inventory));
+                recipe.set(this.slots - 1, validator.apply(inventory));
             }
         }
 
@@ -154,8 +152,8 @@ public class TableRecipeStorage {
         }
     }
 
-    private BaseItemStackHandler createRecipeGrid(BaseItemStackHandler recipe) {
-        var grid = BaseItemStackHandler.create(this.slots - 1);
+    private CItemStacksHandler createRecipeGrid(CItemStacksHandler recipe) {
+        var grid = CItemStacksHandler.create(this.slots - 1);
 
         for (int i = 0; i < this.slots - 1; i++) {
             grid.setStackInSlot(i, recipe.getStackInSlot(i));

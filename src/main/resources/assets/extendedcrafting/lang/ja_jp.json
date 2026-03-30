@@ -103,10 +103,8 @@
   "tooltip.extendedcrafting.type": "タイプ: %s",
   "tooltip.extendedcrafting.num_items": "%sアイテム",
   "tooltip.extendedcrafting.and_x_more": "そして%s以上...",
-  "tooltip.extendedcrafting.ticks": "%sティック",
   "tooltip.extendedcrafting.seconds": "%s秒",
   "tooltip.extendedcrafting.requires_table": "ティア%s作業台が必要です。",
-  "tooltip.extendedcrafting.items_required": "必要なアイテム:",
   "tooltip.extendedcrafting.recipe_count": "%s(s)保存されたレシピ",
   "tooltip.extendedcrafting.per_alternator": "オルタネーターあたり %s",
   "tooltip.extendedcrafting.singularity_id": "シンギュラリティ ID: %s",
@@ -116,7 +114,6 @@
 
   "message.extendedcrafting.changed_mode": "モードを%sに変更しました。",
   "message.extendedcrafting.copied_recipe": "レシピをクリップボードにコピーしました。",
-  "message.extendedcrafting.nbt_requires_crafttweaker": "NBTをコピーするにはCraftTweakerが必要です。",
   "message.extendedcrafting.max_unique_items_exceeded": "シェイプされたデータパックレシピには、最大(%s)個の一意のアイテムしか含めることができません。",
 
   "jei.category.extendedcrafting.combination": "コンビネーションクラフト",

@@ -22,12 +22,12 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeHolder;
 
 public class BasicTableCategory implements IRecipeCategory<RecipeHolder<ITableRecipe>> {
-	private static final ResourceLocation TEXTURE = ExtendedCrafting.resource("textures/jei/basic_crafting.png");
+	private static final Identifier TEXTURE = ExtendedCrafting.resource("textures/jei/basic_crafting.png");
 	public static final RecipeType<RecipeHolder<ITableRecipe>> RECIPE_TYPE = RecipeType.createRecipeHolderType(ExtendedCrafting.resource("basic_crafting"));
 
 	private final IDrawable background;

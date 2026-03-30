@@ -2,18 +2,21 @@ package com.blakebr0.extendedcrafting.block;
 
 import com.blakebr0.cucumber.block.BaseTileEntityBlock;
 import com.blakebr0.cucumber.helper.BlockHelper;
+import com.blakebr0.cucumber.iface.IHoverTextProvider;
 import com.blakebr0.cucumber.util.VoxelShapeBuilder;
 import com.blakebr0.extendedcrafting.lib.ModTooltips;
 import com.blakebr0.extendedcrafting.tileentity.EliteTableTileEntity;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
-import net.minecraft.world.Containers;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.ItemInteractionResult;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.component.TooltipDisplay;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.SoundType;
@@ -23,9 +26,9 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
-import java.util.List;
+import java.util.function.Consumer;
 
-public class EliteTableBlock extends BaseTileEntityBlock {
+public class EliteTableBlock extends BaseTileEntityBlock implements IHoverTextProvider {
 	public static final VoxelShape ELITE_TABLE_SHAPE = VoxelShapeBuilder.builder()
 			.cuboid(2, 0, 2, 14, 2, 14)
 			.cuboid(3, 2, 3, 5, 10, 5)
@@ -35,8 +38,8 @@ public class EliteTableBlock extends BaseTileEntityBlock {
 			.cuboid(0, 10, 0, 16, 16, 16)
 			.build();
 
-	public EliteTableBlock() {
-		super(SoundType.METAL, 5.0F, 10.0F, true);
+	public EliteTableBlock(Identifier id) {
+		super(id, SoundType.METAL, 5.0F, 10.0F, true);
 	}
 
 	@Override
@@ -45,7 +48,7 @@ public class EliteTableBlock extends BaseTileEntityBlock {
 	}
 
 	@Override
-	protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
+	protected InteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
 		if (!level.isClientSide()) {
 			var tile = level.getBlockEntity(pos);
 
@@ -54,20 +57,7 @@ public class EliteTableBlock extends BaseTileEntityBlock {
 			}
 		}
 
-		return ItemInteractionResult.SUCCESS;
-	}
-
-	@Override
-	public void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean isMoving) {
-		if (state.getBlock() != newState.getBlock()) {
-			var tile = level.getBlockEntity(pos);
-
-			if (tile instanceof EliteTableTileEntity table) {
-				Containers.dropContents(level, pos, table.getInventory().getStacks());
-			}
-		}
-
-		super.onRemove(state, level, pos, newState, isMoving);
+		return InteractionResult.SUCCESS;
 	}
 
 	@Override
@@ -76,8 +66,8 @@ public class EliteTableBlock extends BaseTileEntityBlock {
 	}
 
 	@Override
-	public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> tooltip, TooltipFlag flag) {
-		tooltip.add(ModTooltips.TIER.args(3).build());
+	public void appendHoverText(ItemStack stack, Item.TooltipContext context, TooltipDisplay display, Consumer<Component> builder, TooltipFlag flag) {
+		builder.accept(ModTooltips.TIER.args(3).toComponent());
 	}
 
 	@Override
@@ -86,7 +76,7 @@ public class EliteTableBlock extends BaseTileEntityBlock {
 	}
 
 	@Override
-	protected int getAnalogOutputSignal(BlockState state, Level level, BlockPos pos) {
+	protected int getAnalogOutputSignal(BlockState state, Level level, BlockPos pos, Direction direction) {
 		return BlockHelper.getRedstoneSignalFromInventory(level.getBlockEntity(pos));
 	}
 }

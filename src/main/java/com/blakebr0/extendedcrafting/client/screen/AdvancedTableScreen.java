@@ -5,11 +5,11 @@ import com.blakebr0.extendedcrafting.ExtendedCrafting;
 import com.blakebr0.extendedcrafting.container.AdvancedTableContainer;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Inventory;
 
 public class AdvancedTableScreen extends BaseContainerScreen<AdvancedTableContainer> {
-	public static final ResourceLocation BACKGROUND = ExtendedCrafting.resource("textures/gui/advanced_table.png");
+	public static final Identifier BACKGROUND = ExtendedCrafting.resource("textures/gui/advanced_table.png");
 
 	public AdvancedTableScreen(AdvancedTableContainer container, Inventory inventory, Component title) {
 		super(container, inventory, title, BACKGROUND, 176, 206);

@@ -89,10 +89,8 @@
   "tooltip.extendedcrafting.mode": "Режим: %s",
   "tooltip.extendedcrafting.type": "Тип: %s",
   "tooltip.extendedcrafting.num_items": "%s предметів",
-  "tooltip.extendedcrafting.ticks": "%s тіків",
   "tooltip.extendedcrafting.seconds": "%s секунд",
   "tooltip.extendedcrafting.requires_table": "Потрібен верстак рівня %s",
-  "tooltip.extendedcrafting.items_required": "Необхідні предмети:",
   "tooltip.extendedcrafting.singularity_id": "ID сингулярності: %s",
   "tooltip.extendedcrafting.added_by": "Додано: %s",
   "tooltip.extendedcrafting.auto_table_save_recipe": "Shift + ЛКМ, щоб зберегти цей рецепт.",
@@ -129,7 +127,6 @@
   "singularity.extendedcrafting.nickel": "Нікелева",
   "singularity.extendedcrafting.electrum": "Електрумова",
   "singularity.extendedcrafting.invar": "Інварова",
-  "singularity.extendedcrafting.uranium": "Уранова",
   "singularity.extendedcrafting.platinum": "Платинова",
 
   "book.extendedcrafting.name": "Extended Crafting",

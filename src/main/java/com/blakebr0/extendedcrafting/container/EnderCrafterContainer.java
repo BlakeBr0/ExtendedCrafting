@@ -1,8 +1,8 @@
 package com.blakebr0.extendedcrafting.container;
 
 import com.blakebr0.cucumber.container.BaseContainerMenu;
-import com.blakebr0.cucumber.inventory.BaseItemStackHandler;
-import com.blakebr0.cucumber.inventory.slot.OutputSlot;
+import com.blakebr0.cucumber.inventory.CItemStacksHandler;
+import com.blakebr0.cucumber.inventory.slot.COutputSlot;
 import com.blakebr0.extendedcrafting.container.inventory.ExtendedCraftingInventory;
 import com.blakebr0.extendedcrafting.init.ModMenuTypes;
 import com.blakebr0.extendedcrafting.tileentity.EnderCrafterTileEntity;
@@ -19,12 +19,12 @@ public class EnderCrafterContainer extends BaseContainerMenu {
 		this(type, id, playerInventory, EnderCrafterTileEntity.createInventoryHandler(), buffer.readBlockPos());
 	}
 
-	private EnderCrafterContainer(MenuType<?> type, int id, Inventory playerInventory, BaseItemStackHandler inventory, BlockPos pos) {
+	private EnderCrafterContainer(MenuType<?> type, int id, Inventory playerInventory, CItemStacksHandler inventory, BlockPos pos) {
 		super(type, id, pos);
 
 		var matrix = new ExtendedCraftingInventory(this, inventory, 3);
 
-		this.addSlot(new OutputSlot(inventory, 9, 124, 36));
+		this.addSlot(new COutputSlot(inventory, 9, 124, 36));
 		
 		int i, j;
 		for (i = 0; i < 3; i++) {
@@ -87,7 +87,7 @@ public class EnderCrafterContainer extends BaseContainerMenu {
 		return new EnderCrafterContainer(ModMenuTypes.ENDER_CRAFTER.get(), windowId, playerInventory, buffer);
 	}
 
-	public static EnderCrafterContainer create(int windowId, Inventory playerInventory, BaseItemStackHandler inventory, BlockPos pos) {
+	public static EnderCrafterContainer create(int windowId, Inventory playerInventory, CItemStacksHandler inventory, BlockPos pos) {
 		return new EnderCrafterContainer(ModMenuTypes.ENDER_CRAFTER.get(), windowId, playerInventory, inventory, pos);
 	}
 }

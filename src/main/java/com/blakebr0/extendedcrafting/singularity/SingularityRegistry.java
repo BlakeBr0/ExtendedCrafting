@@ -10,7 +10,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.loading.FMLPaths;
 import net.neoforged.neoforge.event.OnDatapackSyncEvent;
@@ -34,7 +34,7 @@ public final class SingularityRegistry {
     private static final SingularityRegistry INSTANCE = new SingularityRegistry();
     private static final Gson GSON = (new GsonBuilder()).setPrettyPrinting().create();
 
-    private final Map<ResourceLocation, Singularity> singularities = new LinkedHashMap<>();
+    private final Map<Identifier, Singularity> singularities = new LinkedHashMap<>();
 
     @SubscribeEvent
     public void onDatapackSync(OnDatapackSyncEvent event) {
@@ -94,7 +94,7 @@ public final class SingularityRegistry {
         return Lists.newArrayList(this.singularities.values());
     }
 
-    public Singularity getSingularityById(ResourceLocation id) {
+    public Singularity getSingularityById(Identifier id) {
         return this.singularities.get(id);
     }
 

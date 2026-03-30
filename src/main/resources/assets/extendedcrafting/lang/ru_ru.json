@@ -88,9 +88,7 @@
   "tooltip.extendedcrafting.mode": "Режим: %s",
   "tooltip.extendedcrafting.type": "Тип: %s",
   "tooltip.extendedcrafting.num_items": "%s предметов",
-  "tooltip.extendedcrafting.ticks": "%s тиков",
   "tooltip.extendedcrafting.requires_table": "Требуется верстак %s уровня",
-  "tooltip.extendedcrafting.items_required": "Необходимые предметы::",
   "tooltip.extendedcrafting.singularity_id": "ID сингулярности: %s",
   "tooltip.extendedcrafting.added_by": "Добавлено: %s",
 
@@ -125,7 +123,6 @@
   "singularity.extendedcrafting.nickel": "Никелевая",
   "singularity.extendedcrafting.electrum": "Электрумовая",
   "singularity.extendedcrafting.invar": "Инваровая",
-  "singularity.extendedcrafting.uranium": "Урановая",
   "singularity.extendedcrafting.platinum": "Платиновая",
 
   "book.extendedcrafting.name": "Extended Crafting",

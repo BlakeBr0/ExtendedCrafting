@@ -1,9 +1,9 @@
 package com.blakebr0.extendedcrafting.container;
 
 import com.blakebr0.cucumber.container.BaseContainerMenu;
-import com.blakebr0.cucumber.inventory.BaseItemStackHandler;
-import com.blakebr0.cucumber.inventory.slot.BaseItemStackHandlerSlot;
-import com.blakebr0.cucumber.inventory.slot.OutputSlot;
+import com.blakebr0.cucumber.inventory.CItemStacksHandler;
+import com.blakebr0.cucumber.inventory.slot.COutputSlot;
+import com.blakebr0.cucumber.inventory.slot.CSlot;
 import com.blakebr0.extendedcrafting.container.slot.CatalystSlot;
 import com.blakebr0.extendedcrafting.init.ModMenuTypes;
 import com.blakebr0.extendedcrafting.tileentity.CompressorTileEntity;
@@ -20,10 +20,10 @@ public class CompressorContainer extends BaseContainerMenu {
 		this(type, id, playerInventory, CompressorTileEntity.createInventoryHandler(), buffer.readBlockPos());
 	}
 
-	private CompressorContainer(MenuType<?> type, int id, Inventory playerInventory, BaseItemStackHandler inventory, BlockPos pos) {
+	private CompressorContainer(MenuType<?> type, int id, Inventory playerInventory, CItemStacksHandler inventory, BlockPos pos) {
 		super(type, id, pos);
-		this.addSlot(new OutputSlot(inventory, 0, 135, 48));
-		this.addSlot(new BaseItemStackHandlerSlot(inventory, 1, 65, 48));
+		this.addSlot(new COutputSlot(inventory, 0, 135, 48));
+		this.addSlot(new CSlot(inventory, 1, 65, 48));
 		this.addSlot(new CatalystSlot(inventory, 2, 38, 48));
 
 		for (int i = 0; i < 3; i++) {
@@ -89,7 +89,7 @@ public class CompressorContainer extends BaseContainerMenu {
 		return new CompressorContainer(ModMenuTypes.COMPRESSOR.get(), windowId, playerInventory, buffer);
 	}
 
-	public static CompressorContainer create(int windowId, Inventory playerInventory, BaseItemStackHandler inventory, BlockPos pos) {
+	public static CompressorContainer create(int windowId, Inventory playerInventory, CItemStacksHandler inventory, BlockPos pos) {
 		return new CompressorContainer(ModMenuTypes.COMPRESSOR.get(), windowId, playerInventory, inventory, pos);
 	}
 }

@@ -1,6 +1,6 @@
 package com.blakebr0.extendedcrafting.container.inventory;
 
-import com.blakebr0.cucumber.inventory.BaseItemStackHandler;
+import com.blakebr0.cucumber.inventory.CItemStacksHandler;
 import com.blakebr0.extendedcrafting.api.TableCraftingInput;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.TransientCraftingContainer;
@@ -8,14 +8,14 @@ import net.minecraft.world.item.ItemStack;
 
 public class ExtendedCraftingInventory extends TransientCraftingContainer {
     private final AbstractContainerMenu container;
-    private final BaseItemStackHandler inventory;
+    private final CItemStacksHandler inventory;
     private final boolean autoTable;
 
-    public ExtendedCraftingInventory(AbstractContainerMenu container, BaseItemStackHandler inventory, int size) {
+    public ExtendedCraftingInventory(AbstractContainerMenu container, CItemStacksHandler inventory, int size) {
         this(container, inventory, size, false);
     }
 
-    public ExtendedCraftingInventory(AbstractContainerMenu container, BaseItemStackHandler inventory, int size, boolean autoTable) {
+    public ExtendedCraftingInventory(AbstractContainerMenu container, CItemStacksHandler inventory, int size, boolean autoTable) {
         super(container, size, size);
         this.container = container;
         this.inventory = inventory;

@@ -1,7 +1,6 @@
 package com.blakebr0.extendedcrafting.crafting.recipe;
 
 import com.blakebr0.cucumber.crafting.ShapedRecipePatternCodecs;
-import com.blakebr0.cucumber.util.TriFunction;
 import com.blakebr0.extendedcrafting.api.TableCraftingInput;
 import com.blakebr0.extendedcrafting.api.crafting.ITableRecipe;
 import com.blakebr0.extendedcrafting.init.ModRecipeSerializers;
@@ -9,7 +8,6 @@ import com.blakebr0.extendedcrafting.init.ModRecipeTypes;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
@@ -19,8 +17,21 @@ import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.item.crafting.ShapedRecipePattern;
 import net.minecraft.world.level.Level;
+import org.apache.commons.lang3.function.TriFunction;
 
 public class ShapedTableRecipe implements ITableRecipe {
+    public static final MapCodec<ShapedTableRecipe> MAP_CODEC = RecordCodecBuilder.mapCodec(builder ->
+            builder.group(
+                    ShapedRecipePatternCodecs.MAP_CODEC.forGetter(recipe -> recipe.pattern),
+                    ItemStack.CODEC.fieldOf("result").forGetter(recipe -> recipe.result),
+                    Codec.INT.optionalFieldOf("tier", 0).forGetter(recipe -> recipe.tier)
+            ).apply(builder, ShapedTableRecipe::new)
+    );
+    public static final StreamCodec<RegistryFriendlyByteBuf, ShapedTableRecipe> STREAM_CODEC = StreamCodec.of(
+            ShapedTableRecipe::toNetwork, ShapedTableRecipe::fromNetwork
+    );
+    public static final RecipeSerializer<ShapedTableRecipe> SERIALIZER = new RecipeSerializer<>(MAP_CODEC, STREAM_CODEC);
+
     private final ShapedRecipePattern pattern;
     private final ItemStack result;
     private final int tier;
@@ -41,38 +52,18 @@ public class ShapedTableRecipe implements ITableRecipe {
     }
 
     @Override
-    public ItemStack assemble(TableCraftingInput inventory, HolderLookup.Provider provider) {
+    public ItemStack assemble(TableCraftingInput inventory) {
         return this.result.copy();
     }
 
     @Override
-    public boolean canCraftInDimensions(int width, int height) {
-        return width >= this.pattern.width() && height >= this.pattern.height();
+    public RecipeSerializer<ShapedTableRecipe> getSerializer() {
+        return SERIALIZER;
     }
 
     @Override
-    public ItemStack getResultItem(HolderLookup.Provider lookup) {
-        return this.result;
-    }
-
-    @Override
-    public NonNullList<Ingredient> getIngredients() {
-        return this.pattern.ingredients();
-    }
-
-    @Override
-    public RecipeSerializer<?> getSerializer() {
-        return ModRecipeSerializers.SHAPED_TABLE.get();
-    }
-
-    @Override
-    public RecipeType<?> getType() {
+    public RecipeType<ITableRecipe> getType() {
         return ModRecipeTypes.TABLE.get();
-    }
-
-    @Override
-    public boolean isSpecial() {
-        return true;
     }
 
     @Override
@@ -81,8 +72,9 @@ public class ShapedTableRecipe implements ITableRecipe {
 
         for (int i = 0; i < remaining.size(); ++i) {
             var item = inventory.getItem(i);
-            if (item.hasCraftingRemainingItem()) {
-                remaining.set(i, item.getCraftingRemainingItem());
+            var remainder = item.getCraftingRemainder();
+            if (remainder != null) {
+                remaining.set(i, remainder.create());
             }
         }
 
@@ -171,40 +163,17 @@ public class ShapedTableRecipe implements ITableRecipe {
         this.transformer = transformer;
     }
 
-    public static class Serializer implements RecipeSerializer<ShapedTableRecipe> {
-        public static final MapCodec<ShapedTableRecipe> CODEC = RecordCodecBuilder.mapCodec(builder ->
-                builder.group(
-                        ShapedRecipePatternCodecs.MAP_CODEC.forGetter(recipe -> recipe.pattern),
-                        ItemStack.STRICT_CODEC.fieldOf("result").forGetter(recipe -> recipe.result),
-                        Codec.INT.optionalFieldOf("tier", 0).forGetter(recipe -> recipe.tier)
-                ).apply(builder, ShapedTableRecipe::new)
-        );
-        public static final StreamCodec<RegistryFriendlyByteBuf, ShapedTableRecipe> STREAM_CODEC = StreamCodec.of(
-                ShapedTableRecipe.Serializer::toNetwork, ShapedTableRecipe.Serializer::fromNetwork
-        );
+    private static ShapedTableRecipe fromNetwork(RegistryFriendlyByteBuf buffer) {
+        var pattern = ShapedRecipePattern.STREAM_CODEC.decode(buffer);
+        var result = ItemStack.STREAM_CODEC.decode(buffer);
+        int tier = buffer.readVarInt();
 
-        @Override
-        public MapCodec<ShapedTableRecipe> codec() {
-            return CODEC;
-        }
+        return new ShapedTableRecipe(pattern, result, tier);
+    }
 
-        @Override
-        public StreamCodec<RegistryFriendlyByteBuf, ShapedTableRecipe> streamCodec() {
-            return STREAM_CODEC;
-        }
-
-        private static ShapedTableRecipe fromNetwork(RegistryFriendlyByteBuf buffer) {
-            var pattern = ShapedRecipePattern.STREAM_CODEC.decode(buffer);
-            var result = ItemStack.STREAM_CODEC.decode(buffer);
-            int tier = buffer.readVarInt();
-
-            return new ShapedTableRecipe(pattern, result, tier);
-        }
-
-        private static void toNetwork(RegistryFriendlyByteBuf buffer, ShapedTableRecipe recipe) {
-            ShapedRecipePattern.STREAM_CODEC.encode(buffer, recipe.pattern);
-            ItemStack.STREAM_CODEC.encode(buffer, recipe.result);
-            buffer.writeVarInt(recipe.tier);
-        }
+    private static void toNetwork(RegistryFriendlyByteBuf buffer, ShapedTableRecipe recipe) {
+        ShapedRecipePattern.STREAM_CODEC.encode(buffer, recipe.pattern);
+        ItemStack.STREAM_CODEC.encode(buffer, recipe.result);
+        buffer.writeVarInt(recipe.tier);
     }
 }

@@ -1,11 +1,10 @@
 package com.blakebr0.extendedcrafting.tileentity;
 
 import com.blakebr0.cucumber.helper.StackHelper;
-import com.blakebr0.cucumber.inventory.BaseItemStackHandler;
+import com.blakebr0.cucumber.inventory.CItemStacksHandler;
 import com.blakebr0.cucumber.inventory.CachedRecipe;
 import com.blakebr0.cucumber.inventory.OnContentsChangedFunction;
 import com.blakebr0.cucumber.tileentity.BaseInventoryTileEntity;
-import com.blakebr0.cucumber.util.Localizable;
 import com.blakebr0.extendedcrafting.api.crafting.IFluxCrafterRecipe;
 import com.blakebr0.extendedcrafting.block.FluxAlternatorBlock;
 import com.blakebr0.extendedcrafting.container.FluxCrafterContainer;
@@ -15,9 +14,7 @@ import com.blakebr0.extendedcrafting.init.ModTileEntities;
 import com.blakebr0.extendedcrafting.util.AlternatorParticleOffsets;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.MenuProvider;
@@ -29,12 +26,14 @@ import net.minecraft.world.item.crafting.CraftingInput;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class FluxCrafterTileEntity extends BaseInventoryTileEntity implements MenuProvider {
-	private final BaseItemStackHandler inventory;
+	private final CItemStacksHandler inventory;
 	private final CachedRecipe<CraftingInput, IFluxCrafterRecipe> recipe;
 	private int progress;
 	private int progressReq;
@@ -51,27 +50,27 @@ public class FluxCrafterTileEntity extends BaseInventoryTileEntity implements Me
 	}
 
 	@Override
-	public BaseItemStackHandler getInventory() {
+	public CItemStacksHandler getInventory() {
 		return this.inventory;
 	}
 
 	@Override
-	public void loadAdditional(CompoundTag tag, HolderLookup.Provider lookup) {
-		super.loadAdditional(tag, lookup);
-		this.progress = tag.getInt("Progress");
-		this.progressReq = tag.getInt("ProgressReq");
+	public void loadAdditional(ValueInput input) {
+		super.loadAdditional(input);
+		this.progress = input.getIntOr("Progress", 0);
+		this.progressReq = input.getIntOr("ProgressReq", 0);
 	}
 
 	@Override
-	public void saveAdditional(CompoundTag tag, HolderLookup.Provider lookup) {
-		super.saveAdditional(tag, lookup);
-		tag.putInt("Progress", this.progress);
-		tag.putInt("ProgressReq", this.progressReq);
+	public void saveAdditional(ValueOutput output) {
+		super.saveAdditional(output);
+		output.putInt("Progress", this.progress);
+		output.putInt("ProgressReq", this.progressReq);
 	}
 
 	@Override
 	public Component getDisplayName() {
-		return Localizable.of("container.extendedcrafting.flux_crafter").build();
+		return Component.translatable("container.extendedcrafting.flux_crafter");
 	}
 
 	@Override
@@ -132,12 +131,12 @@ public class FluxCrafterTileEntity extends BaseInventoryTileEntity implements Me
 		tile.dispatchIfChanged();
 	}
 
-	public static BaseItemStackHandler createInventoryHandler() {
+	public static CItemStacksHandler createInventoryHandler() {
 		return createInventoryHandler(null);
 	}
 
-	public static BaseItemStackHandler createInventoryHandler(OnContentsChangedFunction onContentsChanged) {
-		return BaseItemStackHandler.create(10, onContentsChanged, builder -> {
+	public static CItemStacksHandler createInventoryHandler(OnContentsChangedFunction onContentsChanged) {
+		return CItemStacksHandler.create(10, onContentsChanged, builder -> {
 			builder.setOutputSlots(9);
 			builder.setCanInsert((slot, stack) -> false);
 		});
@@ -211,7 +210,7 @@ public class FluxCrafterTileEntity extends BaseInventoryTileEntity implements Me
 		level.sendParticles(ParticleTypes.PORTAL, x, y, z, 1, 0, 0, 0, 0.1D);
 	}
 
-	private void onContentsChanged(int slot) {
+	private void onContentsChanged(int slot, ItemStack oldStack) {
 		if (!this.isGridChanged) {
 			this.isGridChanged = true;
 			this.setChanged();
@@ -229,7 +228,7 @@ public class FluxCrafterTileEntity extends BaseInventoryTileEntity implements Me
 	public IFluxCrafterRecipe getActiveRecipe() {
 		if (this.isGridChanged) {
 			this.isGridChanged = false;
-			return this.recipe.checkAndGet(this.inventory.toCraftingInput(3, 3, 0, 9), this.level);
+			return this.recipe.checkAndGet(this.inventory.toCraftingInput(3, 3, 0, 9), (ServerLevel) this.level);
 		}
 
 		return this.recipe.get();

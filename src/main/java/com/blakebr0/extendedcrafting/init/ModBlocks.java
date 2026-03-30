@@ -23,6 +23,7 @@ import com.blakebr0.extendedcrafting.block.TheUltimateBlock;
 import com.blakebr0.extendedcrafting.block.UltimateAutoTableBlock;
 import com.blakebr0.extendedcrafting.block.UltimateTableBlock;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Rarity;
 import net.minecraft.world.level.block.Block;
@@ -33,23 +34,22 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.function.Function;
-import java.util.function.Supplier;
 
 public final class ModBlocks {
 	public static final DeferredRegister<Block> REGISTRY = DeferredRegister.create(Registries.BLOCK, ExtendedCrafting.MOD_ID);
-	public static final Map<String, Supplier<BlockItem>> BLOCK_ITEMS = new LinkedHashMap<>();
+	public static final Map<String, Function<Identifier, BlockItem>> BLOCK_ITEMS = new LinkedHashMap<>();
 
-	public static final DeferredHolder<Block, Block> LUMINESSENCE_BLOCK = register("luminessence_block", () -> new BaseBlock(SoundType.STONE, 5.0F, 10.0F, true));
-	public static final DeferredHolder<Block, Block> BLACK_IRON_BLOCK = register("black_iron_block", () -> new BaseBlock(SoundType.METAL, 5.0F, 10.0F, true));
-	public static final DeferredHolder<Block, Block> REDSTONE_INGOT_BLOCK = register("redstone_ingot_block", () -> new BaseBlock(SoundType.METAL, 5.0F, 10.0F, true));
-	public static final DeferredHolder<Block, Block> ENHANCED_REDSTONE_INGOT_BLOCK = register("enhanced_redstone_ingot_block", () -> new BaseBlock(SoundType.METAL, 5.0F, 10.0F, true), Rarity.UNCOMMON);
-	public static final DeferredHolder<Block, Block> ENDER_INGOT_BLOCK = register("ender_ingot_block", () -> new BaseBlock(SoundType.METAL, 5.0F, 10.0F, true));
-	public static final DeferredHolder<Block, Block> ENHANCED_ENDER_INGOT_BLOCK = register("enhanced_ender_ingot_block", () -> new BaseBlock(SoundType.METAL, 5.0F, 10.0F, true), Rarity.UNCOMMON);
-	public static final DeferredHolder<Block, Block> CRYSTALTINE_BLOCK = register("crystaltine_block", () -> new BaseBlock(SoundType.METAL, 5.0F, 10.0F, true), Rarity.UNCOMMON);
+	public static final DeferredHolder<Block, Block> LUMINESSENCE_BLOCK = register("luminessence_block", id -> new BaseBlock(id, SoundType.STONE, 5.0F, 10.0F, true));
+	public static final DeferredHolder<Block, Block> BLACK_IRON_BLOCK = register("black_iron_block", id -> new BaseBlock(id, SoundType.METAL, 5.0F, 10.0F, true));
+	public static final DeferredHolder<Block, Block> REDSTONE_INGOT_BLOCK = register("redstone_ingot_block", id -> new BaseBlock(id, SoundType.METAL, 5.0F, 10.0F, true));
+	public static final DeferredHolder<Block, Block> ENHANCED_REDSTONE_INGOT_BLOCK = register("enhanced_redstone_ingot_block", id -> new BaseBlock(id, SoundType.METAL, 5.0F, 10.0F, true), Rarity.UNCOMMON);
+	public static final DeferredHolder<Block, Block> ENDER_INGOT_BLOCK = register("ender_ingot_block", id -> new BaseBlock(id, SoundType.METAL, 5.0F, 10.0F, true));
+	public static final DeferredHolder<Block, Block> ENHANCED_ENDER_INGOT_BLOCK = register("enhanced_ender_ingot_block", id -> new BaseBlock(id, SoundType.METAL, 5.0F, 10.0F, true), Rarity.UNCOMMON);
+	public static final DeferredHolder<Block, Block> CRYSTALTINE_BLOCK = register("crystaltine_block", id -> new BaseBlock(id, SoundType.METAL, 5.0F, 10.0F, true), Rarity.UNCOMMON);
 	public static final DeferredHolder<Block, Block> THE_ULTIMATE_BLOCK = register("the_ultimate_block", TheUltimateBlock::new, Rarity.EPIC);
-	public static final DeferredHolder<Block, Block> NETHER_STAR_BLOCK = register("nether_star_block", () -> new BaseBlock(SoundType.METAL, 5.0F, 10.0F, true), Rarity.UNCOMMON);
-	public static final DeferredHolder<Block, Block> FLUX_STAR_BLOCK = register("flux_star_block", () -> new BaseBlock(SoundType.METAL, 5.0F, 10.0F, true), Rarity.UNCOMMON);
-	public static final DeferredHolder<Block, Block> ENDER_STAR_BLOCK = register("ender_star_block", () -> new BaseBlock(SoundType.METAL, 5.0F, 10.0F, true), Rarity.UNCOMMON);
+	public static final DeferredHolder<Block, Block> NETHER_STAR_BLOCK = register("nether_star_block", id -> new BaseBlock(id, SoundType.METAL, 5.0F, 10.0F, true), Rarity.UNCOMMON);
+	public static final DeferredHolder<Block, Block> FLUX_STAR_BLOCK = register("flux_star_block", id -> new BaseBlock(id, SoundType.METAL, 5.0F, 10.0F, true), Rarity.UNCOMMON);
+	public static final DeferredHolder<Block, Block> ENDER_STAR_BLOCK = register("ender_star_block", id -> new BaseBlock(id, SoundType.METAL, 5.0F, 10.0F, true), Rarity.UNCOMMON);
 
 	public static final DeferredHolder<Block, Block> FRAME = register("frame", FrameBlock::new);
 	public static final DeferredHolder<Block, Block> PEDESTAL = register("pedestal", PedestalBlock::new);
@@ -70,17 +70,17 @@ public final class ModBlocks {
 	public static final DeferredHolder<Block, Block> FLUX_CRAFTER = register("flux_crafter", FluxCrafterBlock::new);
 	public static final DeferredHolder<Block, Block> AUTO_FLUX_CRAFTER = register("auto_flux_crafter", AutoFluxCrafterBlock::new);
 
-	private static DeferredHolder<Block, Block> register(String name, Supplier<Block> block) {
-		return register(name, block, b -> () -> new BaseBlockItem(b.get()));
+	private static DeferredHolder<Block, Block> register(String name, Function<Identifier, Block> block) {
+		return register(name, block, b -> id -> new BaseBlockItem(id, b.get()));
 	}
 
-	private static DeferredHolder<Block, Block> register(String name, Supplier<Block> block, Rarity rarity) {
-		return register(name, block, b -> () -> new BaseBlockItem(b.get(), p -> p.rarity(rarity)));
+	private static DeferredHolder<Block, Block> register(String name, Function<Identifier, Block> block, Rarity rarity) {
+		return register(name, block, b -> id -> new BaseBlockItem(id, b.get(), p -> p.rarity(rarity)));
 	}
 
-	private static DeferredHolder<Block, Block> register(String name, Supplier<Block> block, Function<DeferredHolder<Block, Block>, Supplier<? extends BlockItem>> item) {
+	private static DeferredHolder<Block, Block> register(String name, Function<Identifier, Block> block, Function<DeferredHolder<Block, Block>, Function<Identifier, BlockItem>> item) {
 		var reg = REGISTRY.register(name, block);
-		BLOCK_ITEMS.put(name, () -> item.apply(reg).get());
+		BLOCK_ITEMS.put(name, id -> item.apply(reg).apply(id));
 		return reg;
 	}
 }

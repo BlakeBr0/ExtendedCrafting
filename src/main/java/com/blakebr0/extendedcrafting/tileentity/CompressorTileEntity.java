@@ -1,12 +1,11 @@
 package com.blakebr0.extendedcrafting.tileentity;
 
-import com.blakebr0.cucumber.energy.BaseEnergyStorage;
+import com.blakebr0.cucumber.energy.CEnergyStorage;
 import com.blakebr0.cucumber.helper.StackHelper;
-import com.blakebr0.cucumber.inventory.BaseItemStackHandler;
+import com.blakebr0.cucumber.inventory.CItemStacksHandler;
 import com.blakebr0.cucumber.inventory.CachedRecipe;
 import com.blakebr0.cucumber.inventory.OnContentsChangedFunction;
 import com.blakebr0.cucumber.tileentity.BaseInventoryTileEntity;
-import com.blakebr0.cucumber.util.Localizable;
 import com.blakebr0.extendedcrafting.api.crafting.ICompressorRecipe;
 import com.blakebr0.extendedcrafting.config.ModConfigs;
 import com.blakebr0.extendedcrafting.container.CompressorContainer;
@@ -26,14 +25,16 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.CraftingInput;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class CompressorTileEntity extends BaseInventoryTileEntity implements MenuProvider {
-	private final BaseItemStackHandler inventory;
-	private final BaseItemStackHandler recipeInventory;
-	private final BaseEnergyStorage energy;
+	private final CItemStacksHandler inventory;
+	private final CItemStacksHandler recipeInventory;
+	private final CEnergyStorage energy;
 	private final CachedRecipe<CraftingInput, ICompressorRecipe> recipe;
 	private ItemStack materialStack = ItemStack.EMPTY;
 	private List<MaterialInput> inputs = NonNullList.create();
@@ -44,46 +45,46 @@ public class CompressorTileEntity extends BaseInventoryTileEntity implements Men
 
 	public CompressorTileEntity(BlockPos pos, BlockState state) {
 		super(ModTileEntities.COMPRESSOR.get(), pos, state);
-		this.inventory = createInventoryHandler((slot) -> this.setChanged());
-		this.recipeInventory = BaseItemStackHandler.create(2);
-		this.energy = new BaseEnergyStorage(ModConfigs.COMPRESSOR_POWER_CAPACITY.get(), this::setChangedFast);
+		this.inventory = createInventoryHandler((_, _) -> this.setChanged());
+		this.recipeInventory = CItemStacksHandler.create(2);
+		this.energy = new CEnergyStorage(ModConfigs.COMPRESSOR_POWER_CAPACITY.get(), _ -> this.setChangedFast());
 		this.recipe = new CachedRecipe<>(ModRecipeTypes.COMPRESSOR.get());
 	}
 
 	@Override
-	public BaseItemStackHandler getInventory() {
+	public CItemStacksHandler getInventory() {
 		return this.inventory;
 	}
 
 	@Override
-	public void loadAdditional(CompoundTag tag, HolderLookup.Provider lookup) {
-		super.loadAdditional(tag, lookup);
-		this.materialCount = tag.getInt("MaterialCount");
-		this.materialStack = ItemStack.parseOptional(lookup, tag.getCompound("MaterialStack"));
-		this.progress = tag.getInt("Progress");
-		this.ejecting = tag.getBoolean("Ejecting");
-		this.energy.deserializeNBT(lookup, tag.get("Energy"));
-		this.inputLimit = tag.getBoolean("InputLimit");
+	public void loadAdditional(ValueInput input) {
+		super.loadAdditional(input);
+		this.materialCount = input.getIntOr("MaterialCount", 0);
+		this.materialStack = input.read("MaterialStack", ItemStack.OPTIONAL_CODEC).orElse(null);
+		this.progress = input.getIntOr("Progress", 0);
+		this.ejecting = input.getBooleanOr("Ejecting", false);
+		this.energy.deserialize(input);
+		this.inputLimit = input.getBooleanOr("InputLimit", false);
 
 		this.inputs = loadMaterialInputs(lookup, tag);
 	}
 
 	@Override
-	public void saveAdditional(CompoundTag tag, HolderLookup.Provider lookup) {
-		super.saveAdditional(tag, lookup);
-		tag.putInt("MaterialCount", this.materialCount);
-		tag.put("MaterialStack", this.materialStack.saveOptional(lookup));
-		tag.putInt("Progress", this.progress);
-		tag.putBoolean("Ejecting", this.ejecting);
-		tag.putInt("Energy", this.energy.getEnergyStored());
-		tag.putBoolean("InputLimit", this.inputLimit);
+	public void saveAdditional(ValueOutput output) {
+		super.saveAdditional(output);
+		output.putInt("MaterialCount", this.materialCount);
+		output.storeNullable("MaterialStack", ItemStack.OPTIONAL_CODEC, this.materialStack);
+		output.putInt("Progress", this.progress);
+		output.putBoolean("Ejecting", this.ejecting);
+		this.energy.serialize(output);
+		output.putBoolean("InputLimit", this.inputLimit);
 
 		saveMaterialInputs(lookup, tag, this.inputs);
 	}
 
 	@Override
 	public Component getDisplayName() {
-		return Localizable.of("container.extendedcrafting.compressor").build();
+		return Component.translatable("container.extendedcrafting.compressor");
 	}
 
 	@Override
@@ -171,18 +172,18 @@ public class CompressorTileEntity extends BaseInventoryTileEntity implements Men
 		tile.dispatchIfChanged();
 	}
 
-	public static BaseItemStackHandler createInventoryHandler() {
+	public static CItemStacksHandler createInventoryHandler() {
 		return createInventoryHandler(null);
 	}
 
-	public static BaseItemStackHandler createInventoryHandler(OnContentsChangedFunction onContentsChanged) {
-		return BaseItemStackHandler.create(3, onContentsChanged, builder -> {
+	public static CItemStacksHandler createInventoryHandler(OnContentsChangedFunction onContentsChanged) {
+		return CItemStacksHandler.create(3, onContentsChanged, builder -> {
 			builder.setOutputSlots(0);
 			builder.setCanInsert((slot, stack) -> slot == 1);
 		});
 	}
 
-	public BaseEnergyStorage getEnergy() {
+	public CEnergyStorage getEnergy() {
 		return this.energy;
 	}
 

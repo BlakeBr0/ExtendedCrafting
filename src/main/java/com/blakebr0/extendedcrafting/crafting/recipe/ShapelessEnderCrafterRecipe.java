@@ -49,23 +49,8 @@ public class ShapelessEnderCrafterRecipe implements IEnderCrafterRecipe {
 	}
 
 	@Override
-	public ItemStack assemble(CraftingInput inventory, HolderLookup.Provider lookup) {
+	public ItemStack assemble(CraftingInput inventory) {
 		return this.result.copy();
-	}
-
-	@Override
-	public boolean canCraftInDimensions(int width, int height) {
-		return width * height >= this.inputs.size();
-	}
-
-	@Override
-	public ItemStack getResultItem(HolderLookup.Provider lookup) {
-		return this.result;
-	}
-
-	@Override
-	public NonNullList<Ingredient> getIngredients() {
-		return this.inputs;
 	}
 
 	@Override
@@ -76,11 +61,6 @@ public class ShapelessEnderCrafterRecipe implements IEnderCrafterRecipe {
 	@Override
 	public RecipeType<?> getType() {
 		return ModRecipeTypes.ENDER_CRAFTER.get();
-	}
-
-	@Override
-	public boolean isSpecial() {
-		return true;
 	}
 
 	@Override

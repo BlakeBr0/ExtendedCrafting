@@ -3,6 +3,7 @@ package com.blakebr0.extendedcrafting.block;
 import com.blakebr0.cucumber.block.BaseBlock;
 import com.blakebr0.cucumber.util.VoxelShapeBuilder;
 import net.minecraft.core.BlockPos;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockState;
@@ -26,8 +27,8 @@ public class FrameBlock extends BaseBlock {
             .cuboid(13, 0, 3, 16, 3, 13)
             .build();
 
-    public FrameBlock() {
-        super(SoundType.STONE, 5.0F, 10.0F, true);
+    public FrameBlock(Identifier id) {
+        super(id, SoundType.STONE, 5.0F, 10.0F, true);
     }
 
     @Override

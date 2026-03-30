@@ -19,7 +19,7 @@ public final class ModCreativeModeTabs {
     public static final DeferredHolder<CreativeModeTab, CreativeModeTab> CREATIVE_TAB = REGISTRY.register("creative_tab", () -> CreativeModeTab.builder()
             .title(Component.translatable("itemGroup.extendedcrafting"))
             .icon(() -> new ItemStack(ModItems.LUMINESSENCE.get()))
-            .displayItems(FeatureFlagDisplayItemGenerator.create((parameters, output) -> {
+            .displayItems(FeatureFlagDisplayItemGenerator.create((_, output) -> {
                 var stack = ItemStack.EMPTY;
 
                 output.accept(ModBlocks.LUMINESSENCE_BLOCK);

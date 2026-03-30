@@ -8,11 +8,11 @@ import com.blakebr0.extendedcrafting.init.ModTileEntities;
 import com.blakebr0.extendedcrafting.tileentity.CraftingCoreTileEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.resources.Identifier;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.world.Containers;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.ItemInteractionResult;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -26,6 +26,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import net.neoforged.neoforge.transfer.item.ItemResource;
 
 public class CraftingCoreBlock extends BaseTileEntityBlock {
 	public static final VoxelShape CRAFTING_CORE_SHAPE = VoxelShapeBuilder.builder()
@@ -37,8 +38,8 @@ public class CraftingCoreBlock extends BaseTileEntityBlock {
 			.cuboid(0, 13, 0, 16, 16, 16)
 			.build();
 
-	public CraftingCoreBlock() {
-		super(SoundType.METAL, 5.0F, 10.0F, true);
+	public CraftingCoreBlock(Identifier id) {
+		super(id, SoundType.METAL, 5.0F, 10.0F, true);
 	}
 
 	@Override
@@ -47,29 +48,28 @@ public class CraftingCoreBlock extends BaseTileEntityBlock {
 	}
 
 	@Override
-	protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
-		var held = player.getItemInHand(hand);
-
+	protected InteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
 		if (!level.isClientSide()) {
 			var tile = level.getBlockEntity(pos);
 
 			if (tile instanceof CraftingCoreTileEntity core) {
 				if (hitResult.getDirection() == Direction.UP) {
 					var inventory = core.getInventory();
-					var stackInSlot = inventory.getStackInSlot(0);
+					var input = inventory.getResource(0);
+					var held = player.getItemInHand(hand);
 
-					if (stackInSlot.isEmpty()) {
+					if (input.isEmpty()) {
 						if (!held.isEmpty()) {
-							inventory.setStackInSlot(0, StackHelper.withSize(held, 1, false));
+							inventory.set(0, ItemResource.of(held), 1);
 							player.setItemInHand(hand, StackHelper.shrink(held, 1, false));
 							level.playSound(null, pos, SoundEvents.ITEM_PICKUP, SoundSource.BLOCKS, 1.0F, 1.0F);
 						}
 					} else {
-						var item = new ItemEntity(level, player.getX(), player.getY(), player.getZ(), stackInSlot);
+						var item = new ItemEntity(level, player.getX(), player.getY(), player.getZ(), input.toStack());
 
 						item.setNoPickUpDelay();
 						level.addFreshEntity(item);
-						inventory.setStackInSlot(0, ItemStack.EMPTY);
+						inventory.set(0, ItemResource.EMPTY, 0);
 					}
 				} else {
 					player.openMenu(core, pos);
@@ -77,20 +77,7 @@ public class CraftingCoreBlock extends BaseTileEntityBlock {
 			}
 		}
 
-		return ItemInteractionResult.SUCCESS;
-	}
-
-	@Override
-	public void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean isMoving) {
-		if (state.getBlock() != newState.getBlock()) {
-			var tile = level.getBlockEntity(pos);
-
-			if (tile instanceof CraftingCoreTileEntity core) {
-				Containers.dropContents(level, pos, core.getInventory().getStacks());
-			}
-		}
-
-		super.onRemove(state, level, pos, newState, isMoving);
+		return InteractionResult.SUCCESS;
 	}
 
 	@Override
@@ -104,7 +91,7 @@ public class CraftingCoreBlock extends BaseTileEntityBlock {
 	}
 
 	@Override
-	protected int getAnalogOutputSignal(BlockState state, Level level, BlockPos pos) {
+	protected int getAnalogOutputSignal(BlockState state, Level level, BlockPos pos, Direction direction) {
 		return BlockHelper.getRedstoneSignalFromInventory(level.getBlockEntity(pos));
 	}
 

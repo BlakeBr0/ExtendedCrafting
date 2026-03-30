@@ -10,7 +10,7 @@ import com.blakebr0.extendedcrafting.singularity.SingularityRegistry;
 import com.blakebr0.extendedcrafting.singularity.SingularityUtils;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -45,7 +45,7 @@ public final class DynamicRecipeManager {
         var id = ExtendedCrafting.resource(singularity.getId().getPath() + "_singularity");
         var result = SingularityUtils.getItemForSingularity(singularity);
         int ingredientCount = singularity.getIngredientCount();
-        var catalystItem = BuiltInRegistries.ITEM.get(ResourceLocation.parse(ModConfigs.SINGULARITY_DEFAULT_CATALYST.get()));
+        var catalystItem = BuiltInRegistries.ITEM.get(Identifier.parse(ModConfigs.SINGULARITY_DEFAULT_CATALYST.get()));
         var catalyst = Ingredient.of(catalystItem);
         int powerRequired = ModConfigs.SINGULARITY_POWER_REQUIRED.get();
 

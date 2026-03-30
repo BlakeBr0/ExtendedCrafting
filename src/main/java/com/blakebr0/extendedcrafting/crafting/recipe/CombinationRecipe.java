@@ -2,17 +2,16 @@ package com.blakebr0.extendedcrafting.crafting.recipe;
 
 import com.blakebr0.extendedcrafting.api.crafting.ICombinationRecipe;
 import com.blakebr0.extendedcrafting.config.ModConfigs;
-import com.blakebr0.extendedcrafting.init.ModRecipeSerializers;
 import com.blakebr0.extendedcrafting.init.ModRecipeTypes;
 import com.blakebr0.extendedcrafting.util.IngredientListCache;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.CraftingInput;
@@ -22,21 +21,53 @@ import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.common.util.RecipeMatcher;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.function.BiFunction;
 
 public class CombinationRecipe implements ICombinationRecipe {
-	private final ItemStack result;
+	public static final MapCodec<CombinationRecipe> MAP_CODEC = RecordCodecBuilder.mapCodec(builder ->
+			builder.group(
+					Ingredient.CODEC.fieldOf("input").forGetter(recipe -> recipe.input),
+					Ingredient.CODEC
+							.listOf()
+							.fieldOf("ingredients")
+							.flatXmap(
+									field -> {
+										var max = 48;
+										var ingredients = field.toArray(Ingredient[]::new);
+										if (ingredients.length == 0) {
+											return DataResult.error(() -> "No ingredients for Combination recipe");
+										} else {
+											return ingredients.length > max
+													? DataResult.error(() -> "Too many ingredients for Combination recipe. The maximum is: %s".formatted(max))
+													: DataResult.success(Arrays.asList(ingredients));
+										}
+									},
+									DataResult::success
+							)
+							.forGetter(recipe -> recipe.ingredients),
+					ItemStack.CODEC.fieldOf("result").forGetter(recipe -> recipe.result),
+					Codec.INT.fieldOf("power_cost").forGetter(recipe -> recipe.powerCost),
+					Codec.INT.optionalFieldOf("power_rate", ModConfigs.CRAFTING_CORE_POWER_RATE.get()).forGetter(recipe -> recipe.powerRate)
+			).apply(builder, CombinationRecipe::new)
+	);
+	public static final StreamCodec<RegistryFriendlyByteBuf, CombinationRecipe> STREAM_CODEC = StreamCodec.of(
+			CombinationRecipe::toNetwork, CombinationRecipe::fromNetwork
+	);
+	public static final RecipeSerializer<CombinationRecipe> SERIALIZER = new RecipeSerializer<>(MAP_CODEC, STREAM_CODEC);
+
 	private final Ingredient input;
-	private final NonNullList<Ingredient> inputs;
+	private final List<Ingredient> ingredients;
+	private final ItemStack result;
 	private final int powerCost;
 	private final int powerRate;
     // for CraftTweaker recipes
     private BiFunction<Integer, ItemStack, ItemStack> transformer;
 
-	public CombinationRecipe(Ingredient input, NonNullList<Ingredient> inputs, ItemStack result, int powerCost, int powerRate) {
+	public CombinationRecipe(Ingredient input, List<Ingredient> ingredients, ItemStack result, int powerCost, int powerRate) {
 		this.input = input;
-		this.inputs = inputs;
+		this.ingredients = ingredients;
 		this.result = result;
 		this.powerCost = powerCost;
 		this.powerRate = powerRate;
@@ -45,7 +76,7 @@ public class CombinationRecipe implements ICombinationRecipe {
 	@Override
 	public boolean matches(CraftingInput inventory, Level level) {
 		// -1 ingredient for the input item
-		if (this.inputs.size() != inventory.ingredientCount() - 1)
+		if (this.ingredients.size() != inventory.ingredientCount() - 1)
 			return false;
 
 		var input = inventory.getItem(0);
@@ -61,52 +92,33 @@ public class CombinationRecipe implements ICombinationRecipe {
 			}
 		}
 
-		return RecipeMatcher.findMatches(inputs, this.inputs) != null;
+		return RecipeMatcher.findMatches(inputs, this.ingredients) != null;
 	}
 
 	@Override
-	public ItemStack assemble(CraftingInput inventory, HolderLookup.Provider lookup) {
+	public ItemStack assemble(CraftingInput inventory) {
 		return this.result.copy();
 	}
 
 	@Override
-	public boolean canCraftInDimensions(int width, int height) {
-		return true;
+	public RecipeSerializer<CombinationRecipe> getSerializer() {
+		return SERIALIZER;
 	}
 
 	@Override
-	public ItemStack getResultItem(HolderLookup.Provider provider) {
-		return this.result;
-	}
-
-	@Override
-	public NonNullList<Ingredient> getIngredients() {
-		return this.inputs;
-	}
-
-	@Override
-	public RecipeSerializer<?> getSerializer() {
-		return ModRecipeSerializers.COMBINATION.get();
-	}
-
-	@Override
-	public RecipeType<?> getType() {
+	public RecipeType<ICombinationRecipe> getType() {
 		return ModRecipeTypes.COMBINATION.get();
 	}
 
 	@Override
-	public boolean isSpecial() {
-		return true;
-	}
-
-    @Override
     public NonNullList<ItemStack> getRemainingItems(CraftingInput inventory) {
         var remaining = NonNullList.withSize(inventory.size(), ItemStack.EMPTY);
 
         for (int i = 0; i < remaining.size(); ++i) {
             var item = inventory.getItem(i);
-            if (item.hasCraftingRemainingItem()) {
-                remaining.set(i, item.getCraftingRemainingItem());
+			var remainder = item.getCraftingRemainder();
+            if (remainder != null) {
+                remaining.set(i, remainder.create());
             }
         }
 
@@ -115,7 +127,7 @@ public class CombinationRecipe implements ICombinationRecipe {
             var inputs = NonNullList.<Ingredient>create();
 
             inputs.add(this.input);
-            inputs.addAll(this.inputs);
+            inputs.addAll(this.ingredients);
 
             for (int i = 0; i < remaining.size(); i++) {
                 var stack = inventory.getItem(i);
@@ -157,7 +169,7 @@ public class CombinationRecipe implements ICombinationRecipe {
 		return IngredientListCache.getInstance().getIngredientsList(this, () -> {
             var ingredients = NonNullList.<Ingredient>create();
             ingredients.add(this.input);
-            ingredients.addAll(this.inputs);
+            ingredients.addAll(this.ingredients);
             return ingredients;
         });
 	}
@@ -166,75 +178,21 @@ public class CombinationRecipe implements ICombinationRecipe {
         this.transformer = transformer;
     }
 
-	public static class Serializer implements RecipeSerializer<CombinationRecipe> {
-		public static final MapCodec<CombinationRecipe> CODEC = RecordCodecBuilder.mapCodec(builder ->
-				builder.group(
-						Ingredient.CODEC_NONEMPTY.fieldOf("input").forGetter(recipe -> recipe.input),
-						Ingredient.CODEC_NONEMPTY
-								.listOf()
-								.fieldOf("ingredients")
-								.flatXmap(
-										field -> {
-											var max = 48;
-											var ingredients = field.toArray(Ingredient[]::new);
-											if (ingredients.length == 0) {
-												return DataResult.error(() -> "No ingredients for Combination recipe");
-											} else {
-												return ingredients.length > max
-														? DataResult.error(() -> "Too many ingredients for Combination recipe. The maximum is: %s".formatted(max))
-														: DataResult.success(NonNullList.of(Ingredient.EMPTY, ingredients));
-											}
-										},
-										DataResult::success
-								)
-								.forGetter(recipe -> recipe.inputs),
-						ItemStack.STRICT_CODEC.fieldOf("result").forGetter(recipe -> recipe.result),
-						Codec.INT.fieldOf("power_cost").forGetter(recipe -> recipe.powerCost),
-						Codec.INT.optionalFieldOf("power_rate", ModConfigs.CRAFTING_CORE_POWER_RATE.get()).forGetter(recipe -> recipe.powerRate)
-				).apply(builder, CombinationRecipe::new)
-		);
-		public static final StreamCodec<RegistryFriendlyByteBuf, CombinationRecipe> STREAM_CODEC = StreamCodec.of(
-				CombinationRecipe.Serializer::toNetwork, CombinationRecipe.Serializer::fromNetwork
-		);
+	private static CombinationRecipe fromNetwork(RegistryFriendlyByteBuf buffer) {
+		var input = Ingredient.CONTENTS_STREAM_CODEC.decode(buffer);
+		var ingredients = Ingredient.CONTENTS_STREAM_CODEC.apply(ByteBufCodecs.list()).decode(buffer);
+		var result = ItemStack.STREAM_CODEC.decode(buffer);
+		int powerCost = buffer.readVarInt();
+		int powerRate = buffer.readVarInt();
 
-		@Override
-		public MapCodec<CombinationRecipe> codec() {
-			return CODEC;
-		}
-
-		@Override
-		public StreamCodec<RegistryFriendlyByteBuf, CombinationRecipe> streamCodec() {
-			return STREAM_CODEC;
-		}
-
-		private static CombinationRecipe fromNetwork(RegistryFriendlyByteBuf buffer) {
-			var input = Ingredient.CONTENTS_STREAM_CODEC.decode(buffer);
-			int size = buffer.readVarInt();
-			var inputs = NonNullList.withSize(size, Ingredient.EMPTY);
-
-			for (int i = 0; i < size; i++) {
-				inputs.set(i, Ingredient.CONTENTS_STREAM_CODEC.decode(buffer));
-			}
-
-			var result = ItemStack.STREAM_CODEC.decode(buffer);
-			int powerCost = buffer.readVarInt();
-			int powerRate = buffer.readVarInt();
-
-			return new CombinationRecipe(input, inputs, result, powerCost, powerRate);
-		}
-
-		private static void toNetwork(RegistryFriendlyByteBuf buffer, CombinationRecipe recipe) {
-			Ingredient.CONTENTS_STREAM_CODEC.encode(buffer, recipe.input);
-			buffer.writeVarInt(recipe.inputs.size());
-
-			for (var ingredient : recipe.inputs) {
-				Ingredient.CONTENTS_STREAM_CODEC.encode(buffer, ingredient);
-			}
-
-			ItemStack.STREAM_CODEC.encode(buffer, recipe.result);
-			buffer.writeVarInt(recipe.powerCost);
-			buffer.writeVarInt(recipe.powerRate);
-		}
+		return new CombinationRecipe(input, ingredients, result, powerCost, powerRate);
 	}
 
+	private static void toNetwork(RegistryFriendlyByteBuf buffer, CombinationRecipe recipe) {
+		Ingredient.CONTENTS_STREAM_CODEC.encode(buffer, recipe.input);
+		Ingredient.CONTENTS_STREAM_CODEC.apply(ByteBufCodecs.list()).encode(buffer, recipe.ingredients);
+		ItemStack.STREAM_CODEC.encode(buffer, recipe.result);
+		buffer.writeVarInt(recipe.powerCost);
+		buffer.writeVarInt(recipe.powerRate);
+	}
 }

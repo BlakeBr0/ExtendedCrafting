@@ -6,7 +6,7 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.util.FastColor;
 import net.minecraft.world.item.crafting.Ingredient;
@@ -19,7 +19,7 @@ public class Singularity {
             Singularity::encode, Singularity::read
     );
 
-    private final ResourceLocation id;
+    private final Identifier id;
     private final String name;
     private final int[] colors;
     private final String tag;
@@ -29,7 +29,7 @@ public class Singularity {
     private Ingredient ingredient;
     private boolean enabled = true;
 
-    public Singularity(ResourceLocation id, String name, int[] colors, @Nullable Ingredient ingredient, int ingredientCount, boolean inUltimateSingularity) {
+    public Singularity(Identifier id, String name, int[] colors, @Nullable Ingredient ingredient, int ingredientCount, boolean inUltimateSingularity) {
         this.id = id;
         this.name = name;
         this.colors = Arrays.stream(colors).map(c -> FastColor.ARGB32.color(255, c)).toArray();
@@ -39,11 +39,11 @@ public class Singularity {
         this.inUltimateSingularity = inUltimateSingularity;
     }
 
-    public Singularity(ResourceLocation id, String name, int[] colors, @Nullable Ingredient ingredient) {
+    public Singularity(Identifier id, String name, int[] colors, @Nullable Ingredient ingredient) {
         this(id, name, colors, ingredient, -1, true);
     }
 
-    public Singularity(ResourceLocation id, String name, int[] colors, String tag, int ingredientCount, boolean inUltimateSingularity) {
+    public Singularity(Identifier id, String name, int[] colors, String tag, int ingredientCount, boolean inUltimateSingularity) {
         this.id = id;
         this.name = name;
         this.colors = Arrays.stream(colors).map(c -> FastColor.ARGB32.color(255, c)).toArray();
@@ -53,11 +53,11 @@ public class Singularity {
         this.inUltimateSingularity = inUltimateSingularity;
     }
 
-    public Singularity(ResourceLocation id, String name, int[] colors, String tag) {
+    public Singularity(Identifier id, String name, int[] colors, String tag) {
         this(id, name, colors, tag, -1, true);
     }
 
-    public ResourceLocation getId() {
+    public Identifier getId() {
         return this.id;
     }
 
@@ -79,7 +79,7 @@ public class Singularity {
 
     public Ingredient getIngredient() {
         if (this.tag != null && this.ingredient == null) {
-            var tag = ItemTags.create(ResourceLocation.parse(this.tag));
+            var tag = ItemTags.create(Identifier.parse(this.tag));
             if (BuiltInRegistries.ITEM.getTag(tag).isPresent()) {
                 this.ingredient = Ingredient.of(tag);
             } else {
@@ -115,7 +115,7 @@ public class Singularity {
     }
 
     public void write(RegistryFriendlyByteBuf buffer) {
-        buffer.writeResourceLocation(this.id);
+        buffer.writeIdentifier(this.id);
         buffer.writeUtf(this.name);
         buffer.writeVarIntArray(this.colors);
         buffer.writeBoolean(this.tag != null);
@@ -136,7 +136,7 @@ public class Singularity {
     }
 
     public static Singularity read(RegistryFriendlyByteBuf buffer) {
-        var id = buffer.readResourceLocation();
+        var id = buffer.readIdentifier();
         var name = buffer.readUtf();
         int[] colors = buffer.readVarIntArray();
         var isTagIngredient = buffer.readBoolean();

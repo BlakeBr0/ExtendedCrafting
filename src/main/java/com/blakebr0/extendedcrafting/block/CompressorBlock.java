@@ -5,9 +5,10 @@ import com.blakebr0.cucumber.helper.BlockHelper;
 import com.blakebr0.extendedcrafting.init.ModTileEntities;
 import com.blakebr0.extendedcrafting.tileentity.CompressorTileEntity;
 import net.minecraft.core.BlockPos;
-import net.minecraft.world.Containers;
+import net.minecraft.core.Direction;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.ItemInteractionResult;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -22,14 +23,14 @@ import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
-import net.minecraft.world.level.block.state.properties.DirectionProperty;
+import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.phys.BlockHitResult;
 
 public class CompressorBlock extends BaseTileEntityBlock {
-	private static final DirectionProperty FACING = HorizontalDirectionalBlock.FACING;
+	private static final EnumProperty<Direction> FACING = HorizontalDirectionalBlock.FACING;
 
-	public CompressorBlock() {
-		super(SoundType.METAL, 5.0F, 10.0F, true);
+	public CompressorBlock(Identifier id) {
+		super(id, SoundType.METAL, 5.0F, 10.0F, true);
 	}
 
 	@Override
@@ -38,7 +39,7 @@ public class CompressorBlock extends BaseTileEntityBlock {
 	}
 
 	@Override
-	protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
+	protected InteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
 		if (!level.isClientSide()) {
 			var tile = level.getBlockEntity(pos);
 
@@ -47,20 +48,7 @@ public class CompressorBlock extends BaseTileEntityBlock {
 			}
 		}
 
-		return ItemInteractionResult.SUCCESS;
-	}
-
-	@Override
-	public void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean isMoving) {
-		if (state.getBlock() != newState.getBlock()) {
-			var tile = level.getBlockEntity(pos);
-
-			if (tile instanceof CompressorTileEntity compressor) {
-				Containers.dropContents(level, pos, compressor.getInventory().getStacks());
-			}
-		}
-
-		super.onRemove(state, level, pos, newState, isMoving);
+		return InteractionResult.SUCCESS;
 	}
 
 	@Override
@@ -84,7 +72,7 @@ public class CompressorBlock extends BaseTileEntityBlock {
 	}
 
 	@Override
-	protected int getAnalogOutputSignal(BlockState state, Level level, BlockPos pos) {
+	protected int getAnalogOutputSignal(BlockState state, Level level, BlockPos pos, Direction direction) {
 		return BlockHelper.getRedstoneSignalFromInventory(level.getBlockEntity(pos));
 	}
 

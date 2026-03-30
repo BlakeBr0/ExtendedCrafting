@@ -1,12 +1,11 @@
 package com.blakebr0.extendedcrafting.tileentity;
 
-import com.blakebr0.cucumber.energy.BaseEnergyStorage;
+import com.blakebr0.cucumber.energy.CEnergyStorage;
 import com.blakebr0.cucumber.helper.StackHelper;
-import com.blakebr0.cucumber.inventory.BaseItemStackHandler;
+import com.blakebr0.cucumber.inventory.CItemStacksHandler;
 import com.blakebr0.cucumber.inventory.CachedRecipe;
 import com.blakebr0.cucumber.inventory.OnContentsChangedFunction;
 import com.blakebr0.cucumber.tileentity.BaseInventoryTileEntity;
-import com.blakebr0.cucumber.util.Localizable;
 import com.blakebr0.cucumber.util.Utils;
 import com.blakebr0.extendedcrafting.api.crafting.ICombinationRecipe;
 import com.blakebr0.extendedcrafting.config.ModConfigs;
@@ -14,12 +13,10 @@ import com.blakebr0.extendedcrafting.container.CraftingCoreContainer;
 import com.blakebr0.extendedcrafting.init.ModRecipeTypes;
 import com.blakebr0.extendedcrafting.init.ModTileEntities;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.core.particles.ColorParticleOption;
 import net.minecraft.core.particles.ItemParticleOption;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.FastColor;
@@ -31,14 +28,16 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.CraftingInput;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class CraftingCoreTileEntity extends BaseInventoryTileEntity implements MenuProvider {
-	private final BaseItemStackHandler inventory;
-	private final BaseItemStackHandler recipeInventory;
-	private final BaseEnergyStorage energy;
+	private final CItemStacksHandler inventory;
+	private final CItemStacksHandler recipeInventory;
+	private final CEnergyStorage energy;
 	private final CachedRecipe<CraftingInput, ICombinationRecipe> recipe;
 	private int progress;
 	private int pedestalCount;
@@ -46,34 +45,34 @@ public class CraftingCoreTileEntity extends BaseInventoryTileEntity implements M
 
 	public CraftingCoreTileEntity(BlockPos pos, BlockState state) {
 		super(ModTileEntities.CRAFTING_CORE.get(), pos, state);
-		this.inventory = createInventoryHandler((slot) -> this.setChanged());
-		this.energy = new BaseEnergyStorage(ModConfigs.CRAFTING_CORE_POWER_CAPACITY.get(), this::setChangedFast);
-		this.recipeInventory = BaseItemStackHandler.create(49);
+		this.inventory = createInventoryHandler((_, _) -> this.setChanged());
+		this.energy = new CEnergyStorage(ModConfigs.CRAFTING_CORE_POWER_CAPACITY.get(), _ -> this.setChangedFast());
+		this.recipeInventory = CItemStacksHandler.create(49);
 		this.recipe = new CachedRecipe<>(ModRecipeTypes.COMBINATION.get());
 	}
 
 	@Override
-	public BaseItemStackHandler getInventory() {
+	public CItemStacksHandler getInventory() {
 		return this.inventory;
 	}
 
 	@Override
-	public void loadAdditional(CompoundTag tag, HolderLookup.Provider lookup) {
-		super.loadAdditional(tag, lookup);
-		this.progress = tag.getInt("Progress");
-		this.energy.deserializeNBT(lookup, tag.get("Energy"));
+	public void loadAdditional(ValueInput input) {
+		super.loadAdditional(input);
+		this.progress = input.getIntOr("Progress", 0);
+		this.energy.deserialize(input);
 	}
 
 	@Override
-	public void saveAdditional(CompoundTag tag, HolderLookup.Provider lookup) {
-		super.saveAdditional(tag, lookup);
-		tag.putInt("Progress", this.progress);
-		tag.putInt("Energy", this.energy.getEnergyStored());
+	public void saveAdditional(ValueOutput output) {
+		super.saveAdditional(output);
+		output.putInt("Progress", this.progress);
+		this.energy.serialize(output);
 	}
 
 	@Override
 	public Component getDisplayName() {
-		return Localizable.of("container.extendedcrafting.crafting_core").build();
+		return Component.translatable("container.extendedcrafting.crafting_core");
 	}
 
 	@Override
@@ -139,13 +138,13 @@ public class CraftingCoreTileEntity extends BaseInventoryTileEntity implements M
 		tile.dispatchIfChanged();
 	}
 
-	public static BaseItemStackHandler createInventoryHandler(OnContentsChangedFunction onContentsChanged) {
-		return BaseItemStackHandler.create(1, onContentsChanged, builder -> {
+	public static CItemStacksHandler createInventoryHandler(OnContentsChangedFunction onContentsChanged) {
+		return CItemStacksHandler.create(1, onContentsChanged, builder -> {
 			builder.setDefaultSlotLimit(1);
 		});
 	}
 
-	public BaseEnergyStorage getEnergy() {
+	public CEnergyStorage getEnergy() {
 		return this.energy;
 	}
 

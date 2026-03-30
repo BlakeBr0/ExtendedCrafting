@@ -7,13 +7,13 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.mojang.serialization.JsonOps;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 
 public final class SingularityUtils {
-    public static Singularity loadFromJson(ResourceLocation id, JsonObject json) {
+    public static Singularity loadFromJson(Identifier id, JsonObject json) {
         var name = GsonHelper.getAsString(json, "name");
         var colors = GsonHelper.getAsJsonArray(json, "colors");
         int materialCount = GsonHelper.getAsInt(json, "materialCount", ModConfigs.SINGULARITY_MATERIALS_REQUIRED.get());

@@ -3,7 +3,7 @@ package com.blakebr0.extendedcrafting.client.screen;
 import com.blakebr0.cucumber.client.render.GhostItemRenderer;
 import com.blakebr0.cucumber.client.screen.BaseContainerScreen;
 import com.blakebr0.cucumber.client.screen.widget.EnergyBarWidget;
-import com.blakebr0.cucumber.inventory.BaseItemStackHandler;
+import com.blakebr0.cucumber.inventory.CItemStacksHandler;
 import com.blakebr0.extendedcrafting.ExtendedCrafting;
 import com.blakebr0.extendedcrafting.client.screen.button.RecipeSelectButton;
 import com.blakebr0.extendedcrafting.client.screen.button.ToggleTableRunningButton;
@@ -16,14 +16,14 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
 
 import java.util.List;
 
 public class AdvancedAutoTableScreen extends BaseContainerScreen<AdvancedAutoTableContainer> {
-	public static final ResourceLocation BACKGROUND = ExtendedCrafting.resource("textures/gui/advanced_auto_table.png");
+	public static final Identifier BACKGROUND = ExtendedCrafting.resource("textures/gui/advanced_auto_table.png");
 	private AutoTableTileEntity tile;
 
 	public AdvancedAutoTableScreen(AdvancedAutoTableContainer container, Inventory inventory, Component title) {
@@ -159,14 +159,14 @@ public class AdvancedAutoTableScreen extends BaseContainerScreen<AdvancedAutoTab
 		return this.tile.isRunning();
 	}
 
-	private BaseItemStackHandler getRecipeInfo(int selected) {
+	private CItemStacksHandler getRecipeInfo(int selected) {
 		if (this.tile == null)
 			return null;
 
 		return this.tile.getRecipeStorage().getRecipe(selected);
 	}
 
-	private BaseItemStackHandler getSelectedRecipe() {
+	private CItemStacksHandler getSelectedRecipe() {
 		if (this.tile == null)
 			return null;
 

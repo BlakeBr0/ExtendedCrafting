@@ -8,6 +8,7 @@ import com.blakebr0.extendedcrafting.lib.ModTooltips;
 import com.blakebr0.extendedcrafting.singularity.SingularityUtils;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Rarity;
 import net.minecraft.world.item.TooltipFlag;
@@ -15,8 +16,8 @@ import net.minecraft.world.item.TooltipFlag;
 import java.util.List;
 
 public class SingularityItem extends BaseItem implements IColored {
-	public SingularityItem() {
-		super(p -> p.rarity(Rarity.UNCOMMON));
+	public SingularityItem(Identifier id) {
+		super(id, p -> p.rarity(Rarity.UNCOMMON));
 	}
 
 	@Override

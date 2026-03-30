@@ -3,7 +3,7 @@ package com.blakebr0.extendedcrafting.client.screen;
 import com.blakebr0.cucumber.client.render.GhostItemRenderer;
 import com.blakebr0.cucumber.client.screen.BaseContainerScreen;
 import com.blakebr0.cucumber.client.screen.widget.EnergyBarWidget;
-import com.blakebr0.cucumber.inventory.BaseItemStackHandler;
+import com.blakebr0.cucumber.inventory.CItemStacksHandler;
 import com.blakebr0.extendedcrafting.ExtendedCrafting;
 import com.blakebr0.extendedcrafting.client.screen.button.RecipeSelectButton;
 import com.blakebr0.extendedcrafting.container.AutoFluxCrafterContainer;
@@ -15,14 +15,14 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
 
 import java.util.List;
 
 public class AutoFluxCrafterScreen extends BaseContainerScreen<AutoFluxCrafterContainer> {
-	private static final ResourceLocation BACKGROUND = ExtendedCrafting.resource("textures/gui/auto_flux_crafter.png");
+	private static final Identifier BACKGROUND = ExtendedCrafting.resource("textures/gui/auto_flux_crafter.png");
 	private AutoFluxCrafterTileEntity tile;
 
 	public AutoFluxCrafterScreen(AutoFluxCrafterContainer container, Inventory inventory, Component title) {
@@ -137,14 +137,14 @@ public class AutoFluxCrafterScreen extends BaseContainerScreen<AutoFluxCrafterCo
 		return null;
 	}
 
-	private BaseItemStackHandler getRecipeInfo(int selected) {
+	private CItemStacksHandler getRecipeInfo(int selected) {
 		if (this.tile == null)
 			return null;
 
 		return this.tile.getRecipeStorage().getRecipe(selected);
 	}
 
-	private BaseItemStackHandler getSelectedRecipe() {
+	private CItemStacksHandler getSelectedRecipe() {
 		if (this.tile == null)
 			return null;
 

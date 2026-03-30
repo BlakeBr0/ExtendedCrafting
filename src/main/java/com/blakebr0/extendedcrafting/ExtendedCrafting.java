@@ -1,7 +1,6 @@
 package com.blakebr0.extendedcrafting;
 
 import com.blakebr0.extendedcrafting.client.ModMenuScreens;
-import com.blakebr0.extendedcrafting.client.ModRecipeBookCategories;
 import com.blakebr0.extendedcrafting.client.ModTESRs;
 import com.blakebr0.extendedcrafting.client.handler.ColorHandler;
 import com.blakebr0.extendedcrafting.config.ModConfigs;
@@ -19,7 +18,7 @@ import com.blakebr0.extendedcrafting.init.ModReloadListeners;
 import com.blakebr0.extendedcrafting.init.ModTileEntities;
 import com.blakebr0.extendedcrafting.network.NetworkHandler;
 import com.blakebr0.extendedcrafting.singularity.SingularityRegistry;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -54,10 +53,9 @@ public final class ExtendedCrafting {
 		bus.register(new NetworkHandler());
 		bus.register(new RegisterCapabilityHandler());
 
-		if (FMLEnvironment.dist == Dist.CLIENT) {
+		if (FMLEnvironment.getDist() == Dist.CLIENT) {
 			bus.register(new ColorHandler());
 			bus.register(new ModMenuScreens());
-			bus.register(new ModRecipeBookCategories());
 			bus.register(new ModTESRs());
 		}
 
@@ -74,7 +72,7 @@ public final class ExtendedCrafting {
 		SingularityRegistry.getInstance().writeDefaultSingularityFiles();
 	}
 
-	public static ResourceLocation resource(String path) {
-		return ResourceLocation.fromNamespaceAndPath(MOD_ID, path);
+	public static Identifier resource(String path) {
+		return Identifier.fromNamespaceAndPath(MOD_ID, path);
 	}
 }

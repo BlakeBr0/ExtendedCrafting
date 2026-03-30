@@ -54,7 +54,7 @@ public class ShapelessTableRecipe implements ITableRecipe {
 	}
 
 	@Override
-	public ItemStack assemble(TableCraftingInput inventory, HolderLookup.Provider provider) {
+	public ItemStack assemble(TableCraftingInput input, HolderLookup.Provider provider) {
 		return this.result.copy();
 	}
 

@@ -27,6 +27,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.Identifier;
 import net.minecraft.resources.RegistryOps;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -53,8 +54,8 @@ public class RecipeMakerItem extends BaseItem {
 	private static final String NEW_LINE = System.lineSeparator() + "\t";
 	private static final char[] KEYS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+-_*/".toCharArray();
 
-	public RecipeMakerItem() {
-		super(p -> p
+	public RecipeMakerItem(Identifier id) {
+		super(id, p -> p
 				.stacksTo(1)
 				.component(ModDataComponentTypes.RECIPE_MAKER, RecipeMakerComponent.EMPTY)
 		);

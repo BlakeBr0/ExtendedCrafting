@@ -11,14 +11,14 @@ import com.blakebr0.extendedcrafting.tileentity.CompressorTileEntity;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Inventory;
 
 import java.util.ArrayList;
 
 public class CompressorScreen extends BaseContainerScreen<CompressorContainer> {
-	public static final ResourceLocation BACKGROUND = ExtendedCrafting.resource("textures/gui/compressor.png");
+	public static final Identifier BACKGROUND = ExtendedCrafting.resource("textures/gui/compressor.png");
 	private CompressorTileEntity tile;
 
 	public CompressorScreen(CompressorContainer container, Inventory inventory, Component title) {

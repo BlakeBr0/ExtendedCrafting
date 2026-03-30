@@ -1,6 +1,6 @@
 package com.blakebr0.extendedcrafting.tileentity;
 
-import com.blakebr0.cucumber.energy.BaseEnergyStorage;
+import com.blakebr0.cucumber.energy.CEnergyStorage;
 import com.blakebr0.cucumber.helper.StackHelper;
 import com.blakebr0.extendedcrafting.config.ModConfigs;
 import com.blakebr0.extendedcrafting.container.AutoFluxCrafterContainer;
@@ -9,8 +9,7 @@ import com.blakebr0.extendedcrafting.init.ModRecipeTypes;
 import com.blakebr0.extendedcrafting.init.ModTileEntities;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -18,33 +17,35 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.items.IItemHandler;
 
 import java.util.Optional;
 
 public class AutoFluxCrafterTileEntity extends FluxCrafterTileEntity implements MenuProvider {
-    private final BaseEnergyStorage energy;
+    private final CEnergyStorage energy;
     private final TableRecipeStorage recipeStorage;
 
     public AutoFluxCrafterTileEntity(BlockPos pos, BlockState state) {
         super(ModTileEntities.AUTO_FLUX_CRAFTER.get(), pos, state);
-        this.energy = new BaseEnergyStorage(ModConfigs.AUTO_FLUX_CRAFTER_POWER_CAPACITY.get(), this::setChangedFast);
+        this.energy = new CEnergyStorage(ModConfigs.AUTO_FLUX_CRAFTER_POWER_CAPACITY.get(), _ -> this.setChangedFast());
         this.recipeStorage = new TableRecipeStorage(10);
     }
 
     @Override
-    public void saveAdditional(CompoundTag tag, HolderLookup.Provider lookup) {
-        super.saveAdditional(tag, lookup);
-        tag.put("Energy", this.energy.serializeNBT(lookup));
-        tag.merge(this.recipeStorage.serializeNBT(lookup));
+    public void loadAdditional(ValueInput input) {
+        super.loadAdditional(input);
+        this.energy.deserialize(input);
+        this.recipeStorage.deserialize(lookup, tag);
     }
 
     @Override
-    public void loadAdditional(CompoundTag tag, HolderLookup.Provider lookup) {
-        super.loadAdditional(tag, lookup);
-        this.energy.deserializeNBT(lookup, tag.get("Energy"));
-        this.recipeStorage.deserializeNBT(lookup, tag);
+    public void saveAdditional(ValueOutput output) {
+        super.saveAdditional(output);
+        this.energy.serialize(output);
+        output.merge(this.recipeStorage.serialize(lookup));
     }
 
     @Override
@@ -53,9 +54,9 @@ public class AutoFluxCrafterTileEntity extends FluxCrafterTileEntity implements 
 
         // on load, we will re-validate the recipe outputs to ensure they are still correct
         if (this.level != null && !this.level.isClientSide()) {
-            this.getRecipeStorage().validate(inventory -> this.level.getRecipeManager()
+            this.getRecipeStorage().validate(inventory -> ((ServerLevel) this.level).recipeAccess()
                     .getRecipeFor(ModRecipeTypes.FLUX_CRAFTER.get(), inventory, this.level)
-                    .map(r -> r.value().assemble(inventory, this.level.registryAccess()))
+                    .map(r -> r.value().assemble(inventory))
                     .orElse(ItemStack.EMPTY)
             );
         }
@@ -127,7 +128,7 @@ public class AutoFluxCrafterTileEntity extends FluxCrafterTileEntity implements 
         this.setChangedAndDispatch();
     }
 
-    public BaseEnergyStorage getEnergy() {
+    public CEnergyStorage getEnergy() {
         return this.energy;
     }
 

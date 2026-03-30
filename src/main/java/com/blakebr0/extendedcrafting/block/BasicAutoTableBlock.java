@@ -2,21 +2,24 @@ package com.blakebr0.extendedcrafting.block;
 
 import com.blakebr0.cucumber.block.BaseTileEntityBlock;
 import com.blakebr0.cucumber.helper.BlockHelper;
+import com.blakebr0.cucumber.iface.IHoverTextProvider;
 import com.blakebr0.cucumber.util.VoxelShapeBuilder;
 import com.blakebr0.extendedcrafting.init.ModDataComponentTypes;
 import com.blakebr0.extendedcrafting.init.ModTileEntities;
 import com.blakebr0.extendedcrafting.lib.ModTooltips;
 import com.blakebr0.extendedcrafting.tileentity.AutoTableTileEntity;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
-import net.minecraft.world.Containers;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.ItemInteractionResult;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.component.TooltipDisplay;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.SoundType;
@@ -28,9 +31,9 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
-import java.util.List;
+import java.util.function.Consumer;
 
-public class BasicAutoTableBlock extends BaseTileEntityBlock {
+public class BasicAutoTableBlock extends BaseTileEntityBlock implements IHoverTextProvider {
     public static final VoxelShape BASIC_AUTO_TABLE_SHAPE = VoxelShapeBuilder.builder()
             .cuboid(2, 0, 2, 14, 2, 14)
             .cuboid(3, 2, 3, 5, 10, 5)
@@ -41,8 +44,8 @@ public class BasicAutoTableBlock extends BaseTileEntityBlock {
             .cuboid(4, 2, 4, 12, 10, 12)
             .build();
 
-    public BasicAutoTableBlock() {
-        super(SoundType.METAL, 5.0F, 10.0F, true);
+    public BasicAutoTableBlock(Identifier id) {
+        super(id, SoundType.METAL, 5.0F, 10.0F, true);
     }
 
     @Override
@@ -51,7 +54,7 @@ public class BasicAutoTableBlock extends BaseTileEntityBlock {
     }
 
     @Override
-    protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
+    protected InteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
         if (!level.isClientSide()) {
             var tile = level.getBlockEntity(pos);
 
@@ -60,20 +63,7 @@ public class BasicAutoTableBlock extends BaseTileEntityBlock {
             }
         }
 
-        return ItemInteractionResult.SUCCESS;
-    }
-
-    @Override
-    public void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean isMoving) {
-        if (state.getBlock() != newState.getBlock()) {
-            var tile = level.getBlockEntity(pos);
-
-            if (tile instanceof AutoTableTileEntity.Basic table) {
-                Containers.dropContents(level, pos, table.getInventory().getStacks());
-            }
-        }
-
-        super.onRemove(state, level, pos, newState, isMoving);
+        return InteractionResult.SUCCESS;
     }
 
     @Override
@@ -83,7 +73,7 @@ public class BasicAutoTableBlock extends BaseTileEntityBlock {
             var tile = level.getBlockEntity(pos);
 
             if (tile instanceof AutoTableTileEntity.Basic table) {
-                table.getRecipeStorage().deserializeNBT(level.registryAccess(), storage.data());
+                table.getRecipeStorage().deserialize(storage.data());
             }
         }
     }
@@ -94,12 +84,12 @@ public class BasicAutoTableBlock extends BaseTileEntityBlock {
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> tooltip, TooltipFlag flag) {
-        tooltip.add(ModTooltips.TIER.args(1).build());
+    public void appendHoverText(ItemStack stack, Item.TooltipContext context, TooltipDisplay display, Consumer<Component> builder, TooltipFlag flag) {
+        builder.accept(ModTooltips.TIER.args(1).toComponent());
 
         var storage = stack.get(ModDataComponentTypes.TABLE_RECIPE_STORAGE);
         if (storage != null && storage.recipeCount() > 0) {
-            tooltip.add(ModTooltips.RECIPE_COUNT.args(storage.recipeCount()).build());
+            builder.accept(ModTooltips.RECIPE_COUNT.args(storage.recipeCount()).toComponent());
         }
     }
 
@@ -109,7 +99,7 @@ public class BasicAutoTableBlock extends BaseTileEntityBlock {
     }
 
     @Override
-    protected int getAnalogOutputSignal(BlockState state, Level level, BlockPos pos) {
+    protected int getAnalogOutputSignal(BlockState state, Level level, BlockPos pos, Direction direction) {
         return BlockHelper.getRedstoneSignalFromInventory(level.getBlockEntity(pos));
     }
 

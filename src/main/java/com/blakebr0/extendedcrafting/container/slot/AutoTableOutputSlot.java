@@ -1,17 +1,17 @@
 package com.blakebr0.extendedcrafting.container.slot;
 
-import com.blakebr0.cucumber.inventory.slot.OutputSlot;
+import com.blakebr0.cucumber.inventory.CItemStacksHandler;
+import com.blakebr0.cucumber.inventory.slot.COutputSlot;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.neoforge.items.IItemHandler;
 
-public class AutoTableOutputSlot extends OutputSlot {
+public class AutoTableOutputSlot extends COutputSlot {
     private final AbstractContainerMenu container;
     private final CraftingContainer matrix;
     private ItemStack lastStack = ItemStack.EMPTY;
 
-    public AutoTableOutputSlot(AbstractContainerMenu container, CraftingContainer matrix, IItemHandler inventory, int index, int xPosition, int yPosition) {
+    public AutoTableOutputSlot(AbstractContainerMenu container, CraftingContainer matrix, CItemStacksHandler inventory, int index, int xPosition, int yPosition) {
         super(inventory, index, xPosition, yPosition);
         this.container = container;
         this.matrix = matrix;

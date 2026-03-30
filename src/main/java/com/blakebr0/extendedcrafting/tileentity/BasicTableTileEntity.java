@@ -1,9 +1,8 @@
 package com.blakebr0.extendedcrafting.tileentity;
 
-import com.blakebr0.cucumber.inventory.BaseItemStackHandler;
+import com.blakebr0.cucumber.inventory.CItemStacksHandler;
 import com.blakebr0.cucumber.inventory.OnContentsChangedFunction;
 import com.blakebr0.cucumber.tileentity.BaseInventoryTileEntity;
-import com.blakebr0.cucumber.util.Localizable;
 import com.blakebr0.extendedcrafting.container.BasicTableContainer;
 import com.blakebr0.extendedcrafting.init.ModTileEntities;
 import net.minecraft.core.BlockPos;
@@ -15,21 +14,21 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.level.block.state.BlockState;
 
 public class BasicTableTileEntity extends BaseInventoryTileEntity implements MenuProvider {
-	private final BaseItemStackHandler inventory;
+	private final CItemStacksHandler inventory;
 
 	public BasicTableTileEntity(BlockPos pos, BlockState state) {
 		super(ModTileEntities.BASIC_TABLE.get(), pos, state);
-		this.inventory = createInventoryHandler((slot) -> this.setChangedAndDispatch());
+		this.inventory = createInventoryHandler((_, _) -> this.setChangedAndDispatch());
 	}
 
 	@Override
-	public BaseItemStackHandler getInventory() {
+	public CItemStacksHandler getInventory() {
 		return this.inventory;
 	}
 
 	@Override
 	public Component getDisplayName() {
-		return Localizable.of("container.extendedcrafting.basic_table").build();
+		return Component.translatable("container.extendedcrafting.basic_table");
 	}
 
 	@Override
@@ -37,11 +36,11 @@ public class BasicTableTileEntity extends BaseInventoryTileEntity implements Men
 		return BasicTableContainer.create(windowId, playerInventory, this.inventory, this.getBlockPos());
 	}
 
-	public static BaseItemStackHandler createInventoryHandler() {
+	public static CItemStacksHandler createInventoryHandler() {
 		return createInventoryHandler(null);
 	}
 
-	public static BaseItemStackHandler createInventoryHandler(OnContentsChangedFunction onContentsChanged) {
-		return BaseItemStackHandler.create(9, onContentsChanged, builder -> {});
+	public static CItemStacksHandler createInventoryHandler(OnContentsChangedFunction onContentsChanged) {
+		return CItemStacksHandler.create(9, onContentsChanged, builder -> {});
 	}
 }

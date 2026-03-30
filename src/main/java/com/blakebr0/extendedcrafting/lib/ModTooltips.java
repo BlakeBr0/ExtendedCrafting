@@ -18,10 +18,8 @@ public final class ModTooltips {
     public static final Tooltip MODE = new Tooltip("tooltip.extendedcrafting.mode");
     public static final Tooltip NUM_ITEMS = new Tooltip("tooltip.extendedcrafting.num_items");
     public static final Tooltip AND_X_MORE = new Tooltip("tooltip.extendedcrafting.and_x_more");
-    public static final Tooltip TICKS = new Tooltip("tooltip.extendedcrafting.ticks");
     public static final Tooltip SECONDS = new Tooltip("tooltip.extendedcrafting.seconds");
     public static final Tooltip REQUIRES_TABLE = new Tooltip("tooltip.extendedcrafting.requires_table");
-    public static final Tooltip ITEMS_REQUIRED = new Tooltip("tooltip.extendedcrafting.items_required");
     public static final Tooltip PER_ALTERNATOR = new Tooltip("tooltip.extendedcrafting.per_alternator");
     public static final Tooltip RECIPE_COUNT = new Tooltip("tooltip.extendedcrafting.recipe_count");
     public static final Tooltip SINGULARITY_ID = new Tooltip("tooltip.extendedcrafting.singularity_id");
@@ -31,6 +29,6 @@ public final class ModTooltips {
 
     public static Component getAddedByTooltip(String modid) {
         var name = ModList.get().getModFileById(modid).getMods().get(0).getDisplayName();
-        return ADDED_BY.args(name).build();
+        return ADDED_BY.args(name).toComponent();
     }
 }

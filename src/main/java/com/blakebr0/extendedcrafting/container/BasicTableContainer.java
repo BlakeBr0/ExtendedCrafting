@@ -1,7 +1,7 @@
 package com.blakebr0.extendedcrafting.container;
 
 import com.blakebr0.cucumber.container.BaseContainerMenu;
-import com.blakebr0.cucumber.inventory.BaseItemStackHandler;
+import com.blakebr0.cucumber.inventory.CItemStacksHandler;
 import com.blakebr0.extendedcrafting.config.ModConfigs;
 import com.blakebr0.extendedcrafting.container.inventory.ExtendedCraftingInventory;
 import com.blakebr0.extendedcrafting.container.slot.TableOutputSlot;
@@ -10,6 +10,7 @@ import com.blakebr0.extendedcrafting.init.ModRecipeTypes;
 import com.blakebr0.extendedcrafting.tileentity.BasicTableTileEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -30,7 +31,7 @@ public class BasicTableContainer extends BaseContainerMenu {
 		this(type, id, playerInventory, BasicTableTileEntity.createInventoryHandler(), buffer.readBlockPos());
 	}
 
-	private BasicTableContainer(MenuType<?> type, int id, Inventory playerInventory, BaseItemStackHandler inventory, BlockPos pos) {
+	private BasicTableContainer(MenuType<?> type, int id, Inventory playerInventory, CItemStacksHandler inventory, BlockPos pos) {
 		super(type, id, pos);
 		this.level = playerInventory.player.level();
 		this.result = new ResultContainer();
@@ -60,24 +61,25 @@ public class BasicTableContainer extends BaseContainerMenu {
 
 	@Override
 	public void slotsChanged(Container matrix) {
-        if (this.level.isClientSide) {
+        if (this.level.isClientSide()) {
             return;
         }
 
+		var recipeAccess = ((ServerLevel) this.level).recipeAccess();
 		var inventory = this.matrix.asCraftInput();
-		var recipe = this.level.getRecipeManager().getRecipeFor(ModRecipeTypes.TABLE.get(), inventory, this.level);
+		var recipe = recipeAccess.getRecipeFor(ModRecipeTypes.TABLE.get(), inventory, this.level);
 
 		this.isVanillaRecipe = false;
 
 		if (recipe.isPresent()) {
-			var result = recipe.get().value().assemble(inventory, this.level.registryAccess());
+			var result = recipe.get().value().assemble(inventory);
 
 			this.result.setItem(0, result);
 		} else if (ModConfigs.TABLE_USE_VANILLA_RECIPES.get()) {
-			var vanilla = this.level.getRecipeManager().getRecipeFor(RecipeType.CRAFTING, inventory, this.level);
+			var vanilla = recipeAccess.getRecipeFor(RecipeType.CRAFTING, inventory, this.level);
 
 			if (vanilla.isPresent()) {
-				var result = vanilla.get().value().assemble(inventory, this.level.registryAccess());
+				var result = vanilla.get().value().assemble(inventory);
 
 				this.isVanillaRecipe = true;
 				this.result.setItem(0, result);
@@ -138,7 +140,7 @@ public class BasicTableContainer extends BaseContainerMenu {
 		return new BasicTableContainer(ModMenuTypes.BASIC_TABLE.get(), windowId, playerInventory, buffer);
 	}
 
-	public static BasicTableContainer create(int windowId, Inventory playerInventory, BaseItemStackHandler inventory, BlockPos pos) {
+	public static BasicTableContainer create(int windowId, Inventory playerInventory, CItemStacksHandler inventory, BlockPos pos) {
 		return new BasicTableContainer(ModMenuTypes.BASIC_TABLE.get(), windowId, playerInventory, inventory, pos);
 	}
 }

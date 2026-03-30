@@ -5,14 +5,15 @@ import com.blakebr0.extendedcrafting.ExtendedCrafting;
 import com.blakebr0.extendedcrafting.crafting.TableRecipeStorage;
 import com.blakebr0.extendedcrafting.network.payload.SaveRecipePayload;
 import com.blakebr0.extendedcrafting.network.payload.SelectRecipePayload;
-import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.input.InputWithModifiers;
 import net.minecraft.core.BlockPos;
-import net.minecraft.resources.ResourceLocation;
-import net.neoforged.neoforge.network.PacketDistributor;
+import net.minecraft.resources.Identifier;
+import net.neoforged.neoforge.client.network.ClientPacketDistributor;
 
 public class RecipeSelectButton extends IconButton {
-    private static final ResourceLocation WIDGETS_LOCATION = ExtendedCrafting.resource("textures/gui/widgets.png");
+    private static final Identifier WIDGETS_LOCATION = ExtendedCrafting.resource("textures/gui/widgets.png");
 
+    private final BlockPos pos;
     private final int index;
     private final TableRecipeStorage recipeStorage;
 
@@ -21,9 +22,19 @@ public class RecipeSelectButton extends IconButton {
     }
 
     public RecipeSelectButton(int x, int y, BlockPos pos, int index, int textureY, TableRecipeStorage recipeStorage, OnTooltip onTooltip) {
-        super(x, y, 11, 11, index * 11, textureY, WIDGETS_LOCATION, button -> onPress(pos, index), onTooltip);
+        super(x, y, 11, 11, index * 11, textureY, WIDGETS_LOCATION, onTooltip);
+        this.pos = pos;
         this.index = index;
         this.recipeStorage = recipeStorage;
+    }
+
+    @Override
+    public void onPress(InputWithModifiers input) {
+        if (input.hasShiftDown()) {
+            ClientPacketDistributor.sendToServer(new SaveRecipePayload(this.pos, this.index));
+        } else {
+            ClientPacketDistributor.sendToServer(new SelectRecipePayload(this.pos, this.index));
+        }
     }
 
     @Override
@@ -37,13 +48,5 @@ public class RecipeSelectButton extends IconButton {
 
     public boolean isSelected() {
         return this.recipeStorage.getSelected() == this.index;
-    }
-
-    private static void onPress(BlockPos pos, int index) {
-        if (Screen.hasShiftDown()) {
-            PacketDistributor.sendToServer(new SaveRecipePayload(pos, index));
-        } else {
-            PacketDistributor.sendToServer(new SelectRecipePayload(pos, index));
-        }
     }
 }

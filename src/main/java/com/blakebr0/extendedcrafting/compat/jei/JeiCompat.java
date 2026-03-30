@@ -54,9 +54,8 @@ import mezz.jei.api.registration.IRecipeRegistration;
 import mezz.jei.api.registration.IRecipeTransferRegistration;
 import mezz.jei.api.registration.ISubtypeRegistration;
 import net.minecraft.client.Minecraft;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.RecipeHolder;
 
 import java.util.ArrayList;
 import java.util.stream.Collectors;
@@ -64,11 +63,11 @@ import java.util.stream.Stream;
 
 @JeiPlugin
 public final class JeiCompat implements IModPlugin {
-    public static final ResourceLocation UID = ExtendedCrafting.resource("jei_plugin");
-    public static final ResourceLocation ICONS = ExtendedCrafting.resource("textures/jei/icons.png");
+    public static final Identifier UID = ExtendedCrafting.resource("jei_plugin");
+    public static final Identifier ICONS = ExtendedCrafting.resource("textures/jei/icons.png");
 
     @Override
-    public ResourceLocation getPluginUid() {
+    public Identifier getPluginUid() {
         return UID;
     }
 

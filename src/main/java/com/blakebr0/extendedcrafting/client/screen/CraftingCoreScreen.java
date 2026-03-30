@@ -7,12 +7,12 @@ import com.blakebr0.extendedcrafting.container.CraftingCoreContainer;
 import com.blakebr0.extendedcrafting.tileentity.CraftingCoreTileEntity;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
 
 public class CraftingCoreScreen extends BaseContainerScreen<CraftingCoreContainer> {
-	private static final ResourceLocation BACKGROUND = ExtendedCrafting.resource("textures/gui/crafting_core.png");
+	private static final Identifier BACKGROUND = ExtendedCrafting.resource("textures/gui/crafting_core.png");
 	private CraftingCoreTileEntity tile;
 
 	public CraftingCoreScreen(CraftingCoreContainer container, Inventory inventory, Component title) {

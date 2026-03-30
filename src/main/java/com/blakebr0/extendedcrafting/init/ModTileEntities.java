@@ -46,6 +46,6 @@ public final class ModTileEntities {
 	public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<AutoFluxCrafterTileEntity>> AUTO_FLUX_CRAFTER = register("auto_flux_crafter", AutoFluxCrafterTileEntity::new, () -> new Block[] { ModBlocks.AUTO_FLUX_CRAFTER.get() });
 
 	private static <T extends BlockEntity> DeferredHolder<BlockEntityType<?>, BlockEntityType<T>> register(String name, BlockEntityType.BlockEntitySupplier<T> tile, Supplier<Block[]> blocks) {
-		return REGISTRY.register(name, () -> BlockEntityType.Builder.of(tile, blocks.get()).build(null));
+		return REGISTRY.register(name, () -> new BlockEntityType<>(tile, blocks.get()));
 	}
 }

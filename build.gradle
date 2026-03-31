@@ -86,9 +86,9 @@ configurations {
 dependencies {
     implementation "com.blakebr0.cucumber:Cucumber:${cucumber_version}"
     implementation "curse.maven:jade-324717:${jade_version}"
-    implementation "com.blamejared.crafttweaker:CraftTweaker-neoforge-${crafttweaker_version}"
+    compileOnly "com.blamejared.crafttweaker:CraftTweaker-neoforge-${crafttweaker_version}" // TODO update ct
 
-    runtimeOnly "vazkii.patchouli:Patchouli:${patchouli_version}"
+    compileOnly "vazkii.patchouli:Patchouli:${patchouli_version}" // TODO update patchouli
     runtimeOnly "mezz.jei:jei-${minecraft_version}-neoforge:${jei_version}"
 
     compileOnly "mezz.jei:jei-${minecraft_version}-common-api:${jei_version}"

@@ -70,4 +70,12 @@ public class FluxAlternatorContainer extends BaseContainerMenu {
 
 		return itemstack;
 	}
+
+	public int getEnergyStored() {
+		return this.data.get(0);
+	}
+
+	public int getMaxEnergyCapacity() {
+		return this.data.get(1);
+	}
 }

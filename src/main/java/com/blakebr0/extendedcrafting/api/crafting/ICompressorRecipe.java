@@ -6,18 +6,13 @@ import net.minecraft.world.item.crafting.PlacementInfo;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeBookCategories;
 import net.minecraft.world.item.crafting.RecipeBookCategory;
+import net.neoforged.neoforge.common.crafting.SizedIngredient;
 
 /**
  * Used to represent a Compressor recipe for the recipe type
  */
 public interface ICompressorRecipe extends Recipe<CraftingInput> {
-    /**
-     * Get the count for the ingredient at the requested index
-     * @param index the ingredient index
-     * @return either the count or -1 if invalid
-     */
-    int getCount(int index);
-
+    SizedIngredient getIngredient();
     Ingredient getCatalyst();
     int getPowerCost();
     int getPowerRate();

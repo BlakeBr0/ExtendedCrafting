@@ -24,9 +24,4 @@ public class CatalystSlot extends CSingleSlot {
     public boolean mayPlace(ItemStack stack) {
         return true;
     }
-
-    @Override
-    public ItemStack remove(int amount) {
-        return this.inventory.extractItem(this.index, amount, false, true);
-    }
 }

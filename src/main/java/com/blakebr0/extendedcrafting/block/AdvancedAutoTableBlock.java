@@ -73,7 +73,7 @@ public class AdvancedAutoTableBlock extends BaseTileEntityBlock implements IHove
             var tile = level.getBlockEntity(pos);
 
             if (tile instanceof AutoTableTileEntity.Advanced table) {
-                table.getRecipeStorage().deserialize(storage.data());
+                table.getRecipeStorage().read(storage.data());
             }
         }
     }

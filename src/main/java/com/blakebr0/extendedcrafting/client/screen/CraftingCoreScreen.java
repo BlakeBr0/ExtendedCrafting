@@ -15,7 +15,7 @@ import net.minecraft.world.item.crafting.CraftingInput;
 
 public class CraftingCoreScreen extends BaseContainerScreen<CraftingCoreContainer> {
 	private static final Identifier BACKGROUND = ExtendedCrafting.resource("textures/gui/crafting_core.png");
-	private  static final Identifier SLOT_HIGHLIGHT_FRONT_SPRITE = Identifier.withDefaultNamespace("container/slot_highlight_front");
+	private static final Identifier SLOT_HIGHLIGHT_FRONT_SPRITE = Identifier.withDefaultNamespace("container/slot_highlight_front");
 
 	private CraftingCoreTileEntity tile;
 
@@ -31,9 +31,7 @@ public class CraftingCoreScreen extends BaseContainerScreen<CraftingCoreContaine
 
 		this.tile = this.getTileEntity();
 
-		if (this.tile != null) {
-			this.addRenderableWidget(new EnergyBarWidget(x + 7, y + 17, this.tile.getEnergy()));
-		}
+		this.addRenderableWidget(new EnergyBarWidget(x + 7, y + 17, this.menu::getEnergyStored, this.menu::getMaxEnergyCapacity));
 	}
 
 	@Override
@@ -46,15 +44,15 @@ public class CraftingCoreScreen extends BaseContainerScreen<CraftingCoreContaine
 		matrix.pushMatrix();
 		matrix.scale(0.75F, 0.75F);
 
-		gfx.text(this.font, text("screen.extendedcrafting.crafting_core.pedestals", this.getPedestalCount()), 36, 36, -1);
+		gfx.text(this.font, text("screen.extendedcrafting.crafting_core.pedestals", this.menu.getPedestalCount()), 36, 36, -1);
 
 		if (!this.hasRecipe()) {
 			gfx.text(this.font, text("screen.extendedcrafting.crafting_core.no_recipe"), 36, 56, -1);
 		} else {
-			gfx.text(this.font, text("screen.extendedcrafting.crafting_core.power_cost", number(this.getEnergyRequired())) + " FE", 36, 56, -1);
-			gfx.text(this.font, text("screen.extendedcrafting.crafting_core.power_rate", number(this.getEnergyRate())) + " FE/t", 36, 66, -1);
+			gfx.text(this.font, text("screen.extendedcrafting.crafting_core.power_cost", number(this.menu.getEnergyRequired())) + " FE", 36, 56, -1);
+			gfx.text(this.font, text("screen.extendedcrafting.crafting_core.power_rate", number(this.menu.getEnergyRate())) + " FE/t", 36, 66, -1);
 
-			if (this.getEnergyStored() < this.getEnergyRate()) {
+			if (this.menu.getEnergyStored() < this.menu.getEnergyRate()) {
 				gfx.text(this.font, text("screen.extendedcrafting.crafting_core.no_power"), 36, 86, -1);
 			}
 		}
@@ -90,7 +88,7 @@ public class CraftingCoreScreen extends BaseContainerScreen<CraftingCoreContaine
 		int y = this.getGuiTop();
 
 		if (this.hasRecipe()) {
-			if (this.getProgress() > 0 && this.getEnergyRate() > 0) {
+			if (this.menu.getProgress() > 0 && this.menu.getEnergyRate() > 0) {
 				int i2 = this.getProgressBarScaled();
 				gfx.blit(RenderPipelines.GUI_TEXTURED, BACKGROUND, x + 116, y + 47, 194, 0, i2 + 1, 16, 256, 256);
 			}
@@ -139,44 +137,9 @@ public class CraftingCoreScreen extends BaseContainerScreen<CraftingCoreContaine
 		return ItemStack.EMPTY;
 	}
 
-	private int getEnergyStored() {
-		if (this.tile == null)
-			return 0;
-
-		return this.tile.getEnergy().getAmountAsInt();
-	}
-
-	private int getEnergyRequired() {
-		if (this.tile == null)
-			return 0;
-
-		return this.tile.getEnergyRequired();
-	}
-
-	private int getEnergyRate() {
-		if (this.tile == null)
-			return 0;
-
-		return this.tile.getEnergyRate();
-	}
-
-	private int getProgress() {
-		if (this.tile == null)
-			return 0;
-
-		return this.tile.getProgress();
-	}
-
-	private int getPedestalCount() {
-		if (this.tile == null)
-			return 0;
-
-		return this.tile.getPedestalCount();
-	}
-
 	private int getProgressBarScaled() {
-		int i = this.getProgress();
-		long j = this.getEnergyRequired();
+		int i = this.menu.getProgress();
+		long j = this.menu.getEnergyRequired();
 		return (int) (j != 0 && i != 0 ? (long) i * 24 / j : 0);
 	}
 

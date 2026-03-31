@@ -20,6 +20,7 @@ import com.blakebr0.extendedcrafting.tileentity.CraftingCoreTileEntity;
 import com.blakebr0.extendedcrafting.tileentity.EnderCrafterTileEntity;
 import com.blakebr0.extendedcrafting.tileentity.FluxCrafterTileEntity;
 import net.minecraft.resources.Identifier;
+import net.minecraft.world.item.crafting.CraftingInput;
 import snownee.jade.api.BlockAccessor;
 import snownee.jade.api.IBlockComponentProvider;
 import snownee.jade.api.ITooltip;
@@ -50,14 +51,13 @@ public class JadeCompat implements IWailaPlugin {
 		registration.registerBlockComponent(new IBlockComponentProvider() {
 			@Override
 			public void appendTooltip(ITooltip tooltip, BlockAccessor accessor, IPluginConfig config) {
-				var core = (CraftingCoreTileEntity) accessor.getBlockEntity();
-				var recipe = core.getActiveRecipe();
+				if (accessor.getBlockEntity() instanceof CraftingCoreTileEntity core) {
+					var recipe = core.getActiveRecipe();
+					if (recipe != null) {
+						var output = recipe.assemble(CraftingInput.EMPTY);
 
-				if (recipe != null) {
-					var level = accessor.getLevel();
-					var output = recipe.getResultItem(level.registryAccess());
-
-					tooltip.add(ModTooltips.CRAFTING.args(output.getCount(), output.getHoverName()).build());
+						tooltip.add(ModTooltips.CRAFTING.args(output.getCount(), output.getHoverName()).toComponent());
+					}
 				}
 			}
 
@@ -70,7 +70,7 @@ public class JadeCompat implements IWailaPlugin {
 		registration.registerBlockComponent(new IBlockComponentProvider() {
 			@Override
 			public void appendTooltip(ITooltip tooltip, BlockAccessor accessor, IPluginConfig config) {
-				tooltip.add(ModTooltips.TIER.args(1).build());
+				tooltip.add(ModTooltips.TIER.args(1).toComponent());
 			}
 
 			@Override
@@ -82,7 +82,7 @@ public class JadeCompat implements IWailaPlugin {
 		registration.registerBlockComponent(new IBlockComponentProvider() {
 			@Override
 			public void appendTooltip(ITooltip tooltip, BlockAccessor accessor, IPluginConfig config) {
-				tooltip.add(ModTooltips.TIER.args(2).build());
+				tooltip.add(ModTooltips.TIER.args(2).toComponent());
 			}
 
 			@Override
@@ -94,7 +94,7 @@ public class JadeCompat implements IWailaPlugin {
 		registration.registerBlockComponent(new IBlockComponentProvider() {
 			@Override
 			public void appendTooltip(ITooltip tooltip, BlockAccessor accessor, IPluginConfig config) {
-				tooltip.add(ModTooltips.TIER.args(3).build());
+				tooltip.add(ModTooltips.TIER.args(3).toComponent());
 			}
 
 			@Override
@@ -106,7 +106,7 @@ public class JadeCompat implements IWailaPlugin {
 		registration.registerBlockComponent(new IBlockComponentProvider() {
 			@Override
 			public void appendTooltip(ITooltip tooltip, BlockAccessor accessor, IPluginConfig config) {
-				tooltip.add(ModTooltips.TIER.args(4).build());
+				tooltip.add(ModTooltips.TIER.args(4).toComponent());
 			}
 
 			@Override
@@ -118,7 +118,7 @@ public class JadeCompat implements IWailaPlugin {
 		registration.registerBlockComponent(new IBlockComponentProvider() {
 			@Override
 			public void appendTooltip(ITooltip tooltip, BlockAccessor accessor, IPluginConfig config) {
-				tooltip.add(ModTooltips.TIER.args(1).build());
+				tooltip.add(ModTooltips.TIER.args(1).toComponent());
 			}
 
 			@Override
@@ -130,7 +130,7 @@ public class JadeCompat implements IWailaPlugin {
 		registration.registerBlockComponent(new IBlockComponentProvider() {
 			@Override
 			public void appendTooltip(ITooltip tooltip, BlockAccessor accessor, IPluginConfig config) {
-				tooltip.add(ModTooltips.TIER.args(2).build());
+				tooltip.add(ModTooltips.TIER.args(2).toComponent());
 			}
 
 			@Override
@@ -142,7 +142,7 @@ public class JadeCompat implements IWailaPlugin {
 		registration.registerBlockComponent(new IBlockComponentProvider() {
 			@Override
 			public void appendTooltip(ITooltip tooltip, BlockAccessor accessor, IPluginConfig config) {
-				tooltip.add(ModTooltips.TIER.args(3).build());
+				tooltip.add(ModTooltips.TIER.args(3).toComponent());
 			}
 
 			@Override
@@ -154,7 +154,7 @@ public class JadeCompat implements IWailaPlugin {
 		registration.registerBlockComponent(new IBlockComponentProvider() {
 			@Override
 			public void appendTooltip(ITooltip tooltip, BlockAccessor accessor, IPluginConfig config) {
-				tooltip.add(ModTooltips.TIER.args(4).build());
+				tooltip.add(ModTooltips.TIER.args(4).toComponent());
 			}
 
 			@Override
@@ -166,14 +166,13 @@ public class JadeCompat implements IWailaPlugin {
 		registration.registerBlockComponent(new IBlockComponentProvider() {
 			@Override
 			public void appendTooltip(ITooltip tooltip, BlockAccessor accessor, IPluginConfig config) {
-				var crafter = (EnderCrafterTileEntity) accessor.getBlockEntity();
-				var recipe = crafter.getActiveRecipe();
+				if (accessor.getBlockEntity() instanceof EnderCrafterTileEntity crafter) {
+					var recipe = crafter.getActiveRecipe();
+					if (recipe != null) {
+						var output = recipe.assemble(CraftingInput.EMPTY);
 
-				if (recipe != null) {
-					var level = accessor.getLevel();
-					var output = recipe.getResultItem(level.registryAccess());
-
-					tooltip.add(ModTooltips.CRAFTING.args(output.getCount(), output.getHoverName()).build());
+						tooltip.add(ModTooltips.CRAFTING.args(output.getCount(), output.getHoverName()).toComponent());
+					}
 				}
 			}
 
@@ -186,14 +185,13 @@ public class JadeCompat implements IWailaPlugin {
 		registration.registerBlockComponent(new IBlockComponentProvider() {
 			@Override
 			public void appendTooltip(ITooltip tooltip, BlockAccessor accessor, IPluginConfig config) {
-				var crafter = (EnderCrafterTileEntity) accessor.getBlockEntity();
-				var recipe = crafter.getActiveRecipe();
+				if (accessor.getBlockEntity() instanceof EnderCrafterTileEntity crafter) {
+					var recipe = crafter.getActiveRecipe();
+					if (recipe != null) {
+						var output = recipe.assemble(CraftingInput.EMPTY);
 
-				if (recipe != null) {
-					var level = accessor.getLevel();
-					var output = recipe.getResultItem(level.registryAccess());
-
-					tooltip.add(ModTooltips.CRAFTING.args(output.getCount(), output.getHoverName()).build());
+						tooltip.add(ModTooltips.CRAFTING.args(output.getCount(), output.getHoverName()).toComponent());
+					}
 				}
 			}
 
@@ -206,14 +204,13 @@ public class JadeCompat implements IWailaPlugin {
 		registration.registerBlockComponent(new IBlockComponentProvider() {
 			@Override
 			public void appendTooltip(ITooltip tooltip, BlockAccessor accessor, IPluginConfig config) {
-				var crafter = (FluxCrafterTileEntity) accessor.getBlockEntity();
-				var recipe = crafter.getActiveRecipe();
+				if (accessor.getBlockEntity() instanceof FluxCrafterTileEntity crafter) {
+					var recipe = crafter.getActiveRecipe();
+					if (recipe != null) {
+						var output = recipe.assemble(CraftingInput.EMPTY);
 
-				if (recipe != null) {
-					var level = accessor.getLevel();
-					var output = recipe.getResultItem(level.registryAccess());
-
-					tooltip.add(ModTooltips.CRAFTING.args(output.getCount(), output.getHoverName()).build());
+						tooltip.add(ModTooltips.CRAFTING.args(output.getCount(), output.getHoverName()).toComponent());
+					}
 				}
 			}
 
@@ -226,14 +223,13 @@ public class JadeCompat implements IWailaPlugin {
 		registration.registerBlockComponent(new IBlockComponentProvider() {
 			@Override
 			public void appendTooltip(ITooltip tooltip, BlockAccessor accessor, IPluginConfig config) {
-				var compressor = (CompressorTileEntity) accessor.getBlockEntity();
-				var recipe = compressor.getActiveRecipe();
+				if (accessor.getBlockEntity() instanceof CompressorTileEntity compressor) {
+					var recipe = compressor.getActiveRecipe();
+					if (recipe != null) {
+						var output = recipe.assemble(CraftingInput.EMPTY);
 
-				if (recipe != null) {
-					var level = accessor.getLevel();
-					var output = recipe.getResultItem(level.registryAccess());
-
-					tooltip.add(ModTooltips.CRAFTING.args(output.getCount(), output.getHoverName()).build());
+						tooltip.add(ModTooltips.CRAFTING.args(output.getCount(), output.getHoverName()).toComponent());
+					}
 				}
 			}
 

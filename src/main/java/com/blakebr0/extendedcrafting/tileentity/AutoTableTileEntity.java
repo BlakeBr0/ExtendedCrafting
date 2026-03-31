@@ -1,12 +1,10 @@
 package com.blakebr0.extendedcrafting.tileentity;
 
 import com.blakebr0.cucumber.energy.CEnergyStorage;
-import com.blakebr0.cucumber.helper.StackHelper;
 import com.blakebr0.cucumber.inventory.CItemStacksHandler;
 import com.blakebr0.cucumber.inventory.OnContentsChangedFunction;
 import com.blakebr0.cucumber.tileentity.BaseInventoryTileEntity;
 import com.blakebr0.cucumber.util.ContainerDataBuilder;
-import com.blakebr0.cucumber.util.Localizable;
 import com.blakebr0.extendedcrafting.api.TableCraftingInput;
 import com.blakebr0.extendedcrafting.api.crafting.ITableRecipe;
 import com.blakebr0.extendedcrafting.config.ModConfigs;
@@ -27,9 +25,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.CraftingInput;
 import net.minecraft.world.item.crafting.CraftingRecipe;
-import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
@@ -38,7 +34,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import net.neoforged.neoforge.capabilities.Capabilities;
-import net.neoforged.neoforge.items.IItemHandler;
 import net.neoforged.neoforge.transfer.ResourceHandler;
 import net.neoforged.neoforge.transfer.item.ItemResource;
 import net.neoforged.neoforge.transfer.transaction.Transaction;
@@ -59,7 +54,14 @@ public abstract class AutoTableTileEntity extends BaseInventoryTileEntity implem
     public AutoTableTileEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
         super(type, pos, state);
 
-        this.dataAccess = ContainerDataBuilder.builder().build();
+        this.dataAccess = ContainerDataBuilder.builder()
+                .sync(this.getEnergy()::getAmountAsInt, this.getEnergy()::set)
+                .sync(this.getEnergy()::getCapacityAsInt, this.getEnergy()::setMaxCapacity)
+                .sync(() -> this.progress, value -> this.progress = value)
+                .sync(this::getProgressRequired)
+                .sync(() -> this.running ? 1 : 0, value -> this.running = value != 0)
+                .sync(this.getRecipeStorage()::getSelected, this.getRecipeStorage()::setSelected)
+                .build();
     }
 
     @Override
@@ -123,15 +125,10 @@ public abstract class AutoTableTileEntity extends BaseInventoryTileEntity implem
                                     var size = (recipeInventory.tier() * 2) + 1;
                                     var index = l + recipeInventory.left() + (k + recipeInventory.top()) * size;
                                     var remainingStack = remaining.get(l + k * recipeInventory.width());
-                                    var currentStack = inventory.getStackInSlot(index);
+                                    var currentStack = inventory.getResource(index);
 
-                                    inventory.setStackInSlot(index, StackHelper.shrink(currentStack, 1, false));
-
-                                    currentStack = inventory.getStackInSlot(index);
-
-                                    if (StackHelper.canCombineStacks(remainingStack, currentStack)) {
-                                        inventory.setStackInSlot(index, StackHelper.combineStacks(inventory.getStackInSlot(index), remainingStack));
-                                    }
+                                    inventory.extract(index, currentStack, 1, tx, true);
+                                    inventory.insert(index, ItemResource.of(remainingStack), remainingStack.count(), tx, true);
                                 }
                             }
 

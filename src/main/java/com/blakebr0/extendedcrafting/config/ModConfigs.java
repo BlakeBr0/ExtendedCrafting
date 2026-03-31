@@ -15,7 +15,7 @@ public final class ModConfigs {
 
 		client.comment("Client settings.").push("General");
 		ENABLE_COMPRESSOR_RENDERER = client
-				.comment("Should the Quantum Compressor render the result item above it?")
+				.comment("Should the Quantum Compressor render the result stack above it?")
 				.define("enableCompressorRenderer", true);
 		client.pop();
 
@@ -182,7 +182,7 @@ public final class ModConfigs {
 				.comment("Should default recipes be generated for Singularities?")
 				.define("defaultRecipes", true);
 		SINGULARITY_DEFAULT_CATALYST = common
-				.comment("The item to use as the Catalyst in default Singularity recipes.")
+				.comment("The stack to use as the Catalyst in default Singularity recipes.")
 				.define("defaultCatalyst", "extendedcrafting:ultimate_catalyst");
 		SINGULARITY_ULTIMATE_RECIPE = common
 				.comment("Should the default recipe for the Ultimate Singularity be generated?")

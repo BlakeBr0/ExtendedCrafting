@@ -1,6 +1,8 @@
 package com.blakebr0.extendedcrafting.crafting;
 
 import com.blakebr0.cucumber.inventory.CItemStacksHandler;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.CraftingInput;
 import net.minecraft.world.level.storage.ValueInput;
@@ -128,6 +130,25 @@ public class TableRecipeStorage implements ValueIOSerializable {
         }
 
         child.putInt("Selected", this.selected);
+    }
+
+    public void read(CompoundTag tag) {
+//        var child = tag.child("RecipeStorage");
+//        var recipes = child.childrenList("Recipes");
+//
+//        for (int i = 0; i < recipes.size(); i++) {
+//            this.recipes[i].deserialize(recipes.get(i));
+//        }
+//
+//        this.selected = child.getIntOr("Selected", 0);
+    }
+
+    public CompoundTag write() {
+        var tag = new CompoundTag();
+//        var recipes = new ListTag();
+//
+////        tag.
+        return tag;
     }
 
     public void validate(Function<CraftingInput, ItemStack> validator) {

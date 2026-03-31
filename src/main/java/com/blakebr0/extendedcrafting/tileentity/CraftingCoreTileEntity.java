@@ -1,7 +1,6 @@
 package com.blakebr0.extendedcrafting.tileentity;
 
 import com.blakebr0.cucumber.energy.CEnergyStorage;
-import com.blakebr0.cucumber.helper.StackHelper;
 import com.blakebr0.cucumber.inventory.CItemStacksHandler;
 import com.blakebr0.cucumber.inventory.CachedRecipe;
 import com.blakebr0.cucumber.inventory.OnContentsChangedFunction;
@@ -57,7 +56,14 @@ public class CraftingCoreTileEntity extends BaseInventoryTileEntity implements M
 		this.recipeInventory = CItemStacksHandler.create(49);
 		this.recipe = new CachedRecipe<>(ModRecipeTypes.COMBINATION.get());
 
-		this.dataAccess = ContainerDataBuilder.builder().build();
+		this.dataAccess = ContainerDataBuilder.builder()
+				.sync(this.energy::getAmountAsInt, this.energy::set)
+				.sync(this.energy::getCapacityAsInt, this.energy::setMaxCapacity)
+				.sync(() -> this.progress, value -> this.progress = value)
+				.sync(this::getEnergyRequired)
+				.sync(this::getEnergyRate)
+				.sync(() -> this.pedestalCount)
+				.build();
 	}
 
 	@Override
@@ -101,7 +107,7 @@ public class CraftingCoreTileEntity extends BaseInventoryTileEntity implements M
 					if (done) {
 						var input = tile.toCraftingInput();
 						var remaining = recipe.getRemainingItems(input);
-						int index = 1; // 0 is the center item
+						int index = 1; // 0 is the center stack
 
 						for (var pedestalPos : pedestalsWithItems.keySet()) {
 							var pedestalTile = level.getBlockEntity(pedestalPos);
@@ -218,11 +224,14 @@ public class CraftingCoreTileEntity extends BaseInventoryTileEntity implements M
 		if (!haveItemsChanged)
 			return;
 
-		this.recipeInventory.setSize(items.length + 1);
-		this.recipeInventory.setStackInSlot(0, this.inventory.getStackInSlot(0));
+		this.recipeInventory.set(0, this.inventory.getResource(0), this.inventory.getAmountAsInt(0));
 
-		for (int i = 0; i < items.length; i++) {
-			this.recipeInventory.setStackInSlot(i + 1, items[i]);
+		for (int i = 0; i < this.recipeInventory.size() - 1; i++) {
+			if (i < items.length) {
+				this.recipeInventory.set(i + 1, ItemResource.of(items[i]), items[i].count());
+			} else {
+				this.recipeInventory.set(i + 1, ItemResource.EMPTY, 0);
+			}
 		}
 	}
 

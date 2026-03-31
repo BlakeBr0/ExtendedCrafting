@@ -72,11 +72,8 @@ public class CompressorRecipe implements ICompressorRecipe {
 	}
 
 	@Override
-	public int getCount(int index) {
-		if (index < 0 || index > 1)
-			return -1;
-
-		return this.ingredient.count();
+	public SizedIngredient getIngredient() {
+		return this.ingredient;
 	}
 
 	@Override

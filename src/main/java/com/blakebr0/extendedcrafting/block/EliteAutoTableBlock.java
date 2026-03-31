@@ -73,7 +73,7 @@ public class EliteAutoTableBlock extends BaseTileEntityBlock implements IHoverTe
             var tile = level.getBlockEntity(pos);
 
             if (tile instanceof AutoTableTileEntity.Elite table) {
-                table.getRecipeStorage().deserialize(storage.data());
+                table.getRecipeStorage().read(storage.data());
             }
         }
     }

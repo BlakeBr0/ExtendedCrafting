@@ -59,7 +59,7 @@ public class AutoFluxCrafterBlock extends BaseTileEntityBlock implements IHoverT
 			var tile = level.getBlockEntity(pos);
 
 			if (tile instanceof AutoFluxCrafterTileEntity crafter) {
-				crafter.getRecipeStorage().deserialize(storage.data());
+				crafter.getRecipeStorage().read(storage.data());
 			}
 		}
 	}

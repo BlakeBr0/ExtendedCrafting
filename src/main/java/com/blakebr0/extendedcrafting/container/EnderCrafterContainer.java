@@ -87,4 +87,12 @@ public class EnderCrafterContainer extends BaseContainerMenu {
 
 		return itemstack;
 	}
+
+	public int getProgress() {
+		return this.data.get(0);
+	}
+
+	public int getProgressRequired() {
+		return this.data.get(1);
+	}
 }

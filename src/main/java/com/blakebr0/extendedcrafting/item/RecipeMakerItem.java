@@ -189,7 +189,7 @@ public class RecipeMakerItem extends BaseItem {
 
 			if (item.isEmpty()) {
 				var id = BuiltInRegistries.ITEM.getKey(resource.getItem());
-				item = "item:" + id;
+				item = "stack:" + id;
 			}
 
 			if (ModConfigs.RECIPE_MAKER_USE_DATA_COMPONENTS.get() && !item.startsWith("tag") && ModConfigs.isCraftTweakerInstalled()) {
@@ -254,7 +254,7 @@ public class RecipeMakerItem extends BaseItem {
 				item = "tag:items:" + tagId;
 			} else {
 				var id = BuiltInRegistries.ITEM.getKey(resource.getItem());
-				item = "item:" + id;
+				item = "stack:" + id;
 			}
 
 			if (ModConfigs.RECIPE_MAKER_USE_DATA_COMPONENTS.get() && !item.startsWith("tag") && ModConfigs.isCraftTweakerInstalled()) {
@@ -288,7 +288,7 @@ public class RecipeMakerItem extends BaseItem {
 
 		var inputId = BuiltInRegistries.ITEM.getKey(tile.getInventory().getResource(0).getItem());
 
-		string.append("<recipetype:extendedcrafting:combination>.addRecipe(\"").append(uuid).append("\", <>, 100000, <item:").append(inputId).append(">, [").append(NEW_LINE);
+		string.append("<recipetype:extendedcrafting:combination>.addRecipe(\"").append(uuid).append("\", <>, 100000, <stack:").append(inputId).append(">, [").append(NEW_LINE);
 
 		var stacks = tile.getPedestalsWithItems().values().stream().filter(s -> !s.isEmpty()).toArray(ItemStack[]::new);
 
@@ -301,7 +301,7 @@ public class RecipeMakerItem extends BaseItem {
 				item = "tag:items:" + tagId;
 			} else {
 				var id = BuiltInRegistries.ITEM.getKey(stack.getItem());
-				item = "item:" + id;
+				item = "stack:" + id;
 			}
 
 			if (ModConfigs.RECIPE_MAKER_USE_DATA_COMPONENTS.get() && !item.startsWith("tag") && ModConfigs.isCraftTweakerInstalled()) {

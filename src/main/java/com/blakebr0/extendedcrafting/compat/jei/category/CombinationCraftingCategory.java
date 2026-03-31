@@ -1,7 +1,6 @@
 package com.blakebr0.extendedcrafting.compat.jei.category;
 
 import com.blakebr0.cucumber.util.Formatting;
-import com.blakebr0.cucumber.util.Localizable;
 import com.blakebr0.extendedcrafting.ExtendedCrafting;
 import com.blakebr0.extendedcrafting.api.crafting.ICombinationRecipe;
 import com.blakebr0.extendedcrafting.init.ModBlocks;
@@ -13,8 +12,9 @@ import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
 import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.RecipeIngredientRole;
-import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.recipe.category.IRecipeCategory;
+import mezz.jei.api.recipe.types.IRecipeHolderType;
+import mezz.jei.api.recipe.types.IRecipeType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
@@ -25,7 +25,7 @@ import java.awt.*;
 
 public class CombinationCraftingCategory implements IRecipeCategory<RecipeHolder<ICombinationRecipe>> {
 	private static final Identifier TEXTURE = ExtendedCrafting.resource("textures/jei/combination_crafting.png");
-	public static final RecipeType<RecipeHolder<ICombinationRecipe>> RECIPE_TYPE = RecipeType.createRecipeHolderType(ExtendedCrafting.resource("combination"));
+	public static final IRecipeHolderType<ICombinationRecipe> RECIPE_TYPE = IRecipeHolderType.create(ExtendedCrafting.resource("combination"));
 
 	private final IDrawable background;
 	private final IDrawable icon;
@@ -36,18 +36,23 @@ public class CombinationCraftingCategory implements IRecipeCategory<RecipeHolder
 	}
 
     @Override
-    public RecipeType<RecipeHolder<ICombinationRecipe>> getRecipeType() {
+    public IRecipeType<RecipeHolder<ICombinationRecipe>> getRecipeType() {
         return RECIPE_TYPE;
     }
 
     @Override
 	public Component getTitle() {
-		return Localizable.of("jei.category.extendedcrafting.combination").build();
+		return Component.translatable("jei.category.extendedcrafting.combination");
 	}
 
 	@Override
-	public IDrawable getBackground() {
-		return this.background;
+	public int getWidth() {
+		return this.background.getWidth();
+	}
+
+	@Override
+	public int getHeight() {
+		return this.background.getHeight();
 	}
 
 	@Override
@@ -75,22 +80,22 @@ public class CombinationCraftingCategory implements IRecipeCategory<RecipeHolder
 		var level = Minecraft.getInstance().level;
 
 		assert level != null;
-
-		var inputs = recipe.getIngredients();
-		var output = recipe.getResultItem(level.registryAccess());
-
-		builder.addSlot(RecipeIngredientRole.INPUT, 77, 47).addIngredients(recipe.getInput());
-
-		double angleBetweenEach = 360.0 / inputs.size();
-		Point point = new Point(53, 8), center = new Point(74, 47);
-
-        for (var input : inputs) {
-            builder.addSlot(RecipeIngredientRole.INPUT, point.x, point.y).addIngredients(input);
-
-            point = rotatePoint(point, center, angleBetweenEach);
-        }
-
-		builder.addSlot(RecipeIngredientRole.OUTPUT, 77, 150).addItemStack(output);
+// TODO jei
+//		var inputs = recipe.getIngredients();
+//		var output = recipe.getResultItem(level.registryAccess());
+//
+//		builder.addSlot(RecipeIngredientRole.INPUT, 77, 47).addIngredients(recipe.getInput());
+//
+//		double angleBetweenEach = 360.0 / inputs.size();
+//		Point point = new Point(53, 8), center = new Point(74, 47);
+//
+//        for (var input : inputs) {
+//            builder.addSlot(RecipeIngredientRole.INPUT, point.x, point.y).addIngredients(input);
+//
+//            point = rotatePoint(point, center, angleBetweenEach);
+//        }
+//
+//		builder.addSlot(RecipeIngredientRole.OUTPUT, 77, 150).addItemStack(output);
 	}
 
 	private static Point rotatePoint(Point in, Point about, double degrees) {

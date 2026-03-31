@@ -18,6 +18,8 @@ import net.minecraft.world.item.crafting.ShapedRecipePattern;
 import net.minecraft.world.level.Level;
 import org.apache.commons.lang3.function.TriFunction;
 
+import java.util.Optional;
+
 public class ShapedTableRecipe implements ITableRecipe {
     public static final MapCodec<ShapedTableRecipe> MAP_CODEC = RecordCodecBuilder.mapCodec(builder ->
             builder.group(
@@ -141,7 +143,7 @@ public class ShapedTableRecipe implements ITableRecipe {
 
         for (int i = 0; i < height; i++) {
             for (int j = 0; j < width; j++) {
-                Ingredient ingredient;
+                Optional<Ingredient> ingredient;
                 if (symmetrical) {
                     ingredient = ingredients.get(width - j - 1 + i * width);
                 } else {
@@ -149,7 +151,7 @@ public class ShapedTableRecipe implements ITableRecipe {
                 }
 
                 var stack = inventory.getItem(j, i);
-                if (!ingredient.test(stack)) {
+                if (ingredient.isEmpty() || !ingredient.get().test(stack)) {
                     return false;
                 }
             }

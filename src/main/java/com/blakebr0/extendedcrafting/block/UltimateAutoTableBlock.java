@@ -73,7 +73,7 @@ public class UltimateAutoTableBlock extends BaseTileEntityBlock implements IHove
             var tile = level.getBlockEntity(pos);
 
             if (tile instanceof AutoTableTileEntity.Ultimate table) {
-                table.getRecipeStorage().deserialize(storage.data());
+                table.getRecipeStorage().read(storage.data());
             }
         }
     }

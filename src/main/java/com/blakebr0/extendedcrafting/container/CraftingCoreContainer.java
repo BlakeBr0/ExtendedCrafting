@@ -70,4 +70,28 @@ public class CraftingCoreContainer extends BaseContainerMenu {
 
 		return itemstack;
 	}
+
+	public int getEnergyStored() {
+		return this.data.get(0);
+	}
+
+	public int getMaxEnergyCapacity() {
+		return this.data.get(1);
+	}
+
+	public int getProgress() {
+		return this.data.get(2);
+	}
+
+	public int getEnergyRequired() {
+		return this.data.get(3);
+	}
+
+	public int getEnergyRate() {
+		return this.data.get(4);
+	}
+
+	public int getPedestalCount() {
+		return this.data.get(5);
+	}
 }

@@ -75,7 +75,7 @@ public class CombinationRecipe implements ICombinationRecipe {
 
 	@Override
 	public boolean matches(CraftingInput inventory, Level level) {
-		// -1 ingredient for the input item
+		// -1 ingredient for the input stack
 		if (this.ingredients.size() != inventory.ingredientCount() - 1)
 			return false;
 

@@ -35,14 +35,11 @@ public class CompressorScreen extends BaseContainerScreen<CompressorContainer> {
 		int y = this.getGuiTop();
 		var pos = this.getMenu().getBlockPos();
 
-		this.addRenderableWidget(new EjectModeSwitchButton(x + 69, y + 30, pos));
-		this.addRenderableWidget(new InputLimitSwitchButton(x + 91, y + 74, pos, this::isLimitingInput));
-
 		this.tile = this.getTileEntity();
 
-		if (this.tile != null) {
-			this.addRenderableWidget(new EnergyBarWidget(x + 7, y + 17, this.tile.getEnergy()));
-		}
+		this.addRenderableWidget(new EjectModeSwitchButton(x + 69, y + 30, pos));
+		this.addRenderableWidget(new InputLimitSwitchButton(x + 91, y + 74, pos, this.menu::isLimitingInput));
+		this.addRenderableWidget(new EnergyBarWidget(x + 7, y + 17, this.menu::getEnergyStored, this.menu::getMaxEnergyCapacity));
 	}
 
 	@Override
@@ -59,10 +56,10 @@ public class CompressorScreen extends BaseContainerScreen<CompressorContainer> {
 		if (mouseX > x + 60 && mouseX < x + 85 && mouseY > y + 74 && mouseY < y + 83) {
 			var tooltip = new ArrayList<Component>();
 
-			if (this.getMaterialCount() < 1) {
+			if (this.menu.getMaterialCount() < 1) {
 				tooltip.add(ModTooltips.EMPTY.color(ChatFormatting.WHITE).toComponent());
 			} else {
-				var text = Component.literal(number(this.getMaterialCount()) + " / " + number(this.getMaterialsRequired()));
+				var text = Component.literal(number(this.menu.getMaterialCount()) + " / " + number(this.menu.getMaterialsRequired()));
 
 				tooltip.add(text);
 
@@ -83,7 +80,7 @@ public class CompressorScreen extends BaseContainerScreen<CompressorContainer> {
 		}
 
 		if (mouseX > x + 68 && mouseX < x + 79 && mouseY > y + 28 && mouseY < y + 39) {
-			if (this.isEjecting()) {
+			if (this.menu.isEjecting()) {
 				gfx.setTooltipForNextFrame(this.font, ModTooltips.EJECTING.color(ChatFormatting.WHITE).toComponent(), mouseX, mouseY);
 			} else {
 				gfx.setTooltipForNextFrame(this.font, ModTooltips.EJECT.color(ChatFormatting.WHITE).toComponent(), mouseX, mouseY);
@@ -91,7 +88,7 @@ public class CompressorScreen extends BaseContainerScreen<CompressorContainer> {
 		}
 
 		if (mouseX > x + 90 && mouseX < x + 98 && mouseY > y + 73 && mouseY < y + 84) {
-			if (this.isLimitingInput()) {
+			if (this.menu.isLimitingInput()) {
 				gfx.setTooltipForNextFrame(this.font, ModTooltips.LIMITED_INPUT.color(ChatFormatting.WHITE).toComponent(), mouseX, mouseY);
 			} else {
 				gfx.setTooltipForNextFrame(this.font, ModTooltips.UNLIMITED_INPUT.color(ChatFormatting.WHITE).toComponent(), mouseX, mouseY);
@@ -107,18 +104,18 @@ public class CompressorScreen extends BaseContainerScreen<CompressorContainer> {
 		int y = this.getGuiTop();
 
 		if (this.hasRecipe()) {
-			if (this.getMaterialCount() > 0 && this.getMaterialsRequired() > 0) {
+			if (this.menu.getMaterialCount() > 0 && this.menu.getMaterialsRequired() > 0) {
 				int i2 = this.getMaterialBarScaled(26);
 				gfx.blit(RenderPipelines.GUI_TEXTURED, BACKGROUND, x + 60, y + 74, 194, 19, i2 + 1, 10, 256, 256);
 			}
 
-			if (this.getProgress() > 0 && this.getEnergyRequired() > 0) {
+			if (this.menu.getProgress() > 0 && this.menu.getEnergyRequired() > 0) {
 				int i2 = this.getProgressBarScaled(24);
 				gfx.blit(RenderPipelines.GUI_TEXTURED, BACKGROUND, x + 96, y + 47, 194, 0, i2 + 1, 16, 256, 256);
 			}
 		}
 
-		if (this.isLimitingInput()) {
+		if (this.menu.isLimitingInput()) {
 			gfx.blit(RenderPipelines.GUI_TEXTURED, BACKGROUND, x + 90, y + 74, 203, 56, 9, 10, 256, 256);
 		}
 	}
@@ -136,20 +133,6 @@ public class CompressorScreen extends BaseContainerScreen<CompressorContainer> {
 		return null;
 	}
 
-	public boolean isEjecting() {
-		if (this.tile == null)
-			return false;
-
-		return this.tile.isEjecting();
-	}
-
-	public boolean isLimitingInput() {
-		if (this.tile == null)
-			return false;
-
-		return this.tile.isLimitingInput();
-	}
-
 	public boolean hasRecipe() {
 		if (this.tile == null)
 			return false;
@@ -164,43 +147,15 @@ public class CompressorScreen extends BaseContainerScreen<CompressorContainer> {
 		return this.tile.hasMaterialStack();
 	}
 
-	public int getProgress() {
-		if (this.tile == null)
-			return 0;
-
-		return this.tile.getProgress();
-	}
-
-	public int getMaterialCount() {
-		if (this.tile == null)
-			return 0;
-
-		return this.tile.getMaterialCount();
-	}
-
-	public int getEnergyRequired() {
-		if (this.tile == null)
-			return 0;
-
-		return this.tile.getEnergyRequired();
-	}
-
-	public int getMaterialsRequired() {
-		if (this.tile == null)
-			return 0;
-
-		return this.tile.getMaterialsRequired();
-	}
-
 	public int getMaterialBarScaled(int pixels) {
-		int i = Mth.clamp(this.getMaterialCount(), 0, this.getMaterialsRequired());
-		int j = this.getMaterialsRequired();
+		int i = Mth.clamp(this.menu.getMaterialCount(), 0, this.menu.getMaterialsRequired());
+		int j = this.menu.getMaterialsRequired();
 		return j != 0 && i != 0 ? i * pixels / j : 0;
 	}
 
 	public int getProgressBarScaled(int pixels) {
-		int i = this.getProgress();
-		int j = this.getEnergyRequired();
+		int i = this.menu.getProgress();
+		int j = this.menu.getEnergyRequired();
 		return (int) (j != 0 && i != 0 ? (long) i * pixels / j : 0);
 	}
 }

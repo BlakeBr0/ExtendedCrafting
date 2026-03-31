@@ -90,4 +90,36 @@ public class CompressorContainer extends BaseContainerMenu {
 
 		return itemstack;
 	}
+
+	public int getEnergyStored() {
+		return this.data.get(0);
+	}
+
+	public int getMaxEnergyCapacity() {
+		return this.data.get(1);
+	}
+
+	public int getProgress() {
+		return this.data.get(2);
+	}
+
+	public int getEnergyRequired() {
+		return this.data.get(3);
+	}
+
+	public int getMaterialCount() {
+		return this.data.get(4);
+	}
+
+	public int getMaterialsRequired() {
+		return this.data.get(5);
+	}
+
+	public boolean isEjecting() {
+		return this.data.get(6) != 0;
+	}
+
+	public boolean isLimitingInput() {
+		return this.data.get(7) != 0;
+	}
 }

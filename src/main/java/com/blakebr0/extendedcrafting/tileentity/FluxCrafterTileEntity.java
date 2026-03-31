@@ -53,7 +53,10 @@ public class FluxCrafterTileEntity extends BaseInventoryTileEntity implements Me
 		this.inventory = createInventoryHandler(this::onContentsChanged);
 		this.recipe = new CachedRecipe<>(ModRecipeTypes.FLUX_CRAFTER.get());
 
-		this.dataAccess = ContainerDataBuilder.builder().build();
+		this.dataAccess = ContainerDataBuilder.builder()
+				.sync(() -> this.progress, value -> this.progress = value)
+				.sync(() -> this.progressReq, value -> this.progressReq = value)
+				.build();
 	}
 
 	@Override

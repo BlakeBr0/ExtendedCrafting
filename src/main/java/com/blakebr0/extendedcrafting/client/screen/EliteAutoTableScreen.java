@@ -40,17 +40,15 @@ public class EliteAutoTableScreen extends BaseContainerScreen<EliteAutoTableCont
 		int y = this.getGuiTop();
 		var pos = this.getMenu().getBlockPos();
 
-		this.addRenderableWidget(new ToggleTableRunningButton(x + 192, y + 96, pos, this::isRunning));
+		this.addRenderableWidget(new ToggleTableRunningButton(x + 192, y + 96, pos, this.menu::isRunning));
 
 		this.tile = this.getTileEntity();
 
-		if (this.tile != null) {
-			this.addRenderableWidget(new RecipeSelectButton(x + 176, y + 7, pos, 0, this.tile.getRecipeStorage(), this::onSelectButtonTooltip));
-			this.addRenderableWidget(new RecipeSelectButton(x + 189, y + 7, pos, 1, this.tile.getRecipeStorage(), this::onSelectButtonTooltip));
-			this.addRenderableWidget(new RecipeSelectButton(x + 202, y + 7, pos, 2, this.tile.getRecipeStorage(), this::onSelectButtonTooltip));
+		this.addRenderableWidget(new RecipeSelectButton(x + 176, y + 7, pos, 0, this.menu::getSelectedRecipeIndex, this::onSelectButtonTooltip));
+		this.addRenderableWidget(new RecipeSelectButton(x + 189, y + 7, pos, 1, this.menu::getSelectedRecipeIndex, this::onSelectButtonTooltip));
+		this.addRenderableWidget(new RecipeSelectButton(x + 202, y + 7, pos, 2, this.menu::getSelectedRecipeIndex, this::onSelectButtonTooltip));
 
-			this.addRenderableWidget(new EnergyBarWidget(x + 7, y + 41, this.tile.getEnergy()));
-		}
+		this.addRenderableWidget(new EnergyBarWidget(x + 7, y + 41, this.menu::getEnergyStored, this.menu::getMaxEnergyCapacity));
 	}
 
 	@Override
@@ -78,29 +76,30 @@ public class EliteAutoTableScreen extends BaseContainerScreen<EliteAutoTableCont
 		int x = this.getGuiLeft();
 		int y = this.getGuiTop();
 
-		if (this.isRunning()) {
+		if (this.menu.isRunning()) {
 			int i2 = this.getProgressBarScaled();
 			gfx.blit(RenderPipelines.GUI_TEXTURED, BACKGROUND, x + 191, y + 95, 238, 0, 13, i2, 256, 256);
 		}
 
-		var recipe = this.getSelectedRecipe();
-
-		if (recipe != null) {
-			var itemRenderer = Minecraft.getInstance().getItemRenderer();
-
-			for (int i = 0; i < 7; i++) {
-				for (int j = 0; j < 7; j++) {
-					int index = (i * 7) + j;
-					var item = recipe.getStackInSlot(index);
-
-					GhostItemRenderer.renderItemIntoGui(item, x + 27 + (j * 18), y + 18 + (i * 18), itemRenderer);
-				}
-			}
-
-			var output = recipe.getStackInSlot(recipe.getSlots() - 1);
-
-			GhostItemRenderer.renderItemIntoGui(output, x + 191, y + 71, itemRenderer);
-		}
+//		TODO ghost items
+//		var recipe = this.getSelectedRecipe();
+//
+//		if (recipe != null) {
+//			var itemRenderer = Minecraft.getInstance().getItemRenderer();
+//
+//			for (int i = 0; i < 7; i++) {
+//				for (int j = 0; j < 7; j++) {
+//					int index = (i * 7) + j;
+//					var stack = recipe.getStackInSlot(index);
+//
+//					GhostItemRenderer.renderItemIntoGui(stack, x + 27 + (j * 18), y + 18 + (i * 18), itemRenderer);
+//				}
+//			}
+//
+//			var output = recipe.getStackInSlot(recipe.getSlots() - 1);
+//
+//			GhostItemRenderer.renderItemIntoGui(output, x + 191, y + 71, itemRenderer);
+//		}
 	}
 
 	private void onSelectButtonTooltip(Button button, GuiGraphicsExtractor gfx, int mouseX, int mouseY) {
@@ -152,13 +151,6 @@ public class EliteAutoTableScreen extends BaseContainerScreen<EliteAutoTableCont
 		return null;
 	}
 
-	private boolean isRunning() {
-		if (this.tile == null)
-			return false;
-
-		return this.tile.isRunning();
-	}
-
 	private CItemStacksHandler getRecipeInfo(int selected) {
 		if (this.tile == null)
 			return null;
@@ -173,23 +165,9 @@ public class EliteAutoTableScreen extends BaseContainerScreen<EliteAutoTableCont
 		return this.tile.getRecipeStorage().getSelectedRecipe();
 	}
 
-	private int getProgress() {
-		if (this.tile == null)
-			return 0;
-
-		return this.tile.getProgress();
-	}
-
-	private int getProgressRequired() {
-		if (this.tile == null)
-			return 0;
-
-		return this.tile.getProgressRequired();
-	}
-
 	private int getProgressBarScaled() {
-		int i = this.getProgress();
-		int j = this.getProgressRequired();
+		int i = this.menu.getProgress();
+		int j = this.menu.getProgressRequired();
 		return j != 0 && i != 0 ? i * 16 / j : 0;
 	}
 }

@@ -87,4 +87,24 @@ public class AutoFluxCrafterContainer extends BaseContainerMenu {
 
 		return itemstack;
 	}
+
+	public int getEnergyStored() {
+		return this.data.get(0);
+	}
+
+	public int getMaxEnergyCapacity() {
+		return this.data.get(1);
+	}
+
+	public int getProgress() {
+		return this.data.get(2);
+	}
+
+	public int getProgressRequired() {
+		return this.data.get(3);
+	}
+
+	public int getSelectedRecipeIndex() {
+		return this.data.get(4);
+	}
 }

@@ -1,6 +1,5 @@
 package com.blakebr0.extendedcrafting.compat.jei.category.table;
 
-import com.blakebr0.cucumber.util.Localizable;
 import com.blakebr0.extendedcrafting.ExtendedCrafting;
 import com.blakebr0.extendedcrafting.api.crafting.ITableRecipe;
 import com.blakebr0.extendedcrafting.compat.jei.JeiCompat;
@@ -16,11 +15,12 @@ import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
 import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.RecipeIngredientRole;
-import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.recipe.category.IRecipeCategory;
+import mezz.jei.api.recipe.types.IRecipeHolderType;
+import mezz.jei.api.recipe.types.IRecipeType;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
@@ -28,7 +28,7 @@ import net.minecraft.world.item.crafting.RecipeHolder;
 
 public class EliteTableCategory implements IRecipeCategory<RecipeHolder<ITableRecipe>> {
 	private static final Identifier TEXTURE = ExtendedCrafting.resource("textures/jei/elite_crafting.png");
-	public static final RecipeType<RecipeHolder<ITableRecipe>> RECIPE_TYPE = RecipeType.createRecipeHolderType(ExtendedCrafting.resource("elite_crafting"));
+	public static final IRecipeHolderType<ITableRecipe> RECIPE_TYPE = IRecipeHolderType.create(ExtendedCrafting.resource("elite_crafting"));
 
 	private final IDrawable background;
 	private final IDrawable icon;
@@ -41,18 +41,23 @@ public class EliteTableCategory implements IRecipeCategory<RecipeHolder<ITableRe
 	}
 
 	@Override
-	public RecipeType<RecipeHolder<ITableRecipe>> getRecipeType() {
+	public IRecipeType<RecipeHolder<ITableRecipe>> getRecipeType() {
 		return RECIPE_TYPE;
 	}
 
 	@Override
 	public Component getTitle() {
-		return Localizable.of("jei.category.extendedcrafting.elite_crafting").build();
+		return Component.translatable("jei.category.extendedcrafting.elite_crafting");
 	}
 
 	@Override
-	public IDrawable getBackground() {
-		return this.background;
+	public int getWidth() {
+		return this.background.getWidth();
+	}
+
+	@Override
+	public int getHeight() {
+		return this.background.getHeight();
 	}
 
 	@Override
@@ -61,19 +66,19 @@ public class EliteTableCategory implements IRecipeCategory<RecipeHolder<ITableRe
 	}
 
 	@Override
-	public void draw(RecipeHolder<ITableRecipe> recipeHolder, IRecipeSlotsView slots, GuiGraphics gfx, double mouseX, double mouseY) {
+	public void draw(RecipeHolder<ITableRecipe> recipeHolder, IRecipeSlotsView slots, GuiGraphicsExtractor gfx, double mouseX, double mouseY) {
         var recipe = recipeHolder.value();
 		var matrix = gfx.pose();
 
-		matrix.pushPose();
-		matrix.scale(0.5F, 0.5F, 0.5F);
+		matrix.pushMatrix();
+		matrix.scale(0.5F, 0.5F);
 
 		var shapeless = recipe instanceof ShapelessTableRecipe;
 
 		if (recipe.hasRequiredTier())
 			this.required.draw(gfx, shapeless ? 217 : 237, 257);
 
-		matrix.popPose();
+		matrix.popMatrix();
 	}
 
 	@Override
@@ -83,7 +88,7 @@ public class EliteTableCategory implements IRecipeCategory<RecipeHolder<ITableRe
 		int sX = (shapeless ? 217 : 237) / 2, sY = 257 / 2;
 
 		if (recipe.hasRequiredTier() && mouseX > sX - 1 && mouseX < sX + 8 && mouseY > sY - 1 && mouseY < sY + 8) {
-			tooltip.add(ModTooltips.REQUIRES_TABLE.args(recipe.getTier()).color(ChatFormatting.WHITE).build());
+			tooltip.add(ModTooltips.REQUIRES_TABLE.args(recipe.getTier()).color(ChatFormatting.WHITE).toComponent());
 		}
 	}
 
@@ -93,39 +98,39 @@ public class EliteTableCategory implements IRecipeCategory<RecipeHolder<ITableRe
 		var level = Minecraft.getInstance().level;
 
 		assert level != null;
-
-		var inputs = recipe.getIngredients();
-		var output = recipe.getResultItem(level.registryAccess());
-
-		if (recipe instanceof ShapedTableRecipe shaped) {
-			int heightOffset = Math.floorDiv(7 - shaped.getHeight(), 2);
-			int widthOffset = Math.floorDiv(7 - shaped.getWidth(), 2);
-			int stackIndex = 0;
-
-			for (int i = 0; i < 7; i++) {
-				for (int j = 0; j < 7; j++) {
-					var slot = builder.addSlot(RecipeIngredientRole.INPUT, j * 18 + 1, i * 18 + 1);
-
-					if (i >= heightOffset && i < shaped.getHeight() + heightOffset && j >= widthOffset && j < shaped.getWidth() + widthOffset) {
-						slot.addIngredients(inputs.get(stackIndex++));
-					}
-				}
-			}
-		} else if (recipe instanceof ShapelessTableRecipe) {
-			for (int i = 0; i < 7; i++) {
-				for (int j = 0; j < 7; j++) {
-					int index = j + (i * 7);
-
-					if (index < inputs.size()) {
-						builder.addSlot(RecipeIngredientRole.INPUT, j * 18 + 1, i * 18 + 1).addIngredients(inputs.get(index));
-					}
-				}
-			}
-
-			builder.setShapeless(118, 128);
-		}
-
-		builder.addSlot(RecipeIngredientRole.OUTPUT, 66, 138).addItemStack(output);
+// TODO jei
+//		var inputs = recipe.getIngredients();
+//		var output = recipe.getResultItem(level.registryAccess());
+//
+//		if (recipe instanceof ShapedTableRecipe shaped) {
+//			int heightOffset = Math.floorDiv(7 - shaped.getHeight(), 2);
+//			int widthOffset = Math.floorDiv(7 - shaped.getWidth(), 2);
+//			int stackIndex = 0;
+//
+//			for (int i = 0; i < 7; i++) {
+//				for (int j = 0; j < 7; j++) {
+//					var slot = builder.addSlot(RecipeIngredientRole.INPUT, j * 18 + 1, i * 18 + 1);
+//
+//					if (i >= heightOffset && i < shaped.getHeight() + heightOffset && j >= widthOffset && j < shaped.getWidth() + widthOffset) {
+//						slot.addIngredients(inputs.get(stackIndex++));
+//					}
+//				}
+//			}
+//		} else if (recipe instanceof ShapelessTableRecipe) {
+//			for (int i = 0; i < 7; i++) {
+//				for (int j = 0; j < 7; j++) {
+//					int index = j + (i * 7);
+//
+//					if (index < inputs.size()) {
+//						builder.addSlot(RecipeIngredientRole.INPUT, j * 18 + 1, i * 18 + 1).addIngredients(inputs.get(index));
+//					}
+//				}
+//			}
+//
+//			builder.setShapeless(118, 128);
+//		}
+//
+//		builder.addSlot(RecipeIngredientRole.OUTPUT, 66, 138).addItemStack(output);
 
 		builder.moveRecipeTransferButton(113, 146);
 	}

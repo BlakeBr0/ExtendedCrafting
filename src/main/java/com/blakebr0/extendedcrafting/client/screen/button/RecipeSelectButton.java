@@ -2,7 +2,6 @@ package com.blakebr0.extendedcrafting.client.screen.button;
 
 import com.blakebr0.cucumber.client.screen.button.IconButton;
 import com.blakebr0.extendedcrafting.ExtendedCrafting;
-import com.blakebr0.extendedcrafting.crafting.TableRecipeStorage;
 import com.blakebr0.extendedcrafting.network.payload.SaveRecipePayload;
 import com.blakebr0.extendedcrafting.network.payload.SelectRecipePayload;
 import net.minecraft.client.input.InputWithModifiers;
@@ -10,22 +9,24 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.resources.Identifier;
 import net.neoforged.neoforge.client.network.ClientPacketDistributor;
 
+import java.util.function.IntSupplier;
+
 public class RecipeSelectButton extends IconButton {
     private static final Identifier WIDGETS_LOCATION = ExtendedCrafting.resource("textures/gui/widgets.png");
 
     private final BlockPos pos;
     private final int index;
-    private final TableRecipeStorage recipeStorage;
+    private final IntSupplier selectedIndex;
 
-    public RecipeSelectButton(int x, int y, BlockPos pos, int index, TableRecipeStorage recipeStorage, OnTooltip onTooltip) {
-        this(x, y, pos, index, 0, recipeStorage, onTooltip);
+    public RecipeSelectButton(int x, int y, BlockPos pos, int index, IntSupplier selectedIndex, OnTooltip onTooltip) {
+        this(x, y, pos, index, 0, selectedIndex, onTooltip);
     }
 
-    public RecipeSelectButton(int x, int y, BlockPos pos, int index, int textureY, TableRecipeStorage recipeStorage, OnTooltip onTooltip) {
+    public RecipeSelectButton(int x, int y, BlockPos pos, int index, int textureY, IntSupplier selectedIndex, OnTooltip onTooltip) {
         super(x, y, 11, 11, index * 11, textureY, WIDGETS_LOCATION, onTooltip);
         this.pos = pos;
         this.index = index;
-        this.recipeStorage = recipeStorage;
+        this.selectedIndex = selectedIndex;
     }
 
     @Override
@@ -47,6 +48,6 @@ public class RecipeSelectButton extends IconButton {
     }
 
     public boolean isSelected() {
-        return this.recipeStorage.getSelected() == this.index;
+        return this.selectedIndex.getAsInt() == this.index;
     }
 }

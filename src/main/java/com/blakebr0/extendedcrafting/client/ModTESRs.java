@@ -1,9 +1,9 @@
 package com.blakebr0.extendedcrafting.client;
 
-import com.blakebr0.extendedcrafting.client.tesr.CompressorRenderer;
-import com.blakebr0.extendedcrafting.client.tesr.CraftingCoreRenderer;
-import com.blakebr0.extendedcrafting.client.tesr.PedestalRenderer;
-import com.blakebr0.extendedcrafting.client.tesr.TheUltimateBlockRenderer;
+import com.blakebr0.extendedcrafting.client.tesr.renderer.CompressorRenderer;
+import com.blakebr0.extendedcrafting.client.tesr.renderer.CraftingCoreRenderer;
+import com.blakebr0.extendedcrafting.client.tesr.renderer.PedestalRenderer;
+import com.blakebr0.extendedcrafting.client.tesr.renderer.TheUltimateBlockRenderer;
 import com.blakebr0.extendedcrafting.init.ModTileEntities;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;

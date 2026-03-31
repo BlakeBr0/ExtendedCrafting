@@ -5,6 +5,8 @@ import com.blakebr0.extendedcrafting.api.TableCraftingInput;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.TransientCraftingContainer;
 import net.minecraft.world.item.ItemStack;
+import net.neoforged.neoforge.transfer.item.ItemResource;
+import net.neoforged.neoforge.transfer.transaction.Transaction;
 
 public class ExtendedCraftingInventory extends TransientCraftingContainer {
     private final AbstractContainerMenu container;
@@ -24,13 +26,13 @@ public class ExtendedCraftingInventory extends TransientCraftingContainer {
 
     @Override
     public int getContainerSize() {
-        return this.autoTable ? this.inventory.getSlots() - 1 : this.inventory.getSlots();
+        return this.autoTable ? this.inventory.size() - 1 : this.inventory.size();
     }
 
     @Override
     public boolean isEmpty() {
         for (int i = 0; i < this.getContainerSize(); i++) {
-            if (!this.inventory.getStackInSlot(i).isEmpty())
+            if (!this.inventory.getResource(i).isEmpty())
                 return false;
         }
 
@@ -39,37 +41,40 @@ public class ExtendedCraftingInventory extends TransientCraftingContainer {
 
     @Override
     public ItemStack getItem(int slot) {
-        return this.inventory.getStackInSlot(slot);
+        return this.inventory.getResource(slot).toStack(this.inventory.getAmountAsInt(slot));
     }
 
     @Override
     public ItemStack removeItem(int slot, int amount) {
-        var stack = this.inventory.extractItem(slot, amount, false, true);
+        try (var tx = Transaction.openRoot()) {
+            var resource = this.inventory.getResource(slot);
+            var removed = this.inventory.extract(slot, resource, amount, tx, true);
 
-        this.container.slotsChanged(this);
+            this.container.slotsChanged(this);
 
-        return stack;
+            return resource.toStack(removed);
+        }
     }
 
     @Override
     public ItemStack removeItemNoUpdate(int slot) {
-        var stack = this.inventory.getStackInSlot(slot);
+        var stack = this.inventory.getResource(slot).toStack(this.inventory.getAmountAsInt(slot));
 
-        this.inventory.setStackInSlot(slot, ItemStack.EMPTY);
+        this.inventory.set(slot, ItemResource.EMPTY, 0);
 
         return stack;
     }
 
     @Override
     public void setItem(int slot, ItemStack stack) {
-        this.inventory.setStackInSlot(slot, stack);
+        this.inventory.set(slot, ItemResource.of(stack), stack.count());
         this.container.slotsChanged(this);
     }
 
     @Override
     public void clearContent() {
         for (int i = 0; i < this.getContainerSize(); i++) {
-            this.inventory.setStackInSlot(i, ItemStack.EMPTY);
+            this.inventory.set(i, ItemResource.EMPTY, 0);
         }
     }
 

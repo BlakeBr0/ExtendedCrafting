@@ -41,13 +41,11 @@ public class AutoFluxCrafterScreen extends BaseContainerScreen<AutoFluxCrafterCo
 
 		this.tile = this.getTileEntity();
 
-		if (this.tile != null) {
-			this.addRenderableWidget(new RecipeSelectButton(x + 132, y + 7, pos, 0, 66, this.tile.getRecipeStorage(), this::onSelectButtonTooltip));
-			this.addRenderableWidget(new RecipeSelectButton(x + 145, y + 7, pos, 1, 66, this.tile.getRecipeStorage(), this::onSelectButtonTooltip));
-			this.addRenderableWidget(new RecipeSelectButton(x + 158, y + 7, pos, 2, 66, this.tile.getRecipeStorage(), this::onSelectButtonTooltip));
+		this.addRenderableWidget(new RecipeSelectButton(x + 132, y + 7, pos, 0, 66, this.menu::getSelectedRecipeIndex, this::onSelectButtonTooltip));
+		this.addRenderableWidget(new RecipeSelectButton(x + 145, y + 7, pos, 1, 66, this.menu::getSelectedRecipeIndex, this::onSelectButtonTooltip));
+		this.addRenderableWidget(new RecipeSelectButton(x + 158, y + 7, pos, 2, 66, this.menu::getSelectedRecipeIndex, this::onSelectButtonTooltip));
 
-			this.addRenderableWidget(new EnergyBarWidget(x + 7, y + 17, this.tile.getEnergy()));
-		}
+		this.addRenderableWidget(new EnergyBarWidget(x + 7, y + 17, this.menu::getEnergyStored, this.menu::getMaxEnergyCapacity));
 	}
 
 	@Override
@@ -63,29 +61,30 @@ public class AutoFluxCrafterScreen extends BaseContainerScreen<AutoFluxCrafterCo
 		int x = this.getGuiLeft();
 		int y = this.getGuiTop();
 
-		if (this.getProgress() > 0) {
+		if (this.menu.getProgress() > 0) {
 			int i2 = this.getProgressBarScaled();
 			gfx.blit(RenderPipelines.GUI_TEXTURED, BACKGROUND, x + 92, y + 48, 194, 0, i2 + 1, 16, 256, 256);
 		}
 
-		var recipe = this.getSelectedRecipe();
-
-		if (recipe != null) {
-			var itemRenderer = Minecraft.getInstance().getItemRenderer();
-
-			for (int i = 0; i < 3; i++) {
-				for (int j = 0; j < 3; j++) {
-					int index = (i * 3) + j;
-					var item = recipe.getStackInSlot(index);
-
-					GhostItemRenderer.renderItemIntoGui(item, x + 33 + (j * 18), y + 30 + (i * 18), itemRenderer);
-				}
-			}
-
-			var output = recipe.getStackInSlot(recipe.getSlots() - 1);
-
-			GhostItemRenderer.renderItemIntoGui(output, x + 127, y + 48, itemRenderer);
-		}
+//		TODO ghost items
+//		var recipe = this.getSelectedRecipe();
+//
+//		if (recipe != null) {
+//			var itemRenderer = Minecraft.getInstance().getItemRenderer();
+//
+//			for (int i = 0; i < 3; i++) {
+//				for (int j = 0; j < 3; j++) {
+//					int index = (i * 3) + j;
+//					var stack = recipe.getStackInSlot(index);
+//
+//					GhostItemRenderer.renderItemIntoGui(stack, x + 33 + (j * 18), y + 30 + (i * 18), itemRenderer);
+//				}
+//			}
+//
+//			var output = recipe.getStackInSlot(recipe.getSlots() - 1);
+//
+//			GhostItemRenderer.renderItemIntoGui(output, x + 127, y + 48, itemRenderer);
+//		}
 	}
 
 	private void onSelectButtonTooltip(Button button, GuiGraphicsExtractor gfx, int mouseX, int mouseY) {
@@ -151,23 +150,9 @@ public class AutoFluxCrafterScreen extends BaseContainerScreen<AutoFluxCrafterCo
 		return this.tile.getRecipeStorage().getSelectedRecipe();
 	}
 
-	private int getProgress() {
-		if (this.tile == null)
-			return 0;
-
-		return this.tile.getProgress();
-	}
-
-	private int getProgressRequired() {
-		if (this.tile == null)
-			return 0;
-
-		return this.tile.getProgressRequired();
-	}
-
 	private int getProgressBarScaled() {
-		int i = this.getProgress();
-		int j = Math.max(this.getProgressRequired(), i);
+		int i = this.menu.getProgress();
+		int j = Math.max(this.menu.getProgressRequired(), i);
 		return j != 0 && i != 0 ? i * 24 / j : 0;
 	}
 }

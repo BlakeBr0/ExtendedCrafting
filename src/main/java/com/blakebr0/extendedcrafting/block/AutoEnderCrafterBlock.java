@@ -59,7 +59,7 @@ public class AutoEnderCrafterBlock extends BaseTileEntityBlock implements IHover
 			var tile = level.getBlockEntity(pos);
 
 			if (tile instanceof AutoEnderCrafterTileEntity crafter) {
-				crafter.getRecipeStorage().deserialize(storage.data());
+				crafter.getRecipeStorage().read(storage.data());
 			}
 		}
 	}

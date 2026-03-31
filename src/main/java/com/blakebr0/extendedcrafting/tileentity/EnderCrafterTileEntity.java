@@ -1,6 +1,5 @@
 package com.blakebr0.extendedcrafting.tileentity;
 
-import com.blakebr0.cucumber.helper.StackHelper;
 import com.blakebr0.cucumber.inventory.CItemStacksHandler;
 import com.blakebr0.cucumber.inventory.CachedRecipe;
 import com.blakebr0.cucumber.inventory.OnContentsChangedFunction;
@@ -24,7 +23,6 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ContainerData;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.CraftingInput;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -55,7 +53,10 @@ public class EnderCrafterTileEntity extends BaseInventoryTileEntity implements M
 		this.inventory = createInventoryHandler((_, _) -> this.onContentsChanged());
 		this.recipe = new CachedRecipe<>(ModRecipeTypes.ENDER_CRAFTER.get());
 
-		this.dataAccess = ContainerDataBuilder.builder().build();
+		this.dataAccess = ContainerDataBuilder.builder()
+				.sync(() -> this.progress, value -> this.progress = value)
+				.sync(() -> this.progressReq, value -> this.progressReq = value)
+				.build();
 	}
 
     @Override

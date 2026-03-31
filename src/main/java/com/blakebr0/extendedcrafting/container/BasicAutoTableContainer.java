@@ -142,4 +142,28 @@ public class BasicAutoTableContainer extends BaseContainerMenu {
 	public boolean isVanillaRecipe() {
 		return this.isVanillaRecipe;
 	}
+
+	public int getEnergyStored() {
+		return this.data.get(0);
+	}
+
+	public int getMaxEnergyCapacity() {
+		return this.data.get(1);
+	}
+
+	public int getProgress() {
+		return this.data.get(2);
+	}
+
+	public int getProgressRequired() {
+		return this.data.get(3);
+	}
+
+	public boolean isRunning() {
+		return this.data.get(4) != 0;
+	}
+
+	public int getSelectedRecipeIndex() {
+		return this.data.get(5);
+	}
 }

@@ -1,6 +1,5 @@
 package com.blakebr0.extendedcrafting.client.screen;
 
-import com.blakebr0.cucumber.client.render.GhostItemRenderer;
 import com.blakebr0.cucumber.client.screen.BaseContainerScreen;
 import com.blakebr0.cucumber.client.screen.widget.EnergyBarWidget;
 import com.blakebr0.cucumber.inventory.CItemStacksHandler;
@@ -12,8 +11,6 @@ import com.blakebr0.extendedcrafting.lib.ModTooltips;
 import com.blakebr0.extendedcrafting.tileentity.AutoTableTileEntity;
 import com.google.common.collect.Lists;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.renderer.RenderPipelines;
@@ -41,17 +38,15 @@ public class BasicAutoTableScreen extends BaseContainerScreen<BasicAutoTableCont
 		int y = this.getGuiTop();
 		var pos = this.getMenu().getBlockPos();
 
-		this.addRenderableWidget(new ToggleTableRunningButton(x + 130, y + 59, pos, this::isRunning));
+		this.addRenderableWidget(new ToggleTableRunningButton(x + 130, y + 59, pos, this.menu::isRunning));
 
 		this.tile = this.getTileEntity();
 
-		if (this.tile != null) {
-			this.addRenderableWidget(new RecipeSelectButton(x + 132, y + 7, pos, 0, this.tile.getRecipeStorage(), this::onSelectButtonTooltip));
-			this.addRenderableWidget(new RecipeSelectButton(x + 145, y + 7, pos, 1, this.tile.getRecipeStorage(), this::onSelectButtonTooltip));
-			this.addRenderableWidget(new RecipeSelectButton(x + 158, y + 7, pos, 2, this.tile.getRecipeStorage(), this::onSelectButtonTooltip));
+		this.addRenderableWidget(new RecipeSelectButton(x + 132, y + 7, pos, 0, this.menu::getSelectedRecipeIndex, this::onSelectButtonTooltip));
+		this.addRenderableWidget(new RecipeSelectButton(x + 145, y + 7, pos, 1, this.menu::getSelectedRecipeIndex, this::onSelectButtonTooltip));
+		this.addRenderableWidget(new RecipeSelectButton(x + 158, y + 7, pos, 2, this.menu::getSelectedRecipeIndex, this::onSelectButtonTooltip));
 
-			this.addRenderableWidget(new EnergyBarWidget(x + 7, y + 17, this.tile.getEnergy()));
-		}
+		this.addRenderableWidget(new EnergyBarWidget(x + 7, y + 17, this.menu::getEnergyStored, this.menu::getMaxEnergyCapacity));
 	}
 
 	@Override
@@ -79,29 +74,30 @@ public class BasicAutoTableScreen extends BaseContainerScreen<BasicAutoTableCont
 		int x = this.getGuiLeft();
 		int y = this.getGuiTop();
 
-		if (this.isRunning()) {
+		if (this.menu.isRunning()) {
 			int i2 = this.getProgressBarScaled();
 			gfx.blit(RenderPipelines.GUI_TEXTURED, BACKGROUND, x + 129, y + 58, 194, 0, 13, i2, 256, 256);
 		}
 
-		var recipe = this.getSelectedRecipe();
-
-		if (recipe != null) {
-			var itemRenderer = Minecraft.getInstance().getItemRenderer();
-
-			for (int i = 0; i < 3; i++) {
-				for (int j = 0; j < 3; j++) {
-					int index = (i * 3) + j;
-					var item = recipe.getStackInSlot(index);
-
-					GhostItemRenderer.renderItemIntoGui(item, x + 33 + (j * 18), y + 30 + (i * 18), itemRenderer);
-				}
-			}
-
-			var output = recipe.getStackInSlot(recipe.getSlots() - 1);
-
-			GhostItemRenderer.renderItemIntoGui(output, x + 129, y + 34, itemRenderer);
-		}
+//		TODO ghost items
+//		var recipe = this.getSelectedRecipe();
+//
+//		if (recipe != null) {
+//			var itemRenderer = Minecraft.getInstance().getItemRenderer();
+//
+//			for (int i = 0; i < 3; i++) {
+//				for (int j = 0; j < 3; j++) {
+//					int index = (i * 3) + j;
+//					var stack = recipe.getStackInSlot(index);
+//
+//					GhostItemRenderer.renderItemIntoGui(stack, x + 33 + (j * 18), y + 30 + (i * 18), itemRenderer);
+//				}
+//			}
+//
+//			var output = recipe.getStackInSlot(recipe.getSlots() - 1);
+//
+//			GhostItemRenderer.renderItemIntoGui(output, x + 129, y + 34, itemRenderer);
+//		}
 	}
 
 	private void onSelectButtonTooltip(Button button, GuiGraphicsExtractor gfx, int mouseX, int mouseY) {
@@ -153,13 +149,6 @@ public class BasicAutoTableScreen extends BaseContainerScreen<BasicAutoTableCont
 		return null;
 	}
 
-	private boolean isRunning() {
-		if (this.tile == null)
-			return false;
-
-		return this.tile.isRunning();
-	}
-
 	private CItemStacksHandler getRecipeInfo(int selected) {
 		if (this.tile == null)
 			return null;
@@ -174,23 +163,9 @@ public class BasicAutoTableScreen extends BaseContainerScreen<BasicAutoTableCont
 		return this.tile.getRecipeStorage().getSelectedRecipe();
 	}
 
-	private int getProgress() {
-		if (this.tile == null)
-			return 0;
-
-		return this.tile.getProgress();
-	}
-
-	private int getProgressRequired() {
-		if (this.tile == null)
-			return 0;
-
-		return this.tile.getProgressRequired();
-	}
-
 	private int getProgressBarScaled() {
-		int i = this.getProgress();
-		int j = this.getProgressRequired();
+		int i = this.menu.getProgress();
+		int j = this.menu.getProgressRequired();
 		return j != 0 && i != 0 ? i * 16 / j : 0;
 	}
 }

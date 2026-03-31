@@ -17,16 +17,17 @@ public class AutoTableOutputSlot extends COutputSlot {
         this.matrix = matrix;
     }
 
-    @Override
-    public ItemStack getItem() {
-        var stack = super.getItem();
-
-        // TODO: this is a shitty workaround for a dupe bug #146
-        if (!stack.equals(this.lastStack)) {
-            this.lastStack = stack;
-            this.container.slotsChanged(this.matrix);
-        }
-
-        return stack;
-    }
+//    TODO test that this isn't a thing anymore
+//    @Override
+//    public ItemStack getItem() {
+//        var stack = super.getItem();
+//
+//        // TODO: this is a shitty workaround for a dupe bug #146
+//        if (!stack.equals(this.lastStack)) {
+//            this.lastStack = stack;
+//            this.container.slotsChanged(this.matrix);
+//        }
+//
+//        return stack;
+//    }
 }

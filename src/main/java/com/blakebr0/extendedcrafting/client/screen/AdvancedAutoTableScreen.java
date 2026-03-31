@@ -40,17 +40,15 @@ public class AdvancedAutoTableScreen extends BaseContainerScreen<AdvancedAutoTab
 		int y = this.getGuiTop();
 		var pos = this.getMenu().getBlockPos();
 
-		this.addRenderableWidget(new ToggleTableRunningButton(x + 155, y + 62, pos, this::isRunning));
+		this.addRenderableWidget(new ToggleTableRunningButton(x + 155, y + 62, pos, this.menu::isRunning));
 
 		this.tile = this.getTileEntity();
 
-		if (this.tile != null) {
-			this.addRenderableWidget(new RecipeSelectButton(x + 142, y + 7, pos, 0, this.tile.getRecipeStorage(), this::onSelectButtonTooltip));
-			this.addRenderableWidget(new RecipeSelectButton(x + 155, y + 7, pos, 1, this.tile.getRecipeStorage(), this::onSelectButtonTooltip));
-			this.addRenderableWidget(new RecipeSelectButton(x + 168, y + 7, pos, 2, this.tile.getRecipeStorage(), this::onSelectButtonTooltip));
+		this.addRenderableWidget(new RecipeSelectButton(x + 142, y + 7, pos, 0, this.menu::getSelectedRecipeIndex, this::onSelectButtonTooltip));
+		this.addRenderableWidget(new RecipeSelectButton(x + 155, y + 7, pos, 1, this.menu::getSelectedRecipeIndex, this::onSelectButtonTooltip));
+		this.addRenderableWidget(new RecipeSelectButton(x + 168, y + 7, pos, 2, this.menu::getSelectedRecipeIndex, this::onSelectButtonTooltip));
 
-			this.addRenderableWidget(new EnergyBarWidget(x + 7, y + 23, this.tile.getEnergy()));
-		}
+		this.addRenderableWidget(new EnergyBarWidget(x + 7, y + 23, this.menu::getEnergyStored, this.menu::getMaxEnergyCapacity));
 	}
 
 	@Override
@@ -78,29 +76,30 @@ public class AdvancedAutoTableScreen extends BaseContainerScreen<AdvancedAutoTab
 		int x = this.getGuiLeft();
 		int y = this.getGuiTop();
 
-		if (this.isRunning()) {
+		if (this.menu.isRunning()) {
 			int i2 = this.getProgressBarScaled();
 			gfx.blit(RenderPipelines.GUI_TEXTURED, BACKGROUND, x + 154, y + 61, 204, 0, 13, i2, 256, 256);
 		}
 
-		var recipe = this.getSelectedRecipe();
-
-		if (recipe != null) {
-			var itemRenderer = Minecraft.getInstance().getItemRenderer();
-
-			for (int i = 0; i < 5; i++) {
-				for (int j = 0; j < 5; j++) {
-					int index = (i * 5) + j;
-					var item = recipe.getStackInSlot(index);
-
-					GhostItemRenderer.renderItemIntoGui(item, x + 26 + (j * 18), y + 18 + (i * 18), itemRenderer);
-				}
-			}
-
-			var output = recipe.getStackInSlot(recipe.getSlots() - 1);
-
-			GhostItemRenderer.renderItemIntoGui(output, x + 154, y + 37, itemRenderer);
-		}
+//		TODO ghost items
+//		var recipe = this.getSelectedRecipe();
+//
+//		if (recipe != null) {
+//			var itemRenderer = Minecraft.getInstance().getItemRenderer();
+//
+//			for (int i = 0; i < 5; i++) {
+//				for (int j = 0; j < 5; j++) {
+//					int index = (i * 5) + j;
+//					var stack = recipe.getStackInSlot(index);
+//
+//					GhostItemRenderer.renderItemIntoGui(stack, x + 26 + (j * 18), y + 18 + (i * 18), itemRenderer);
+//				}
+//			}
+//
+//			var output = recipe.getStackInSlot(recipe.getSlots() - 1);
+//
+//			GhostItemRenderer.renderItemIntoGui(output, x + 154, y + 37, itemRenderer);
+//		}
 	}
 
 	private void onSelectButtonTooltip(Button button, GuiGraphicsExtractor gfx, int mouseX, int mouseY) {
@@ -152,13 +151,6 @@ public class AdvancedAutoTableScreen extends BaseContainerScreen<AdvancedAutoTab
 		return null;
 	}
 
-	private boolean isRunning() {
-		if (this.tile == null)
-			return false;
-
-		return this.tile.isRunning();
-	}
-
 	private CItemStacksHandler getRecipeInfo(int selected) {
 		if (this.tile == null)
 			return null;
@@ -180,23 +172,9 @@ public class AdvancedAutoTableScreen extends BaseContainerScreen<AdvancedAutoTab
 		return this.tile.getRecipeStorage().getSelected();
 	}
 
-	private int getProgress() {
-		if (this.tile == null)
-			return 0;
-
-		return this.tile.getProgress();
-	}
-
-	private int getProgressRequired() {
-		if (this.tile == null)
-			return 0;
-
-		return this.tile.getProgressRequired();
-	}
-
 	private int getProgressBarScaled() {
-		int i = this.getProgress();
-		int j = this.getProgressRequired();
+		int i = this.menu.getProgress();
+		int j = this.menu.getProgressRequired();
 		return j != 0 && i != 0 ? i * 16 / j : 0;
 	}
 }

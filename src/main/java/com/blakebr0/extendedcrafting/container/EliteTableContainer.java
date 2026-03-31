@@ -24,12 +24,12 @@ public class EliteTableContainer extends BaseContainerMenu {
 	private final Container result;
 	private final ExtendedCraftingInventory matrix;
 
-	private EliteTableContainer(MenuType<?> type, int id, Inventory playerInventory, FriendlyByteBuf buffer) {
-		this(type, id, playerInventory, EliteTableTileEntity.createInventoryHandler(), buffer.readBlockPos());
+	public EliteTableContainer(int id, Inventory playerInventory, FriendlyByteBuf buffer) {
+		this(id, playerInventory, EliteTableTileEntity.createInventoryHandler(), buffer.readBlockPos());
 	}
 
-	private EliteTableContainer(MenuType<?> type, int id, Inventory playerInventory, CItemStacksHandler inventory, BlockPos pos) {
-		super(type, id, pos);
+	public EliteTableContainer(int id, Inventory playerInventory, CItemStacksHandler inventory, BlockPos pos) {
+		super(ModMenuTypes.ELITE_TABLE.get(), id, pos);
 		this.level = playerInventory.player.level();
 		this.result = new ResultContainer();
 		this.matrix = new ExtendedCraftingInventory(this, inventory, 7);
@@ -112,13 +112,5 @@ public class EliteTableContainer extends BaseContainerMenu {
 		}
 
 		return itemstack;
-	}
-
-	public static EliteTableContainer create(int windowId, Inventory playerInventory, FriendlyByteBuf buffer) {
-		return new EliteTableContainer(ModMenuTypes.ELITE_TABLE.get(), windowId, playerInventory, buffer);
-	}
-
-	public static EliteTableContainer create(int windowId, Inventory playerInventory, CItemStacksHandler inventory, BlockPos pos) {
-		return new EliteTableContainer(ModMenuTypes.ELITE_TABLE.get(), windowId, playerInventory, inventory, pos);
 	}
 }

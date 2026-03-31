@@ -2,15 +2,14 @@ package com.blakebr0.extendedcrafting.crafting.recipe;
 
 import com.blakebr0.extendedcrafting.api.TableCraftingInput;
 import com.blakebr0.extendedcrafting.api.crafting.ITableRecipe;
-import com.blakebr0.extendedcrafting.init.ModRecipeSerializers;
 import com.blakebr0.extendedcrafting.init.ModRecipeTypes;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
 import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
@@ -19,16 +18,47 @@ import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.common.util.RecipeMatcher;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.function.BiFunction;
 
 public class ShapelessTableRecipe implements ITableRecipe {
-	private final NonNullList<Ingredient> inputs;
+	public static final MapCodec<ShapelessTableRecipe> MAP_CODEC = RecordCodecBuilder.mapCodec(builder ->
+			builder.group(
+					Ingredient.CODEC
+							.listOf()
+							.fieldOf("ingredients")
+							.flatXmap(
+									field -> {
+										var max = 81;
+										var ingredients = field.toArray(Ingredient[]::new);
+										if (ingredients.length == 0) {
+											return DataResult.error(() -> "No ingredients for Combination recipe");
+										} else {
+											return ingredients.length > max
+													? DataResult.error(() -> "Too many ingredients for Combination recipe. The maximum is: %s".formatted(max))
+													: DataResult.success(Arrays.asList(ingredients));
+										}
+									},
+									DataResult::success
+							)
+							.forGetter(recipe -> recipe.ingredients),
+					ItemStack.CODEC.fieldOf("result").forGetter(recipe -> recipe.result),
+					Codec.INT.optionalFieldOf("tier", 0).forGetter(recipe -> recipe.tier)
+			).apply(builder, ShapelessTableRecipe::new)
+	);
+	public static final StreamCodec<RegistryFriendlyByteBuf, ShapelessTableRecipe> STREAM_CODEC = StreamCodec.of(
+			ShapelessTableRecipe::toNetwork, ShapelessTableRecipe::fromNetwork
+	);
+	public static final RecipeSerializer<ShapelessTableRecipe> SERIALIZER = new RecipeSerializer<>(MAP_CODEC, STREAM_CODEC);
+
+	private final List<Ingredient> ingredients;
 	private final ItemStack result;
 	private final int tier;
 	private BiFunction<Integer, ItemStack, ItemStack> transformer;
 
-	public ShapelessTableRecipe(NonNullList<Ingredient> inputs, ItemStack result, int tier) {
-		this.inputs = inputs;
+	public ShapelessTableRecipe(List<Ingredient> ingredients, ItemStack result, int tier) {
+		this.ingredients = ingredients;
 		this.result = result;
 		this.tier = tier;
 	}
@@ -38,7 +68,7 @@ public class ShapelessTableRecipe implements ITableRecipe {
 		if (this.tier != 0 && this.tier != inventory.tier())
 			return false;
 
-		if (this.inputs.size() != inventory.ingredientCount())
+		if (this.ingredients.size() != inventory.ingredientCount())
 			return false;
 
 		var inputs = NonNullList.<ItemStack>create();
@@ -50,42 +80,22 @@ public class ShapelessTableRecipe implements ITableRecipe {
 			}
 		}
 
-		return RecipeMatcher.findMatches(inputs, this.inputs) != null;
+		return RecipeMatcher.findMatches(inputs, this.ingredients) != null;
 	}
 
 	@Override
-	public ItemStack assemble(TableCraftingInput input, HolderLookup.Provider provider) {
+	public ItemStack assemble(TableCraftingInput input) {
 		return this.result.copy();
 	}
 
 	@Override
-	public boolean canCraftInDimensions(int width, int height) {
-		return width * height >= this.inputs.size();
+	public RecipeSerializer<ShapelessTableRecipe> getSerializer() {
+		return SERIALIZER;
 	}
 
 	@Override
-	public ItemStack getResultItem(HolderLookup.Provider lookup) {
-		return this.result;
-	}
-
-	@Override
-	public NonNullList<Ingredient> getIngredients() {
-		return this.inputs;
-	}
-
-	@Override
-	public RecipeSerializer<?> getSerializer() {
-		return ModRecipeSerializers.SHAPELESS_TABLE.get();
-	}
-
-	@Override
-	public RecipeType<?> getType() {
+	public RecipeType<ITableRecipe> getType() {
 		return ModRecipeTypes.TABLE.get();
-	}
-
-	@Override
-	public boolean isSpecial() {
-		return true;
 	}
 
 	@Override
@@ -94,8 +104,9 @@ public class ShapelessTableRecipe implements ITableRecipe {
 
 		for (int i = 0; i < remaining.size(); ++i) {
 			var item = inventory.getItem(i);
-			if (item.hasCraftingRemainingItem()) {
-				remaining.set(i, item.getCraftingRemainingItem());
+			var remainder = item.getCraftingRemainder();
+			if (remainder != null) {
+				remaining.set(i, remainder.create());
 			}
 		}
 
@@ -105,8 +116,8 @@ public class ShapelessTableRecipe implements ITableRecipe {
 			for (int i = 0; i < remaining.size(); i++) {
 				var stack = inventory.getItem(i);
 
-				for (int j = 0; j < this.inputs.size(); j++) {
-					var input = this.inputs.get(j);
+				for (int j = 0; j < this.ingredients.size(); j++) {
+					var input = this.ingredients.get(j);
 
 					if (!used[j] && input.test(stack)) {
 						var ingredient = this.transformer.apply(j, stack);
@@ -126,7 +137,7 @@ public class ShapelessTableRecipe implements ITableRecipe {
 	@Override
 	public int getTier() {
 		if (this.tier > 0) return this.tier;
-		return getTierFromSize(this.inputs.size());
+		return getTierFromSize(this.ingredients.size());
 	}
 
 	@Override
@@ -145,68 +156,17 @@ public class ShapelessTableRecipe implements ITableRecipe {
 				: 4;
 	}
 
-	public static class Serializer implements RecipeSerializer<ShapelessTableRecipe> {
-		public static final MapCodec<ShapelessTableRecipe> CODEC = RecordCodecBuilder.mapCodec(builder ->
-				builder.group(
-						Ingredient.CODEC_NONEMPTY
-								.listOf()
-								.fieldOf("ingredients")
-								.flatXmap(
-										field -> {
-											var max = 81;
-											var ingredients = field.toArray(Ingredient[]::new);
-											if (ingredients.length == 0) {
-												return DataResult.error(() -> "No ingredients for Combination recipe");
-											} else {
-												return ingredients.length > max
-														? DataResult.error(() -> "Too many ingredients for Combination recipe. The maximum is: %s".formatted(max))
-														: DataResult.success(NonNullList.of(Ingredient.EMPTY, ingredients));
-											}
-										},
-										DataResult::success
-								)
-								.forGetter(recipe -> recipe.inputs),
-						ItemStack.STRICT_CODEC.fieldOf("result").forGetter(recipe -> recipe.result),
-						Codec.INT.optionalFieldOf("tier", 0).forGetter(recipe -> recipe.tier)
-				).apply(builder, ShapelessTableRecipe::new)
-		);
-		public static final StreamCodec<RegistryFriendlyByteBuf, ShapelessTableRecipe> STREAM_CODEC = StreamCodec.of(
-				ShapelessTableRecipe.Serializer::toNetwork, ShapelessTableRecipe.Serializer::fromNetwork
-		);
+	private static ShapelessTableRecipe fromNetwork(RegistryFriendlyByteBuf buffer) {
+		var ingredients = Ingredient.CONTENTS_STREAM_CODEC.apply(ByteBufCodecs.list()).decode(buffer);
+		var result = ItemStack.STREAM_CODEC.decode(buffer);
+		int tier = buffer.readVarInt();
 
-		@Override
-		public MapCodec<ShapelessTableRecipe> codec() {
-			return CODEC;
-		}
+		return new ShapelessTableRecipe(ingredients, result, tier);
+	}
 
-		@Override
-		public StreamCodec<RegistryFriendlyByteBuf, ShapelessTableRecipe> streamCodec() {
-			return STREAM_CODEC;
-		}
-
-		private static ShapelessTableRecipe fromNetwork(RegistryFriendlyByteBuf buffer) {
-			int size = buffer.readVarInt();
-			var inputs = NonNullList.withSize(size, Ingredient.EMPTY);
-
-			for (int i = 0; i < size; ++i) {
-				inputs.set(i, Ingredient.CONTENTS_STREAM_CODEC.decode(buffer));
-			}
-
-			var result = ItemStack.STREAM_CODEC.decode(buffer);
-			int tier = buffer.readVarInt();
-
-			return new ShapelessTableRecipe(inputs, result, tier);
-		}
-
-		private static void toNetwork(RegistryFriendlyByteBuf buffer, ShapelessTableRecipe recipe) {
-			buffer.writeVarInt(recipe.inputs.size());
-
-			for (var ingredient : recipe.inputs) {
-				Ingredient.CONTENTS_STREAM_CODEC.encode(buffer, ingredient);
-			}
-
-			ItemStack.STREAM_CODEC.encode(buffer, recipe.result);
-			buffer.writeVarInt(recipe.tier);
-		}
+	private static void toNetwork(RegistryFriendlyByteBuf buffer, ShapelessTableRecipe recipe) {
+		Ingredient.CONTENTS_STREAM_CODEC.apply(ByteBufCodecs.list()).encode(buffer, recipe.ingredients);
+		ItemStack.STREAM_CODEC.encode(buffer, recipe.result);
+		buffer.writeVarInt(recipe.tier);
 	}
 }

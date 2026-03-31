@@ -10,17 +10,22 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.inventory.MenuType;
+import net.minecraft.world.inventory.SimpleContainerData;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 
 public class FluxCrafterContainer extends BaseContainerMenu {
-	private FluxCrafterContainer(MenuType<?> type, int id, Inventory playerInventory, FriendlyByteBuf buffer) {
-		this(type, id, playerInventory, FluxCrafterTileEntity.createInventoryHandler(), buffer.readBlockPos());
+	private final ContainerData data;
+
+	public FluxCrafterContainer(int id, Inventory playerInventory, FriendlyByteBuf buffer) {
+		this(id, playerInventory, FluxCrafterTileEntity.createInventoryHandler(), new SimpleContainerData(3), buffer.readBlockPos());
 	}
 
-	private FluxCrafterContainer(MenuType<?> type, int id, Inventory playerInventory, CItemStacksHandler inventory, BlockPos pos) {
-		super(type, id, pos);
+	public FluxCrafterContainer(int id, Inventory playerInventory, CItemStacksHandler inventory, ContainerData data, BlockPos pos) {
+		super(ModMenuTypes.FLUX_CRAFTER.get(), id, pos);
+		this.data = data;
 
 		var matrix = new ExtendedCraftingInventory(this, inventory, 3);
 
@@ -81,13 +86,5 @@ public class FluxCrafterContainer extends BaseContainerMenu {
 		}
 
 		return itemstack;
-	}
-
-	public static FluxCrafterContainer create(int windowId, Inventory playerInventory, FriendlyByteBuf buffer) {
-		return new FluxCrafterContainer(ModMenuTypes.FLUX_CRAFTER.get(), windowId, playerInventory, buffer);
-	}
-
-	public static FluxCrafterContainer create(int windowId, Inventory playerInventory, CItemStacksHandler inventory, BlockPos pos) {
-		return new FluxCrafterContainer(ModMenuTypes.FLUX_CRAFTER.get(), windowId, playerInventory, inventory, pos);
 	}
 }

@@ -39,7 +39,7 @@ public final class DynamicRecipeManager {
             return null;
 
         var ingredient = singularity.getIngredient();
-        if (ingredient == Ingredient.EMPTY)
+        if (ingredient == null)
             return null;
 
         var id = ExtendedCrafting.resource(singularity.getId().getPath() + "_singularity");

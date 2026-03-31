@@ -13,7 +13,6 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.inventory.ResultContainer;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
@@ -24,12 +23,12 @@ public class AdvancedTableContainer extends BaseContainerMenu {
 	private final Container result;
 	private final ExtendedCraftingInventory matrix;
 
-	private AdvancedTableContainer(MenuType<?> type, int id, Inventory playerInventory, FriendlyByteBuf buffer) {
-		this(type, id, playerInventory, AdvancedTableTileEntity.createInventoryHandler(), buffer.readBlockPos());
+	public AdvancedTableContainer(int id, Inventory playerInventory, FriendlyByteBuf buffer) {
+		this(id, playerInventory, AdvancedTableTileEntity.createInventoryHandler(), buffer.readBlockPos());
 	}
 
-	private AdvancedTableContainer(MenuType<?> type, int id, Inventory playerInventory, CItemStacksHandler inventory, BlockPos pos) {
-		super(type, id, pos);
+	public AdvancedTableContainer(int id, Inventory playerInventory, CItemStacksHandler inventory, BlockPos pos) {
+		super(ModMenuTypes.ADVANCED_TABLE.get(), id, pos);
 		this.level = playerInventory.player.level();
 		this.result = new ResultContainer();
 		this.matrix = new ExtendedCraftingInventory(this, inventory, 5);
@@ -112,13 +111,5 @@ public class AdvancedTableContainer extends BaseContainerMenu {
 		}
 
 		return itemstack;
-	}
-
-	public static AdvancedTableContainer create(int windowId, Inventory playerInventory, FriendlyByteBuf buffer) {
-		return new AdvancedTableContainer(ModMenuTypes.ADVANCED_TABLE.get(), windowId, playerInventory, buffer);
-	}
-
-	public static AdvancedTableContainer create(int windowId, Inventory playerInventory, CItemStacksHandler inventory, BlockPos pos) {
-		return new AdvancedTableContainer(ModMenuTypes.ADVANCED_TABLE.get(), windowId, playerInventory, inventory, pos);
 	}
 }

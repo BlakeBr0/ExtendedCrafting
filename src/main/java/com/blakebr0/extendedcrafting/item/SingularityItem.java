@@ -2,7 +2,6 @@ package com.blakebr0.extendedcrafting.item;
 
 import com.blakebr0.cucumber.iface.IColored;
 import com.blakebr0.cucumber.item.BaseItem;
-import com.blakebr0.cucumber.util.Localizable;
 import com.blakebr0.extendedcrafting.ExtendedCrafting;
 import com.blakebr0.extendedcrafting.lib.ModTooltips;
 import com.blakebr0.extendedcrafting.singularity.SingularityUtils;
@@ -12,8 +11,9 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Rarity;
 import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.component.TooltipDisplay;
 
-import java.util.List;
+import java.util.function.Consumer;
 
 public class SingularityItem extends BaseItem implements IColored {
 	public SingularityItem(Identifier id) {
@@ -25,31 +25,30 @@ public class SingularityItem extends BaseItem implements IColored {
 		var singularity = SingularityUtils.getSingularity(stack);
 
 		if (singularity == null) {
-			return Localizable.of(this.getDescriptionId(stack)).args("NULL").build();
+			return Component.translatable(this.descriptionId, "Null");
 		}
 
-		return Localizable.of(this.getDescriptionId(stack)).args(singularity.getDisplayName()).build();
+		return Component.translatable(this.descriptionId, singularity.getDisplayName());
 	}
 
 	@Override
-	public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltip, TooltipFlag flag) {
+	public void appendHoverText(ItemStack stack, TooltipContext context, TooltipDisplay display, Consumer<Component> builder, TooltipFlag flag) {
 		var singularity = SingularityUtils.getSingularity(stack);
 
 		if (singularity != null) {
 			var modid = singularity.getId().getNamespace();
 
 			if (!modid.equals(ExtendedCrafting.MOD_ID))
-				tooltip.add(ModTooltips.getAddedByTooltip(modid));
+				builder.accept(ModTooltips.getAddedByTooltip(modid));
 
 			if (flag.isAdvanced())
-				tooltip.add(ModTooltips.SINGULARITY_ID.args(singularity.getId().toString()).color(ChatFormatting.DARK_GRAY).build());
+				builder.accept(ModTooltips.SINGULARITY_ID.args(singularity.getId().toString()).color(ChatFormatting.DARK_GRAY).toComponent());
 		}
 	}
 
 	@Override
 	public int getColor(int i, ItemStack stack) {
 		var singularity = SingularityUtils.getSingularity(stack);
-
 		if (singularity == null)
 			return -1;
 

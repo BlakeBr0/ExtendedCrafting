@@ -14,23 +14,27 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.inventory.ResultContainer;
+import net.minecraft.world.inventory.SimpleContainerData;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 
 public class EliteAutoTableContainer extends BaseContainerMenu {
+	private final ContainerData data;
 	private final Level level;
 	private final Container result;
 	private final ExtendedCraftingInventory matrix;
 
-	private EliteAutoTableContainer(MenuType<?> type, int id, Inventory playerInventory, FriendlyByteBuf buffer) {
-		this(type, id, playerInventory, AutoTableTileEntity.Elite.createInventoryHandler(), buffer.readBlockPos());
+	public EliteAutoTableContainer(int id, Inventory playerInventory, FriendlyByteBuf buffer) {
+		this(id, playerInventory, AutoTableTileEntity.Elite.createInventoryHandler(), new SimpleContainerData(4), buffer.readBlockPos());
 	}
 
-	private EliteAutoTableContainer(MenuType<?> type, int id, Inventory playerInventory, CItemStacksHandler inventory, BlockPos pos) {
-		super(type, id, pos);
+	public EliteAutoTableContainer(int id, Inventory playerInventory, CItemStacksHandler inventory, ContainerData data, BlockPos pos) {
+		super(ModMenuTypes.ELITE_AUTO_TABLE.get(), id, pos);
+		this.data = data;
 		this.level = playerInventory.player.level();
 		this.result = new ResultContainer();
 		this.matrix = new ExtendedCraftingInventory(this, inventory, 7, true);
@@ -115,13 +119,5 @@ public class EliteAutoTableContainer extends BaseContainerMenu {
 		}
 
 		return itemstack;
-	}
-
-	public static EliteAutoTableContainer create(int windowId, Inventory playerInventory, FriendlyByteBuf buffer) {
-		return new EliteAutoTableContainer(ModMenuTypes.ELITE_AUTO_TABLE.get(), windowId, playerInventory, buffer);
-	}
-
-	public static EliteAutoTableContainer create(int windowId, Inventory playerInventory, CItemStacksHandler inventory, BlockPos pos) {
-		return new EliteAutoTableContainer(ModMenuTypes.ELITE_AUTO_TABLE.get(), windowId, playerInventory, inventory, pos);
 	}
 }

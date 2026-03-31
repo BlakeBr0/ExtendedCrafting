@@ -27,12 +27,12 @@ public class BasicTableContainer extends BaseContainerMenu {
 	private final ExtendedCraftingInventory matrix;
 	private boolean isVanillaRecipe = false;
 
-	private BasicTableContainer(MenuType<?> type, int id, Inventory playerInventory, FriendlyByteBuf buffer) {
-		this(type, id, playerInventory, BasicTableTileEntity.createInventoryHandler(), buffer.readBlockPos());
+	public BasicTableContainer(int id, Inventory playerInventory, FriendlyByteBuf buffer) {
+		this(id, playerInventory, BasicTableTileEntity.createInventoryHandler(), buffer.readBlockPos());
 	}
 
-	private BasicTableContainer(MenuType<?> type, int id, Inventory playerInventory, CItemStacksHandler inventory, BlockPos pos) {
-		super(type, id, pos);
+	public BasicTableContainer(int id, Inventory playerInventory, CItemStacksHandler inventory, BlockPos pos) {
+		super(ModMenuTypes.BASIC_TABLE.get(), id, pos);
 		this.level = playerInventory.player.level();
 		this.result = new ResultContainer();
 		this.matrix = new ExtendedCraftingInventory(this, inventory, 3);
@@ -134,13 +134,5 @@ public class BasicTableContainer extends BaseContainerMenu {
 
 	public boolean isVanillaRecipe() {
 		return this.isVanillaRecipe;
-	}
-
-	public static BasicTableContainer create(int windowId, Inventory playerInventory, FriendlyByteBuf buffer) {
-		return new BasicTableContainer(ModMenuTypes.BASIC_TABLE.get(), windowId, playerInventory, buffer);
-	}
-
-	public static BasicTableContainer create(int windowId, Inventory playerInventory, CItemStacksHandler inventory, BlockPos pos) {
-		return new BasicTableContainer(ModMenuTypes.BASIC_TABLE.get(), windowId, playerInventory, inventory, pos);
 	}
 }

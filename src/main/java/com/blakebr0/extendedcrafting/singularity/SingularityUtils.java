@@ -27,7 +27,7 @@ public final class SingularityUtils {
         var ing = GsonHelper.getAsJsonObject(json, "ingredient", null);
 
         if (ing == null) {
-            singularity = new Singularity(id, name, new int[] { overlayColor, underlayColor }, Ingredient.EMPTY, materialCount, inUltimateSingularity);
+            singularity = new Singularity(id, name, new int[] { overlayColor, underlayColor }, (Ingredient) null, materialCount, inUltimateSingularity);
         } else if (ing.has("tag")) {
             var tag = ing.get("tag").getAsString();
             singularity = new Singularity(id, name, new int[] { overlayColor, underlayColor }, tag, materialCount, inUltimateSingularity);

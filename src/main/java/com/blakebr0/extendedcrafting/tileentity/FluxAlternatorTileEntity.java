@@ -2,6 +2,7 @@ package com.blakebr0.extendedcrafting.tileentity;
 
 import com.blakebr0.cucumber.energy.CEnergyStorage;
 import com.blakebr0.cucumber.tileentity.BaseTileEntity;
+import com.blakebr0.cucumber.util.ContainerDataBuilder;
 import com.blakebr0.extendedcrafting.config.ModConfigs;
 import com.blakebr0.extendedcrafting.container.FluxAlternatorContainer;
 import com.blakebr0.extendedcrafting.init.ModTileEntities;
@@ -11,6 +12,7 @@ import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
@@ -18,9 +20,13 @@ import net.minecraft.world.level.storage.ValueOutput;
 public class FluxAlternatorTileEntity extends BaseTileEntity implements MenuProvider {
     private final CEnergyStorage energy;
 
+    private final ContainerData dataAccess;
+
     public FluxAlternatorTileEntity(BlockPos pos, BlockState state) {
         super(ModTileEntities.FLUX_ALTERNATOR.get(), pos, state);
         this.energy = new CEnergyStorage(ModConfigs.FLUX_ALTERNATOR_POWER_CAPACITY.get(), _ -> this.setChangedAndDispatch());
+
+        this.dataAccess = ContainerDataBuilder.builder().build();
     }
 
     @Override
@@ -42,7 +48,7 @@ public class FluxAlternatorTileEntity extends BaseTileEntity implements MenuProv
 
     @Override
     public AbstractContainerMenu createMenu(int windowId, Inventory playerInventory, Player player) {
-        return FluxAlternatorContainer.create(windowId, playerInventory, this.getBlockPos());
+        return new FluxAlternatorContainer(windowId, playerInventory, this.dataAccess, this.getBlockPos());
     }
 
     public CEnergyStorage getEnergy() {

@@ -33,7 +33,7 @@ public class UltimateTableTileEntity extends BaseInventoryTileEntity implements 
 
 	@Override
 	public AbstractContainerMenu createMenu(int windowId, Inventory playerInventory, Player player) {
-		return UltimateTableContainer.create(windowId, playerInventory, this.inventory, this.getBlockPos());
+		return new UltimateTableContainer(windowId, playerInventory, this.inventory, this.getBlockPos());
 	}
 
 	public static CItemStacksHandler createInventoryHandler() {

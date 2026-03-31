@@ -11,17 +11,23 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.inventory.MenuType;
+import net.minecraft.world.inventory.SimpleContainerData;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 
 public class CompressorContainer extends BaseContainerMenu {
-	private CompressorContainer(MenuType<?> type, int id, Inventory playerInventory, FriendlyByteBuf buffer) {
-		this(type, id, playerInventory, CompressorTileEntity.createInventoryHandler(), buffer.readBlockPos());
+	private final ContainerData data;
+
+	public CompressorContainer(int id, Inventory playerInventory, FriendlyByteBuf buffer) {
+		this(id, playerInventory, CompressorTileEntity.createInventoryHandler(), new SimpleContainerData(3), buffer.readBlockPos());
 	}
 
-	private CompressorContainer(MenuType<?> type, int id, Inventory playerInventory, CItemStacksHandler inventory, BlockPos pos) {
-		super(type, id, pos);
+	public CompressorContainer(int id, Inventory playerInventory, CItemStacksHandler inventory, ContainerData data, BlockPos pos) {
+		super(ModMenuTypes.COMPRESSOR.get(), id, pos);
+		this.data = data;
+
 		this.addSlot(new COutputSlot(inventory, 0, 135, 48));
 		this.addSlot(new CSlot(inventory, 1, 65, 48));
 		this.addSlot(new CatalystSlot(inventory, 2, 38, 48));
@@ -83,13 +89,5 @@ public class CompressorContainer extends BaseContainerMenu {
 		}
 
 		return itemstack;
-	}
-
-	public static CompressorContainer create(int windowId, Inventory playerInventory, FriendlyByteBuf buffer) {
-		return new CompressorContainer(ModMenuTypes.COMPRESSOR.get(), windowId, playerInventory, buffer);
-	}
-
-	public static CompressorContainer create(int windowId, Inventory playerInventory, CItemStacksHandler inventory, BlockPos pos) {
-		return new CompressorContainer(ModMenuTypes.COMPRESSOR.get(), windowId, playerInventory, inventory, pos);
 	}
 }

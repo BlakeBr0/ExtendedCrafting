@@ -33,7 +33,7 @@ public class BasicTableTileEntity extends BaseInventoryTileEntity implements Men
 
 	@Override
 	public AbstractContainerMenu createMenu(int windowId, Inventory playerInventory, Player player) {
-		return BasicTableContainer.create(windowId, playerInventory, this.inventory, this.getBlockPos());
+		return new BasicTableContainer(windowId, playerInventory, this.inventory, this.getBlockPos());
 	}
 
 	public static CItemStacksHandler createInventoryHandler() {
@@ -41,6 +41,6 @@ public class BasicTableTileEntity extends BaseInventoryTileEntity implements Men
 	}
 
 	public static CItemStacksHandler createInventoryHandler(OnContentsChangedFunction onContentsChanged) {
-		return CItemStacksHandler.create(9, onContentsChanged, builder -> {});
+		return CItemStacksHandler.create(9, onContentsChanged, _ -> {});
 	}
 }

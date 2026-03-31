@@ -6,6 +6,7 @@ import com.blakebr0.cucumber.inventory.CItemStacksHandler;
 import com.blakebr0.cucumber.inventory.CachedRecipe;
 import com.blakebr0.cucumber.inventory.OnContentsChangedFunction;
 import com.blakebr0.cucumber.tileentity.BaseInventoryTileEntity;
+import com.blakebr0.cucumber.util.ContainerDataBuilder;
 import com.blakebr0.extendedcrafting.api.crafting.ICompressorRecipe;
 import com.blakebr0.extendedcrafting.config.ModConfigs;
 import com.blakebr0.extendedcrafting.container.CompressorContainer;
@@ -17,16 +18,20 @@ import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.CraftingInput;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
+import net.neoforged.neoforge.transfer.item.ItemResource;
+import net.neoforged.neoforge.transfer.transaction.Transaction;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,12 +48,16 @@ public class CompressorTileEntity extends BaseInventoryTileEntity implements Men
 	private boolean ejecting = false;
 	private boolean inputLimit = true;
 
+	private final ContainerData dataAccess;
+
 	public CompressorTileEntity(BlockPos pos, BlockState state) {
 		super(ModTileEntities.COMPRESSOR.get(), pos, state);
 		this.inventory = createInventoryHandler((_, _) -> this.setChanged());
 		this.recipeInventory = CItemStacksHandler.create(2);
 		this.energy = new CEnergyStorage(ModConfigs.COMPRESSOR_POWER_CAPACITY.get(), _ -> this.setChangedFast());
 		this.recipe = new CachedRecipe<>(ModRecipeTypes.COMPRESSOR.get());
+
+		this.dataAccess = ContainerDataBuilder.builder().build();
 	}
 
 	@Override
@@ -89,7 +98,7 @@ public class CompressorTileEntity extends BaseInventoryTileEntity implements Men
 
 	@Override
 	public AbstractContainerMenu createMenu(int windowId, Inventory playerInventory, Player playerEntity) {
-		return CompressorContainer.create(windowId, playerInventory, this.inventory, this.getBlockPos());
+		return new CompressorContainer(windowId, playerInventory, this.inventory, this.dataAccess, this.getBlockPos());
 	}
 
 	public static void tick(Level level, BlockPos pos, BlockState state, CompressorTileEntity tile) {
@@ -236,7 +245,7 @@ public class CompressorTileEntity extends BaseInventoryTileEntity implements Men
 		this.recipeInventory.setStackInSlot(0, this.materialStack);
 		this.recipeInventory.setStackInSlot(1, catalyst);
 
-		return this.recipe.checkAndGet(this.toCraftingInput(), this.level);
+		return this.recipe.checkAndGet(this.toCraftingInput(), (ServerLevel) this.level);
 	}
 
 	public int getEnergyRequired() {
@@ -263,17 +272,21 @@ public class CompressorTileEntity extends BaseInventoryTileEntity implements Men
 		if (difference < extract)
 			extract = difference;
 
-		int extracted = this.energy.extractEnergy(extract, false);
-		this.progress += extracted;
+		try (var tx = Transaction.openRoot()) {
+			int extracted = this.energy.extract(extract, tx);
+			this.progress += extracted;
+			tx.commit();
+		}
 	}
 
 	private void updateResult(ItemStack stack) {
-		var result = this.inventory.getStackInSlot(0);
+		var result = this.inventory.getResource(9);
 
 		if (result.isEmpty()) {
-			this.inventory.setStackInSlot(0, stack);
+			this.inventory.set(9, ItemResource.of(stack), stack.getCount());
 		} else {
-			this.inventory.setStackInSlot(0, StackHelper.grow(result, stack.getCount()));
+			var amount = this.inventory.getAmountAsInt(0);
+			this.inventory.set(9, result, amount + stack.getCount());
 		}
 	}
 
@@ -309,7 +322,7 @@ public class CompressorTileEntity extends BaseInventoryTileEntity implements Men
 		} else {
 			var input = this.inputs.get(index);
 
-			if (StackHelper.areStacksEqual(stack, input.stack)) {
+			if (ItemStack.isSameItemSameComponents(stack, input.stack)) {
 				input.count += consumeAmount;
 			} else {
 				this.inputs.add(new MaterialInput(stack.copy(), consumeAmount));

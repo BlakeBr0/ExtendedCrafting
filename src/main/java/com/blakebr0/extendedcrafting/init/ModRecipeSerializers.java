@@ -18,13 +18,13 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 public final class ModRecipeSerializers {
     public static final DeferredRegister<RecipeSerializer<?>> REGISTRY = DeferredRegister.create(Registries.RECIPE_SERIALIZER, ExtendedCrafting.MOD_ID);
 
-    public static final DeferredHolder<RecipeSerializer<?>, RecipeSerializer<?>> COMBINATION = REGISTRY.register("combination", CombinationRecipe.Serializer::new);
-    public static final DeferredHolder<RecipeSerializer<?>, RecipeSerializer<?>> SHAPED_TABLE = REGISTRY.register("shaped_table", ShapedTableRecipe.Serializer::new);
-    public static final DeferredHolder<RecipeSerializer<?>, RecipeSerializer<?>> SHAPELESS_TABLE = REGISTRY.register("shapeless_table", ShapelessTableRecipe.Serializer::new);
-    public static final DeferredHolder<RecipeSerializer<?>, RecipeSerializer<?>> COMPRESSOR = REGISTRY.register("compressor", CompressorRecipe.Serializer::new);
-    public static final DeferredHolder<RecipeSerializer<?>, RecipeSerializer<?>> SHAPED_ENDER_CRAFTER = REGISTRY.register("shaped_ender_crafter", ShapedEnderCrafterRecipe.Serializer::new);
-    public static final DeferredHolder<RecipeSerializer<?>, RecipeSerializer<?>> SHAPELESS_ENDER_CRAFTER = REGISTRY.register("shapeless_ender_crafter", ShapelessEnderCrafterRecipe.Serializer::new);
-    public static final DeferredHolder<RecipeSerializer<?>, RecipeSerializer<?>> SHAPED_FLUX_CRAFTER = REGISTRY.register("shaped_flux_crafter", ShapedFluxCrafterRecipe.Serializer::new);
-    public static final DeferredHolder<RecipeSerializer<?>, RecipeSerializer<?>> SHAPELESS_FLUX_CRAFTER = REGISTRY.register("shapeless_flux_crafter", ShapelessFluxCrafterRecipe.Serializer::new);
-    public static final DeferredHolder<RecipeSerializer<?>, RecipeSerializer<?>> ULTIMATE_SINGULARITY = REGISTRY.register("ultimate_singularity", UltimateSingularityRecipe.Serializer::new);
+    public static final DeferredHolder<RecipeSerializer<?>, RecipeSerializer<?>> COMBINATION = REGISTRY.register("combination", () -> CombinationRecipe.SERIALIZER);
+    public static final DeferredHolder<RecipeSerializer<?>, RecipeSerializer<?>> SHAPED_TABLE = REGISTRY.register("shaped_table", () -> ShapedTableRecipe.SERIALIZER);
+    public static final DeferredHolder<RecipeSerializer<?>, RecipeSerializer<?>> SHAPELESS_TABLE = REGISTRY.register("shapeless_table", () -> ShapelessTableRecipe.SERIALIZER);
+    public static final DeferredHolder<RecipeSerializer<?>, RecipeSerializer<?>> COMPRESSOR = REGISTRY.register("compressor", () -> CompressorRecipe.SERIALIZER);
+    public static final DeferredHolder<RecipeSerializer<?>, RecipeSerializer<?>> SHAPED_ENDER_CRAFTER = REGISTRY.register("shaped_ender_crafter", () -> ShapedEnderCrafterRecipe.SERIALIZER);
+    public static final DeferredHolder<RecipeSerializer<?>, RecipeSerializer<?>> SHAPELESS_ENDER_CRAFTER = REGISTRY.register("shapeless_ender_crafter", () -> ShapelessEnderCrafterRecipe.SERIALIZER);
+    public static final DeferredHolder<RecipeSerializer<?>, RecipeSerializer<?>> SHAPED_FLUX_CRAFTER = REGISTRY.register("shaped_flux_crafter", () -> ShapedFluxCrafterRecipe.SERIALIZER);
+    public static final DeferredHolder<RecipeSerializer<?>, RecipeSerializer<?>> SHAPELESS_FLUX_CRAFTER = REGISTRY.register("shapeless_flux_crafter", () -> ShapelessFluxCrafterRecipe.SERIALIZER);
+    public static final DeferredHolder<RecipeSerializer<?>, RecipeSerializer<?>> ULTIMATE_SINGULARITY = REGISTRY.register("ultimate_singularity", () -> UltimateSingularityRecipe.SERIALIZER);
 }

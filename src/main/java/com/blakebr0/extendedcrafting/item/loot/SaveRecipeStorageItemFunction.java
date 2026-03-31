@@ -3,7 +3,6 @@ package com.blakebr0.extendedcrafting.item.loot;
 import com.blakebr0.extendedcrafting.api.component.TableRecipeStorageComponent;
 import com.blakebr0.extendedcrafting.crafting.TableRecipeStorage;
 import com.blakebr0.extendedcrafting.init.ModDataComponentTypes;
-import com.blakebr0.extendedcrafting.init.ModLootItemFunctionTypes;
 import com.blakebr0.extendedcrafting.tileentity.AutoEnderCrafterTileEntity;
 import com.blakebr0.extendedcrafting.tileentity.AutoFluxCrafterTileEntity;
 import com.blakebr0.extendedcrafting.tileentity.AutoTableTileEntity;
@@ -12,20 +11,19 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.functions.LootItemFunction;
-import net.minecraft.world.level.storage.loot.functions.LootItemFunctionType;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 
 public class SaveRecipeStorageItemFunction implements LootItemFunction {
-    public static final MapCodec<SaveRecipeStorageItemFunction> CODEC = MapCodec.unit(new SaveRecipeStorageItemFunction());
+    public static final MapCodec<SaveRecipeStorageItemFunction> MAP_CODEC = MapCodec.unit(new SaveRecipeStorageItemFunction());
 
     @Override
-    public LootItemFunctionType<SaveRecipeStorageItemFunction> getType() {
-        return ModLootItemFunctionTypes.SAVE_RECIPE_STORAGE.get();
+    public MapCodec<? extends LootItemFunction> codec() {
+        return MAP_CODEC;
     }
 
     @Override
     public ItemStack apply(ItemStack stack, LootContext context) {
-        var tile = context.getParam(LootContextParams.BLOCK_ENTITY);
+        var tile = context.getParameter(LootContextParams.BLOCK_ENTITY);
         var level = context.getLevel();
 
         if (tile instanceof AutoTableTileEntity table) {

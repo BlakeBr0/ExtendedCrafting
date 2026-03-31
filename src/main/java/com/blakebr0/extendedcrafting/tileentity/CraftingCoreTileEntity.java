@@ -6,6 +6,7 @@ import com.blakebr0.cucumber.inventory.CItemStacksHandler;
 import com.blakebr0.cucumber.inventory.CachedRecipe;
 import com.blakebr0.cucumber.inventory.OnContentsChangedFunction;
 import com.blakebr0.cucumber.tileentity.BaseInventoryTileEntity;
+import com.blakebr0.cucumber.util.ContainerDataBuilder;
 import com.blakebr0.cucumber.util.Utils;
 import com.blakebr0.extendedcrafting.api.crafting.ICombinationRecipe;
 import com.blakebr0.extendedcrafting.config.ModConfigs;
@@ -19,17 +20,21 @@ import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.util.FastColor;
+import net.minecraft.util.ARGB;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.CraftingInput;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
+import net.neoforged.neoforge.transfer.item.ItemResource;
+import net.neoforged.neoforge.transfer.transaction.Transaction;
+import net.neoforged.neoforge.transfer.transaction.TransactionContext;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -43,12 +48,16 @@ public class CraftingCoreTileEntity extends BaseInventoryTileEntity implements M
 	private int pedestalCount;
 	private boolean haveItemsChanged = true;
 
+	private final ContainerData dataAccess;
+
 	public CraftingCoreTileEntity(BlockPos pos, BlockState state) {
 		super(ModTileEntities.CRAFTING_CORE.get(), pos, state);
 		this.inventory = createInventoryHandler((_, _) -> this.setChanged());
 		this.energy = new CEnergyStorage(ModConfigs.CRAFTING_CORE_POWER_CAPACITY.get(), _ -> this.setChangedFast());
 		this.recipeInventory = CItemStacksHandler.create(49);
 		this.recipe = new CachedRecipe<>(ModRecipeTypes.COMBINATION.get());
+
+		this.dataAccess = ContainerDataBuilder.builder().build();
 	}
 
 	@Override
@@ -77,55 +86,62 @@ public class CraftingCoreTileEntity extends BaseInventoryTileEntity implements M
 
 	@Override
 	public AbstractContainerMenu createMenu(int windowId, Inventory playerInventory, Player player) {
-		return CraftingCoreContainer.create(windowId, playerInventory, this.getBlockPos());
+		return new CraftingCoreContainer(windowId, playerInventory, this.dataAccess, this.getBlockPos());
 	}
 
 	public static void tick(Level level, BlockPos pos, BlockState state, CraftingCoreTileEntity tile) {
 		var recipe = tile.getActiveRecipe();
 
 		if (recipe != null) {
-			if (tile.energy.getEnergyStored() > 0) {
-				boolean done = tile.process(recipe);
-				var pedestalsWithItems = tile.getPedestalsWithItems();
+			if (tile.energy.getAmountAsInt() > 0) {
+				try (var tx = Transaction.openRoot()) {
+					boolean done = tile.process(recipe, tx);
+					var pedestalsWithItems = tile.getPedestalsWithItems();
 
-				if (done) {
-                    var input = tile.toCraftingInput();
-                    var remaining = recipe.getRemainingItems(input);
-                    int index = 1; // 0 is the center item
+					if (done) {
+						var input = tile.toCraftingInput();
+						var remaining = recipe.getRemainingItems(input);
+						int index = 1; // 0 is the center item
 
-					for (var pedestalPos : pedestalsWithItems.keySet()) {
-						var pedestalTile = level.getBlockEntity(pedestalPos);
-
-						if (pedestalTile instanceof PedestalTileEntity pedestal) {
-							var inventory = pedestal.getInventory();
-
-							inventory.setStackInSlot(0, remaining.get(index));
-
-							tile.spawnParticles(ParticleTypes.SMOKE, pedestalPos, 1.1, 20);
-						}
-
-                        index++;
-					}
-
-					tile.spawnParticles(ParticleTypes.END_ROD, pos, 1.1, 50);
-					tile.inventory.setStackInSlot(0, recipe.assemble(input, level.registryAccess()));
-					tile.progress = 0;
-					tile.setChangedFast();
-				} else {
-					tile.spawnParticles(ColorParticleOption.create(ParticleTypes.ENTITY_EFFECT, FastColor.ARGB32.color(Utils.randInt(0, 255), Utils.randInt(0, 255), Utils.randInt(0, 255))), pos, 1.15, 2);
-
-					if (tile.shouldSpawnItemParticles()) {
 						for (var pedestalPos : pedestalsWithItems.keySet()) {
 							var pedestalTile = level.getBlockEntity(pedestalPos);
 
 							if (pedestalTile instanceof PedestalTileEntity pedestal) {
 								var inventory = pedestal.getInventory();
-								var stack = inventory.getStackInSlot(0);
+								var remainder = remaining.get(index);
 
-								tile.spawnItemParticles(pedestalPos, stack);
+								inventory.set(0, ItemResource.of(remainder), remainder.count());
+
+								tile.spawnParticles(ParticleTypes.SMOKE, pedestalPos, 1.1, 20);
+							}
+
+							index++;
+						}
+
+						var result = recipe.assemble(input);
+
+						tile.spawnParticles(ParticleTypes.END_ROD, pos, 1.1, 50);
+						tile.inventory.set(0, ItemResource.of(result), result.count());
+						tile.progress = 0;
+						tile.setChangedFast();
+					} else {
+						tile.spawnParticles(ColorParticleOption.create(ParticleTypes.ENTITY_EFFECT, ARGB.color(Utils.randInt(0, 255), Utils.randInt(0, 255), Utils.randInt(0, 255))), pos, 1.15, 2);
+
+						if (tile.shouldSpawnItemParticles()) {
+							for (var pedestalPos : pedestalsWithItems.keySet()) {
+								var pedestalTile = level.getBlockEntity(pedestalPos);
+
+								if (pedestalTile instanceof PedestalTileEntity pedestal) {
+									var inventory = pedestal.getInventory();
+									var resource = inventory.getResource(0);
+
+									tile.spawnItemParticles(pedestalPos, resource);
+								}
 							}
 						}
 					}
+
+					tx.commit();
 				}
 			}
 		} else {
@@ -161,7 +177,7 @@ public class CraftingCoreTileEntity extends BaseInventoryTileEntity implements M
 			return this.recipe.get();
 		}
 
-		return this.recipe.checkAndGet(this.toCraftingInput(), this.level);
+		return this.recipe.checkAndGet(this.toCraftingInput(), (ServerLevel) this.level);
 	}
 
 	public boolean hasRecipe() {
@@ -185,12 +201,12 @@ public class CraftingCoreTileEntity extends BaseInventoryTileEntity implements M
 	}
 
 	private void updateRecipeInventory(ItemStack[] items) {
-		boolean haveItemsChanged = this.recipeInventory.getSlots() != items.length + 1
-				|| !StackHelper.areStacksEqual(this.recipeInventory.getStackInSlot(0), this.inventory.getStackInSlot(0));
+		boolean haveItemsChanged = this.recipeInventory.size() != items.length + 1
+				|| !this.recipeInventory.getResource(0).equals(this.inventory.getResource(0));
 
 		if (!haveItemsChanged) {
 			for (int i = 0; i < items.length; i++) {
-				if (!StackHelper.areStacksEqual(this.recipeInventory.getStackInSlot(i + 1), items[i])) {
+				if (!this.recipeInventory.getResource(i + 1).matches(items[i])) {
 					haveItemsChanged = true;
 					break;
 				}
@@ -210,13 +226,13 @@ public class CraftingCoreTileEntity extends BaseInventoryTileEntity implements M
 		}
 	}
 
-	private boolean process(ICombinationRecipe recipe) {
+	private boolean process(ICombinationRecipe recipe, TransactionContext tx) {
 		int extract = recipe.getPowerRate();
 		int difference = recipe.getPowerCost() - this.progress;
 		if (difference < recipe.getPowerRate())
 			extract = difference;
 
-		int extracted = this.energy.extractEnergy(extract, false);
+		int extracted = this.energy.extract(extract, tx);
 		this.progress += extracted;
 
 		return this.progress >= recipe.getPowerCost();
@@ -236,12 +252,12 @@ public class CraftingCoreTileEntity extends BaseInventoryTileEntity implements M
 				var tile = world.getBlockEntity(aoePos);
 
 				if (tile instanceof PedestalTileEntity pedestal) {
-					var stack = pedestal.getInventory().getStackInSlot(0);
+					var resource = pedestal.getInventory().getResource(0);
 
 					pedestalCount++;
 
-					if (!stack.isEmpty()) {
-						pedestals.put(aoePos.immutable(), stack);
+					if (!resource.isEmpty()) {
+						pedestals.put(aoePos.immutable(), resource.toStack());
 					}
 				}
 			}
@@ -265,7 +281,7 @@ public class CraftingCoreTileEntity extends BaseInventoryTileEntity implements M
 		level.sendParticles(particle, x, y, z, count, 0, 0, 0, 0.1D);
 	}
 
-	private void spawnItemParticles(BlockPos pedestalPos, ItemStack stack) {
+	private void spawnItemParticles(BlockPos pedestalPos, ItemResource resource) {
 		if (this.getLevel() == null || this.getLevel().isClientSide())
 			return;
 
@@ -280,7 +296,7 @@ public class CraftingCoreTileEntity extends BaseInventoryTileEntity implements M
 		double velY = 0.25D;
 		double velZ = pos.getZ() - pedestalPos.getZ();
 
-		level.sendParticles(new ItemParticleOption(ParticleTypes.ITEM, stack), x, y, z, 0, velX, velY, velZ, 0.18D);
+		level.sendParticles(new ItemParticleOption(ParticleTypes.ITEM, resource.getItem()), x, y, z, 0, velX, velY, velZ, 0.18D);
 	}
 
 	private boolean shouldSpawnItemParticles() {

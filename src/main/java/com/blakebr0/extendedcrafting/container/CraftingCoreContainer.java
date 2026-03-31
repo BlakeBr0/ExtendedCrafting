@@ -6,17 +6,22 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.inventory.MenuType;
+import net.minecraft.world.inventory.SimpleContainerData;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 
 public class CraftingCoreContainer extends BaseContainerMenu {
-	private CraftingCoreContainer(MenuType<?> type, int id, Inventory playerInventory, FriendlyByteBuf buffer) {
-		this(type, id, playerInventory, buffer.readBlockPos());
+	private final ContainerData data;
+
+	public CraftingCoreContainer(int id, Inventory playerInventory, FriendlyByteBuf buffer) {
+		this(id, playerInventory, new SimpleContainerData(3), buffer.readBlockPos());
 	}
 
-	private CraftingCoreContainer(MenuType<?> type, int id, Inventory playerInventory, BlockPos pos) {
-		super(type, id, pos);
+	public CraftingCoreContainer(int id, Inventory playerInventory, ContainerData data, BlockPos pos) {
+		super(ModMenuTypes.CRAFTING_CORE.get(), id, pos);
+		this.data = data;
 
 		for (int i = 0; i < 3; i++) {
 			for (int j = 0; j < 9; j++) {
@@ -64,13 +69,5 @@ public class CraftingCoreContainer extends BaseContainerMenu {
 		}
 
 		return itemstack;
-	}
-
-	public static CraftingCoreContainer create(int windowId, Inventory playerInventory, FriendlyByteBuf buffer) {
-		return new CraftingCoreContainer(ModMenuTypes.CRAFTING_CORE.get(), windowId, playerInventory, buffer);
-	}
-
-	public static CraftingCoreContainer create(int windowId, Inventory playerInventory, BlockPos pos) {
-		return new CraftingCoreContainer(ModMenuTypes.CRAFTING_CORE.get(), windowId, playerInventory, pos);
 	}
 }

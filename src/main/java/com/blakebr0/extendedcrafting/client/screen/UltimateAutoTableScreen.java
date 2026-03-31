@@ -13,7 +13,7 @@ import com.blakebr0.extendedcrafting.tileentity.AutoTableTileEntity;
 import com.google.common.collect.Lists;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
@@ -21,6 +21,7 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
 
 import java.util.List;
+import java.util.Optional;
 
 public class UltimateAutoTableScreen extends BaseContainerScreen<UltimateAutoTableContainer> {
 	public static final Identifier BACKGROUND = ExtendedCrafting.resource("textures/gui/ultimate_auto_table.png");
@@ -52,28 +53,28 @@ public class UltimateAutoTableScreen extends BaseContainerScreen<UltimateAutoTab
 	}
 
 	@Override
-	protected void renderTooltip(GuiGraphics gfx, int mouseX, int mouseY) {
+	protected void extractLabels(GuiGraphicsExtractor gfx, int mouseX, int mouseY) {
+		var title = this.getTitle().getString();
+
+		gfx.text(this.font, title, 26, 6, 4210752, false);
+		gfx.text(this.font, this.playerInventoryTitle, 47, this.imageHeight - 94, 4210752, false);
+	}
+
+	@Override
+	protected void extractTooltip(GuiGraphicsExtractor gfx, int mouseX, int mouseY) {
 		int x = this.getGuiLeft();
 		int y = this.getGuiTop();
 
-		super.renderTooltip(gfx, mouseX, mouseY);
+		super.extractTooltip(gfx, mouseX, mouseY);
 
 		if (mouseX > x + 226 && mouseX < x + 239 && mouseY > y + 113 && mouseY < y + 129) {
-			gfx.renderTooltip(this.font, ModTooltips.TOGGLE_AUTO_CRAFTING.color(ChatFormatting.WHITE).build(), mouseX, mouseY);
+			gfx.setTooltipForNextFrame(this.font, ModTooltips.TOGGLE_AUTO_CRAFTING.color(ChatFormatting.WHITE).toComponent(), mouseX, mouseY);
 		}
 	}
 
 	@Override
-	protected void renderLabels(GuiGraphics gfx, int mouseX, int mouseY) {
-		var title = this.getTitle().getString();
-
-		gfx.drawString(this.font, title, 26, 6, 4210752, false);
-		gfx.drawString(this.font, this.playerInventoryTitle, 47, this.imageHeight - 94, 4210752, false);
-	}
-
-	@Override
-	protected void renderBg(GuiGraphics gfx, float partialTicks, int mouseX, int mouseY) {
-		super.renderBg(gfx, partialTicks, mouseX, mouseY);
+	public void extractBackground(GuiGraphicsExtractor gfx, int mouseX, int mouseY, float a) {
+		super.extractBackground(gfx, mouseX, mouseY, a);
 
 		int x = this.getGuiLeft();
 		int y = this.getGuiTop();
@@ -103,7 +104,7 @@ public class UltimateAutoTableScreen extends BaseContainerScreen<UltimateAutoTab
 		}
 	}
 
-	private void onSelectButtonTooltip(Button button, GuiGraphics gfx, int mouseX, int mouseY) {
+	private void onSelectButtonTooltip(Button button, GuiGraphicsExtractor gfx, int mouseX, int mouseY) {
 		var index = ((RecipeSelectButton) button).getIndex();
 		var isSelected = ((RecipeSelectButton) button).isSelected();
 		var recipe = this.getRecipeInfo(index);
@@ -113,29 +114,29 @@ public class UltimateAutoTableScreen extends BaseContainerScreen<UltimateAutoTab
 			var hasRecipe = !recipe.getStacks().stream().allMatch(ItemStack::isEmpty);
 
 			if (hasRecipe) {
-				var output = recipe.getStackInSlot(recipe.getSlots() - 1);
+				var output = recipe.getResource(recipe.size() - 1);
 
 				tooltip = Lists.newArrayList(
-						Component.literal(output.getCount() + "x " + output.getHoverName().getString()),
+						Component.literal(recipe.getAmountAsInt(recipe.size() - 1) + "x " + output.getHoverName().getString()),
 						Component.literal(""),
-						ModTooltips.AUTO_TABLE_DELETE_RECIPE.color(ChatFormatting.WHITE).build()
+						ModTooltips.AUTO_TABLE_DELETE_RECIPE.color(ChatFormatting.WHITE).toComponent()
 				);
 
 				if (isSelected) {
-					tooltip.add(1, ModTooltips.SELECTED.color(ChatFormatting.GREEN).build());
+					tooltip.add(1, ModTooltips.SELECTED.color(ChatFormatting.GREEN).toComponent());
 				}
 			} else {
 				tooltip = Lists.newArrayList(
-						ModTooltips.AUTO_TABLE_SAVE_RECIPE.color(ChatFormatting.WHITE).build()
+						ModTooltips.AUTO_TABLE_SAVE_RECIPE.color(ChatFormatting.WHITE).toComponent()
 				);
 
 				if (isSelected) {
-					tooltip.add(0, ModTooltips.SELECTED.color(ChatFormatting.GREEN).build());
+					tooltip.add(0, ModTooltips.SELECTED.color(ChatFormatting.GREEN).toComponent());
 					tooltip.add(1, Component.literal(""));
 				}
 			}
 
-			gfx.renderComponentTooltip(this.font, tooltip, mouseX, mouseY);
+			gfx.setTooltipForNextFrame(this.font, tooltip, Optional.empty(), mouseX, mouseY);
 		}
 	}
 

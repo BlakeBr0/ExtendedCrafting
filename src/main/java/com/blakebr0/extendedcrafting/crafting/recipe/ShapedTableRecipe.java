@@ -3,7 +3,6 @@ package com.blakebr0.extendedcrafting.crafting.recipe;
 import com.blakebr0.cucumber.crafting.ShapedRecipePatternCodecs;
 import com.blakebr0.extendedcrafting.api.TableCraftingInput;
 import com.blakebr0.extendedcrafting.api.crafting.ITableRecipe;
-import com.blakebr0.extendedcrafting.init.ModRecipeSerializers;
 import com.blakebr0.extendedcrafting.init.ModRecipeTypes;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;

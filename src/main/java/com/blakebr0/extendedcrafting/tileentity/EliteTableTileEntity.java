@@ -18,7 +18,7 @@ public class EliteTableTileEntity extends BaseInventoryTileEntity implements Men
 
 	public EliteTableTileEntity(BlockPos pos, BlockState state) {
 		super(ModTileEntities.ELITE_TABLE.get(), pos, state);
-		this.inventory = createInventoryHandler((s_, _) -> this.setChangedAndDispatch());
+		this.inventory = createInventoryHandler((_, _) -> this.setChangedAndDispatch());
 	}
 
 	@Override
@@ -33,7 +33,7 @@ public class EliteTableTileEntity extends BaseInventoryTileEntity implements Men
 
 	@Override
 	public AbstractContainerMenu createMenu(int windowId, Inventory playerInventory, Player player) {
-		return EliteTableContainer.create(windowId, playerInventory, this.inventory, this.getBlockPos());
+		return new EliteTableContainer(windowId, playerInventory, this.inventory, this.getBlockPos());
 	}
 
 	public static CItemStacksHandler createInventoryHandler() {

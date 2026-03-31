@@ -6,6 +6,7 @@ import net.minecraft.world.item.crafting.CraftingInput;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import net.neoforged.neoforge.common.util.ValueIOSerializable;
+import net.neoforged.neoforge.transfer.item.ItemResource;
 
 import java.util.Arrays;
 import java.util.function.Function;
@@ -64,10 +65,11 @@ public class TableRecipeStorage implements ValueIOSerializable {
         var recipe = CItemStacksHandler.create(this.slots);
 
         for (int i = 0; i < this.slots - 1; i++) {
-            recipe.setStackInSlot(i, inventory.getStackInSlot(i).copy());
+            var resource = inventory.getResource(i);
+            recipe.set(i, resource, resource.isEmpty() ? 0 : 1);
         }
 
-        recipe.setStackInSlot(this.slots - 1, output);
+        recipe.set(this.slots - 1, ItemResource.of(output), 1);
 
         this.recipes[index] = recipe;
     }
@@ -135,8 +137,9 @@ public class TableRecipeStorage implements ValueIOSerializable {
                 var grid = this.createRecipeGrid(recipe);
                 var size = (int) Math.sqrt(recipe.size());
                 var inventory = CraftingInput.of(size, size, grid.getStacks());
+                var resource = ItemResource.of(validator.apply(inventory));
 
-                recipe.set(this.slots - 1, validator.apply(inventory));
+                recipe.set(this.slots - 1, resource, resource.isEmpty() ? 0 : 1);
             }
         }
 
@@ -156,7 +159,8 @@ public class TableRecipeStorage implements ValueIOSerializable {
         var grid = CItemStacksHandler.create(this.slots - 1);
 
         for (int i = 0; i < this.slots - 1; i++) {
-            grid.setStackInSlot(i, recipe.getStackInSlot(i));
+            var resource = recipe.getResource(i);
+            grid.set(i, resource, resource.isEmpty() ? 0 : 1);
         }
 
         return grid;

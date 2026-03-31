@@ -15,25 +15,29 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.inventory.ResultContainer;
+import net.minecraft.world.inventory.SimpleContainerData;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
 
 public class BasicAutoTableContainer extends BaseContainerMenu {
+	private final ContainerData data;
 	private final Level level;
 	private final Container result;
 	private final ExtendedCraftingInventory matrix;
 	private boolean isVanillaRecipe = false;
 
-	private BasicAutoTableContainer(MenuType<?> type, int id, Inventory playerInventory, FriendlyByteBuf buffer) {
-		this(type, id, playerInventory, AutoTableTileEntity.Basic.createInventoryHandler(), buffer.readBlockPos());
+	public BasicAutoTableContainer(int id, Inventory playerInventory, FriendlyByteBuf buffer) {
+		this(id, playerInventory, AutoTableTileEntity.Basic.createInventoryHandler(), new SimpleContainerData(5), buffer.readBlockPos());
 	}
 
-	private BasicAutoTableContainer(MenuType<?> type, int id, Inventory playerInventory, CItemStacksHandler inventory, BlockPos pos) {
-		super(type, id, pos);
+	public BasicAutoTableContainer(int id, Inventory playerInventory, CItemStacksHandler inventory, ContainerData data, BlockPos pos) {
+		super(ModMenuTypes.BASIC_AUTO_TABLE.get(), id, pos);
+		this.data = data;
 		this.level = playerInventory.player.level();
 		this.result = new ResultContainer();
 		this.matrix = new ExtendedCraftingInventory(this, inventory, 3, true);
@@ -137,13 +141,5 @@ public class BasicAutoTableContainer extends BaseContainerMenu {
 
 	public boolean isVanillaRecipe() {
 		return this.isVanillaRecipe;
-	}
-
-	public static BasicAutoTableContainer create(int windowId, Inventory playerInventory, FriendlyByteBuf buffer) {
-		return new BasicAutoTableContainer(ModMenuTypes.BASIC_AUTO_TABLE.get(), windowId, playerInventory, buffer);
-	}
-
-	public static BasicAutoTableContainer create(int windowId, Inventory playerInventory, CItemStacksHandler inventory, BlockPos pos) {
-		return new BasicAutoTableContainer(ModMenuTypes.BASIC_AUTO_TABLE.get(), windowId, playerInventory, inventory, pos);
 	}
 }

@@ -6,7 +6,6 @@ import com.blakebr0.extendedcrafting.network.payload.RunningSwitchPayload;
 import net.minecraft.client.input.InputWithModifiers;
 import net.minecraft.core.BlockPos;
 import net.neoforged.neoforge.client.network.ClientPacketDistributor;
-import net.neoforged.neoforge.network.PacketDistributor;
 
 import java.util.function.Supplier;
 

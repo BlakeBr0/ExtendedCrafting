@@ -1,6 +1,5 @@
 package com.blakebr0.extendedcrafting.singularity;
 
-import com.blakebr0.cucumber.util.Localizable;
 import com.blakebr0.extendedcrafting.config.ModConfigs;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.RegistryFriendlyByteBuf;
@@ -8,9 +7,9 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.Identifier;
 import net.minecraft.tags.ItemTags;
-import net.minecraft.util.FastColor;
+import net.minecraft.util.ARGB;
 import net.minecraft.world.item.crafting.Ingredient;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Arrays;
 
@@ -29,14 +28,17 @@ public class Singularity {
     private Ingredient ingredient;
     private boolean enabled = true;
 
+    private boolean loadedIngredient = false;
+
     public Singularity(Identifier id, String name, int[] colors, @Nullable Ingredient ingredient, int ingredientCount, boolean inUltimateSingularity) {
         this.id = id;
         this.name = name;
-        this.colors = Arrays.stream(colors).map(c -> FastColor.ARGB32.color(255, c)).toArray();
+        this.colors = Arrays.stream(colors).map(c -> ARGB.color(255, c)).toArray();
         this.ingredient = ingredient;
         this.tag = null;
         this.ingredientCount = ingredientCount;
         this.inUltimateSingularity = inUltimateSingularity;
+        this.loadedIngredient = true;
     }
 
     public Singularity(Identifier id, String name, int[] colors, @Nullable Ingredient ingredient) {
@@ -46,7 +48,7 @@ public class Singularity {
     public Singularity(Identifier id, String name, int[] colors, String tag, int ingredientCount, boolean inUltimateSingularity) {
         this.id = id;
         this.name = name;
-        this.colors = Arrays.stream(colors).map(c -> FastColor.ARGB32.color(255, c)).toArray();
+        this.colors = Arrays.stream(colors).map(c -> ARGB.color(255, c)).toArray();
         this.ingredient = null;
         this.tag = tag;
         this.ingredientCount = ingredientCount;
@@ -77,17 +79,21 @@ public class Singularity {
         return this.tag;
     }
 
-    public Ingredient getIngredient() {
-        if (this.tag != null && this.ingredient == null) {
+    public @Nullable Ingredient getIngredient() {
+        if (!this.loadedIngredient) {
             var tag = ItemTags.create(Identifier.parse(this.tag));
-            if (BuiltInRegistries.ITEM.getTag(tag).isPresent()) {
-                this.ingredient = Ingredient.of(tag);
+            var items = BuiltInRegistries.ITEM.getOrThrow(tag);
+
+            if (items.isBound()) {
+                this.ingredient = Ingredient.of(items);
             } else {
-                this.ingredient = Ingredient.EMPTY;
+                this.ingredient = null;
             }
+
+            this.loadedIngredient = true;
         }
 
-        return this.ingredient != null ? this.ingredient : Ingredient.EMPTY;
+        return this.ingredient;
     }
 
     public int getIngredientCount() {
@@ -99,7 +105,7 @@ public class Singularity {
     }
 
     public Component getDisplayName() {
-        return Localizable.of(this.name).build();
+        return Component.translatable(this.name);
     }
 
     public boolean isInUltimateSingularity() {
@@ -119,11 +125,12 @@ public class Singularity {
         buffer.writeUtf(this.name);
         buffer.writeVarIntArray(this.colors);
         buffer.writeBoolean(this.tag != null);
+        buffer.writeBoolean(this.ingredient != null);
 
         if (this.tag != null) {
             buffer.writeUtf(this.tag);
-        } else {
-            Ingredient.CONTENTS_STREAM_CODEC.encode(buffer, this.ingredient != null ? this.ingredient : Ingredient.EMPTY);
+        } else if (this.ingredient != null) {
+            Ingredient.CONTENTS_STREAM_CODEC.encode(buffer, this.ingredient);
         }
 
         buffer.writeVarInt(this.getIngredientCount());
@@ -140,13 +147,14 @@ public class Singularity {
         var name = buffer.readUtf();
         int[] colors = buffer.readVarIntArray();
         var isTagIngredient = buffer.readBoolean();
+        var hasIngredient = buffer.readBoolean();
 
         String tag = null;
-        var ingredient = Ingredient.EMPTY;
+        Ingredient ingredient = null;
 
         if (isTagIngredient) {
             tag = buffer.readUtf();
-        } else {
+        } else if (hasIngredient) {
             ingredient = Ingredient.CONTENTS_STREAM_CODEC.decode(buffer);
         }
 

@@ -1,7 +1,7 @@
 package com.blakebr0.extendedcrafting.tileentity;
 
 import com.blakebr0.cucumber.energy.CEnergyStorage;
-import com.blakebr0.cucumber.helper.StackHelper;
+import com.blakebr0.cucumber.util.ContainerDataBuilder;
 import com.blakebr0.extendedcrafting.config.ModConfigs;
 import com.blakebr0.extendedcrafting.container.AutoEnderCrafterContainer;
 import com.blakebr0.extendedcrafting.crafting.TableRecipeStorage;
@@ -9,18 +9,21 @@ import com.blakebr0.extendedcrafting.init.ModRecipeTypes;
 import com.blakebr0.extendedcrafting.init.ModTileEntities;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import net.neoforged.neoforge.capabilities.Capabilities;
-import net.neoforged.neoforge.items.IItemHandler;
+import net.neoforged.neoforge.transfer.ResourceHandler;
+import net.neoforged.neoforge.transfer.item.ItemResource;
+import net.neoforged.neoforge.transfer.transaction.Transaction;
+import net.neoforged.neoforge.transfer.transaction.TransactionContext;
 
 import java.util.Optional;
 
@@ -28,10 +31,20 @@ public class AutoEnderCrafterTileEntity extends EnderCrafterTileEntity implement
     private final CEnergyStorage energy;
     private final TableRecipeStorage recipeStorage;
 
+    private final ContainerData dataAccess;
+
     public AutoEnderCrafterTileEntity(BlockPos pos, BlockState state) {
         super(ModTileEntities.AUTO_ENDER_CRAFTER.get(), pos, state);
         this.energy = new CEnergyStorage(ModConfigs.AUTO_ENDER_CRAFTER_POWER_CAPACITY.get(), _ -> this.setChangedFast());
         this.recipeStorage = new TableRecipeStorage(10);
+
+        this.dataAccess = ContainerDataBuilder.builder()
+                .sync(this.energy::getAmountAsInt, this.energy::set)
+                .sync(this.energy::getCapacityAsInt, this.energy::setMaxCapacity)
+                .sync(this::getProgress)
+                .sync(this::getProgressRequired)
+                .sync(this.recipeStorage::getSelected, this.recipeStorage::setSelected)
+                .build();
     }
 
     @Override
@@ -54,7 +67,7 @@ public class AutoEnderCrafterTileEntity extends EnderCrafterTileEntity implement
 
         // on load, we will re-validate the recipe outputs to ensure they are still correct
         if (this.level != null && !this.level.isClientSide()) {
-            this.getRecipeStorage().validate(inventory -> ((ServerLevel) this.level).recipeAccess()
+            this.getRecipeStorage().validate(inventory -> this.getRecipeManager()
                     .getRecipeFor(ModRecipeTypes.ENDER_CRAFTER.get(), inventory, this.level)
                     .map(r -> r.value().assemble(inventory))
                     .orElse(ItemStack.EMPTY)
@@ -64,7 +77,7 @@ public class AutoEnderCrafterTileEntity extends EnderCrafterTileEntity implement
 
     @Override
     public AbstractContainerMenu createMenu(int windowId, Inventory playerInventory, Player player) {
-        return AutoEnderCrafterContainer.create(windowId, playerInventory, this.getInventory(), this.getBlockPos());
+        return new AutoEnderCrafterContainer(windowId, playerInventory, this.getInventory(), this.dataAccess, this.getBlockPos());
     }
 
     @Override
@@ -77,19 +90,20 @@ public class AutoEnderCrafterTileEntity extends EnderCrafterTileEntity implement
 
         int insertPowerRate = ModConfigs.AUTO_ENDER_CRAFTER_INSERT_POWER_RATE.get();
 
-        if (tile.getEnergy().getEnergyStored() >= insertPowerRate) {
+        if (tile.getEnergy().getAmountAsInt() >= insertPowerRate) {
             int selected = tile.getRecipeStorage().getSelected();
             if (selected != -1) {
                 tile.getAboveInventory().ifPresent(handler -> {
-                    for (int i = 0; i < handler.getSlots(); i++) {
-                        var stack = handler.getStackInSlot(i);
+                    for (int i = 0; i < handler.size(); i++) {
+                        var resource = handler.getResource(i);
 
-                        if (!stack.isEmpty() && !handler.extractItem(i, 1, true).isEmpty()) {
-                            var inserted = tile.tryInsertItemIntoGrid(stack);
-
-                            if (inserted) {
-                                handler.extractItem(i, 1, false);
-                                break;
+                        try (var tx = Transaction.openRoot()) {
+                            if (!resource.isEmpty() && handler.extract(i, resource, 1, tx) == 1) {
+                                var inserted = tile.tryInsertItemIntoGrid(resource, tx);
+                                if (inserted) {
+                                    tx.commit();
+                                    break;
+                                }
                             }
                         }
                     }
@@ -109,14 +123,14 @@ public class AutoEnderCrafterTileEntity extends EnderCrafterTileEntity implement
             return;
 
         var inventory = this.getInventory().toCraftingInput(3, 3, 0, 9);
-        var recipe = level.getRecipeManager()
-                .getRecipeFor(ModRecipeTypes.ENDER_CRAFTER.get(), inventory, level)
+        var recipe = this.getRecipeManager()
+                .getRecipeFor(ModRecipeTypes.FLUX_CRAFTER.get(), inventory, level)
                 .orElse(null);
 
         var result = ItemStack.EMPTY;
 
         if (recipe != null) {
-            result = recipe.value().assemble(inventory, level.registryAccess());
+            result = recipe.value().assemble(inventory);
         }
 
         this.getRecipeStorage().setRecipe(index, this.getInventory(), result);
@@ -134,50 +148,54 @@ public class AutoEnderCrafterTileEntity extends EnderCrafterTileEntity implement
 
     private void addStackToSlot(ItemStack stack, int slot) {
         var inventory = this.getInventory();
-        var stackInSlot = inventory.getStackInSlot(slot);
+        var stackInSlot = inventory.getResource(slot);
 
         if (stackInSlot.isEmpty()) {
-            inventory.setStackInSlot(slot, stack);
+            inventory.set(slot, ItemResource.of(stack), stack.getCount());
         } else {
-            inventory.setStackInSlot(slot, StackHelper.grow(stackInSlot, stack.getCount()));
+            var amount = inventory.getAmountAsInt(slot);
+            inventory.set(slot, ItemResource.of(stack), amount + stack.getCount());
         }
     }
 
-    private Optional<IItemHandler> getAboveInventory() {
+    private Optional<ResourceHandler<ItemResource>> getAboveInventory() {
         var level = this.getLevel();
         var pos = this.getBlockPos().above();
 
         if (level != null) {
-            var capability = level.getCapability(Capabilities.ItemHandler.BLOCK, pos, Direction.DOWN);
+            var capability = level.getCapability(Capabilities.Item.BLOCK, pos, Direction.DOWN);
             return Optional.ofNullable(capability);
         }
 
         return Optional.empty();
     }
 
-    private boolean tryInsertItemIntoGrid(ItemStack input) {
+    private boolean tryInsertItemIntoGrid(ItemResource input, TransactionContext tx) {
         var inventory = this.getInventory();
-        var stackToPut = ItemStack.EMPTY;
+        var stackToPut = ItemResource.EMPTY;
+        var stackAmountToPut = 0;
         var recipe = this.getRecipeStorage().getSelectedRecipe();
         int slotToPut = -1;
         boolean isGridChanged = false;
 
-        // last slot in the inventory is the output slot
-        var slots = inventory.getSlots() - 1;
+        // the last slot in the inventory is the output slot
+        var slots = inventory.size() - 1;
 
         for (int i = 0; i < slots; i++) {
-            var slot = inventory.getStackInSlot(i);
-            var recipeStack = recipe.getStackInSlot(i);
+            var slot = inventory.getResource(i);
+            var count = inventory.getAmountAsInt(i);
+            var recipeResource = recipe.getResource(i);
 
-            if (((slot.isEmpty() || StackHelper.areStacksEqual(input, slot)) && StackHelper.areStacksEqual(input, recipeStack))) {
-                if (slot.isEmpty() || slot.getCount() < slot.getMaxStackSize()) {
+            if (((slot.isEmpty() || input.matches(slot.toStack())) && input.matches(recipeResource.toStack()))) {
+                if (slot.isEmpty() || count < slot.getMaxStackSize()) {
                     if (slot.isEmpty()) {
                         slotToPut = i;
                         isGridChanged = true;
                         break;
-                    } else if (stackToPut.isEmpty() || slot.getCount() < stackToPut.getCount()) {
+                    } else if (stackToPut.isEmpty() || count < stackAmountToPut) {
                         slotToPut = i;
                         stackToPut = slot;
+                        stackAmountToPut = count;
                     }
                 }
             }
@@ -185,15 +203,14 @@ public class AutoEnderCrafterTileEntity extends EnderCrafterTileEntity implement
 
         this.isGridChanged = isGridChanged;
 
-		if (slotToPut > -1) {
-		    int insertPowerRate = ModConfigs.AUTO_ENDER_CRAFTER_INSERT_POWER_RATE.get();
-            var toInsert = StackHelper.withSize(input, 1, false);
+        if (slotToPut > -1) {
+            int insertPowerRate = ModConfigs.AUTO_ENDER_CRAFTER_INSERT_POWER_RATE.get();
 
-            this.addStackToSlot(toInsert, slotToPut);
-			this.getEnergy().extractEnergy(insertPowerRate, false);
+            this.getInventory().insert(slotToPut, input, stackAmountToPut, tx, true);
+            this.getEnergy().extract(insertPowerRate, tx);
 
-			return true;
-		}
+            return true;
+        }
 
 		return false;
 	}

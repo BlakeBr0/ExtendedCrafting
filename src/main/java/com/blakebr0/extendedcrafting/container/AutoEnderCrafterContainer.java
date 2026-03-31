@@ -10,17 +10,22 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.inventory.MenuType;
+import net.minecraft.world.inventory.SimpleContainerData;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 
 public class AutoEnderCrafterContainer extends BaseContainerMenu {
-	private AutoEnderCrafterContainer(MenuType<?> type, int id, Inventory playerInventory, FriendlyByteBuf buffer) {
-		this(type, id, playerInventory, EnderCrafterTileEntity.createInventoryHandler(), buffer.readBlockPos());
+	private final ContainerData data;
+
+	public AutoEnderCrafterContainer(int id, Inventory playerInventory, FriendlyByteBuf buffer) {
+		this(id, playerInventory, EnderCrafterTileEntity.createInventoryHandler(), new SimpleContainerData(3), buffer.readBlockPos());
 	}
 
-	private AutoEnderCrafterContainer(MenuType<?> type, int id, Inventory playerInventory, CItemStacksHandler inventory, BlockPos pos) {
-		super(type, id, pos);
+	public AutoEnderCrafterContainer(int id, Inventory playerInventory, CItemStacksHandler inventory, ContainerData data, BlockPos pos) {
+		super(ModMenuTypes.AUTO_ENDER_CRAFTER.get(), id, pos);
+		this.data = data;
 
 		var matrix = new ExtendedCraftingInventory(this, inventory, 3);
 
@@ -81,13 +86,5 @@ public class AutoEnderCrafterContainer extends BaseContainerMenu {
 		}
 
 		return itemstack;
-	}
-
-	public static AutoEnderCrafterContainer create(int windowId, Inventory playerInventory, FriendlyByteBuf buffer) {
-		return new AutoEnderCrafterContainer(ModMenuTypes.AUTO_ENDER_CRAFTER.get(), windowId, playerInventory, buffer);
-	}
-
-	public static AutoEnderCrafterContainer create(int windowId, Inventory playerInventory, CItemStacksHandler inventory, BlockPos pos) {
-		return new AutoEnderCrafterContainer(ModMenuTypes.AUTO_ENDER_CRAFTER.get(), windowId, playerInventory, inventory, pos);
 	}
 }

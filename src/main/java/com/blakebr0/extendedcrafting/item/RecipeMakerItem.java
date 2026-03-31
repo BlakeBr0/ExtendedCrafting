@@ -2,7 +2,6 @@ package com.blakebr0.extendedcrafting.item;
 
 import com.blakebr0.cucumber.item.BaseItem;
 import com.blakebr0.cucumber.tileentity.BaseInventoryTileEntity;
-import com.blakebr0.cucumber.util.Localizable;
 import com.blakebr0.extendedcrafting.api.component.RecipeMakerComponent;
 import com.blakebr0.extendedcrafting.compat.crafttweaker.CraftTweakerUtils;
 import com.blakebr0.extendedcrafting.config.ModConfigs;
@@ -31,22 +30,24 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.resources.RegistryOps;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.component.TooltipDisplay;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.neoforged.neoforge.common.crafting.DataComponentIngredient;
-import net.neoforged.neoforge.items.IItemHandler;
+import net.neoforged.neoforge.transfer.ResourceHandler;
+import net.neoforged.neoforge.transfer.item.ItemResource;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.function.Consumer;
 import java.util.function.Predicate;
 
 public class RecipeMakerItem extends BaseItem {
@@ -97,7 +98,7 @@ public class RecipeMakerItem extends BaseItem {
 							: makeShapedDatapackTableRecipe(inventory, table, ops);
 
 					if ("TOO MANY ITEMS".equals(string)) {
-						player.sendSystemMessage(Localizable.of("message.extendedcrafting.max_unique_items_exceeded").args(KEYS.length).build());
+						player.sendSystemMessage(Component.translatable("message.extendedcrafting.max_unique_items_exceeded", KEYS.length));
 
 						return InteractionResult.SUCCESS;
 					}
@@ -105,10 +106,10 @@ public class RecipeMakerItem extends BaseItem {
 
 				setClipboard(string);
 
-				player.sendSystemMessage(Localizable.of("message.extendedcrafting.copied_recipe").build());
+				player.sendSystemMessage(Component.translatable("message.extendedcrafting.copied_recipe"));
 
 				if (ModConfigs.RECIPE_MAKER_USE_DATA_COMPONENTS.get() && "CraftTweaker".equals(type) && !ModConfigs.isCraftTweakerInstalled()) {
-					player.sendSystemMessage(Localizable.of("message.extendedcrafting.data_components_requires_crafttweaker").build());
+					player.sendSystemMessage(Component.translatable("message.extendedcrafting.data_components_requires_crafttweaker"));
 				}
 			}
 
@@ -123,7 +124,7 @@ public class RecipeMakerItem extends BaseItem {
 
 				setClipboard(string);
 
-				player.sendSystemMessage(Localizable.of("message.extendedcrafting.copied_recipe").build());
+				player.sendSystemMessage(Component.translatable("message.extendedcrafting.copied_recipe"));
 			}
 
 			return InteractionResult.SUCCESS;
@@ -133,7 +134,7 @@ public class RecipeMakerItem extends BaseItem {
 	}
 
 	@Override
-	public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
+	public InteractionResult use(Level level, Player player, InteractionHand hand) {
 		if (player.isCrouching()) {
 			var stack = player.getItemInHand(hand);
 			var component = stack.getOrDefault(ModDataComponentTypes.RECIPE_MAKER, RecipeMakerComponent.EMPTY);
@@ -141,7 +142,7 @@ public class RecipeMakerItem extends BaseItem {
 			stack.set(ModDataComponentTypes.RECIPE_MAKER, component.flipShapeless());
 
 			if (level.isClientSide()) {
-				player.sendSystemMessage(Localizable.of("message.extendedcrafting.changed_mode").args(getModeString(stack)).build());
+				player.sendSystemMessage(Component.translatable("message.extendedcrafting.changed_mode", getModeString(stack)));
 			}
 		}
 
@@ -149,9 +150,9 @@ public class RecipeMakerItem extends BaseItem {
 	}
 
 	@Override
-	public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltip, TooltipFlag flag) {
-		tooltip.add(ModTooltips.TYPE.args(getType(stack)).build());
-		tooltip.add(ModTooltips.MODE.args(getModeString(stack)).build());
+	public void appendHoverText(ItemStack stack, TooltipContext context, TooltipDisplay display, Consumer<Component> builder, TooltipFlag flag) {
+		builder.accept(ModTooltips.TYPE.args(getType(stack)).toComponent());
+		builder.accept(ModTooltips.MODE.args(getModeString(stack)).toComponent());
 	}
 
 	private static void setClipboard(String string) {
@@ -159,7 +160,7 @@ public class RecipeMakerItem extends BaseItem {
 	}
 
 	// Create a shaped CraftTweaker recipe for a Table, Flux Crafter or Ender Crafter
-	private static String makeShapedCraftTweakerTableRecipe(IItemHandler inventory, TableType type) {
+	private static String makeShapedCraftTweakerTableRecipe(ResourceHandler<ItemResource> inventory, TableType type) {
 		var string = new StringBuilder();
 		var uuid = UUID.randomUUID();
 
@@ -175,11 +176,11 @@ public class RecipeMakerItem extends BaseItem {
 				string.append("[");
 			}
 
-			var stack = inventory.getStackInSlot(i);
+			var resource = inventory.getResource(i);
 			var item = "";
 
-			if (!stack.isEmpty() && ModConfigs.RECIPE_MAKER_USE_TAGS.get()) {
-				var tagId = stack.getTags().findFirst().orElse(null);
+			if (!resource.isEmpty() && ModConfigs.RECIPE_MAKER_USE_TAGS.get()) {
+				var tagId = resource.tags().findFirst().orElse(null);
 
 				if (tagId != null) {
 					item = "tag:items:" + tagId.location();
@@ -187,12 +188,12 @@ public class RecipeMakerItem extends BaseItem {
 			}
 
 			if (item.isEmpty()) {
-				var id = BuiltInRegistries.ITEM.getKey(stack.getItem());
+				var id = BuiltInRegistries.ITEM.getKey(resource.getItem());
 				item = "item:" + id;
 			}
 
 			if (ModConfigs.RECIPE_MAKER_USE_DATA_COMPONENTS.get() && !item.startsWith("tag") && ModConfigs.isCraftTweakerInstalled()) {
-				string.append(CraftTweakerUtils.getItemStackString(stack));
+				string.append(CraftTweakerUtils.getItemStackString(resource.toStack()));
 			} else {
 				string.append("<").append(item).append(">");
 			}
@@ -224,7 +225,7 @@ public class RecipeMakerItem extends BaseItem {
 	}
 
 	// Create a shapeless CraftTweaker recipe for a Table, Flux Crafter or Ender Crafter
-	private static String makeShapelessCraftTweakerTableRecipe(IItemHandler inventory, TableType type) {
+	private static String makeShapelessCraftTweakerTableRecipe(ResourceHandler<ItemResource> inventory, TableType type) {
 		var string = new StringBuilder();
 		var uuid = UUID.randomUUID();
 
@@ -237,27 +238,27 @@ public class RecipeMakerItem extends BaseItem {
 
 		int lastSlot = 0;
 		for (int i = 0; i < slots; i++) {
-			var stack = inventory.getStackInSlot(i);
-			if (!stack.isEmpty()) {
+			var resource = inventory.getResource(i);
+			if (!resource.isEmpty()) {
 				slotsWithItems.add(i);
 				lastSlot = i;
 			}
 		}
 
 		for (int i : slotsWithItems) {
-			var stack = inventory.getStackInSlot(i);
-			var tagId = stack.getTags().findFirst().orElse(null);
+			var resource = inventory.getResource(i);
+			var tagId = resource.tags().findFirst().orElse(null);
 
 			String item;
 			if (ModConfigs.RECIPE_MAKER_USE_TAGS.get() && tagId != null) {
 				item = "tag:items:" + tagId;
 			} else {
-				var id = BuiltInRegistries.ITEM.getKey(stack.getItem());
+				var id = BuiltInRegistries.ITEM.getKey(resource.getItem());
 				item = "item:" + id;
 			}
 
 			if (ModConfigs.RECIPE_MAKER_USE_DATA_COMPONENTS.get() && !item.startsWith("tag") && ModConfigs.isCraftTweakerInstalled()) {
-				string.append(CraftTweakerUtils.getItemStackString(stack));
+				string.append(CraftTweakerUtils.getItemStackString(resource.toStack()));
 			} else {
 				string.append("<").append(item).append(">");
 			}
@@ -285,7 +286,7 @@ public class RecipeMakerItem extends BaseItem {
 		var string = new StringBuilder();
 		var uuid = UUID.randomUUID();
 
-		var inputId = BuiltInRegistries.ITEM.getKey(tile.getInventory().getStackInSlot(0).getItem());
+		var inputId = BuiltInRegistries.ITEM.getKey(tile.getInventory().getResource(0).getItem());
 
 		string.append("<recipetype:extendedcrafting:combination>.addRecipe(\"").append(uuid).append("\", <>, 100000, <item:").append(inputId).append(">, [").append(NEW_LINE);
 
@@ -293,7 +294,7 @@ public class RecipeMakerItem extends BaseItem {
 
 		for (int i = 0; i < stacks.length; i++) {
 			var stack = stacks[i];
-			var tagId = stack.getTags().findFirst().orElse(null);
+			var tagId = stack.tags().findFirst().orElse(null);
 
 			String item;
 			if (ModConfigs.RECIPE_MAKER_USE_TAGS.get() && tagId != null) {
@@ -320,7 +321,7 @@ public class RecipeMakerItem extends BaseItem {
 	}
 
 	// Create a shaped Datapack recipe for a Table, Flux Crafter or Ender Crafter
-	private static String makeShapedDatapackTableRecipe(IItemHandler inventory, TableType type, DynamicOps<JsonElement> ops) {
+	private static String makeShapedDatapackTableRecipe(ResourceHandler<ItemResource> inventory, TableType type, DynamicOps<JsonElement> ops) {
 		var object = new JsonObject();
 
 		object.addProperty("type", type.shapedRecipeType);
@@ -334,25 +335,25 @@ public class RecipeMakerItem extends BaseItem {
 		int slots = getGridSlots(inventory);
 
 		for (int i = 0; i < slots; i++) {
-			var stack = inventory.getStackInSlot(i);
-
-			if (stack.isEmpty() || keysMap.keySet().stream().anyMatch(ing -> ing.test(stack)))
+			var resource = inventory.getResource(i).toStack();
+			if (resource.isEmpty() || keysMap.keySet().stream().anyMatch(ing -> ing.test(resource)))
 				continue;
 
-			var tag = stack.getTags().findFirst().orElse(null);
+			var tag = resource.tags().findFirst().orElse(null);
 			char key = KEYS[keysMap.size()];
 			if (ModConfigs.RECIPE_MAKER_USE_TAGS.get() && tag != null) {
-				keysMap.put(Ingredient.of(tag), key);
+				var items = BuiltInRegistries.ITEM.getOrThrow(tag);
+				keysMap.put(Ingredient.of(items), key);
 			} else {
-				var components = stack.getComponentsPatch()
+				var components = resource.getComponentsPatch()
 						.split()
 						.added()
 						.filter(Predicate.not(DataComponentType::isTransient));
 
 				if (ModConfigs.RECIPE_MAKER_USE_DATA_COMPONENTS.get() && !components.isEmpty()) {
-					keysMap.put(DataComponentIngredient.of(false, components, stack.getItem()), key);
+					keysMap.put(DataComponentIngredient.of(false, components, resource.getItem()), key);
 				} else {
-					keysMap.put(Ingredient.of(stack), key);
+					keysMap.put(Ingredient.of(resource.getItem()), key);
 				}
 			}
 
@@ -368,7 +369,7 @@ public class RecipeMakerItem extends BaseItem {
 			var line = new StringBuilder();
 
 			for (int j = 0; j < size; j++) {
-				var stack = inventory.getStackInSlot(i * size + j);
+				var stack = inventory.getResource(i * size + j).toStack();
 				var entry = keys.stream()
 						.filter(e -> e.getKey().test(stack)).findFirst().orElse(null);
 
@@ -401,7 +402,7 @@ public class RecipeMakerItem extends BaseItem {
 	}
 
 	// Create a shapeless Datapack recipe for a Table Flux Crafter or Ender Crafter
-	private static String makeShapelessDatapackTableRecipe(IItemHandler inventory, TableType type, DynamicOps<JsonElement> ops) {
+	private static String makeShapelessDatapackTableRecipe(ResourceHandler<ItemResource> inventory, TableType type, DynamicOps<JsonElement> ops) {
 		var object = new JsonObject();
 
 		object.addProperty("type", type.shapelessRecipeType);
@@ -415,10 +416,9 @@ public class RecipeMakerItem extends BaseItem {
 		int slots = getGridSlots(inventory);
 
 		for (int i = 0; i < slots; i++) {
-			var stack = inventory.getStackInSlot(i);
-
-			if (!stack.isEmpty()) {
-				var tagId = stack.getTags().findFirst().orElse(null);
+			var resource = inventory.getResource(i);
+			if (!resource.isEmpty()) {
+				var tagId = resource.tags().findFirst().orElse(null);
 
 				if (ModConfigs.RECIPE_MAKER_USE_TAGS.get() && tagId != null) {
 					var tag = new JsonObject();
@@ -427,15 +427,15 @@ public class RecipeMakerItem extends BaseItem {
 					ingredients.add(tag);
 				} else {
 					Ingredient ingredient;
-					var components = stack.getComponentsPatch()
+					var components = resource.getComponentsPatch()
 							.split()
 							.added()
 							.filter(Predicate.not(DataComponentType::isTransient));
 
 					if (ModConfigs.RECIPE_MAKER_USE_DATA_COMPONENTS.get() && !components.isEmpty()) {
-						ingredient = DataComponentIngredient.of(false, components, stack.getItem());
+						ingredient = DataComponentIngredient.of(false, components, resource.getItem());
 					} else {
-						ingredient = Ingredient.of(stack);
+						ingredient = Ingredient.of(resource.getItem());
 					}
 
 					ingredients.add(Ingredient.CODEC.encodeStart(ops, ingredient).getOrThrow());
@@ -461,18 +461,18 @@ public class RecipeMakerItem extends BaseItem {
 		object.addProperty("power_cost", 100000);
 
         {
-            var stack = core.getInventory().getStackInSlot(0);
+            var resource = core.getInventory().getResource(0);
 
             Ingredient ingredient;
-            var components = stack.getComponentsPatch()
+            var components = resource.getComponentsPatch()
                     .split()
                     .added()
                     .filter(Predicate.not(DataComponentType::isTransient));
 
             if (ModConfigs.RECIPE_MAKER_USE_DATA_COMPONENTS.get() && !components.isEmpty()) {
-                ingredient = DataComponentIngredient.of(false, components, stack.getItem());
+                ingredient = DataComponentIngredient.of(false, components, resource.getItem());
             } else {
-                ingredient = Ingredient.of(stack);
+                ingredient = Ingredient.of(resource.getItem());
             }
 
             object.add("input", Ingredient.CODEC.encodeStart(ops, ingredient).getOrThrow());
@@ -482,7 +482,7 @@ public class RecipeMakerItem extends BaseItem {
 		var stacks = core.getPedestalsWithItems().values().stream().filter(s -> !s.isEmpty()).toArray(ItemStack[]::new);
 
 		for (var stack : stacks) {
-			var tagId = stack.getTags().findFirst().orElse(null);
+			var tagId = stack.tags().findFirst().orElse(null);
 
 			if (ModConfigs.RECIPE_MAKER_USE_TAGS.get() && tagId != null) {
 				var tag = new JsonObject();
@@ -499,7 +499,7 @@ public class RecipeMakerItem extends BaseItem {
 				if (ModConfigs.RECIPE_MAKER_USE_DATA_COMPONENTS.get() && !components.isEmpty()) {
 					ingredient = DataComponentIngredient.of(false, components, stack.getItem());
 				} else {
-					ingredient = Ingredient.of(stack);
+					ingredient = Ingredient.of(stack.getItem());
 				}
 
 				ingredients.add(Ingredient.CODEC.encodeStart(ops, ingredient).getOrThrow());
@@ -542,8 +542,8 @@ public class RecipeMakerItem extends BaseItem {
 		return getComponent(stack).shapeless();
 	}
 
-	private static int getGridSlots(IItemHandler inventory) {
-		int slots = inventory.getSlots();
+	private static int getGridSlots(ResourceHandler<ItemResource> inventory) {
+		int slots = inventory.size();
 
 		if (slots >= 81) return 81;
 		else if (slots >= 49) return 49;

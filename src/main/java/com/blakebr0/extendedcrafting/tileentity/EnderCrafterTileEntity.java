@@ -5,6 +5,7 @@ import com.blakebr0.cucumber.inventory.CItemStacksHandler;
 import com.blakebr0.cucumber.inventory.CachedRecipe;
 import com.blakebr0.cucumber.inventory.OnContentsChangedFunction;
 import com.blakebr0.cucumber.tileentity.BaseInventoryTileEntity;
+import com.blakebr0.cucumber.util.ContainerDataBuilder;
 import com.blakebr0.extendedcrafting.api.crafting.IEnderCrafterRecipe;
 import com.blakebr0.extendedcrafting.block.EnderAlternatorBlock;
 import com.blakebr0.extendedcrafting.config.ModConfigs;
@@ -22,6 +23,7 @@ import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.CraftingInput;
 import net.minecraft.world.level.Level;
@@ -29,6 +31,8 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
+import net.neoforged.neoforge.transfer.item.ItemResource;
+import net.neoforged.neoforge.transfer.transaction.Transaction;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,6 +44,8 @@ public class EnderCrafterTileEntity extends BaseInventoryTileEntity implements M
 	private int progressReq;
 	protected boolean isGridChanged = true;
 
+	private final ContainerData dataAccess;
+
 	public EnderCrafterTileEntity(BlockPos pos, BlockState state) {
 		this(ModTileEntities.ENDER_CRAFTER.get(), pos, state);
 	}
@@ -48,6 +54,8 @@ public class EnderCrafterTileEntity extends BaseInventoryTileEntity implements M
 		super(type, pos, state);
 		this.inventory = createInventoryHandler((_, _) -> this.onContentsChanged());
 		this.recipe = new CachedRecipe<>(ModRecipeTypes.ENDER_CRAFTER.get());
+
+		this.dataAccess = ContainerDataBuilder.builder().build();
 	}
 
     @Override
@@ -76,7 +84,7 @@ public class EnderCrafterTileEntity extends BaseInventoryTileEntity implements M
 
 	@Override
 	public AbstractContainerMenu createMenu(int windowId, Inventory playerInventory, Player player) {
-		return EnderCrafterContainer.create(windowId, playerInventory, this.inventory, this.getBlockPos());
+		return new EnderCrafterContainer(windowId, playerInventory, this.inventory, this.dataAccess, this.getBlockPos());
 	}
 
 	public static void tick(Level level, BlockPos pos, BlockState state, EnderCrafterTileEntity tile) {
@@ -84,10 +92,11 @@ public class EnderCrafterTileEntity extends BaseInventoryTileEntity implements M
 		var selectedRecipe = tile.getSelectedRecipeGrid();
 
 		if (recipe != null && (selectedRecipe == null || recipe.matches(selectedRecipe, level))) {
-			var result = recipe.assemble(tile.inventory.toCraftingInput(3, 3, 0, 9), level.registryAccess());
-			var output = tile.inventory.getStackInSlot(9);
+			var result = recipe.assemble(tile.inventory.toCraftingInput(3, 3, 0, 9));
+			var output = tile.inventory.getResource(9);
+			var canFit = result.getCount() + tile.inventory.getAmountAsInt(9) <= output.getMaxStackSize();
 
-			if (StackHelper.canCombineStacks(result, output)) {
+			if (canFit && output.matches(result)) {
 				var alternators = tile.getAlternatorPositions();
 				int alternatorCount = alternators.size();
 
@@ -104,12 +113,16 @@ public class EnderCrafterTileEntity extends BaseInventoryTileEntity implements M
 					}
 
 					if (tile.progress >= tile.progressReq) {
-						for (int i = 0; i < tile.inventory.getSlots() - 1; i++) {
-							tile.inventory.setStackInSlot(i, StackHelper.shrink(tile.inventory.getStackInSlot(i), 1, false));
-						}
+						try (var tx = Transaction.openRoot()) {
+							for (int i = 0; i < tile.inventory.size() - 1; i++) {
+								tile.inventory.extract(i, tile.inventory.getResource(i), 1, tx, true);
+							}
 
-						tile.updateResult(result);
-						tile.progress = 0;
+							tile.inventory.insert(9, ItemResource.of(result), result.count(), tx, true);
+							tile.progress = 0;
+
+							tx.commit();
+						}
 					}
 
 					tile.setChangedFast();
@@ -141,18 +154,8 @@ public class EnderCrafterTileEntity extends BaseInventoryTileEntity implements M
 	public static CItemStacksHandler createInventoryHandler(OnContentsChangedFunction onContentsChanged) {
 		return CItemStacksHandler.create(10, onContentsChanged, builder -> {
 			builder.setOutputSlots(9);
-			builder.setCanInsert((slot, stack) -> false);
+			builder.setCanInsert((_, _) -> false);
 		});
-	}
-
-	private void updateResult(ItemStack stack) {
-		var result = this.inventory.getStackInSlot(9);
-
-		if (result.isEmpty()) {
-			this.inventory.setStackInSlot(9, stack);
-		} else {
-			this.inventory.setStackInSlot(9, StackHelper.grow(result, stack.getCount()));
-		}
 	}
 
 	private List<BlockPos> getAlternatorPositions() {
@@ -229,7 +232,7 @@ public class EnderCrafterTileEntity extends BaseInventoryTileEntity implements M
 	public IEnderCrafterRecipe getActiveRecipe() {
 		if (this.isGridChanged) {
 			this.isGridChanged = false;
-			return this.recipe.checkAndGet(this.inventory.toCraftingInput(3, 3, 0, 9), this.level);
+			return this.recipe.checkAndGet(this.inventory.toCraftingInput(3, 3, 0, 9), (ServerLevel) this.level);
 		}
 
 		return this.recipe.get();

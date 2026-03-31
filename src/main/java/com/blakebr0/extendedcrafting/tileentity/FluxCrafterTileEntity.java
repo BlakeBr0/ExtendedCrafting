@@ -1,10 +1,10 @@
 package com.blakebr0.extendedcrafting.tileentity;
 
-import com.blakebr0.cucumber.helper.StackHelper;
 import com.blakebr0.cucumber.inventory.CItemStacksHandler;
 import com.blakebr0.cucumber.inventory.CachedRecipe;
 import com.blakebr0.cucumber.inventory.OnContentsChangedFunction;
 import com.blakebr0.cucumber.tileentity.BaseInventoryTileEntity;
+import com.blakebr0.cucumber.util.ContainerDataBuilder;
 import com.blakebr0.extendedcrafting.api.crafting.IFluxCrafterRecipe;
 import com.blakebr0.extendedcrafting.block.FluxAlternatorBlock;
 import com.blakebr0.extendedcrafting.container.FluxCrafterContainer;
@@ -21,6 +21,7 @@ import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.CraftingInput;
 import net.minecraft.world.level.Level;
@@ -28,6 +29,8 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
+import net.neoforged.neoforge.transfer.item.ItemResource;
+import net.neoforged.neoforge.transfer.transaction.Transaction;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,6 +42,8 @@ public class FluxCrafterTileEntity extends BaseInventoryTileEntity implements Me
 	private int progressReq;
 	protected boolean isGridChanged = true;
 
+	private final ContainerData dataAccess;
+
 	public FluxCrafterTileEntity(BlockPos pos, BlockState state) {
 		this(ModTileEntities.FLUX_CRAFTER.get(), pos, state);
 	}
@@ -47,6 +52,8 @@ public class FluxCrafterTileEntity extends BaseInventoryTileEntity implements Me
 		super(type, pos, state);
 		this.inventory = createInventoryHandler(this::onContentsChanged);
 		this.recipe = new CachedRecipe<>(ModRecipeTypes.FLUX_CRAFTER.get());
+
+		this.dataAccess = ContainerDataBuilder.builder().build();
 	}
 
 	@Override
@@ -75,7 +82,7 @@ public class FluxCrafterTileEntity extends BaseInventoryTileEntity implements Me
 
 	@Override
 	public AbstractContainerMenu createMenu(int windowId, Inventory playerInventory, Player player) {
-		return FluxCrafterContainer.create(windowId, playerInventory, this.inventory, this.getBlockPos());
+		return new FluxCrafterContainer(windowId, playerInventory, this.inventory, this.dataAccess, this.getBlockPos());
 	}
 
 	public static void tick(Level level, BlockPos pos, BlockState state, FluxCrafterTileEntity tile) {
@@ -83,34 +90,38 @@ public class FluxCrafterTileEntity extends BaseInventoryTileEntity implements Me
 		var selectedRecipe = tile.getSelectedRecipeGrid();
 
 		if (recipe != null && (selectedRecipe == null || recipe.matches(selectedRecipe, level))) {
-			var result = recipe.assemble(tile.inventory.toCraftingInput(3, 3, 0, 9), level.registryAccess());
-			var output = tile.inventory.getStackInSlot(9);
+			var result = recipe.assemble(tile.inventory.toCraftingInput(3, 3, 0, 9));
+			var output = tile.inventory.getResource(9);
+			var canFit = result.getCount() + tile.inventory.getAmountAsInt(9) <= output.getMaxStackSize();
 
-			if (StackHelper.canCombineStacks(result, output)) {
+			if (canFit && output.matches(result)) {
 				var alternators = tile.getAlternators();
 				int alternatorCount = alternators.size();
 
 				if (alternatorCount > 0) {
 					tile.progress(alternatorCount);
 
-					for (var alternator : alternators) {
-						var direction = alternator.getBlockState().getValue(FluxAlternatorBlock.FACING);
-						var alternatorPos = alternator.getBlockPos();
+					try (var tx = Transaction.openRoot()) {
+						for (var alternator : alternators) {
+							var direction = alternator.getBlockState().getValue(FluxAlternatorBlock.FACING);
+							var alternatorPos = alternator.getBlockPos();
 
-						if (level.isEmptyBlock(alternatorPos.relative(direction))) {
-							tile.sendAlternatorParticles(alternatorPos, direction);
+							if (level.isEmptyBlock(alternatorPos.relative(direction))) {
+								tile.sendAlternatorParticles(alternatorPos, direction);
+							}
+
+							alternator.getEnergy().extract(recipe.getPowerRate(), tx);
 						}
 
-						alternator.getEnergy().extractEnergy(recipe.getPowerRate(), false);
-					}
+						if (tile.progress >= tile.progressReq) {
+							for (int i = 0; i < tile.inventory.size() - 1; i++) {
+								tile.inventory.extract(i, tile.inventory.getResource(i), 1, tx, false);
+							}
 
-					if (tile.progress >= tile.progressReq) {
-						for (int i = 0; i < tile.inventory.getSlots() - 1; i++) {
-							tile.inventory.setStackInSlot(i, StackHelper.shrink(tile.inventory.getStackInSlot(i), 1, false));
+							tile.progress = 0;
 						}
 
-						tile.updateResult(result);
-						tile.progress = 0;
+						tx.commit();
 					}
 
 					tile.setChangedFast();
@@ -138,7 +149,7 @@ public class FluxCrafterTileEntity extends BaseInventoryTileEntity implements Me
 	public static CItemStacksHandler createInventoryHandler(OnContentsChangedFunction onContentsChanged) {
 		return CItemStacksHandler.create(10, onContentsChanged, builder -> {
 			builder.setOutputSlots(9);
-			builder.setCanInsert((slot, stack) -> false);
+			builder.setCanInsert((_, _) -> false);
 		});
 	}
 
@@ -160,12 +171,13 @@ public class FluxCrafterTileEntity extends BaseInventoryTileEntity implements Me
 	}
 
 	private void updateResult(ItemStack stack) {
-		var result = this.inventory.getStackInSlot(9);
+		var result = this.inventory.getResource(9);
 
 		if (result.isEmpty()) {
-			this.inventory.setStackInSlot(9, stack);
+			this.inventory.set(9, ItemResource.of(stack), stack.getCount());
 		} else {
-			this.inventory.setStackInSlot(9, StackHelper.grow(result, stack.getCount()));
+			var amount = this.inventory.getAmountAsInt(0);
+			this.inventory.set(9, result, amount + stack.getCount());
 		}
 	}
 
@@ -178,7 +190,7 @@ public class FluxCrafterTileEntity extends BaseInventoryTileEntity implements Me
 
 			BlockPos.betweenClosedStream(pos.offset(-3, -3, -3), pos.offset(3, 3, 3)).forEach(aoePos -> {
 				var tile = level.getBlockEntity(aoePos);
-				if (tile instanceof FluxAlternatorTileEntity alternator && alternator.getEnergy().getEnergyStored() >= this.recipe.get().getPowerRate())
+				if (tile instanceof FluxAlternatorTileEntity alternator && alternator.getEnergy().getAmountAsInt() >= this.recipe.get().getPowerRate())
 					alternators.add(alternator);
 			});
 		}

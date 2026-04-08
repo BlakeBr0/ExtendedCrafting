@@ -2,7 +2,6 @@ package com.blakebr0.extendedcrafting.block;
 
 import com.blakebr0.cucumber.block.BaseTileEntityBlock;
 import com.blakebr0.cucumber.helper.BlockHelper;
-import com.blakebr0.cucumber.helper.StackHelper;
 import com.blakebr0.cucumber.util.VoxelShapeBuilder;
 import com.blakebr0.extendedcrafting.tileentity.PedestalTileEntity;
 import net.minecraft.core.BlockPos;
@@ -52,7 +51,7 @@ public class PedestalBlock extends BaseTileEntityBlock {
 
 			if (input.isEmpty() && !held.isEmpty()) {
 				inventory.set(0, ItemResource.of(held), 1);
-				player.setItemInHand(hand, StackHelper.shrink(held, 1, false));
+				player.setItemInHand(hand, held.copyWithCount(held.count() - 1));
 				level.playSound(null, pos, SoundEvents.ITEM_PICKUP, SoundSource.BLOCKS, 1.0F, 1.0F);
 			} else if (!input.isEmpty()) {
 				var item = new ItemEntity(level, player.getX(), player.getY(), player.getZ(), input.toStack());

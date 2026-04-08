@@ -1,7 +1,6 @@
 package com.blakebr0.extendedcrafting.tileentity;
 
 import com.blakebr0.cucumber.energy.CEnergyStorage;
-import com.blakebr0.cucumber.helper.StackHelper;
 import com.blakebr0.cucumber.inventory.CItemStacksHandler;
 import com.blakebr0.cucumber.inventory.CachedRecipe;
 import com.blakebr0.cucumber.inventory.OnContentsChangedFunction;
@@ -170,7 +169,7 @@ public class CompressorTileEntity extends BaseInventoryTileEntity implements Men
             if (tile.materialCount > 0 && !newestStack.isEmpty() && (output.isEmpty() || output.matches(newestStack))) {
                 int addCount = Math.min(newestInput.count, newestStack.getMaxStackSize() - tile.inventory.getAmountAsInt(0));
                 if (addCount > 0) {
-                    var toAdd = StackHelper.withSize(newestStack, addCount, false);
+                    var toAdd = newestStack.copyWithCount(addCount);
 
                     tile.updateResult(toAdd);
                     tile.materialCount -= addCount;

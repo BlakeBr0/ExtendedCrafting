@@ -2,12 +2,10 @@
   "type": "extendedcrafting:compressor",
   "power_cost": 500000,
   "ingredient": {
-    "item": "minecraft:carrot",
+    "ingredient": "minecraft:carrot",
     "count": 10000
   },
-  "catalyst": {
-    "item": "extendedcrafting:ender_catalyst"
-  },
+  "catalyst": "extendedcrafting:ender_catalyst",
   "result": {
     "id": "minecraft:cobblestone"
   }

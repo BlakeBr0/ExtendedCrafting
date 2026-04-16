@@ -6,9 +6,7 @@
     "III"
   ],
   "key": {
-    "I": {
-      "item": "extendedcrafting:crystaltine_ingot"
-    }
+    "I": "extendedcrafting:crystaltine_ingot"
   },
   "result": {
     "id": "extendedcrafting:crystaltine_block"

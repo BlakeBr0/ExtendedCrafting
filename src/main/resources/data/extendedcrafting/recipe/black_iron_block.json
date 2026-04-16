@@ -6,9 +6,7 @@
     "III"
   ],
   "key": {
-    "I": {
-      "item": "extendedcrafting:black_iron_ingot"
-    }
+    "I": "extendedcrafting:black_iron_ingot"
   },
   "result": {
     "id": "extendedcrafting:black_iron_block"

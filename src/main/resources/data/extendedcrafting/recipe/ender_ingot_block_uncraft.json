@@ -1,9 +1,7 @@
 {
   "type": "minecraft:crafting_shapeless",
   "ingredients": [
-    {
-      "item": "extendedcrafting:ender_ingot_block"
-    }
+    "extendedcrafting:ender_ingot_block"
   ],
   "result": {
     "id": "extendedcrafting:ender_ingot",

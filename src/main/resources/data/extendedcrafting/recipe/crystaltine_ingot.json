@@ -7,21 +7,11 @@
     "DLLLLLD"
   ],
   "key": {
-    "D": {
-      "tag": "c:gems/diamond"
-    },
-    "L": {
-      "tag": "c:gems/lapis"
-    },
-    "N": {
-      "item": "minecraft:nether_star"
-    },
-    "I": {
-      "tag": "c:ingots/iron"
-    },
-    "G": {
-      "tag": "c:ingots/gold"
-    }
+    "D": "#c:gems/diamond",
+    "L": "#c:gems/lapis",
+    "N": "minecraft:nether_star",
+    "I": "#c:ingots/iron",
+    "G": "#c:ingots/gold"
   },
   "result": {
     "id": "extendedcrafting:crystaltine_ingot",

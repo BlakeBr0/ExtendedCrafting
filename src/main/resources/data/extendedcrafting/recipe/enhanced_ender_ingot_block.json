@@ -6,9 +6,7 @@
     "III"
   ],
   "key": {
-    "I": {
-      "item": "extendedcrafting:enhanced_ender_ingot"
-    }
+    "I": "extendedcrafting:enhanced_ender_ingot"
   },
   "result": {
     "id": "extendedcrafting:enhanced_ender_ingot_block"

@@ -11,12 +11,8 @@
     "S "
   ],
   "key": {
-    "C": {
-      "item": "minecraft:crafting_table"
-    },
-    "S": {
-      "tag": "c:rods/wooden"
-    }
+    "C": "minecraft:crafting_table",
+    "S": "#c:rods/wooden"
   },
   "result": {
     "id": "extendedcrafting:handheld_table"

@@ -6,9 +6,7 @@
     "III"
   ],
   "key": {
-    "I": {
-      "item": "extendedcrafting:the_ultimate_ingot"
-    }
+    "I": "extendedcrafting:the_ultimate_ingot"
   },
   "result": {
     "id": "extendedcrafting:the_ultimate_block"

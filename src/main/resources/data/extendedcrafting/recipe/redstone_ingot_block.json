@@ -6,9 +6,7 @@
     "III"
   ],
   "key": {
-    "I": {
-      "item": "extendedcrafting:redstone_ingot"
-    }
+    "I": "extendedcrafting:redstone_ingot"
   },
   "result": {
     "id": "extendedcrafting:redstone_ingot_block"

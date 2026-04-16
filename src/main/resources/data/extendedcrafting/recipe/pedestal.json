@@ -12,12 +12,8 @@
     "IBI"
   ],
   "key": {
-    "I": {
-      "item": "extendedcrafting:black_iron_ingot"
-    },
-    "B": {
-      "item": "extendedcrafting:black_iron_block"
-    }
+    "I": "extendedcrafting:black_iron_ingot",
+    "B": "extendedcrafting:black_iron_block"
   },
   "result": {
     "id": "extendedcrafting:pedestal",

@@ -6,9 +6,7 @@
     "III"
   ],
   "key": {
-    "I": {
-      "item": "extendedcrafting:flux_star"
-    }
+    "I": "extendedcrafting:flux_star"
   },
   "result": {
     "id": "extendedcrafting:flux_star_block"

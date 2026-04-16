@@ -16,18 +16,10 @@
     "BSB"
   ],
   "key": {
-    "T": {
-      "item": "extendedcrafting:basic_table"
-    },
-    "C": {
-      "item": "extendedcrafting:crystaltine_component"
-    },
-    "B": {
-      "item": "extendedcrafting:black_iron_ingot"
-    },
-    "S": {
-      "item": "extendedcrafting:redstone_component"
-    }
+    "T": "extendedcrafting:basic_table",
+    "C": "extendedcrafting:crystaltine_component",
+    "B": "extendedcrafting:black_iron_ingot",
+    "S": "extendedcrafting:redstone_component"
   },
   "result": {
     "id": "extendedcrafting:basic_auto_table"

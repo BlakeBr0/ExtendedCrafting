@@ -6,12 +6,8 @@
     " E "
   ],
   "key": {
-    "S": {
-      "item": "extendedcrafting:ender_star"
-    },
-    "E": {
-      "item": "extendedcrafting:ender_ingot"
-    }
+    "S": "extendedcrafting:ender_star",
+    "E": "extendedcrafting:ender_ingot"
   },
   "result": {
     "id": "extendedcrafting:enhanced_ender_ingot",

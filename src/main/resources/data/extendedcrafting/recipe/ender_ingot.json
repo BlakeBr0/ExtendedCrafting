@@ -1,12 +1,8 @@
 {
   "type": "minecraft:crafting_shapeless",
   "ingredients": [
-    {
-      "tag": "c:ingots/iron"
-    },
-    {
-      "tag": "c:ender_pearls"
-    }
+    "#c:ingots/iron",
+    "#c:ender_pearls"
   ],
   "result": {
     "id": "extendedcrafting:ender_ingot"

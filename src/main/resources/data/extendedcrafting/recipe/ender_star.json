@@ -6,12 +6,8 @@
     " E "
   ],
   "key": {
-    "S": {
-      "item": "minecraft:nether_star"
-    },
-    "E": {
-      "item": "minecraft:ender_eye"
-    }
+    "S": "minecraft:nether_star",
+    "E": "minecraft:ender_eye"
   },
   "result": {
     "id": "extendedcrafting:ender_star"

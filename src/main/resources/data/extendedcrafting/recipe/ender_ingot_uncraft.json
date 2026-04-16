@@ -1,9 +1,7 @@
 {
   "type": "minecraft:crafting_shapeless",
   "ingredients": [
-    {
-      "item": "extendedcrafting:ender_ingot"
-    }
+    "extendedcrafting:ender_ingot"
   ],
   "result": {
     "id": "extendedcrafting:ender_nugget",

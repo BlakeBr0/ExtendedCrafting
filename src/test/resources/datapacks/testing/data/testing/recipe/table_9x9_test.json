@@ -12,9 +12,7 @@
     "XXXXXXXXX"
   ],
   "key": {
-    "X": {
-      "tag": "c:ingots/gold"
-    }
+    "X": "#c:ingots/gold"
   },
   "result": {
     "id": "minecraft:apple"

@@ -6,12 +6,8 @@
     " C "
   ],
   "key": {
-    "I": {
-      "item": "extendedcrafting:black_iron_ingot"
-    },
-    "C": {
-      "item": "extendedcrafting:redstone_component"
-    }
+    "I": "extendedcrafting:black_iron_ingot",
+    "C": "extendedcrafting:redstone_component"
   },
   "result": {
     "id": "extendedcrafting:redstone_catalyst"

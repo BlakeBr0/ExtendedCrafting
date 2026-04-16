@@ -12,12 +12,8 @@
     "III"
   ],
   "key": {
-    "E": {
-      "item": "minecraft:ender_eye"
-    },
-    "I": {
-      "item": "extendedcrafting:ender_ingot"
-    }
+    "E": "minecraft:ender_eye",
+    "I": "extendedcrafting:ender_ingot"
   },
   "result": {
     "id": "extendedcrafting:ender_alternator",

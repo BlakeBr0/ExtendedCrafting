@@ -12,15 +12,9 @@
     "III"
   ],
   "key": {
-    "E": {
-      "item": "minecraft:ender_eye"
-    },
-    "I": {
-      "item": "extendedcrafting:ender_ingot"
-    },
-    "C": {
-      "item": "minecraft:crafting_table"
-    }
+    "E": "minecraft:ender_eye",
+    "I": "extendedcrafting:ender_ingot",
+    "C": "minecraft:crafting_table"
   },
   "result": {
     "id": "extendedcrafting:ender_crafter"

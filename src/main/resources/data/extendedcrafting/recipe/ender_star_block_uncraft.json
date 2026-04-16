@@ -1,9 +1,7 @@
 {
   "type": "minecraft:crafting_shapeless",
   "ingredients": [
-    {
-      "item": "extendedcrafting:ender_star_block"
-    }
+    "extendedcrafting:ender_star_block"
   ],
   "result": {
     "id": "extendedcrafting:ender_star",

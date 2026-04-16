@@ -6,9 +6,7 @@
     "III"
   ],
   "key": {
-    "I": {
-      "item": "extendedcrafting:ender_star"
-    }
+    "I": "extendedcrafting:ender_star"
   },
   "result": {
     "id": "extendedcrafting:ender_star_block"

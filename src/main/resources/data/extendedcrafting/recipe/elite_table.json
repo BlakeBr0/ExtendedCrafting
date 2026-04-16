@@ -12,26 +12,14 @@
     "BSB"
   ],
   "key": {
-    "I": {
-      "tag": "c:storage_blocks/diamond"
-    },
+    "I": "#c:storage_blocks/diamond",
     "C": [
-      {
-        "item": "extendedcrafting:advanced_table"
-      },
-      {
-        "item": "extendedcrafting:advanced_auto_table"
-      }
+      "extendedcrafting:advanced_table",
+      "extendedcrafting:advanced_auto_table"
     ],
-    "B": {
-      "item": "extendedcrafting:elite_component"
-    },
-    "S": {
-      "item": "extendedcrafting:black_iron_slate"
-    },
-    "A": {
-      "item": "extendedcrafting:elite_catalyst"
-    }
+    "B": "extendedcrafting:elite_component",
+    "S": "extendedcrafting:black_iron_slate",
+    "A": "extendedcrafting:elite_catalyst"
   },
   "result": {
     "id": "extendedcrafting:elite_table"

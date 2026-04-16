@@ -16,26 +16,14 @@
     "BSB"
   ],
   "key": {
-    "I": {
-      "tag": "c:storage_blocks/gold"
-    },
+    "I": "#c:storage_blocks/gold",
     "C": [
-      {
-        "item": "extendedcrafting:basic_table"
-      },
-      {
-        "item": "extendedcrafting:basic_auto_table"
-      }
+      "extendedcrafting:basic_table",
+      "extendedcrafting:basic_auto_table"
     ],
-    "B": {
-      "item": "extendedcrafting:advanced_component"
-    },
-    "S": {
-      "item": "extendedcrafting:black_iron_slate"
-    },
-    "A": {
-      "item": "extendedcrafting:advanced_catalyst"
-    }
+    "B": "extendedcrafting:advanced_component",
+    "S": "extendedcrafting:black_iron_slate",
+    "A": "extendedcrafting:advanced_catalyst"
   },
   "result": {
     "id": "extendedcrafting:advanced_table"

@@ -6,9 +6,7 @@
     "III"
   ],
   "key": {
-    "I": {
-      "item": "extendedcrafting:ender_nugget"
-    }
+    "I": "extendedcrafting:ender_nugget"
   },
   "result": {
     "id": "extendedcrafting:ender_ingot"

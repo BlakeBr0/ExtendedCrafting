@@ -6,9 +6,7 @@
     "III"
   ],
   "key": {
-    "I": {
-      "item": "minecraft:nether_star"
-    }
+    "I": "minecraft:nether_star"
   },
   "result": {
     "id": "extendedcrafting:nether_star_block"

@@ -6,12 +6,8 @@
     " C "
   ],
   "key": {
-    "I": {
-      "item": "extendedcrafting:black_iron_ingot"
-    },
-    "C": {
-      "item": "extendedcrafting:ender_component"
-    }
+    "I": "extendedcrafting:black_iron_ingot",
+    "C": "extendedcrafting:ender_component"
   },
   "result": {
     "id": "extendedcrafting:ender_catalyst"

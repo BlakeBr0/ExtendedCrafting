@@ -6,12 +6,8 @@
     " C "
   ],
   "key": {
-    "I": {
-      "item": "extendedcrafting:black_iron_ingot"
-    },
-    "C": {
-      "item": "extendedcrafting:crystaltine_component"
-    }
+    "I": "extendedcrafting:black_iron_ingot",
+    "C": "extendedcrafting:crystaltine_component"
   },
   "result": {
     "id": "extendedcrafting:crystaltine_catalyst"

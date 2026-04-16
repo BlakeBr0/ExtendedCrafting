@@ -1,12 +1,8 @@
 {
   "type": "minecraft:crafting_shapeless",
   "ingredients": [
-    {
-      "tag": "c:ingots/iron"
-    },
-    {
-      "tag": "c:dusts/redstone"
-    }
+    "#c:ingots/iron",
+    "#c:dusts/redstone"
   ],
   "result": {
     "id": "extendedcrafting:redstone_ingot"

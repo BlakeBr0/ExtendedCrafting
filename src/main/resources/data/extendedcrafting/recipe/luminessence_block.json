@@ -6,9 +6,7 @@
     "III"
   ],
   "key": {
-    "I": {
-      "item": "extendedcrafting:luminessence"
-    }
+    "I": "extendedcrafting:luminessence"
   },
   "result": {
     "id": "extendedcrafting:luminessence_block"

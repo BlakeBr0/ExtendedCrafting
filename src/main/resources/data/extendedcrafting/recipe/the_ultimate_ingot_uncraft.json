@@ -1,9 +1,7 @@
 {
   "type": "minecraft:crafting_shapeless",
   "ingredients": [
-    {
-      "item": "extendedcrafting:the_ultimate_ingot"
-    }
+    "extendedcrafting:the_ultimate_ingot"
   ],
   "result": {
     "id": "extendedcrafting:the_ultimate_nugget",

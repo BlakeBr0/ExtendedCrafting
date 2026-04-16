@@ -16,18 +16,10 @@
     "BSB"
   ],
   "key": {
-    "T": {
-      "item": "extendedcrafting:ender_crafter"
-    },
-    "C": {
-      "item": "extendedcrafting:crystaltine_component"
-    },
-    "B": {
-      "item": "extendedcrafting:black_iron_ingot"
-    },
-    "S": {
-      "item": "extendedcrafting:redstone_component"
-    }
+    "T": "extendedcrafting:ender_crafter",
+    "C": "extendedcrafting:crystaltine_component",
+    "B": "extendedcrafting:black_iron_ingot",
+    "S": "extendedcrafting:redstone_component"
   },
   "result": {
     "id": "extendedcrafting:auto_ender_crafter"

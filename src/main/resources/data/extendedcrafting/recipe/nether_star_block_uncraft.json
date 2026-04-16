@@ -1,9 +1,7 @@
 {
   "type": "minecraft:crafting_shapeless",
   "ingredients": [
-    {
-      "item": "extendedcrafting:nether_star_block"
-    }
+    "extendedcrafting:nether_star_block"
   ],
   "result": {
     "id": "minecraft:nether_star",

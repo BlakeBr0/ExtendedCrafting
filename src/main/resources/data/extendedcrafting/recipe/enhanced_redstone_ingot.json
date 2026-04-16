@@ -7,12 +7,8 @@
     " E "
   ],
   "key": {
-    "S": {
-      "item": "extendedcrafting:flux_star"
-    },
-    "E": {
-      "item": "extendedcrafting:redstone_ingot"
-    }
+    "S": "extendedcrafting:flux_star",
+    "E": "extendedcrafting:redstone_ingot"
   },
   "result": {
     "id": "extendedcrafting:enhanced_redstone_ingot",

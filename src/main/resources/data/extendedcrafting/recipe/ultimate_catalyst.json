@@ -6,12 +6,8 @@
     " C "
   ],
   "key": {
-    "I": {
-      "item": "extendedcrafting:black_iron_ingot"
-    },
-    "C": {
-      "item": "extendedcrafting:ultimate_component"
-    }
+    "I": "extendedcrafting:black_iron_ingot",
+    "C": "extendedcrafting:ultimate_component"
   },
   "result": {
     "id": "extendedcrafting:ultimate_catalyst"

@@ -12,26 +12,14 @@
     "BSB"
   ],
   "key": {
-    "I": {
-      "tag": "c:storage_blocks/emerald"
-    },
+    "I": "#c:storage_blocks/emerald",
     "C": [
-      {
-        "item": "extendedcrafting:elite_table"
-      },
-      {
-        "item": "extendedcrafting:elite_auto_table"
-      }
+      "extendedcrafting:elite_table",
+      "extendedcrafting:elite_auto_table"
     ],
-    "B": {
-      "item": "extendedcrafting:ultimate_component"
-    },
-    "S": {
-      "item": "extendedcrafting:black_iron_slate"
-    },
-    "A": {
-      "item": "extendedcrafting:ultimate_catalyst"
-    }
+    "B": "extendedcrafting:ultimate_component",
+    "S": "extendedcrafting:black_iron_slate",
+    "A": "extendedcrafting:ultimate_catalyst"
   },
   "result": {
     "id": "extendedcrafting:ultimate_table"

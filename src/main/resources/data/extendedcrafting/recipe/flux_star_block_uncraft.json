@@ -1,9 +1,7 @@
 {
   "type": "minecraft:crafting_shapeless",
   "ingredients": [
-    {
-      "item": "extendedcrafting:flux_star_block"
-    }
+    "extendedcrafting:flux_star_block"
   ],
   "result": {
     "id": "extendedcrafting:flux_star",

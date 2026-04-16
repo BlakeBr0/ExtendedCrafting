@@ -1,9 +1,7 @@
 {
   "type": "minecraft:crafting_shapeless",
   "ingredients": [
-    {
-      "item": "extendedcrafting:black_iron_ingot"
-    }
+    "extendedcrafting:black_iron_ingot"
   ],
   "result": {
     "id": "extendedcrafting:black_iron_nugget",

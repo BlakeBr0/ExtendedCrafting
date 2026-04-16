@@ -2,12 +2,8 @@
   "type": "extendedcrafting:shapeless_flux_crafter",
   "power_required": 2000000,
   "ingredients": [
-    {
-      "item": "minecraft:coal"
-    },
-    {
-      "item": "minecraft:coal"
-    }
+    "minecraft:coal",
+    "minecraft:coal"
   ],
   "result": {
     "id": "minecraft:string"

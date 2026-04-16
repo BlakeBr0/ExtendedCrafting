@@ -12,12 +12,8 @@
     "III"
   ],
   "key": {
-    "E": {
-      "tag": "c:ingots/gold"
-    },
-    "I": {
-      "item": "extendedcrafting:redstone_ingot"
-    }
+    "E": "#c:ingots/gold",
+    "I": "extendedcrafting:redstone_ingot"
   },
   "result": {
     "id": "extendedcrafting:flux_alternator",

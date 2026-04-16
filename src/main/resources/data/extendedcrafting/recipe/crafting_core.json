@@ -12,21 +12,11 @@
     "CSC"
   ],
   "key": {
-    "I": {
-      "item": "extendedcrafting:frame"
-    },
-    "B": {
-      "item": "extendedcrafting:elite_component"
-    },
-    "S": {
-      "item": "extendedcrafting:black_iron_slate"
-    },
-    "C": {
-      "item": "extendedcrafting:black_iron_ingot"
-    },
-    "A": {
-      "item": "extendedcrafting:elite_catalyst"
-    }
+    "I": "extendedcrafting:frame",
+    "B": "extendedcrafting:elite_component",
+    "S": "extendedcrafting:black_iron_slate",
+    "C": "extendedcrafting:black_iron_ingot",
+    "A": "extendedcrafting:elite_catalyst"
   },
   "result": {
     "id": "extendedcrafting:crafting_core"

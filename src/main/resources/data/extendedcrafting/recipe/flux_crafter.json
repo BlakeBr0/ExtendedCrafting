@@ -12,15 +12,9 @@
     "III"
   ],
   "key": {
-    "E": {
-      "tag": "c:ingots/gold"
-    },
-    "I": {
-      "item": "extendedcrafting:redstone_ingot"
-    },
-    "C": {
-      "item": "minecraft:crafting_table"
-    }
+    "E": "#c:ingots/gold",
+    "I": "extendedcrafting:redstone_ingot",
+    "C": "minecraft:crafting_table"
   },
   "result": {
     "id": "extendedcrafting:flux_crafter"

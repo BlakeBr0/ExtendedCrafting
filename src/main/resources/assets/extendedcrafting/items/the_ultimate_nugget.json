@@ -1,0 +1,11 @@
+{
+  "model": {
+    "type": "minecraft:model",
+    "model": "extendedcrafting:item/the_ultimate_nugget",
+    "tints": [
+      {
+        "type": "extendedcrafting:rainbow"
+      }
+    ]
+  }
+}

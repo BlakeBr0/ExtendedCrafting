@@ -2,7 +2,7 @@ package com.blakebr0.extendedcrafting;
 
 import com.blakebr0.extendedcrafting.client.ModMenuScreens;
 import com.blakebr0.extendedcrafting.client.ModTESRs;
-import com.blakebr0.extendedcrafting.client.handler.ColorHandler;
+import com.blakebr0.extendedcrafting.client.handler.TintSourceHandler;
 import com.blakebr0.extendedcrafting.config.ModConfigs;
 import com.blakebr0.extendedcrafting.crafting.DynamicRecipeManager;
 import com.blakebr0.extendedcrafting.handler.RegisterCapabilityHandler;
@@ -54,7 +54,7 @@ public final class ExtendedCrafting {
 		bus.register(new RegisterCapabilityHandler());
 
 		if (FMLEnvironment.getDist() == Dist.CLIENT) {
-			bus.register(new ColorHandler());
+			bus.register(new TintSourceHandler());
 			bus.register(new ModMenuScreens());
 			bus.register(new ModTESRs());
 		}

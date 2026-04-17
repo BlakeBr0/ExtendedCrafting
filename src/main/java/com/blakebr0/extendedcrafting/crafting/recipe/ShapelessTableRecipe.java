@@ -12,6 +12,7 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
@@ -43,7 +44,7 @@ public class ShapelessTableRecipe implements ITableRecipe {
 									DataResult::success
 							)
 							.forGetter(recipe -> recipe.ingredients),
-					ItemStack.CODEC.fieldOf("result").forGetter(recipe -> recipe.result),
+					ItemStackTemplate.CODEC.fieldOf("result").forGetter(recipe -> recipe.result),
 					Codec.INT.optionalFieldOf("tier", 0).forGetter(recipe -> recipe.tier)
 			).apply(builder, ShapelessTableRecipe::new)
 	);
@@ -53,11 +54,11 @@ public class ShapelessTableRecipe implements ITableRecipe {
 	public static final RecipeSerializer<ShapelessTableRecipe> SERIALIZER = new RecipeSerializer<>(MAP_CODEC, STREAM_CODEC);
 
 	private final List<Ingredient> ingredients;
-	private final ItemStack result;
+	private final ItemStackTemplate result;
 	private final int tier;
 	private BiFunction<Integer, ItemStack, ItemStack> transformer;
 
-	public ShapelessTableRecipe(List<Ingredient> ingredients, ItemStack result, int tier) {
+	public ShapelessTableRecipe(List<Ingredient> ingredients, ItemStackTemplate result, int tier) {
 		this.ingredients = ingredients;
 		this.result = result;
 		this.tier = tier;
@@ -85,7 +86,7 @@ public class ShapelessTableRecipe implements ITableRecipe {
 
 	@Override
 	public ItemStack assemble(TableCraftingInput input) {
-		return this.result.copy();
+		return this.result.create();
 	}
 
 	@Override
@@ -158,7 +159,7 @@ public class ShapelessTableRecipe implements ITableRecipe {
 
 	private static ShapelessTableRecipe fromNetwork(RegistryFriendlyByteBuf buffer) {
 		var ingredients = Ingredient.CONTENTS_STREAM_CODEC.apply(ByteBufCodecs.list()).decode(buffer);
-		var result = ItemStack.STREAM_CODEC.decode(buffer);
+		var result = ItemStackTemplate.STREAM_CODEC.decode(buffer);
 		int tier = buffer.readVarInt();
 
 		return new ShapelessTableRecipe(ingredients, result, tier);
@@ -166,7 +167,7 @@ public class ShapelessTableRecipe implements ITableRecipe {
 
 	private static void toNetwork(RegistryFriendlyByteBuf buffer, ShapelessTableRecipe recipe) {
 		Ingredient.CONTENTS_STREAM_CODEC.apply(ByteBufCodecs.list()).encode(buffer, recipe.ingredients);
-		ItemStack.STREAM_CODEC.encode(buffer, recipe.result);
+		ItemStackTemplate.STREAM_CODEC.encode(buffer, recipe.result);
 		buffer.writeVarInt(recipe.tier);
 	}
 }

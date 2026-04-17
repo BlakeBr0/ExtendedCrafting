@@ -11,6 +11,7 @@ import net.minecraft.core.NonNullList;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
@@ -24,7 +25,7 @@ public class ShapedTableRecipe implements ITableRecipe {
     public static final MapCodec<ShapedTableRecipe> MAP_CODEC = RecordCodecBuilder.mapCodec(builder ->
             builder.group(
                     ShapedRecipePatternCodecs.MAP_CODEC.forGetter(recipe -> recipe.pattern),
-                    ItemStack.CODEC.fieldOf("result").forGetter(recipe -> recipe.result),
+                    ItemStackTemplate.CODEC.fieldOf("result").forGetter(recipe -> recipe.result),
                     Codec.INT.optionalFieldOf("tier", 0).forGetter(recipe -> recipe.tier)
             ).apply(builder, ShapedTableRecipe::new)
     );
@@ -34,11 +35,11 @@ public class ShapedTableRecipe implements ITableRecipe {
     public static final RecipeSerializer<ShapedTableRecipe> SERIALIZER = new RecipeSerializer<>(MAP_CODEC, STREAM_CODEC);
 
     private final ShapedRecipePattern pattern;
-    private final ItemStack result;
+    private final ItemStackTemplate result;
     private final int tier;
     private TriFunction<Integer, Integer, ItemStack, ItemStack> transformer;
 
-    public ShapedTableRecipe(ShapedRecipePattern pattern, ItemStack result, int tier) {
+    public ShapedTableRecipe(ShapedRecipePattern pattern, ItemStackTemplate result, int tier) {
         this.pattern = pattern;
         this.result = result;
         this.tier = tier;
@@ -54,7 +55,7 @@ public class ShapedTableRecipe implements ITableRecipe {
 
     @Override
     public ItemStack assemble(TableCraftingInput inventory) {
-        return this.result.copy();
+        return this.result.create();
     }
 
     @Override
@@ -166,7 +167,7 @@ public class ShapedTableRecipe implements ITableRecipe {
 
     private static ShapedTableRecipe fromNetwork(RegistryFriendlyByteBuf buffer) {
         var pattern = ShapedRecipePattern.STREAM_CODEC.decode(buffer);
-        var result = ItemStack.STREAM_CODEC.decode(buffer);
+        var result = ItemStackTemplate.STREAM_CODEC.decode(buffer);
         int tier = buffer.readVarInt();
 
         return new ShapedTableRecipe(pattern, result, tier);
@@ -174,7 +175,7 @@ public class ShapedTableRecipe implements ITableRecipe {
 
     private static void toNetwork(RegistryFriendlyByteBuf buffer, ShapedTableRecipe recipe) {
         ShapedRecipePattern.STREAM_CODEC.encode(buffer, recipe.pattern);
-        ItemStack.STREAM_CODEC.encode(buffer, recipe.result);
+        ItemStackTemplate.STREAM_CODEC.encode(buffer, recipe.result);
         buffer.writeVarInt(recipe.tier);
     }
 }

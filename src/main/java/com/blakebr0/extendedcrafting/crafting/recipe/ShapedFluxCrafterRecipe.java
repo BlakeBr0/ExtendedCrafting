@@ -10,6 +10,7 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.item.crafting.CraftingInput;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
@@ -20,7 +21,7 @@ public class ShapedFluxCrafterRecipe implements IFluxCrafterRecipe {
 	public static final MapCodec<ShapedFluxCrafterRecipe> MAP_CODEC = RecordCodecBuilder.mapCodec(builder ->
 			builder.group(
 					ShapedRecipePatternCodecs.MAP_CODEC.forGetter(recipe -> recipe.pattern),
-					ItemStack.CODEC.fieldOf("result").forGetter(recipe -> recipe.result),
+					ItemStackTemplate.CODEC.fieldOf("result").forGetter(recipe -> recipe.result),
 					Codec.INT.fieldOf("power_required").forGetter(recipe -> recipe.powerRequired),
 					Codec.INT.optionalFieldOf("power_rate", ModConfigs.FLUX_CRAFTER_POWER_RATE.get()).forGetter(recipe -> recipe.powerRate)
 			).apply(builder, ShapedFluxCrafterRecipe::new)
@@ -31,11 +32,11 @@ public class ShapedFluxCrafterRecipe implements IFluxCrafterRecipe {
 	public static final RecipeSerializer<ShapedFluxCrafterRecipe> SERIALIZER = new RecipeSerializer<>(MAP_CODEC, STREAM_CODEC);
 
 	private final ShapedRecipePattern pattern;
-	private final ItemStack result;
+	private final ItemStackTemplate result;
 	private final int powerRequired;
 	private final int powerRate;
 
-	public ShapedFluxCrafterRecipe(ShapedRecipePattern pattern, ItemStack result, int powerRequired, int powerRate) {
+	public ShapedFluxCrafterRecipe(ShapedRecipePattern pattern, ItemStackTemplate result, int powerRequired, int powerRate) {
 		this.pattern = pattern;
 		this.result = result;
 		this.powerRequired = powerRequired;
@@ -49,7 +50,7 @@ public class ShapedFluxCrafterRecipe implements IFluxCrafterRecipe {
 
 	@Override
 	public ItemStack assemble(CraftingInput inventory) {
-		return this.result.copy();
+		return this.result.create();
 	}
 
 	@Override
@@ -82,7 +83,7 @@ public class ShapedFluxCrafterRecipe implements IFluxCrafterRecipe {
 
 	private static ShapedFluxCrafterRecipe fromNetwork(RegistryFriendlyByteBuf buffer) {
 		var pattern = ShapedRecipePattern.STREAM_CODEC.decode(buffer);
-		var result = ItemStack.STREAM_CODEC.decode(buffer);
+		var result = ItemStackTemplate.STREAM_CODEC.decode(buffer);
 		int powerRequired = buffer.readVarInt();
 		int powerRate = buffer.readVarInt();
 
@@ -91,7 +92,7 @@ public class ShapedFluxCrafterRecipe implements IFluxCrafterRecipe {
 
 	private static void toNetwork(RegistryFriendlyByteBuf buffer, ShapedFluxCrafterRecipe recipe) {
 		ShapedRecipePattern.STREAM_CODEC.encode(buffer, recipe.pattern);
-		ItemStack.STREAM_CODEC.encode(buffer, recipe.result);
+		ItemStackTemplate.STREAM_CODEC.encode(buffer, recipe.result);
 		buffer.writeVarInt(recipe.powerRequired);
 		buffer.writeVarInt(recipe.powerRate);
 	}

@@ -9,6 +9,7 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.item.crafting.CraftingInput;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeSerializer;
@@ -20,7 +21,7 @@ public class CompressorRecipe implements ICompressorRecipe {
 	public static final MapCodec<CompressorRecipe> MAP_CODEC = RecordCodecBuilder.mapCodec(builder ->
 			builder.group(
 					SizedIngredient.NESTED_CODEC.fieldOf("ingredient").forGetter(recipe -> recipe.ingredient),
-					ItemStack.CODEC.fieldOf("result").forGetter(recipe -> recipe.result),
+					ItemStackTemplate.CODEC.fieldOf("result").forGetter(recipe -> recipe.result),
 					Ingredient.CODEC.fieldOf("catalyst").forGetter(recipe -> recipe.catalyst),
 					Codec.INT.fieldOf("power_cost").forGetter(recipe -> recipe.powerCost),
 					Codec.INT.optionalFieldOf("power_rate", ModConfigs.COMPRESSOR_POWER_RATE.get()).forGetter(recipe -> recipe.powerRate)
@@ -32,12 +33,12 @@ public class CompressorRecipe implements ICompressorRecipe {
 	public static final RecipeSerializer<CompressorRecipe> SERIALIZER = new RecipeSerializer<>(MAP_CODEC, STREAM_CODEC);
 
 	private final SizedIngredient ingredient;
-	private final ItemStack result;
+	private final ItemStackTemplate result;
 	private final Ingredient catalyst;
 	private final int powerCost;
 	private final int powerRate;
 
-	public CompressorRecipe(SizedIngredient input, ItemStack result, Ingredient catalyst, int powerCost, int powerRate) {
+	public CompressorRecipe(SizedIngredient input, ItemStackTemplate result, Ingredient catalyst, int powerCost, int powerRate) {
 		this.ingredient = input;
 		this.result = result;
 		this.catalyst = catalyst;
@@ -58,8 +59,29 @@ public class CompressorRecipe implements ICompressorRecipe {
 
 	@Override
 	public ItemStack assemble(CraftingInput inventory) {
-		return this.result.copy();
+		return this.result.create();
 	}
+
+//	@Override
+//	public PlacementInfo placementInfo() {
+//		if (this.placementInfo == null) {
+//			var ingredients = new ArrayList<Ingredient>();
+//			ingredients.add(this.ingredient.ingredient());
+//			ingredients.add(this.catalyst);
+//			this.placementInfo = PlacementInfo.create(ingredients);
+//		}
+//
+//		return this.placementInfo;
+//	}
+//
+//	@Override
+//	public List<RecipeDisplay> display() {
+//		return List.of(new ShapelessCraftingRecipeDisplay(
+//				this.placementInfo().ingredients().stream().map(Ingredient::display).toList(),
+//				new SlotDisplay.ItemStackSlotDisplay(this.result),
+//				new SlotDisplay.ItemSlotDisplay(ModBlocks.COMPRESSOR.get().asItem())
+//		));
+//	}
 
 	@Override
 	public RecipeSerializer<CompressorRecipe> getSerializer() {
@@ -93,7 +115,7 @@ public class CompressorRecipe implements ICompressorRecipe {
 
 	private static CompressorRecipe fromNetwork(RegistryFriendlyByteBuf buffer) {
 		var ingredient = SizedIngredient.STREAM_CODEC.decode(buffer);
-		var result = ItemStack.STREAM_CODEC.decode(buffer);
+		var result = ItemStackTemplate.STREAM_CODEC.decode(buffer);
 		var catalyst = Ingredient.CONTENTS_STREAM_CODEC.decode(buffer);
 		int powerCost = buffer.readInt();
 		int powerRate = buffer.readInt();
@@ -103,7 +125,7 @@ public class CompressorRecipe implements ICompressorRecipe {
 
 	private static void toNetwork(RegistryFriendlyByteBuf buffer, CompressorRecipe recipe) {
 		SizedIngredient.STREAM_CODEC.encode(buffer, recipe.ingredient);
-		ItemStack.STREAM_CODEC.encode(buffer, recipe.result);
+		ItemStackTemplate.STREAM_CODEC.encode(buffer, recipe.result);
 		Ingredient.CONTENTS_STREAM_CODEC.encode(buffer, recipe.catalyst);
 		buffer.writeInt(recipe.powerCost);
 		buffer.writeInt(recipe.powerRate);

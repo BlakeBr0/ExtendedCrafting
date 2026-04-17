@@ -3,7 +3,6 @@ package com.blakebr0.extendedcrafting.crafting.recipe;
 import com.blakebr0.extendedcrafting.api.TableCraftingInput;
 import com.blakebr0.extendedcrafting.api.crafting.ITableRecipe;
 import com.blakebr0.extendedcrafting.init.ModItems;
-import com.blakebr0.extendedcrafting.init.ModRecipeSerializers;
 import com.blakebr0.extendedcrafting.init.ModRecipeTypes;
 import com.blakebr0.extendedcrafting.singularity.SingularityRegistry;
 import com.blakebr0.extendedcrafting.singularity.SingularityUtils;
@@ -103,7 +102,7 @@ public class UltimateSingularityRecipe implements ITableRecipe {
                     .filter(singularity -> singularity.isInUltimateSingularity() && singularity.getIngredient() != null)
                     .limit(81)
                     .map(SingularityUtils::getItemForSingularity)
-                    .map(stack -> DataComponentIngredient.of(false, stack.getComponentsPatch().split().added(), stack.getItem()))
+                    .map(stack -> DataComponentIngredient.of(false, stack.components().split().added(), stack.item()))
                     .forEach(this.getIngredients()::add);
 
             INGREDIENTS_LOADED.put(this, true);

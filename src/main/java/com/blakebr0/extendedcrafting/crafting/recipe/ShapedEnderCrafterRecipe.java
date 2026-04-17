@@ -10,6 +10,7 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.item.crafting.CraftingInput;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
@@ -20,7 +21,7 @@ public class ShapedEnderCrafterRecipe implements IEnderCrafterRecipe {
 	public static final MapCodec<ShapedEnderCrafterRecipe> MAP_CODEC = RecordCodecBuilder.mapCodec(builder ->
 			builder.group(
 					ShapedRecipePatternCodecs.MAP_CODEC.forGetter(recipe -> recipe.pattern),
-					ItemStack.CODEC.fieldOf("result").forGetter(recipe -> recipe.result),
+					ItemStackTemplate.CODEC.fieldOf("result").forGetter(recipe -> recipe.result),
 					Codec.INT.optionalFieldOf("crafting_time", ModConfigs.ENDER_CRAFTER_TIME_REQUIRED.get()).forGetter(recipe -> recipe.craftingTime)
 			).apply(builder, ShapedEnderCrafterRecipe::new)
 	);
@@ -30,10 +31,10 @@ public class ShapedEnderCrafterRecipe implements IEnderCrafterRecipe {
 	public static final RecipeSerializer<ShapedEnderCrafterRecipe> SERIALIZER = new RecipeSerializer<>(MAP_CODEC, STREAM_CODEC);
 
 	private final ShapedRecipePattern pattern;
-	private final ItemStack result;
+	private final ItemStackTemplate result;
 	private final int craftingTime;
 
-	public ShapedEnderCrafterRecipe(ShapedRecipePattern pattern, ItemStack result, int craftingTime) {
+	public ShapedEnderCrafterRecipe(ShapedRecipePattern pattern, ItemStackTemplate result, int craftingTime) {
 		this.pattern = pattern;
 		this.result = result;
 		this.craftingTime = craftingTime;
@@ -46,7 +47,7 @@ public class ShapedEnderCrafterRecipe implements IEnderCrafterRecipe {
 
 	@Override
 	public ItemStack assemble(CraftingInput inventory) {
-		return this.result.copy();
+		return this.result.create();
 	}
 
 	@Override
@@ -74,7 +75,7 @@ public class ShapedEnderCrafterRecipe implements IEnderCrafterRecipe {
 
 	private static ShapedEnderCrafterRecipe fromNetwork(RegistryFriendlyByteBuf buffer) {
 		var pattern = ShapedRecipePattern.STREAM_CODEC.decode(buffer);
-		var result = ItemStack.STREAM_CODEC.decode(buffer);
+		var result = ItemStackTemplate.STREAM_CODEC.decode(buffer);
 		int craftingTime = buffer.readVarInt();
 
 		return new ShapedEnderCrafterRecipe(pattern, result, craftingTime);
@@ -82,7 +83,7 @@ public class ShapedEnderCrafterRecipe implements IEnderCrafterRecipe {
 
 	private static void toNetwork(RegistryFriendlyByteBuf buffer, ShapedEnderCrafterRecipe recipe) {
 		ShapedRecipePattern.STREAM_CODEC.encode(buffer, recipe.pattern);
-		ItemStack.STREAM_CODEC.encode(buffer, recipe.result);
+		ItemStackTemplate.STREAM_CODEC.encode(buffer, recipe.result);
 		buffer.writeVarInt(recipe.craftingTime);
 	}
 }

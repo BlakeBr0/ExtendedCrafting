@@ -12,6 +12,7 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.item.crafting.CraftingInput;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeSerializer;
@@ -43,7 +44,7 @@ public class ShapelessFluxCrafterRecipe implements IFluxCrafterRecipe {
 									DataResult::success
 							)
 							.forGetter(recipe -> recipe.ingredients),
-					ItemStack.CODEC.fieldOf("result").forGetter(recipe -> recipe.result),
+					ItemStackTemplate.CODEC.fieldOf("result").forGetter(recipe -> recipe.result),
 					Codec.INT.fieldOf("power_required").forGetter(recipe -> recipe.powerRequired),
 					Codec.INT.optionalFieldOf("power_rate", ModConfigs.FLUX_CRAFTER_POWER_RATE.get()).forGetter(recipe -> recipe.powerRequired)
 			).apply(builder, ShapelessFluxCrafterRecipe::new)
@@ -54,11 +55,11 @@ public class ShapelessFluxCrafterRecipe implements IFluxCrafterRecipe {
 	public static final RecipeSerializer<ShapelessFluxCrafterRecipe> SERIALIZER = new RecipeSerializer<>(MAP_CODEC, STREAM_CODEC);
 
 	private final List<Ingredient> ingredients;
-	private final ItemStack result;
+	private final ItemStackTemplate result;
 	private final int powerRequired;
 	private final int powerRate;
 
-	public ShapelessFluxCrafterRecipe(List<Ingredient> ingredients, ItemStack result, int powerRequired, int powerRate) {
+	public ShapelessFluxCrafterRecipe(List<Ingredient> ingredients, ItemStackTemplate result, int powerRequired, int powerRate) {
 		this.ingredients = ingredients;
 		this.result = result;
 		this.powerRequired = powerRequired;
@@ -84,7 +85,7 @@ public class ShapelessFluxCrafterRecipe implements IFluxCrafterRecipe {
 
 	@Override
 	public ItemStack assemble(CraftingInput inventory) {
-		return this.result.copy();
+		return this.result.create();
 	}
 
 	@Override
@@ -109,7 +110,7 @@ public class ShapelessFluxCrafterRecipe implements IFluxCrafterRecipe {
 
 	private static ShapelessFluxCrafterRecipe fromNetwork(RegistryFriendlyByteBuf buffer) {
 		var ingredients = Ingredient.CONTENTS_STREAM_CODEC.apply(ByteBufCodecs.list()).decode(buffer);
-		var result = ItemStack.STREAM_CODEC.decode(buffer);
+		var result = ItemStackTemplate.STREAM_CODEC.decode(buffer);
 		int powerRequired = buffer.readVarInt();
 		int powerRate = buffer.readVarInt();
 
@@ -118,7 +119,7 @@ public class ShapelessFluxCrafterRecipe implements IFluxCrafterRecipe {
 
 	private static void toNetwork(RegistryFriendlyByteBuf buffer, ShapelessFluxCrafterRecipe recipe) {
 		Ingredient.CONTENTS_STREAM_CODEC.apply(ByteBufCodecs.list()).encode(buffer, recipe.ingredients);
-		ItemStack.STREAM_CODEC.encode(buffer, recipe.result);
+		ItemStackTemplate.STREAM_CODEC.encode(buffer, recipe.result);
 		buffer.writeVarInt(recipe.powerRequired);
 		buffer.writeVarInt(recipe.powerRate);
 	}

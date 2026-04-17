@@ -14,6 +14,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.item.crafting.CraftingInput;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeSerializer;
@@ -47,7 +48,7 @@ public class CombinationRecipe implements ICombinationRecipe {
 									DataResult::success
 							)
 							.forGetter(recipe -> recipe.ingredients),
-					ItemStack.CODEC.fieldOf("result").forGetter(recipe -> recipe.result),
+					ItemStackTemplate.CODEC.fieldOf("result").forGetter(recipe -> recipe.result),
 					Codec.INT.fieldOf("power_cost").forGetter(recipe -> recipe.powerCost),
 					Codec.INT.optionalFieldOf("power_rate", ModConfigs.CRAFTING_CORE_POWER_RATE.get()).forGetter(recipe -> recipe.powerRate)
 			).apply(builder, CombinationRecipe::new)
@@ -59,13 +60,13 @@ public class CombinationRecipe implements ICombinationRecipe {
 
 	private final Ingredient input;
 	private final List<Ingredient> ingredients;
-	private final ItemStack result;
+	private final ItemStackTemplate result;
 	private final int powerCost;
 	private final int powerRate;
     // for CraftTweaker recipes
     private BiFunction<Integer, ItemStack, ItemStack> transformer;
 
-	public CombinationRecipe(Ingredient input, List<Ingredient> ingredients, ItemStack result, int powerCost, int powerRate) {
+	public CombinationRecipe(Ingredient input, List<Ingredient> ingredients, ItemStackTemplate result, int powerCost, int powerRate) {
 		this.input = input;
 		this.ingredients = ingredients;
 		this.result = result;
@@ -97,7 +98,7 @@ public class CombinationRecipe implements ICombinationRecipe {
 
 	@Override
 	public ItemStack assemble(CraftingInput inventory) {
-		return this.result.copy();
+		return this.result.create();
 	}
 
 	@Override
@@ -181,7 +182,7 @@ public class CombinationRecipe implements ICombinationRecipe {
 	private static CombinationRecipe fromNetwork(RegistryFriendlyByteBuf buffer) {
 		var input = Ingredient.CONTENTS_STREAM_CODEC.decode(buffer);
 		var ingredients = Ingredient.CONTENTS_STREAM_CODEC.apply(ByteBufCodecs.list()).decode(buffer);
-		var result = ItemStack.STREAM_CODEC.decode(buffer);
+		var result = ItemStackTemplate.STREAM_CODEC.decode(buffer);
 		int powerCost = buffer.readVarInt();
 		int powerRate = buffer.readVarInt();
 
@@ -191,7 +192,7 @@ public class CombinationRecipe implements ICombinationRecipe {
 	private static void toNetwork(RegistryFriendlyByteBuf buffer, CombinationRecipe recipe) {
 		Ingredient.CONTENTS_STREAM_CODEC.encode(buffer, recipe.input);
 		Ingredient.CONTENTS_STREAM_CODEC.apply(ByteBufCodecs.list()).encode(buffer, recipe.ingredients);
-		ItemStack.STREAM_CODEC.encode(buffer, recipe.result);
+		ItemStackTemplate.STREAM_CODEC.encode(buffer, recipe.result);
 		buffer.writeVarInt(recipe.powerCost);
 		buffer.writeVarInt(recipe.powerRate);
 	}

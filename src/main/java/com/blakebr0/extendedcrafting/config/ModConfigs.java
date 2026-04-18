@@ -55,7 +55,7 @@ public final class ModConfigs {
 	public static final ModConfigSpec.IntValue AUTO_FLUX_CRAFTER_INSERT_POWER_RATE;
 
 	public static final ModConfigSpec.BooleanValue ENABLE_SINGULARITIES;
-	public static final ModConfigSpec.IntValue SINGULARITY_MATERIALS_REQUIRED;
+	public static final ModConfigSpec.IntValue SINGULARITY_INGREDIENTS_REQUIRED;
 	public static final ModConfigSpec.IntValue SINGULARITY_POWER_REQUIRED;
 	public static final ModConfigSpec.BooleanValue SINGULARITY_DEFAULT_RECIPES;
 	public static final ModConfigSpec.ConfigValue<String> SINGULARITY_DEFAULT_CATALYST;
@@ -172,9 +172,9 @@ public final class ModConfigs {
 		ENABLE_SINGULARITIES = common
 				.comment("Should the Singularities be enabled?")
 				.define("enabled", true);
-		SINGULARITY_MATERIALS_REQUIRED = common
+		SINGULARITY_INGREDIENTS_REQUIRED = common
 				.comment("The default amount of items required to create a Singularity.")
-				.defineInRange("defaultMaterialsRequired", 10000, 1, Integer.MAX_VALUE);
+				.defineInRange("defaultIngredientsRequired", 10000, 1, Integer.MAX_VALUE);
 		SINGULARITY_POWER_REQUIRED = common
 				.comment("The default amount of FE required to create a Singularity.")
 				.defineInRange("defaultPowerRequired", 5000000, 0, Integer.MAX_VALUE);

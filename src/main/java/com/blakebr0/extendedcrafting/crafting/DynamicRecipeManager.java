@@ -21,7 +21,7 @@ public final class DynamicRecipeManager {
 
     @SubscribeEvent
     public void onRegisterRecipes(RecipeManagerLoadingEvent event) {
-        SingularityRegistry.getInstance().loadSingularities();
+        SingularityRegistry.getInstance().loadSingularities(event.getRegistries());
 
         for (var singularity : SingularityRegistry.getInstance().getSingularities()) {
             var compressorRecipe = makeSingularityRecipe(singularity);
@@ -39,7 +39,7 @@ public final class DynamicRecipeManager {
         if (!ModConfigs.SINGULARITY_DEFAULT_RECIPES.get())
             return null;
 
-        var ingredient = singularity.getIngredient();
+        var ingredient = singularity.getIngredient().orElse(null);
         if (ingredient == null)
             return null;
 

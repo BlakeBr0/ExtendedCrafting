@@ -10,7 +10,11 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.mojang.serialization.JsonOps;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.resources.Identifier;
+import net.minecraft.tags.ItemTags;
+import net.minecraft.util.GsonHelper;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.loading.FMLPaths;
 import net.neoforged.neoforge.event.OnDatapackSyncEvent;
@@ -48,7 +52,7 @@ public final class SingularityRegistry {
         }
     }
 
-    public void loadSingularities() {
+    public void loadSingularities(HolderLookup.Provider registries) {
         var stopwatch = Stopwatch.createStarted();
         var dir = FMLPaths.CONFIGDIR.get().resolve("extendedcrafting/singularities/").toFile();
 
@@ -57,7 +61,7 @@ public final class SingularityRegistry {
         this.singularities.clear();
 
         if (!dir.mkdirs() && dir.isDirectory()) {
-            this.loadFiles(dir);
+            this.loadFiles(dir, registries);
         }
         
         UltimateSingularityRecipe.invalidate();
@@ -71,12 +75,12 @@ public final class SingularityRegistry {
         var dir = FMLPaths.CONFIGDIR.get().resolve("extendedcrafting/singularities/").toFile();
 
         if (!dir.exists() && dir.mkdirs()) {
-            for (var singularity : ModSingularities.getDefaults()) {
-                var json = SingularityUtils.writeToJson(singularity);
+            for (var singularity : ModSingularities.createAll()) {
+                var json = singularity.toJson();
                 FileWriter writer = null;
 
                 try {
-                    var file = new File(dir, singularity.getId().getPath() + ".json");
+                    var file = new File(dir, singularity.id().getPath() + ".json");
                     writer = new FileWriter(file);
 
                     GSON.toJson(json, writer);
@@ -111,10 +115,12 @@ public final class SingularityRegistry {
         ExtendedCrafting.LOGGER.info("Loaded {} singularities from the server", singularities.size());
     }
 
-    private void loadFiles(File dir) {
+    private void loadFiles(File dir, HolderLookup.Provider registries) {
         var files = dir.listFiles((FileFilter) FileFilterUtils.suffixFileFilter(".json"));
         if (files == null)
             return;
+
+        var ops = registries.createSerializationContext(JsonOps.INSTANCE);
 
         for (var file : files) {
             JsonObject json;
@@ -123,10 +129,20 @@ public final class SingularityRegistry {
 
             try {
                 reader = new InputStreamReader(new FileInputStream(file), StandardCharsets.UTF_8);
-                var name = file.getName().replace(".json", "");
+                var id = ExtendedCrafting.resource(file.getName().replace(".json", ""));
                 json = JsonParser.parseReader(reader).getAsJsonObject();
 
-                singularity = SingularityUtils.loadFromJson(ExtendedCrafting.resource(name), json);
+                // we'll remove tag ingredients if the tag is empty
+                var ingredient = GsonHelper.getAsString(json, "ingredient");
+                if (ingredient.startsWith("#")) {
+                    var tag = registries.get(ItemTags.create(Identifier.parse(ingredient.substring(1))));
+                    if (tag.isEmpty()) {
+                        json.remove("ingredient");
+                    }
+                }
+
+                singularity = Singularity.CODEC.decode(ops, json).getOrThrow().getFirst();
+                singularity.setId(id);
 
                 reader.close();
             } catch (Exception e) {
@@ -136,9 +152,7 @@ public final class SingularityRegistry {
             }
 
             if (singularity != null && singularity.isEnabled()) {
-                var id = singularity.getId();
-
-                this.singularities.put(id, singularity);
+                this.singularities.put(singularity.getId(), singularity);
             }
         }
     }

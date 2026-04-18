@@ -103,7 +103,7 @@ public final class ModCreativeModeTabs {
 
                 for (var singularity : SingularityRegistry.getInstance().getSingularities()) {
                     if (singularity.isEnabled()) {
-                        output.accept(SingularityUtils.getItemForSingularity(singularity), ModFeatureFlags.SINGULARITIES);
+                        output.accept(SingularityUtils.getItemForSingularity(singularity).create(), ModFeatureFlags.SINGULARITIES);
                     }
                 }
 

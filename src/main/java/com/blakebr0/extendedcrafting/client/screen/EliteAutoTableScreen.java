@@ -1,6 +1,5 @@
 package com.blakebr0.extendedcrafting.client.screen;
 
-import com.blakebr0.cucumber.client.render.GhostItemRenderer;
 import com.blakebr0.cucumber.client.screen.BaseContainerScreen;
 import com.blakebr0.cucumber.client.screen.widget.EnergyBarWidget;
 import com.blakebr0.cucumber.inventory.CItemStacksHandler;
@@ -12,7 +11,6 @@ import com.blakebr0.extendedcrafting.lib.ModTooltips;
 import com.blakebr0.extendedcrafting.tileentity.AutoTableTileEntity;
 import com.google.common.collect.Lists;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.renderer.RenderPipelines;

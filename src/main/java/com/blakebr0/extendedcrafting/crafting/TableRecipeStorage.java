@@ -2,7 +2,6 @@ package com.blakebr0.extendedcrafting.crafting;
 
 import com.blakebr0.cucumber.inventory.CItemStacksHandler;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.CraftingInput;
 import net.minecraft.world.level.storage.ValueInput;

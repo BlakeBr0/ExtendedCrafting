@@ -100,6 +100,11 @@ public class ShapelessTableRecipe implements ITableRecipe {
 	}
 
 	@Override
+	public List<Ingredient> getIngredients() {
+		return this.ingredients;
+	}
+
+	@Override
 	public NonNullList<ItemStack> getRemainingItems(TableCraftingInput inventory) {
 		var remaining = NonNullList.withSize(inventory.size(), ItemStack.EMPTY);
 

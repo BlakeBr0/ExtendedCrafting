@@ -19,11 +19,11 @@ import mezz.jei.api.recipe.category.IRecipeCategory;
 import mezz.jei.api.recipe.types.IRecipeHolderType;
 import mezz.jei.api.recipe.types.IRecipeType;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.CraftingInput;
 import net.minecraft.world.item.crafting.RecipeHolder;
 
 public class EnderCrafterCategory implements IRecipeCategory<RecipeHolder<IEnderCrafterRecipe>> {
@@ -70,6 +70,7 @@ public class EnderCrafterCategory implements IRecipeCategory<RecipeHolder<IEnder
 
 	@Override
 	public void draw(RecipeHolder<IEnderCrafterRecipe> recipe, IRecipeSlotsView slots, GuiGraphicsExtractor gfx, double mouseX, double mouseY) {
+		this.background.draw(gfx);
 		this.arrow.draw(gfx, 61, 19);
 	}
 
@@ -85,42 +86,38 @@ public class EnderCrafterCategory implements IRecipeCategory<RecipeHolder<IEnder
 	@Override
 	public void setRecipe(IRecipeLayoutBuilder builder, RecipeHolder<IEnderCrafterRecipe> recipeHolder, IFocusGroup focuses) {
         var recipe = recipeHolder.value();
-		var level = Minecraft.getInstance().level;
+		var output = recipe.assemble(CraftingInput.EMPTY);
 
-		assert level != null;
+		if (recipe instanceof ShapedEnderCrafterRecipe shaped) {
+			var inputs = recipe.getPositionedIngredients();
+			int stackIndex = 0;
 
-//		TODO implement jei
-//		var inputs = recipe.getIngredients();
-//		var output = recipe.getResultItem(level.registryAccess());
-//
-//		if (recipe instanceof ShapedEnderCrafterRecipe shaped) {
-//			int stackIndex = 0;
-//
-//			for (int i = 0; i < 3; i++) {
-//				for (int j = 0; j < 3; j++) {
-//					var slot = builder.addSlot(RecipeIngredientRole.INPUT, j * 18 + 1, i * 18 + 1);
-//
-//					if (i < shaped.getHeight() && j < shaped.getWidth()) {
-//						slot.addIngredients(inputs.get(stackIndex++));
-//					}
-//				}
-//			}
-//		} else if (recipe instanceof ShapelessEnderCrafterRecipe) {
-//			for (int i = 0; i < 3; i++) {
-//				for (int j = 0; j < 3; j++) {
-//					int index = j + (i * 3);
-//
-//					if (index < inputs.size()) {
-//						builder.addSlot(RecipeIngredientRole.INPUT, j * 18 + 1, i * 18 + 1).addIngredients(inputs.get(index));
-//					}
-//				}
-//			}
-//
-//			builder.setShapeless();
-//		}
-//
-//		builder.addSlot(RecipeIngredientRole.OUTPUT, 95, 19).addItemStack(output);
-//
-//		builder.moveRecipeTransferButton(122, 41);
+			for (int i = 0; i < 3; i++) {
+				for (int j = 0; j < 3; j++) {
+					var slot = builder.addSlot(RecipeIngredientRole.INPUT, j * 18 + 1, i * 18 + 1);
+
+					if (i < shaped.getHeight() && j < shaped.getWidth()) {
+						inputs.get(stackIndex++).ifPresent(slot::add);
+					}
+				}
+			}
+		} else if (recipe instanceof ShapelessEnderCrafterRecipe) {
+			var inputs = recipe.getIngredients();
+			for (int i = 0; i < 3; i++) {
+				for (int j = 0; j < 3; j++) {
+					int index = j + (i * 3);
+
+					if (index < inputs.size()) {
+						builder.addSlot(RecipeIngredientRole.INPUT, j * 18 + 1, i * 18 + 1).add(inputs.get(index));
+					}
+				}
+			}
+
+			builder.setShapeless();
+		}
+
+		builder.addSlot(RecipeIngredientRole.OUTPUT, 95, 19).add(output);
+
+		builder.moveRecipeTransferButton(122, 41);
 	}
 }

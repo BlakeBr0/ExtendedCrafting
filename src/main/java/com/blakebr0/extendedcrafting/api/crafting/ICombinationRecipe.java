@@ -16,7 +16,8 @@ import java.util.List;
  * Used to represent a Combination recipe for the recipe type
  */
 public interface ICombinationRecipe extends Recipe<CraftingInput> {
-    Ingredient getInput();
+    Ingredient getCenterIngredient();
+    List<Ingredient> getPedestalIngredients();
     int getPowerCost();
     int getPowerRate();
     List<Component> getInputsList();

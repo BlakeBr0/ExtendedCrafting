@@ -19,10 +19,11 @@ import mezz.jei.api.recipe.category.IRecipeCategory;
 import mezz.jei.api.recipe.types.IRecipeHolderType;
 import mezz.jei.api.recipe.types.IRecipeType;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.CraftingInput;
 import net.minecraft.world.item.crafting.RecipeHolder;
 
 public class FluxCraftingCategory implements IRecipeCategory<RecipeHolder<IFluxCrafterRecipe>> {
@@ -63,6 +64,11 @@ public class FluxCraftingCategory implements IRecipeCategory<RecipeHolder<IFluxC
 	}
 
 	@Override
+	public void draw(RecipeHolder<IFluxCrafterRecipe> recipe, IRecipeSlotsView recipeSlotsView, GuiGraphicsExtractor gfx, double mouseX, double mouseY) {
+		this.background.draw(gfx);
+	}
+
+	@Override
 	public void getTooltip(ITooltipBuilder tooltip, RecipeHolder<IFluxCrafterRecipe> recipeHolder, IRecipeSlotsView recipeSlotsView, double mouseX, double mouseY) {
         var recipe = recipeHolder.value();
         
@@ -75,40 +81,37 @@ public class FluxCraftingCategory implements IRecipeCategory<RecipeHolder<IFluxC
 	@Override
 	public void setRecipe(IRecipeLayoutBuilder builder, RecipeHolder<IFluxCrafterRecipe> recipeHolder, IFocusGroup focuses) {
         var recipe = recipeHolder.value();
-		var level = Minecraft.getInstance().level;
+		var output = recipe.assemble(CraftingInput.EMPTY);
 
-		assert level != null;
-// TODO jei
-//		var inputs = recipe.getIngredients();
-//		var output = recipe.getResultItem(level.registryAccess());
-//
-//		if (recipe instanceof ShapedFluxCrafterRecipe shaped) {
-//			int stackIndex = 0;
-//
-//			for (int i = 0; i < 3; i++) {
-//				for (int j = 0; j < 3; j++) {
-//					var slot = builder.addSlot(RecipeIngredientRole.INPUT, j * 18 + 26, i * 18 + 13);
-//
-//					if (i < shaped.getHeight() && j < shaped.getWidth()) {
-//						slot.addIngredients(inputs.get(stackIndex++));
-//					}
-//				}
-//			}
-//		} else if (recipe instanceof ShapelessFluxCrafterRecipe) {
-//			for (int i = 0; i < 3; i++) {
-//				for (int j = 0; j < 3; j++) {
-//					int index = j + (i * 3);
-//
-//					if (index < inputs.size()) {
-//						builder.addSlot(RecipeIngredientRole.INPUT, j * 18 + 26, i * 18 + 13).addIngredients(inputs.get(index));
-//					}
-//				}
-//			}
-//
-//			builder.setShapeless();
-//		}
-//
-//		builder.addSlot(RecipeIngredientRole.OUTPUT, 120, 31).addItemStack(output);
+		if (recipe instanceof ShapedFluxCrafterRecipe shaped) {
+			var inputs = recipe.getPositionedIngredients();
+			int stackIndex = 0;
+
+			for (int i = 0; i < 3; i++) {
+				for (int j = 0; j < 3; j++) {
+					var slot = builder.addSlot(RecipeIngredientRole.INPUT, j * 18 + 26, i * 18 + 13);
+
+					if (i < shaped.getHeight() && j < shaped.getWidth()) {
+						inputs.get(stackIndex++).ifPresent(slot::add);
+					}
+				}
+			}
+		} else if (recipe instanceof ShapelessFluxCrafterRecipe) {
+			var inputs = recipe.getIngredients();
+			for (int i = 0; i < 3; i++) {
+				for (int j = 0; j < 3; j++) {
+					int index = j + (i * 3);
+
+					if (index < inputs.size()) {
+						builder.addSlot(RecipeIngredientRole.INPUT, j * 18 + 26, i * 18 + 13).add(inputs.get(index));
+					}
+				}
+			}
+
+			builder.setShapeless();
+		}
+
+		builder.addSlot(RecipeIngredientRole.OUTPUT, 120, 31).add(output);
 
 		builder.moveRecipeTransferButton(134, 63);
 	}

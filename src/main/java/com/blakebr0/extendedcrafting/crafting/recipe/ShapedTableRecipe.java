@@ -19,6 +19,7 @@ import net.minecraft.world.item.crafting.ShapedRecipePattern;
 import net.minecraft.world.level.Level;
 import org.apache.commons.lang3.function.TriFunction;
 
+import java.util.List;
 import java.util.Optional;
 
 public class ShapedTableRecipe implements ITableRecipe {
@@ -66,6 +67,11 @@ public class ShapedTableRecipe implements ITableRecipe {
     @Override
     public RecipeType<ITableRecipe> getType() {
         return ModRecipeTypes.TABLE.get();
+    }
+
+    @Override
+    public List<Optional<Ingredient>> getPositionedIngredients() {
+        return this.pattern.ingredients();
     }
 
     @Override

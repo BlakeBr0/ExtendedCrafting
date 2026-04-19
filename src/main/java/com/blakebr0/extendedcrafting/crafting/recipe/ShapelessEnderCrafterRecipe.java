@@ -96,6 +96,11 @@ public class ShapelessEnderCrafterRecipe implements IEnderCrafterRecipe {
 	}
 
 	@Override
+	public List<Ingredient> getIngredients() {
+		return this.ingredients;
+	}
+
+	@Override
 	public int getCraftingTime() {
 		return this.craftingTime;
 	}

@@ -25,10 +25,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class UltimateSingularityRecipe implements ITableRecipe {
+    private static final UltimateSingularityRecipe INSTANCE = new UltimateSingularityRecipe();
     private static final Object2BooleanOpenHashMap<UltimateSingularityRecipe> INGREDIENTS_LOADED = new Object2BooleanOpenHashMap<>();
 
-    public static final MapCodec<UltimateSingularityRecipe> MAP_CODEC = MapCodec.unit(new UltimateSingularityRecipe());
-    public static final StreamCodec<RegistryFriendlyByteBuf, UltimateSingularityRecipe> STREAM_CODEC = StreamCodec.unit(new UltimateSingularityRecipe());
+    public static final MapCodec<UltimateSingularityRecipe> MAP_CODEC = MapCodec.unit(INSTANCE);
+    public static final StreamCodec<RegistryFriendlyByteBuf, UltimateSingularityRecipe> STREAM_CODEC = StreamCodec.unit(INSTANCE);
     public static final RecipeSerializer<UltimateSingularityRecipe> SERIALIZER = new RecipeSerializer<>(MAP_CODEC, STREAM_CODEC);
 
     private final List<Ingredient> ingredients;
@@ -39,7 +40,7 @@ public class UltimateSingularityRecipe implements ITableRecipe {
 
     @Override
     public boolean matches(TableCraftingInput inventory, Level level) {
-        // ensure the ingredients list is initialized
+        // ensure the ingredient list is initialized
         var ingredients = this.getIngredients();
 
         if (ingredients.isEmpty())
@@ -89,17 +90,13 @@ public class UltimateSingularityRecipe implements ITableRecipe {
     }
 
     @Override
-    public NonNullList<ItemStack> getRemainingItems(TableCraftingInput input) {
-        return CraftingRecipe.defaultCraftingReminder(input);
-    }
-
     public List<Ingredient> getIngredients() {
         if (!INGREDIENTS_LOADED.getOrDefault(this, false)) {
             this.getIngredients().clear();
 
             SingularityRegistry.getInstance().getSingularities()
                     .stream()
-                    .filter(singularity -> singularity.isInUltimateSingularity() && singularity.getIngredient() != null)
+                    .filter(singularity -> singularity.isInUltimateSingularity() && singularity.getIngredient().isPresent())
                     .limit(81)
                     .map(SingularityUtils::getItemForSingularity)
                     .map(stack -> DataComponentIngredient.of(false, stack.components().split().added(), stack.item()))
@@ -109,6 +106,11 @@ public class UltimateSingularityRecipe implements ITableRecipe {
         }
 
         return this.ingredients;
+    }
+
+    @Override
+    public NonNullList<ItemStack> getRemainingItems(TableCraftingInput input) {
+        return CraftingRecipe.defaultCraftingReminder(input);
     }
 
     public static void invalidate() {

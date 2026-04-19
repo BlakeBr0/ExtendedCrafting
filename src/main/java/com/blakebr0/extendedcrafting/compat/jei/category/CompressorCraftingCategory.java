@@ -17,10 +17,11 @@ import mezz.jei.api.recipe.category.IRecipeCategory;
 import mezz.jei.api.recipe.types.IRecipeHolderType;
 import mezz.jei.api.recipe.types.IRecipeType;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.CraftingInput;
 import net.minecraft.world.item.crafting.RecipeHolder;
 
 public class CompressorCraftingCategory implements IRecipeCategory<RecipeHolder<ICompressorRecipe>> {
@@ -61,6 +62,11 @@ public class CompressorCraftingCategory implements IRecipeCategory<RecipeHolder<
 	}
 
 	@Override
+	public void draw(RecipeHolder<ICompressorRecipe> recipe, IRecipeSlotsView recipeSlotsView, GuiGraphicsExtractor gfx, double mouseX, double mouseY) {
+		this.background.draw(gfx);
+	}
+
+	@Override
 	public void getTooltip(ITooltipBuilder tooltip, RecipeHolder<ICompressorRecipe> recipeHolder, IRecipeSlotsView slots, double mouseX, double mouseY) {
         var recipe = recipeHolder.value();
 
@@ -77,16 +83,13 @@ public class CompressorCraftingCategory implements IRecipeCategory<RecipeHolder<
 	@Override
 	public void setRecipe(IRecipeLayoutBuilder builder, RecipeHolder<ICompressorRecipe> recipeHolder, IFocusGroup focuses) {
         var recipe = recipeHolder.value();
-		var level = Minecraft.getInstance().level;
 
-		assert level != null;
-// TODO jei
-//		var inputs = recipe.getIngredients();
-//		var catalyst = recipe.getCatalyst();
-//		var output = recipe.getResultItem(level.registryAccess());
-//
-//		builder.addSlot(RecipeIngredientRole.INPUT, 58, 31).addIngredients(inputs.get(0));
-//		builder.addSlot(RecipeIngredientRole.INPUT, 31, 31).addIngredients(catalyst);
-//		builder.addSlot(RecipeIngredientRole.OUTPUT, 128, 31).addItemStack(output);
+		var input = recipe.getIngredient();
+		var catalyst = recipe.getCatalyst();
+		var output = recipe.assemble(CraftingInput.EMPTY);
+
+		builder.addSlot(RecipeIngredientRole.INPUT, 58, 31).add(input.ingredient());
+		builder.addSlot(RecipeIngredientRole.INPUT, 31, 31).add(catalyst);
+		builder.addSlot(RecipeIngredientRole.OUTPUT, 128, 31).add(output);
 	}
 }

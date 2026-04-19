@@ -99,6 +99,11 @@ public class ShapelessFluxCrafterRecipe implements IFluxCrafterRecipe {
 	}
 
 	@Override
+	public List<Ingredient> getIngredients() {
+		return this.ingredients;
+	}
+
+	@Override
 	public int getPowerRequired() {
 		return this.powerRequired;
 	}

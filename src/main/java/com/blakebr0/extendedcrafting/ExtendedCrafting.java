@@ -2,6 +2,7 @@ package com.blakebr0.extendedcrafting;
 
 import com.blakebr0.extendedcrafting.client.ModMenuScreens;
 import com.blakebr0.extendedcrafting.client.ModTESRs;
+import com.blakebr0.extendedcrafting.client.handler.ClientRecipeHandler;
 import com.blakebr0.extendedcrafting.client.handler.TintSourceHandler;
 import com.blakebr0.extendedcrafting.config.ModConfigs;
 import com.blakebr0.extendedcrafting.crafting.DynamicRecipeManager;
@@ -25,6 +26,7 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.config.ModConfig;
+import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.neoforged.fml.loading.FMLEnvironment;
 import net.neoforged.neoforge.common.NeoForge;
@@ -69,7 +71,14 @@ public final class ExtendedCrafting {
 		NeoForge.EVENT_BUS.register(DynamicRecipeManager.getInstance());
 		NeoForge.EVENT_BUS.register(SingularityRegistry.getInstance());
 
+		NeoForge.EVENT_BUS.addListener(ModRecipeTypes::onDatapackSync);
+
 		SingularityRegistry.getInstance().writeDefaultSingularityFiles();
+	}
+
+	@SubscribeEvent
+	public void onClientSetup(FMLClientSetupEvent event) {
+		NeoForge.EVENT_BUS.register(new ClientRecipeHandler());
 	}
 
 	public static Identifier resource(String path) {

@@ -62,27 +62,6 @@ public class CompressorRecipe implements ICompressorRecipe {
 		return this.result.create();
 	}
 
-//	@Override
-//	public PlacementInfo placementInfo() {
-//		if (this.placementInfo == null) {
-//			var ingredients = new ArrayList<Ingredient>();
-//			ingredients.add(this.ingredient.ingredient());
-//			ingredients.add(this.catalyst);
-//			this.placementInfo = PlacementInfo.create(ingredients);
-//		}
-//
-//		return this.placementInfo;
-//	}
-//
-//	@Override
-//	public List<RecipeDisplay> display() {
-//		return List.of(new ShapelessCraftingRecipeDisplay(
-//				this.placementInfo().ingredients().stream().map(Ingredient::display).toList(),
-//				new SlotDisplay.ItemStackSlotDisplay(this.result),
-//				new SlotDisplay.ItemSlotDisplay(ModBlocks.COMPRESSOR.get().asItem())
-//		));
-//	}
-
 	@Override
 	public RecipeSerializer<CompressorRecipe> getSerializer() {
 		return SERIALIZER;

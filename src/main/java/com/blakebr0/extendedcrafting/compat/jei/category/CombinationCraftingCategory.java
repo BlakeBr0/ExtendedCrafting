@@ -15,10 +15,11 @@ import mezz.jei.api.recipe.RecipeIngredientRole;
 import mezz.jei.api.recipe.category.IRecipeCategory;
 import mezz.jei.api.recipe.types.IRecipeHolderType;
 import mezz.jei.api.recipe.types.IRecipeType;
-import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.CraftingInput;
 import net.minecraft.world.item.crafting.RecipeHolder;
 
 import java.awt.*;
@@ -60,6 +61,11 @@ public class CombinationCraftingCategory implements IRecipeCategory<RecipeHolder
 		return this.icon;
 	}
 
+	@Override
+	public void draw(RecipeHolder<ICombinationRecipe> recipe, IRecipeSlotsView recipeSlotsView, GuiGraphicsExtractor gfx, double mouseX, double mouseY) {
+		this.background.draw(gfx);
+	}
+
     @Override
 	public void getTooltip(ITooltipBuilder tooltip, RecipeHolder<ICombinationRecipe> recipeHolder, IRecipeSlotsView slots, double mouseX, double mouseY) {
         var recipe = recipeHolder.value();
@@ -77,25 +83,21 @@ public class CombinationCraftingCategory implements IRecipeCategory<RecipeHolder
 	@Override
 	public void setRecipe(IRecipeLayoutBuilder builder, RecipeHolder<ICombinationRecipe> recipeHolder, IFocusGroup focuses) {
         var recipe = recipeHolder.value();
-		var level = Minecraft.getInstance().level;
+		var inputs = recipe.getPedestalIngredients();
+		var output = recipe.assemble(CraftingInput.EMPTY);
 
-		assert level != null;
-// TODO jei
-//		var inputs = recipe.getIngredients();
-//		var output = recipe.getResultItem(level.registryAccess());
-//
-//		builder.addSlot(RecipeIngredientRole.INPUT, 77, 47).addIngredients(recipe.getInput());
-//
-//		double angleBetweenEach = 360.0 / inputs.size();
-//		Point point = new Point(53, 8), center = new Point(74, 47);
-//
-//        for (var input : inputs) {
-//            builder.addSlot(RecipeIngredientRole.INPUT, point.x, point.y).addIngredients(input);
-//
-//            point = rotatePoint(point, center, angleBetweenEach);
-//        }
-//
-//		builder.addSlot(RecipeIngredientRole.OUTPUT, 77, 150).addItemStack(output);
+		builder.addSlot(RecipeIngredientRole.INPUT, 77, 47).add(recipe.getCenterIngredient());
+
+		double angleBetweenEach = 360.0 / inputs.size();
+		Point point = new Point(53, 8), center = new Point(74, 47);
+
+        for (var input : inputs) {
+            builder.addSlot(RecipeIngredientRole.INPUT, point.x, point.y).add(input);
+
+            point = rotatePoint(point, center, angleBetweenEach);
+        }
+
+		builder.addSlot(RecipeIngredientRole.OUTPUT, 77, 150).add(output);
 	}
 
 	private static Point rotatePoint(Point in, Point about, double degrees) {

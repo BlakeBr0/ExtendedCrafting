@@ -1,8 +1,8 @@
 package com.blakebr0.extendedcrafting.compat.jei;
 
-import com.blakebr0.cucumber.helper.RecipeHelper;
 import com.blakebr0.extendedcrafting.ExtendedCrafting;
 import com.blakebr0.extendedcrafting.api.component.RecipeMakerComponent;
+import com.blakebr0.extendedcrafting.client.handler.ClientRecipeHandler;
 import com.blakebr0.extendedcrafting.client.screen.AdvancedAutoTableScreen;
 import com.blakebr0.extendedcrafting.client.screen.AdvancedTableScreen;
 import com.blakebr0.extendedcrafting.client.screen.AutoEnderCrafterScreen;
@@ -42,7 +42,6 @@ import com.blakebr0.extendedcrafting.init.ModBlocks;
 import com.blakebr0.extendedcrafting.init.ModDataComponentTypes;
 import com.blakebr0.extendedcrafting.init.ModItems;
 import com.blakebr0.extendedcrafting.init.ModMenuTypes;
-import com.blakebr0.extendedcrafting.init.ModRecipeTypes;
 import com.blakebr0.extendedcrafting.singularity.SingularityUtils;
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
@@ -53,7 +52,6 @@ import mezz.jei.api.registration.IRecipeCategoryRegistration;
 import mezz.jei.api.registration.IRecipeRegistration;
 import mezz.jei.api.registration.IRecipeTransferRegistration;
 import mezz.jei.api.registration.ISubtypeRegistration;
-import net.minecraft.client.Minecraft;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
 
@@ -103,41 +101,35 @@ public final class JeiCompat implements IModPlugin {
 
     @Override
     public void registerRecipes(IRecipeRegistration registration) {
-//        TODO jei recipe registration
-//        var level = Minecraft.getInstance().level;
-//        if (level != null) {
-//            var manager = level.recipeAccess();
-//
-//            if (ModConfigs.ENABLE_CRAFTING_CORE.get()) {
-//                registration.addRecipes(CombinationCraftingCategory.RECIPE_TYPE, RecipeHelper.byType(manager, ModRecipeTypes.COMBINATION.get()).stream().toList());
-//            }
-//
-//            if (ModConfigs.ENABLE_TABLES.get()) {
-//                var recipes = Stream.of(1, 2, 3, 4).collect(Collectors.toMap(tier -> tier, tier ->
-//                        RecipeHelper.byType(manager, ModRecipeTypes.TABLE.get())
-//                                .stream()
-//                                .filter(recipe -> recipe.value().hasRequiredTier() ? tier == recipe.value().getTier() : tier >= recipe.value().getTier())
-//                                .toList()
-//                ));
-//
-//                registration.addRecipes(BasicTableCategory.RECIPE_TYPE, recipes.getOrDefault(1, new ArrayList<>()));
-//                registration.addRecipes(AdvancedTableCategory.RECIPE_TYPE, recipes.getOrDefault(2, new ArrayList<>()));
-//                registration.addRecipes(EliteTableCategory.RECIPE_TYPE, recipes.getOrDefault(3, new ArrayList<>()));
-//                registration.addRecipes(UltimateTableCategory.RECIPE_TYPE, recipes.getOrDefault(4, new ArrayList<>()));
-//            }
-//
-//            if (ModConfigs.ENABLE_COMPRESSOR.get()) {
-//                registration.addRecipes(CompressorCraftingCategory.RECIPE_TYPE, RecipeHelper.byType(manager, ModRecipeTypes.COMPRESSOR.get()).stream().toList());
-//            }
-//
-//            if (ModConfigs.ENABLE_ENDER_CRAFTER.get()) {
-//                registration.addRecipes(EnderCrafterCategory.RECIPE_TYPE, RecipeHelper.byType(manager, ModRecipeTypes.ENDER_CRAFTER.get()).stream().toList());
-//            }
-//
-//            if (ModConfigs.ENABLE_FLUX_CRAFTER.get()) {
-//                registration.addRecipes(FluxCraftingCategory.RECIPE_TYPE, RecipeHelper.byType(manager, ModRecipeTypes.FLUX_CRAFTER.get()).stream().toList());
-//            }
-//        }
+        if (ModConfigs.ENABLE_CRAFTING_CORE.get()) {
+            registration.addRecipes(CombinationCraftingCategory.RECIPE_TYPE, ClientRecipeHandler.COMBINATION_RECIPES);
+        }
+
+        if (ModConfigs.ENABLE_TABLES.get()) {
+            var recipes = Stream.of(1, 2, 3, 4).collect(Collectors.toMap(tier -> tier, tier ->
+                    ClientRecipeHandler.TABLE_RECIPES
+                            .stream()
+                            .filter(recipe -> recipe.value().hasRequiredTier() ? tier == recipe.value().getTier() : tier >= recipe.value().getTier())
+                            .toList()
+            ));
+
+            registration.addRecipes(BasicTableCategory.RECIPE_TYPE, recipes.getOrDefault(1, new ArrayList<>()));
+            registration.addRecipes(AdvancedTableCategory.RECIPE_TYPE, recipes.getOrDefault(2, new ArrayList<>()));
+            registration.addRecipes(EliteTableCategory.RECIPE_TYPE, recipes.getOrDefault(3, new ArrayList<>()));
+            registration.addRecipes(UltimateTableCategory.RECIPE_TYPE, recipes.getOrDefault(4, new ArrayList<>()));
+        }
+
+        if (ModConfigs.ENABLE_COMPRESSOR.get()) {
+            registration.addRecipes(CompressorCraftingCategory.RECIPE_TYPE, ClientRecipeHandler.COMPRESSOR_RECIPES);
+        }
+
+        if (ModConfigs.ENABLE_ENDER_CRAFTER.get()) {
+            registration.addRecipes(EnderCrafterCategory.RECIPE_TYPE, ClientRecipeHandler.ENDER_CRAFTER_RECIPES);
+        }
+
+        if (ModConfigs.ENABLE_FLUX_CRAFTER.get()) {
+            registration.addRecipes(FluxCraftingCategory.RECIPE_TYPE, ClientRecipeHandler.FLUX_CRAFTER_RECIPES);
+        }
     }
 
     @Override

@@ -151,8 +151,13 @@ public class CombinationRecipe implements ICombinationRecipe {
     }
 
 	@Override
-	public Ingredient getInput() {
+	public Ingredient getCenterIngredient() {
 		return this.input;
+	}
+
+	@Override
+	public List<Ingredient> getPedestalIngredients() {
+		return this.ingredients;
 	}
 
 	@Override

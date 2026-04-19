@@ -12,10 +12,14 @@ import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.item.crafting.CraftingInput;
+import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.item.crafting.ShapedRecipePattern;
 import net.minecraft.world.level.Level;
+
+import java.util.List;
+import java.util.Optional;
 
 public class ShapedFluxCrafterRecipe implements IFluxCrafterRecipe {
 	public static final MapCodec<ShapedFluxCrafterRecipe> MAP_CODEC = RecordCodecBuilder.mapCodec(builder ->
@@ -61,6 +65,11 @@ public class ShapedFluxCrafterRecipe implements IFluxCrafterRecipe {
 	@Override
 	public RecipeType<IFluxCrafterRecipe> getType() {
 		return ModRecipeTypes.FLUX_CRAFTER.get();
+	}
+
+	@Override
+	public List<Optional<Ingredient>> getPositionedIngredients() {
+		return this.pattern.ingredients();
 	}
 
 	@Override

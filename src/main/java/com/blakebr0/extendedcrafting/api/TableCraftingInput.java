@@ -36,4 +36,8 @@ public class TableCraftingInput extends CraftingInput {
         var input = positioned.input();
         return new TableCraftingInput(input.width(), input.height(), input.items(), tier, positioned.top(), positioned.left());
     }
+
+    public static TableCraftingInput empty(int tier) {
+        return new TableCraftingInput(0, 0, List.of(), tier, 0, 0);
+    }
 }

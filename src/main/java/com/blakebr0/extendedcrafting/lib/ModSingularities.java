@@ -8,7 +8,7 @@ import java.util.List;
 public final class ModSingularities {
     public static List<DefaultSingularity> createAll() {
         return List.of(
-                create("coal", 0x363739, 0x261E2, "minecraft:coal"),
+                create("coal", 0x363739, 0x261E24, "minecraft:coal"),
                 create("copper", 0xFA977C, 0xBC5430, "minecraft:copper_ingot"),
                 create("iron", 0xE1E1E1, 0x6C6C6C, "minecraft:iron_ingot"),
                 create("lapis_lazuli", 0x678DEA, 0x1B53A7, "minecraft:lapis_lazuli"),

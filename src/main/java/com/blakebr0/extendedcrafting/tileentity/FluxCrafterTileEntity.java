@@ -67,15 +67,15 @@ public class FluxCrafterTileEntity extends BaseInventoryTileEntity implements Me
 	@Override
 	public void loadAdditional(ValueInput input) {
 		super.loadAdditional(input);
-		this.progress = input.getIntOr("Progress", 0);
-		this.progressReq = input.getIntOr("ProgressReq", 0);
+		this.progress = input.getIntOr("progress", 0);
+		this.progressReq = input.getIntOr("progress_required", 0);
 	}
 
 	@Override
 	public void saveAdditional(ValueOutput output) {
 		super.saveAdditional(output);
-		output.putInt("Progress", this.progress);
-		output.putInt("ProgressReq", this.progressReq);
+		output.putInt("progress", this.progress);
+		output.putInt("progress_required", this.progressReq);
 	}
 
 	@Override

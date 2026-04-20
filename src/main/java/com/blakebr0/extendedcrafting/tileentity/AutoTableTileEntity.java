@@ -67,19 +67,19 @@ public abstract class AutoTableTileEntity extends BaseInventoryTileEntity implem
     @Override
     public void loadAdditional(ValueInput input) {
         super.loadAdditional(input);
-        this.progress = input.getIntOr("Progress", 0);
-        this.running = input.getBooleanOr("Running", false);
-        this.getEnergy().deserialize(input);
-        this.getRecipeStorage().deserialize(input);
+        this.progress = input.getIntOr("progress", 0);
+        this.running = input.getBooleanOr("running", false);
+        this.getEnergy().deserialize(input.childOrEmpty("energy"));
+        this.getRecipeStorage().deserialize(input.childOrEmpty("recipe_storage"));
     }
 
     @Override
     public void saveAdditional(ValueOutput output) {
         super.saveAdditional(output);
-        output.putInt("Progress", this.progress);
-        output.putBoolean("Running", this.running);
-        this.getEnergy().serialize(output);
-        this.getRecipeStorage().serialize(output);
+        output.putInt("progress", this.progress);
+        output.putBoolean("running", this.running);
+        output.putChild("energy", this.getEnergy());
+        output.putChild("recipe_storage", this.getRecipeStorage());
     }
 
     @Override

@@ -35,13 +35,13 @@ public class FluxAlternatorTileEntity extends BaseTileEntity implements MenuProv
     @Override
     protected void loadAdditional(ValueInput input) {
         super.loadAdditional(input);
-        this.energy.deserialize(input);
+        this.energy.deserialize(input.childOrEmpty("energy"));
     }
 
     @Override
     public void saveAdditional(ValueOutput output) {
         super.saveAdditional(output);
-        this.energy.serialize(output);
+        output.putChild("energy", this.energy);
     }
 
     @Override

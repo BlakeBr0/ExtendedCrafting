@@ -44,15 +44,15 @@ public class AutoFluxCrafterTileEntity extends FluxCrafterTileEntity implements 
     @Override
     public void loadAdditional(ValueInput input) {
         super.loadAdditional(input);
-        this.energy.deserialize(input);
-        this.recipeStorage.deserialize(input);
+        this.energy.deserialize(input.childOrEmpty("energy"));
+        this.recipeStorage.deserialize(input.childOrEmpty("recipe_storage"));
     }
 
     @Override
     public void saveAdditional(ValueOutput output) {
         super.saveAdditional(output);
-        this.energy.serialize(output);
-        this.recipeStorage.serialize(output);
+        output.putChild("energy", this.energy);
+        output.putChild("recipe_storage", this.recipeStorage);
     }
 
     @Override

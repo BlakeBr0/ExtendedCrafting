@@ -77,25 +77,25 @@ public class CompressorTileEntity extends BaseInventoryTileEntity implements Men
     @Override
     public void loadAdditional(ValueInput input) {
         super.loadAdditional(input);
-        this.materialCount = input.getIntOr("MaterialCount", 0);
-        this.materialStack = input.read("MaterialStack", ItemStack.OPTIONAL_CODEC).orElse(null);
-        this.progress = input.getIntOr("Progress", 0);
-        this.ejecting = input.getBooleanOr("Ejecting", false);
-        this.energy.deserialize(input);
-        this.inputLimit = input.getBooleanOr("InputLimit", false);
-        this.inputs = input.read("MaterialStacks", MaterialInput.CODEC.listOf()).orElseGet(ArrayList::new);
+        this.materialCount = input.getIntOr("material_count", 0);
+        this.materialStack = input.read("material_stack", ItemStack.OPTIONAL_CODEC).orElse(null);
+        this.progress = input.getIntOr("progress", 0);
+        this.ejecting = input.getBooleanOr("ejecting", false);
+        this.energy.deserialize(input.childOrEmpty("energy"));
+        this.inputLimit = input.getBooleanOr("input_limit", false);
+        this.inputs = input.read("material_stacks", MaterialInput.CODEC.listOf()).orElseGet(ArrayList::new);
     }
 
     @Override
     public void saveAdditional(ValueOutput output) {
         super.saveAdditional(output);
-        output.putInt("MaterialCount", this.materialCount);
-        output.storeNullable("MaterialStack", ItemStack.OPTIONAL_CODEC, this.materialStack);
-        output.putInt("Progress", this.progress);
-        output.putBoolean("Ejecting", this.ejecting);
-        this.energy.serialize(output);
-        output.putBoolean("InputLimit", this.inputLimit);
-        output.store("MaterialStacks", MaterialInput.CODEC.listOf(), this.inputs);
+        output.putInt("material_count", this.materialCount);
+        output.storeNullable("material_stack", ItemStack.OPTIONAL_CODEC, this.materialStack);
+        output.putInt("progress", this.progress);
+        output.putBoolean("ejecting", this.ejecting);
+        output.putChild("energy", this.energy);
+        output.putBoolean("input_limit", this.inputLimit);
+        output.store("material_stacks", MaterialInput.CODEC.listOf(), this.inputs);
     }
 
     @Override

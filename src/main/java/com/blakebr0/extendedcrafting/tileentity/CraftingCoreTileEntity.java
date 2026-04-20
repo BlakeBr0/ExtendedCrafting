@@ -74,15 +74,15 @@ public class CraftingCoreTileEntity extends BaseInventoryTileEntity implements M
 	@Override
 	public void loadAdditional(ValueInput input) {
 		super.loadAdditional(input);
-		this.progress = input.getIntOr("Progress", 0);
-		this.energy.deserialize(input);
+		this.progress = input.getIntOr("progress", 0);
+		this.energy.deserialize(input.childOrEmpty("energy"));
 	}
 
 	@Override
 	public void saveAdditional(ValueOutput output) {
 		super.saveAdditional(output);
-		output.putInt("Progress", this.progress);
-		this.energy.serialize(output);
+		output.putInt("progress", this.progress);
+		output.putChild("energy", this.energy);
 	}
 
 	@Override

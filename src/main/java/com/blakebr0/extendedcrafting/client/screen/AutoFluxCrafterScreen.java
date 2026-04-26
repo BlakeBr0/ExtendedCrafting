@@ -64,25 +64,22 @@ public class AutoFluxCrafterScreen extends BaseContainerScreen<AutoFluxCrafterCo
 			gfx.blit(RenderPipelines.GUI_TEXTURED, BACKGROUND, x + 92, y + 48, 194, 0, i2 + 1, 16, 256, 256);
 		}
 
-//		TODO ghost items
-//		var recipe = this.getSelectedRecipe();
-//
-//		if (recipe != null) {
-//			var itemRenderer = Minecraft.getInstance().getItemRenderer();
-//
-//			for (int i = 0; i < 3; i++) {
-//				for (int j = 0; j < 3; j++) {
-//					int index = (i * 3) + j;
-//					var stack = recipe.getStackInSlot(index);
-//
-//					GhostItemRenderer.renderItemIntoGui(stack, x + 33 + (j * 18), y + 30 + (i * 18), itemRenderer);
-//				}
-//			}
-//
-//			var output = recipe.getStackInSlot(recipe.getSlots() - 1);
-//
-//			GhostItemRenderer.renderItemIntoGui(output, x + 127, y + 48, itemRenderer);
-//		}
+		var recipe = this.getSelectedRecipe();
+
+		if (recipe != null) {
+			for (int i = 0; i < 3; i++) {
+				for (int j = 0; j < 3; j++) {
+					int index = (i * 3) + j;
+					var stack = recipe.getResource(index).toStack();
+
+					this.extractGhostItem(gfx, x + 33 + (j * 18), y + 30 + (i * 18), stack);
+				}
+			}
+
+			var output = recipe.getResource(recipe.size() - 1).toStack();
+
+			this.extractGhostItem(gfx, x + 127, y + 48, output);
+		}
 	}
 
 	private void onSelectButtonTooltip(Button button, GuiGraphicsExtractor gfx, int mouseX, int mouseY) {

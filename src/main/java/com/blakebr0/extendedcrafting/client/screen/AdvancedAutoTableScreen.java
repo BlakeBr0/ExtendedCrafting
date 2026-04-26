@@ -79,25 +79,22 @@ public class AdvancedAutoTableScreen extends BaseContainerScreen<AdvancedAutoTab
 			gfx.blit(RenderPipelines.GUI_TEXTURED, BACKGROUND, x + 154, y + 61, 204, 0, 13, i2, 256, 256);
 		}
 
-//		TODO ghost items
-//		var recipe = this.getSelectedRecipe();
-//
-//		if (recipe != null) {
-//			var itemRenderer = Minecraft.getInstance().getItemRenderer();
-//
-//			for (int i = 0; i < 5; i++) {
-//				for (int j = 0; j < 5; j++) {
-//					int index = (i * 5) + j;
-//					var stack = recipe.getStackInSlot(index);
-//
-//					GhostItemRenderer.renderItemIntoGui(stack, x + 26 + (j * 18), y + 18 + (i * 18), itemRenderer);
-//				}
-//			}
-//
-//			var output = recipe.getStackInSlot(recipe.getSlots() - 1);
-//
-//			GhostItemRenderer.renderItemIntoGui(output, x + 154, y + 37, itemRenderer);
-//		}
+		var recipe = this.getSelectedRecipe();
+
+		if (recipe != null) {
+			for (int i = 0; i < 5; i++) {
+				for (int j = 0; j < 5; j++) {
+					int index = (i * 5) + j;
+					var stack = recipe.getResource(index).toStack();
+
+					this.extractGhostItem(gfx, x + 26 + (j * 18), y + 18 + (i * 18), stack);
+				}
+			}
+
+			var output = recipe.getResource(recipe.size() - 1).toStack();
+
+			this.extractGhostItem(gfx, x + 154, y + 37, output);
+		}
 	}
 
 	private void onSelectButtonTooltip(Button button, GuiGraphicsExtractor gfx, int mouseX, int mouseY) {

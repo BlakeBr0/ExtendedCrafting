@@ -16,7 +16,6 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.NonNullList;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
@@ -45,7 +44,7 @@ public class CompressorTileEntity extends BaseInventoryTileEntity implements Men
     private final CEnergyStorage energy;
     private final CachedRecipe<CraftingInput, ICompressorRecipe> recipe;
     private ItemStack materialStack = ItemStack.EMPTY;
-    private List<MaterialInput> inputs = NonNullList.create();
+    private ArrayList<MaterialInput> inputs = new ArrayList<>();
     private int materialCount;
     private int progress;
     private @Nullable Identifier recipeId;
@@ -88,7 +87,9 @@ public class CompressorTileEntity extends BaseInventoryTileEntity implements Men
         this.ejecting = input.getBooleanOr("ejecting", false);
         this.energy.deserialize(input.childOrEmpty("energy"));
         this.inputLimit = input.getBooleanOr("input_limit", false);
-        this.inputs = input.read("material_stacks", MaterialInput.CODEC.listOf()).orElseGet(ArrayList::new);
+        this.inputs = input.read("material_stacks", MaterialInput.CODEC.listOf())
+                .map(ArrayList::new)
+                .orElseGet(ArrayList::new);
     }
 
     @Override

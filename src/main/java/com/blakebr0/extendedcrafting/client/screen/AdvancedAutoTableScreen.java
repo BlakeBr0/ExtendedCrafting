@@ -51,8 +51,8 @@ public class AdvancedAutoTableScreen extends BaseContainerScreen<AdvancedAutoTab
 
 	@Override
 	protected void extractLabels(GuiGraphicsExtractor gfx, int mouseX, int mouseY) {
-		gfx.text(this.font, this.title, 25, 6, 4210752, false);
-		gfx.text(this.font, this.playerInventoryTitle, 13, this.imageHeight - 94, 4210752, false);
+		gfx.text(this.font, this.title, 25, 6, -12566464, false);
+		gfx.text(this.font, this.playerInventoryTitle, 13, this.imageHeight - 94, -12566464, false);
 	}
 
 	@Override

@@ -48,8 +48,8 @@ public class AutoEnderCrafterScreen extends BaseContainerScreen<AutoEnderCrafter
 
 	@Override
 	protected void extractLabels(GuiGraphicsExtractor gfx, int mouseX, int mouseY) {
-		gfx.text(this.font, this.title, 32, 6, 4210752, false);
-		gfx.text(this.font, this.playerInventoryTitle, 8, this.imageHeight - 94, 4210752, false);
+		gfx.text(this.font, this.title, 32, 6, -12566464, false);
+		gfx.text(this.font, this.playerInventoryTitle, 8, this.imageHeight - 94, -12566464, false);
 	}
 
 	@Override

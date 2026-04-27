@@ -17,7 +17,7 @@ public class UltimateTableScreen extends BaseContainerScreen<UltimateTableContai
 	
 	@Override
 	protected void extractLabels(GuiGraphicsExtractor gfx, int mouseX, int mouseY) {
-		gfx.text(this.font, this.title, 8, 6, 4210752, false);
-		gfx.text(this.font, this.playerInventoryTitle, 39, this.imageHeight - 94, 4210752, false);
+		gfx.text(this.font, this.title, 8, 6, -12566464, false);
+		gfx.text(this.font, this.playerInventoryTitle, 39, this.imageHeight - 94, -12566464, false);
 	}
 }

@@ -52,8 +52,8 @@ public class UltimateAutoTableScreen extends BaseContainerScreen<UltimateAutoTab
 	protected void extractLabels(GuiGraphicsExtractor gfx, int mouseX, int mouseY) {
 		var title = this.getTitle().getString();
 
-		gfx.text(this.font, title, 26, 6, 4210752, false);
-		gfx.text(this.font, this.playerInventoryTitle, 47, this.imageHeight - 94, 4210752, false);
+		gfx.text(this.font, title, 26, 6, -12566464, false);
+		gfx.text(this.font, this.playerInventoryTitle, 47, this.imageHeight - 94, -12566464, false);
 	}
 
 	@Override

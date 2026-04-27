@@ -7,6 +7,7 @@ import com.blakebr0.cucumber.tileentity.BaseInventoryTileEntity;
 import com.blakebr0.cucumber.util.ContainerDataBuilder;
 import com.blakebr0.extendedcrafting.api.crafting.IFluxCrafterRecipe;
 import com.blakebr0.extendedcrafting.block.FluxAlternatorBlock;
+import com.blakebr0.extendedcrafting.client.handler.ClientRecipeHandler;
 import com.blakebr0.extendedcrafting.container.FluxCrafterContainer;
 import com.blakebr0.extendedcrafting.crafting.TableRecipeStorage;
 import com.blakebr0.extendedcrafting.init.ModRecipeTypes;
@@ -16,6 +17,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Inventory;
@@ -31,6 +33,7 @@ import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import net.neoforged.neoforge.transfer.item.ItemResource;
 import net.neoforged.neoforge.transfer.transaction.Transaction;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,6 +43,7 @@ public class FluxCrafterTileEntity extends BaseInventoryTileEntity implements Me
 	private final CachedRecipe<CraftingInput, IFluxCrafterRecipe> recipe;
 	private int progress;
 	private int progressReq;
+	private @Nullable Identifier recipeId;
 	protected boolean isGridChanged = true;
 
 	private final ContainerData dataAccess;
@@ -69,6 +73,7 @@ public class FluxCrafterTileEntity extends BaseInventoryTileEntity implements Me
 		super.loadAdditional(input);
 		this.progress = input.getIntOr("progress", 0);
 		this.progressReq = input.getIntOr("progress_required", 0);
+		this.recipeId = input.read("recipe_id", Identifier.CODEC).orElse(null);
 	}
 
 	@Override
@@ -76,6 +81,7 @@ public class FluxCrafterTileEntity extends BaseInventoryTileEntity implements Me
 		super.saveAdditional(output);
 		output.putInt("progress", this.progress);
 		output.putInt("progress_required", this.progressReq);
+		output.storeNullable("recipe_id", Identifier.CODEC, this.recipeId);
 	}
 
 	@Override
@@ -240,12 +246,22 @@ public class FluxCrafterTileEntity extends BaseInventoryTileEntity implements Me
 		return this.progressReq;
 	}
 
-	public IFluxCrafterRecipe getActiveRecipe() {
+	public @Nullable IFluxCrafterRecipe getActiveRecipe() {
 		if (this.isGridChanged) {
 			this.isGridChanged = false;
-			return this.recipe.checkAndGet(this.inventory.toCraftingInput(3, 3, 0, 9), (ServerLevel) this.level);
+
+			this.recipe.check(this.inventory.toCraftingInput(3, 3, 0, 9), (ServerLevel) this.level);
+
+			if (this.recipeId != this.recipe.id()) {
+				this.recipeId = this.recipe.id();
+				this.setChangedFast();
+			}
 		}
 
 		return this.recipe.get();
+	}
+
+	public @Nullable IFluxCrafterRecipe getActiveClientRecipe() {
+		return ClientRecipeHandler.FLUX_CRAFTER_RECIPE_MAP.get(this.recipeId);
 	}
 }

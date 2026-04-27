@@ -4,6 +4,7 @@ import com.blakebr0.extendedcrafting.ExtendedCrafting;
 import com.blakebr0.extendedcrafting.block.AdvancedAutoTableBlock;
 import com.blakebr0.extendedcrafting.block.AdvancedTableBlock;
 import com.blakebr0.extendedcrafting.block.AutoEnderCrafterBlock;
+import com.blakebr0.extendedcrafting.block.AutoFluxCrafterBlock;
 import com.blakebr0.extendedcrafting.block.BasicAutoTableBlock;
 import com.blakebr0.extendedcrafting.block.BasicTableBlock;
 import com.blakebr0.extendedcrafting.block.CompressorBlock;
@@ -43,8 +44,8 @@ public class JadeCompat implements IWailaPlugin {
 	private static final Identifier ENDER_CRAFTER_PROVIDER = ExtendedCrafting.resource("ender_crafter");
 	private static final Identifier AUTO_ENDER_CRAFTER_PROVIDER = ExtendedCrafting.resource("auto_ender_crafter");
 	private static final Identifier FLUX_CRAFTER_PROVIDER = ExtendedCrafting.resource("flux_crafter");
+	private static final Identifier AUTO_FLUX_CRAFTER_PROVIDER = ExtendedCrafting.resource("auto_flux_crafter");
 	private static final Identifier COMPRESSOR_PROVIDER = ExtendedCrafting.resource("compressor");
-
 
 	@Override
 	public void registerClient(IWailaClientRegistration registration) {
@@ -52,7 +53,7 @@ public class JadeCompat implements IWailaPlugin {
 			@Override
 			public void appendTooltip(ITooltip tooltip, BlockAccessor accessor, IPluginConfig config) {
 				if (accessor.getBlockEntity() instanceof CraftingCoreTileEntity core) {
-					var recipe = core.getActiveRecipe();
+					var recipe = core.getActiveClientRecipe();
 					if (recipe != null) {
 						var output = recipe.assemble(CraftingInput.EMPTY);
 
@@ -167,7 +168,7 @@ public class JadeCompat implements IWailaPlugin {
 			@Override
 			public void appendTooltip(ITooltip tooltip, BlockAccessor accessor, IPluginConfig config) {
 				if (accessor.getBlockEntity() instanceof EnderCrafterTileEntity crafter) {
-					var recipe = crafter.getActiveRecipe();
+					var recipe = crafter.getActiveClientRecipe();
 					if (recipe != null) {
 						var output = recipe.assemble(CraftingInput.EMPTY);
 
@@ -186,7 +187,7 @@ public class JadeCompat implements IWailaPlugin {
 			@Override
 			public void appendTooltip(ITooltip tooltip, BlockAccessor accessor, IPluginConfig config) {
 				if (accessor.getBlockEntity() instanceof EnderCrafterTileEntity crafter) {
-					var recipe = crafter.getActiveRecipe();
+					var recipe = crafter.getActiveClientRecipe();
 					if (recipe != null) {
 						var output = recipe.assemble(CraftingInput.EMPTY);
 
@@ -205,7 +206,7 @@ public class JadeCompat implements IWailaPlugin {
 			@Override
 			public void appendTooltip(ITooltip tooltip, BlockAccessor accessor, IPluginConfig config) {
 				if (accessor.getBlockEntity() instanceof FluxCrafterTileEntity crafter) {
-					var recipe = crafter.getActiveRecipe();
+					var recipe = crafter.getActiveClientRecipe();
 					if (recipe != null) {
 						var output = recipe.assemble(CraftingInput.EMPTY);
 
@@ -223,8 +224,27 @@ public class JadeCompat implements IWailaPlugin {
 		registration.registerBlockComponent(new IBlockComponentProvider() {
 			@Override
 			public void appendTooltip(ITooltip tooltip, BlockAccessor accessor, IPluginConfig config) {
+				if (accessor.getBlockEntity() instanceof FluxCrafterTileEntity crafter) {
+					var recipe = crafter.getActiveClientRecipe();
+					if (recipe != null) {
+						var output = recipe.assemble(CraftingInput.EMPTY);
+
+						tooltip.add(ModTooltips.CRAFTING.args(output.getCount(), output.getHoverName()).toComponent());
+					}
+				}
+			}
+
+			@Override
+			public Identifier getUid() {
+				return AUTO_FLUX_CRAFTER_PROVIDER;
+			}
+		}, AutoFluxCrafterBlock.class);
+
+		registration.registerBlockComponent(new IBlockComponentProvider() {
+			@Override
+			public void appendTooltip(ITooltip tooltip, BlockAccessor accessor, IPluginConfig config) {
 				if (accessor.getBlockEntity() instanceof CompressorTileEntity compressor) {
-					var recipe = compressor.getActiveRecipe();
+					var recipe = compressor.getActiveClientRecipe();
 					if (recipe != null) {
 						var output = recipe.assemble(CraftingInput.EMPTY);
 

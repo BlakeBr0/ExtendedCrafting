@@ -15,7 +15,6 @@ import net.minecraft.world.item.crafting.CraftingInput;
 
 public class CraftingCoreScreen extends BaseContainerScreen<CraftingCoreContainer> {
 	private static final Identifier BACKGROUND = ExtendedCrafting.resource("textures/gui/crafting_core.png");
-	private static final Identifier SLOT_HIGHLIGHT_FRONT_SPRITE = Identifier.withDefaultNamespace("container/slot_highlight_front");
 
 	private CraftingCoreTileEntity tile;
 
@@ -65,11 +64,6 @@ public class CraftingCoreScreen extends BaseContainerScreen<CraftingCoreContaine
 		int x = this.getGuiLeft();
 		int y = this.getGuiTop();
 
-		// this ensures that the current recipe is always updated
-		if (this.tile != null) {
-			this.tile.getActiveRecipe();
-		}
-
 		var isHoldingItem = !this.menu.getCarried().isEmpty() || this.isDragging();
 
 		if (!isHoldingItem && isHoveringSlot(x + 148, y + 47, mouseX, mouseY)) {
@@ -95,8 +89,15 @@ public class CraftingCoreScreen extends BaseContainerScreen<CraftingCoreContaine
 
 			var output = this.getRecipeOutput();
 
+			if (isHoveringSlot(x + 148, y + 47, mouseX, mouseY)) {
+				extractSlotHighlightBack(gfx, x + 148, y + 47);
+			}
+
 			gfx.item(output, x + 148, y + 47);
-			gfx.blitSprite(RenderPipelines.GUI_TEXTURED, SLOT_HIGHLIGHT_FRONT_SPRITE, x + 148, y + 47, 24, 24);
+
+			if (isHoveringSlot(x + 148, y + 47, mouseX, mouseY)) {
+				extractSlotHighlightFront(gfx, x + 148, y + 47);
+			}
 		}
 	}
 
@@ -128,7 +129,7 @@ public class CraftingCoreScreen extends BaseContainerScreen<CraftingCoreContaine
 		if (level == null)
 			return ItemStack.EMPTY;
 
-		var recipe = this.tile.getActiveRecipe();
+		var recipe = this.tile.getActiveClientRecipe();
 
 		if (recipe != null) {
 			return recipe.assemble(CraftingInput.EMPTY);
@@ -141,9 +142,5 @@ public class CraftingCoreScreen extends BaseContainerScreen<CraftingCoreContaine
 		int i = this.menu.getProgress();
 		long j = this.menu.getEnergyRequired();
 		return (int) (j != 0 && i != 0 ? (long) i * 24 / j : 0);
-	}
-
-	private static boolean isHoveringSlot(int x, int y, int mouseX, int mouseY) {
-		return mouseX > x - 1 && mouseX < x + 16 && mouseY > y - 1 && mouseY < y + 16;
 	}
 }

@@ -8,6 +8,7 @@ import com.blakebr0.cucumber.tileentity.BaseInventoryTileEntity;
 import com.blakebr0.cucumber.util.ContainerDataBuilder;
 import com.blakebr0.cucumber.util.Utils;
 import com.blakebr0.extendedcrafting.api.crafting.ICombinationRecipe;
+import com.blakebr0.extendedcrafting.client.handler.ClientRecipeHandler;
 import com.blakebr0.extendedcrafting.config.ModConfigs;
 import com.blakebr0.extendedcrafting.container.CraftingCoreContainer;
 import com.blakebr0.extendedcrafting.init.ModRecipeTypes;
@@ -18,6 +19,7 @@ import net.minecraft.core.particles.ItemParticleOption;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.ARGB;
 import net.minecraft.world.MenuProvider;
@@ -34,6 +36,7 @@ import net.minecraft.world.level.storage.ValueOutput;
 import net.neoforged.neoforge.transfer.item.ItemResource;
 import net.neoforged.neoforge.transfer.transaction.Transaction;
 import net.neoforged.neoforge.transfer.transaction.TransactionContext;
+import org.jspecify.annotations.Nullable;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -45,6 +48,7 @@ public class CraftingCoreTileEntity extends BaseInventoryTileEntity implements M
 	private final CachedRecipe<CraftingInput, ICombinationRecipe> recipe;
 	private int progress;
 	private int pedestalCount;
+	private @Nullable Identifier recipeId;
 	private boolean haveItemsChanged = true;
 
 	private final ContainerData dataAccess;
@@ -76,6 +80,7 @@ public class CraftingCoreTileEntity extends BaseInventoryTileEntity implements M
 		super.loadAdditional(input);
 		this.progress = input.getIntOr("progress", 0);
 		this.energy.deserialize(input.childOrEmpty("energy"));
+		this.recipeId = input.read("recipe_id", Identifier.CODEC).orElse(null);
 	}
 
 	@Override
@@ -83,6 +88,7 @@ public class CraftingCoreTileEntity extends BaseInventoryTileEntity implements M
 		super.saveAdditional(output);
 		output.putInt("progress", this.progress);
 		output.putChild("energy", this.energy);
+		output.storeNullable("recipe_id", Identifier.CODEC, this.recipeId);
 	}
 
 	@Override
@@ -170,7 +176,7 @@ public class CraftingCoreTileEntity extends BaseInventoryTileEntity implements M
 		return this.energy;
 	}
 
-	public ICombinationRecipe getActiveRecipe() {
+	public @Nullable ICombinationRecipe getActiveRecipe() {
 		if (this.level == null)
 			return null;
 
@@ -179,11 +185,20 @@ public class CraftingCoreTileEntity extends BaseInventoryTileEntity implements M
 
 		this.updateRecipeInventory(stacks);
 
-		if (!this.haveItemsChanged) {
-			return this.recipe.get();
+		if (this.haveItemsChanged) {
+			this.recipe.check(this.toCraftingInput(), (ServerLevel) this.level);
+
+			if (this.recipeId != this.recipe.id()) {
+				this.recipeId = this.recipe.id();
+				this.setChangedFast();
+			}
 		}
 
-		return this.recipe.checkAndGet(this.toCraftingInput(), (ServerLevel) this.level);
+		return this.recipe.get();
+	}
+
+	public @Nullable ICombinationRecipe getActiveClientRecipe() {
+		return ClientRecipeHandler.COMBINATION_RECIPE_MAP.get(this.recipeId);
 	}
 
 	public boolean hasRecipe() {

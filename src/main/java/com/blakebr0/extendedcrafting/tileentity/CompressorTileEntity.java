@@ -7,6 +7,7 @@ import com.blakebr0.cucumber.inventory.OnContentsChangedFunction;
 import com.blakebr0.cucumber.tileentity.BaseInventoryTileEntity;
 import com.blakebr0.cucumber.util.ContainerDataBuilder;
 import com.blakebr0.extendedcrafting.api.crafting.ICompressorRecipe;
+import com.blakebr0.extendedcrafting.client.handler.ClientRecipeHandler;
 import com.blakebr0.extendedcrafting.config.ModConfigs;
 import com.blakebr0.extendedcrafting.container.CompressorContainer;
 import com.blakebr0.extendedcrafting.init.ModRecipeTypes;
@@ -17,6 +18,7 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Inventory;
@@ -32,6 +34,7 @@ import net.minecraft.world.level.storage.ValueOutput;
 import net.neoforged.neoforge.transfer.item.ItemResource;
 import net.neoforged.neoforge.transfer.transaction.Transaction;
 import net.neoforged.neoforge.transfer.transaction.TransactionContext;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,6 +48,7 @@ public class CompressorTileEntity extends BaseInventoryTileEntity implements Men
     private List<MaterialInput> inputs = NonNullList.create();
     private int materialCount;
     private int progress;
+    private @Nullable Identifier recipeId;
     private boolean ejecting = false;
     private boolean inputLimit = true;
 
@@ -78,8 +82,9 @@ public class CompressorTileEntity extends BaseInventoryTileEntity implements Men
     public void loadAdditional(ValueInput input) {
         super.loadAdditional(input);
         this.materialCount = input.getIntOr("material_count", 0);
-        this.materialStack = input.read("material_stack", ItemStack.OPTIONAL_CODEC).orElse(null);
+        this.materialStack = input.read("material_stack", ItemStack.OPTIONAL_CODEC).orElse(ItemStack.EMPTY);
         this.progress = input.getIntOr("progress", 0);
+        this.recipeId = input.read("recipe_id", Identifier.CODEC).orElse(null);
         this.ejecting = input.getBooleanOr("ejecting", false);
         this.energy.deserialize(input.childOrEmpty("energy"));
         this.inputLimit = input.getBooleanOr("input_limit", false);
@@ -92,6 +97,7 @@ public class CompressorTileEntity extends BaseInventoryTileEntity implements Men
         output.putInt("material_count", this.materialCount);
         output.storeNullable("material_stack", ItemStack.OPTIONAL_CODEC, this.materialStack);
         output.putInt("progress", this.progress);
+        output.storeNullable("recipe_id", Identifier.CODEC, this.recipeId);
         output.putBoolean("ejecting", this.ejecting);
         output.putChild("energy", this.energy);
         output.putBoolean("input_limit", this.inputLimit);
@@ -251,16 +257,32 @@ public class CompressorTileEntity extends BaseInventoryTileEntity implements Men
         return this.recipe.exists();
     }
 
-    public ICompressorRecipe getActiveRecipe() {
+    public @Nullable ICompressorRecipe getActiveRecipe() {
         if (this.level == null)
             return null;
 
         var catalyst = this.inventory.getResource(2);
 
-        this.recipeInventory.set(0, ItemResource.of(this.materialStack), 1);
-        this.recipeInventory.set(1, catalyst, 1);
+        if (!this.materialStack.isEmpty()) {
+            this.recipeInventory.set(0, ItemResource.of(this.materialStack), 1);
+        } else {
+            this.recipeInventory.set(0, ItemResource.EMPTY, 0);
+        }
 
-        return this.recipe.checkAndGet(this.toCraftingInput(), (ServerLevel) this.level);
+        this.recipeInventory.set(1, catalyst, catalyst.isEmpty() ? 0 : 1);
+
+        this.recipe.check(this.toCraftingInput(), (ServerLevel) this.level);
+
+        if (this.recipeId != this.recipe.id()) {
+            this.recipeId = this.recipe.id();
+            this.setChangedFast();
+        }
+
+        return this.recipe.get();
+    }
+
+    public @Nullable ICompressorRecipe getActiveClientRecipe() {
+        return ClientRecipeHandler.COMPRESSOR_RECIPE_MAP.get(this.recipeId);
     }
 
     public int getEnergyRequired() {

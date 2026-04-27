@@ -21,6 +21,6 @@ public class TheUltimateBlock extends BaseTileEntityBlock {
 
     @Override
     public RenderShape getRenderShape(BlockState state) {
-        return RenderShape.MODEL;
+        return RenderShape.INVISIBLE;
     }
 }

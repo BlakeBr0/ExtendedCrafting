@@ -4,31 +4,22 @@ import com.blakebr0.extendedcrafting.client.tesr.state.TheUltimateBlockRenderSta
 import com.blakebr0.extendedcrafting.tileentity.TheUltimateBlockTileEntity;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.renderer.SubmitNodeCollector;
+import net.minecraft.client.renderer.block.BlockModelResolver;
+import net.minecraft.client.renderer.block.model.BlockDisplayContext;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
+import net.minecraft.client.renderer.feature.ModelFeatureRenderer;
 import net.minecraft.client.renderer.state.level.CameraRenderState;
+import net.minecraft.client.renderer.texture.OverlayTexture;
+import net.minecraft.world.phys.Vec3;
+import org.jspecify.annotations.Nullable;
 
 public class TheUltimateBlockRenderer implements BlockEntityRenderer<TheUltimateBlockTileEntity, TheUltimateBlockRenderState> {
-    public TheUltimateBlockRenderer(BlockEntityRendererProvider.Context context) { }
+    private final BlockModelResolver blockModelResolver;
 
-//    @Override
-//    public void render(TheUltimateBlockTileEntity tile, float v, PoseStack matrix, MultiBufferSource buffer, int i, int i1) {
-//        var minecraft = Minecraft.getInstance();
-//
-//        var level = tile.getLevel();
-//        if (level == null)
-//            return;
-//
-//        var pos = tile.getBlockPos();
-//        var vertex = buffer.getBuffer(RenderType.solid());
-//        var state = ModBlocks.THE_ULTIMATE_BLOCK.get().defaultBlockState();
-//
-//        matrix.pushPose();
-//        matrix.scale(1.0125f, 1.0125f, 1.0125f);
-//        matrix.translate(-0.005, -0.005, -0.005);
-//        minecraft.getBlockRenderer().renderBatched(state, pos, level, matrix, vertex, false, level.getRandom(), ModelData.EMPTY, RenderType.solid());
-//        matrix.popPose();
-//    }
+    public TheUltimateBlockRenderer(BlockEntityRendererProvider.Context context) {
+        this.blockModelResolver = context.blockModelResolver();
+    }
 
     @Override
     public TheUltimateBlockRenderState createRenderState() {
@@ -36,7 +27,18 @@ public class TheUltimateBlockRenderer implements BlockEntityRenderer<TheUltimate
     }
 
     @Override
-    public void submit(TheUltimateBlockRenderState state, PoseStack poseStack, SubmitNodeCollector submitNodeCollector, CameraRenderState camera) {
+    public void extractRenderState(TheUltimateBlockTileEntity tile, TheUltimateBlockRenderState state, float partialTicks, Vec3 cameraPosition, ModelFeatureRenderer.@Nullable CrumblingOverlay breakProgress) {
+        BlockEntityRenderer.super.extractRenderState(tile, state, partialTicks, cameraPosition, breakProgress);
 
+        this.blockModelResolver.update(state.blockModelRenderState, tile.getBlockState(), BlockDisplayContext.create());
+    }
+
+    @Override
+    public void submit(TheUltimateBlockRenderState state, PoseStack matrix, SubmitNodeCollector submitNodeCollector, CameraRenderState camera) {
+        matrix.pushPose();
+        matrix.scale(1.0125f, 1.0125f, 1.0125f);
+        matrix.translate(-0.005, -0.005, -0.005);
+        state.blockModelRenderState.submit(matrix, submitNodeCollector, 15728880, OverlayTexture.NO_OVERLAY, 0);
+        matrix.popPose();
     }
 }

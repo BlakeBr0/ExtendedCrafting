@@ -31,7 +31,7 @@ public class BasicAutoTableContainer extends BaseContainerMenu {
 	private boolean isVanillaRecipe = false;
 
 	public BasicAutoTableContainer(int id, Inventory playerInventory, FriendlyByteBuf buffer) {
-		this(id, playerInventory, AutoTableTileEntity.Basic.createInventoryHandler(), new SimpleContainerData(5), buffer.readBlockPos());
+		this(id, playerInventory, AutoTableTileEntity.Basic.createInventoryHandler(), new SimpleContainerData(6), buffer.readBlockPos());
 	}
 
 	public BasicAutoTableContainer(int id, Inventory playerInventory, CItemStacksHandler inventory, ContainerData data, BlockPos pos) {
@@ -62,6 +62,7 @@ public class BasicAutoTableContainer extends BaseContainerMenu {
 			this.addSlot(new Slot(playerInventory, j, 8 + j * 18, 170));
 		}
 
+		this.addDataSlots(data);
 		this.slotsChanged(matrix);
 	}
 

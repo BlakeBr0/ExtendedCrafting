@@ -28,7 +28,7 @@ public class EliteAutoTableContainer extends BaseContainerMenu {
 	private final ExtendedCraftingInventory matrix;
 
 	public EliteAutoTableContainer(int id, Inventory playerInventory, FriendlyByteBuf buffer) {
-		this(id, playerInventory, AutoTableTileEntity.Elite.createInventoryHandler(), new SimpleContainerData(4), buffer.readBlockPos());
+		this(id, playerInventory, AutoTableTileEntity.Elite.createInventoryHandler(), new SimpleContainerData(6), buffer.readBlockPos());
 	}
 
 	public EliteAutoTableContainer(int id, Inventory playerInventory, CItemStacksHandler inventory, ContainerData data, BlockPos pos) {
@@ -59,6 +59,7 @@ public class EliteAutoTableContainer extends BaseContainerMenu {
 			this.addSlot(new Slot(playerInventory, j, 30 + j * 18, 218));
 		}
 
+		this.addDataSlots(data);
 		this.slotsChanged(matrix);
 	}
 

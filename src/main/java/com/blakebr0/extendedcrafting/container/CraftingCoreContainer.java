@@ -15,7 +15,7 @@ public class CraftingCoreContainer extends BaseContainerMenu {
 	private final ContainerData data;
 
 	public CraftingCoreContainer(int id, Inventory playerInventory, FriendlyByteBuf buffer) {
-		this(id, playerInventory, new SimpleContainerData(3), buffer.readBlockPos());
+		this(id, playerInventory, new SimpleContainerData(6), buffer.readBlockPos());
 	}
 
 	public CraftingCoreContainer(int id, Inventory playerInventory, ContainerData data, BlockPos pos) {
@@ -31,6 +31,8 @@ public class CraftingCoreContainer extends BaseContainerMenu {
 		for (int i = 0; i < 9; i++) {
 			this.addSlot(new Slot(playerInventory, i, 8 + i * 18, 170));
 		}
+
+		this.addDataSlots(data);
 	}
 
 	@Override

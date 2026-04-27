@@ -19,7 +19,7 @@ public class FluxCrafterContainer extends BaseContainerMenu {
 	private final ContainerData data;
 
 	public FluxCrafterContainer(int id, Inventory playerInventory, FriendlyByteBuf buffer) {
-		this(id, playerInventory, FluxCrafterTileEntity.createInventoryHandler(), new SimpleContainerData(3), buffer.readBlockPos());
+		this(id, playerInventory, FluxCrafterTileEntity.createInventoryHandler(), new SimpleContainerData(2), buffer.readBlockPos());
 	}
 
 	public FluxCrafterContainer(int id, Inventory playerInventory, CItemStacksHandler inventory, ContainerData data, BlockPos pos) {
@@ -46,6 +46,8 @@ public class FluxCrafterContainer extends BaseContainerMenu {
 		for (j = 0; j < 9; j++) {
 			this.addSlot(new Slot(playerInventory, j, 8 + j * 18, 146));
 		}
+
+		this.addDataSlots(data);
 	}
 
 	@Override

@@ -15,7 +15,7 @@ public class FluxAlternatorContainer extends BaseContainerMenu {
 	private final ContainerData data;
 
 	public FluxAlternatorContainer(int id, Inventory playerInventory, FriendlyByteBuf buffer) {
-		this(id, playerInventory, new SimpleContainerData(1), buffer.readBlockPos());
+		this(id, playerInventory, new SimpleContainerData(2), buffer.readBlockPos());
 	}
 
 	public FluxAlternatorContainer(int id, Inventory playerInventory, ContainerData data, BlockPos pos) {
@@ -31,6 +31,8 @@ public class FluxAlternatorContainer extends BaseContainerMenu {
 		for (int i = 0; i < 9; i++) {
 			this.addSlot(new Slot(playerInventory, i, 8 + i * 18, 170));
 		}
+
+		this.addDataSlots(data);
 	}
 
 	@Override

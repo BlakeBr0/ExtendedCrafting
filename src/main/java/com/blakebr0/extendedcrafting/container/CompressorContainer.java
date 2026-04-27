@@ -20,7 +20,7 @@ public class CompressorContainer extends BaseContainerMenu {
 	private final ContainerData data;
 
 	public CompressorContainer(int id, Inventory playerInventory, FriendlyByteBuf buffer) {
-		this(id, playerInventory, CompressorTileEntity.createInventoryHandler(), new SimpleContainerData(3), buffer.readBlockPos());
+		this(id, playerInventory, CompressorTileEntity.createInventoryHandler(), new SimpleContainerData(8), buffer.readBlockPos());
 	}
 
 	public CompressorContainer(int id, Inventory playerInventory, CItemStacksHandler inventory, ContainerData data, BlockPos pos) {
@@ -40,6 +40,8 @@ public class CompressorContainer extends BaseContainerMenu {
 		for (int i = 0; i < 9; i++) {
 			this.addSlot(new Slot(playerInventory, i, 8 + i * 18, 170));
 		}
+
+		this.addDataSlots(data);
 	}
 
 	@Override

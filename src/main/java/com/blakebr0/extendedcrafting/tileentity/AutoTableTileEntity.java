@@ -22,6 +22,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.Clearable;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -40,7 +41,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 
-public abstract class AutoTableTileEntity extends BaseInventoryTileEntity implements MenuProvider {
+public abstract class AutoTableTileEntity extends BaseInventoryTileEntity implements MenuProvider, Clearable {
     @Nullable
     private Either<Recipe<CraftingInput>, ITableRecipe> recipe;
     private int progress;
@@ -365,6 +366,11 @@ public abstract class AutoTableTileEntity extends BaseInventoryTileEntity implem
         }
 
         return false;
+    }
+
+    @Override
+    public void clearContent() {
+        getInventory().getStacks().clear();
     }
 
     public static class Basic extends AutoTableTileEntity {

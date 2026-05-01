@@ -5,9 +5,10 @@ import com.blakebr0.cucumber.inventory.OnContentsChangedFunction;
 import com.blakebr0.cucumber.tileentity.BaseInventoryTileEntity;
 import com.blakebr0.extendedcrafting.init.ModTileEntities;
 import net.minecraft.core.BlockPos;
+import net.minecraft.world.Clearable;
 import net.minecraft.world.level.block.state.BlockState;
 
-public class PedestalTileEntity extends BaseInventoryTileEntity {
+public class PedestalTileEntity extends BaseInventoryTileEntity implements Clearable {
 	private final BaseItemStackHandler inventory;
 
 	public PedestalTileEntity(BlockPos pos, BlockState state) {
@@ -25,4 +26,9 @@ public class PedestalTileEntity extends BaseInventoryTileEntity {
 			builder.setDefaultSlotLimit(1);
 		});
 	}
+
+    @Override
+    public void clearContent() {
+        inventory.getStacks().clear();
+    }
 }

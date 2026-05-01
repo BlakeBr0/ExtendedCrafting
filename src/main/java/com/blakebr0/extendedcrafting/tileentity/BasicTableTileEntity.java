@@ -8,13 +8,14 @@ import com.blakebr0.extendedcrafting.container.BasicTableContainer;
 import com.blakebr0.extendedcrafting.init.ModTileEntities;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.Clearable;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.level.block.state.BlockState;
 
-public class BasicTableTileEntity extends BaseInventoryTileEntity implements MenuProvider {
+public class BasicTableTileEntity extends BaseInventoryTileEntity implements MenuProvider, Clearable {
 	private final BaseItemStackHandler inventory;
 
 	public BasicTableTileEntity(BlockPos pos, BlockState state) {
@@ -44,4 +45,9 @@ public class BasicTableTileEntity extends BaseInventoryTileEntity implements Men
 	public static BaseItemStackHandler createInventoryHandler(OnContentsChangedFunction onContentsChanged) {
 		return BaseItemStackHandler.create(9, onContentsChanged, builder -> {});
 	}
+
+    @Override
+    public void clearContent() {
+        inventory.getStacks().clear();
+    }
 }

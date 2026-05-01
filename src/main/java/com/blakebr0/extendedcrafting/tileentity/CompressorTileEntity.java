@@ -18,6 +18,7 @@ import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.Clearable;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -30,7 +31,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CompressorTileEntity extends BaseInventoryTileEntity implements MenuProvider {
+public class CompressorTileEntity extends BaseInventoryTileEntity implements MenuProvider, Clearable {
 	private final BaseItemStackHandler inventory;
 	private final BaseItemStackHandler recipeInventory;
 	private final BaseEnergyStorage energy;
@@ -371,6 +372,11 @@ public class CompressorTileEntity extends BaseInventoryTileEntity implements Men
 
 		tag.put("Inputs", list);
 	}
+
+    @Override
+    public void clearContent() {
+        getInventory().getStacks().clear();
+    }
 
 	public static class MaterialInput {
 		public ItemStack stack;

@@ -11,6 +11,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.Clearable;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -23,7 +24,7 @@ import net.neoforged.neoforge.items.IItemHandler;
 
 import java.util.Optional;
 
-public class AutoEnderCrafterTileEntity extends EnderCrafterTileEntity implements MenuProvider {
+public class AutoEnderCrafterTileEntity extends EnderCrafterTileEntity implements MenuProvider, Clearable {
     private final BaseEnergyStorage energy;
     private final TableRecipeStorage recipeStorage;
 
@@ -196,4 +197,9 @@ public class AutoEnderCrafterTileEntity extends EnderCrafterTileEntity implement
 
 		return false;
 	}
+
+    @Override
+    public void clearContent() {
+        this.getInventory().getStacks().clear();
+    }
 }

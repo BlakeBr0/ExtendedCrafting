@@ -23,6 +23,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.FastColor;
+import net.minecraft.world.Clearable;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -35,7 +36,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-public class CraftingCoreTileEntity extends BaseInventoryTileEntity implements MenuProvider {
+public class CraftingCoreTileEntity extends BaseInventoryTileEntity implements MenuProvider, Clearable {
 	private final BaseItemStackHandler inventory;
 	private final BaseItemStackHandler recipeInventory;
 	private final BaseEnergyStorage energy;
@@ -295,4 +296,9 @@ public class CraftingCoreTileEntity extends BaseInventoryTileEntity implements M
 	private CraftingInput toCraftingInput() {
 		return this.recipeInventory.toShapelessCraftingInput();
 	}
+
+    @Override
+    public void clearContent() {
+        getInventory().getStacks().clear();
+    }
 }

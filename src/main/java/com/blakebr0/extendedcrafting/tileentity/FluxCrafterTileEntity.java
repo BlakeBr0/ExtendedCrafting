@@ -20,6 +20,7 @@ import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.Clearable;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -33,7 +34,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import java.util.ArrayList;
 import java.util.List;
 
-public class FluxCrafterTileEntity extends BaseInventoryTileEntity implements MenuProvider {
+public class FluxCrafterTileEntity extends BaseInventoryTileEntity implements MenuProvider, Clearable {
 	private final BaseItemStackHandler inventory;
 	private final CachedRecipe<CraftingInput, IFluxCrafterRecipe> recipe;
 	private int progress;
@@ -234,4 +235,9 @@ public class FluxCrafterTileEntity extends BaseInventoryTileEntity implements Me
 
 		return this.recipe.get();
 	}
+
+    @Override
+    public void clearContent() {
+        getInventory().getStacks().clear();
+    }
 }

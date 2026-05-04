@@ -92,7 +92,7 @@ public class UltimateSingularityRecipe implements ITableRecipe {
     @Override
     public List<Ingredient> getIngredients() {
         if (!INGREDIENTS_LOADED.getOrDefault(this, false)) {
-            this.getIngredients().clear();
+            this.ingredients.clear();
 
             SingularityRegistry.getInstance().getSingularities()
                     .stream()
@@ -100,7 +100,7 @@ public class UltimateSingularityRecipe implements ITableRecipe {
                     .limit(81)
                     .map(SingularityUtils::getItemForSingularity)
                     .map(stack -> DataComponentIngredient.of(false, stack.components().split().added(), stack.item()))
-                    .forEach(this.getIngredients()::add);
+                    .forEach(this.ingredients::add);
 
             INGREDIENTS_LOADED.put(this, true);
         }

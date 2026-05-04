@@ -33,8 +33,8 @@ public class AutoEnderCrafterScreen extends BaseContainerScreen<AutoEnderCrafter
 	protected void init() {
 		super.init();
 
-		int x = this.getGuiLeft();
-		int y = this.getGuiTop();
+		int x = this.getLeftPos();
+		int y = this.getTopPos();
 		var pos = this.getMenu().getBlockPos();
 
 		this.tile = this.getTileEntity();
@@ -56,8 +56,8 @@ public class AutoEnderCrafterScreen extends BaseContainerScreen<AutoEnderCrafter
 	public void extractBackground(GuiGraphicsExtractor gfx, int mouseX, int mouseY, float a) {
 		super.extractBackground(gfx, mouseX, mouseY, a);
 
-		int x = this.getGuiLeft();
-		int y = this.getGuiTop();
+		int x = this.getLeftPos();
+		int y = this.getTopPos();
 
 		if (this.menu.getProgress() > 0) {
 			int i2 = this.getProgressBarScaled();

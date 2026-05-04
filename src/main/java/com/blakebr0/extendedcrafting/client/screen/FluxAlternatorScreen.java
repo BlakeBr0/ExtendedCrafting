@@ -19,8 +19,8 @@ public class FluxAlternatorScreen extends BaseContainerScreen<FluxAlternatorCont
 	@Override
 	protected void init() {
 		super.init();
-		int x = this.getGuiLeft();
-		int y = this.getGuiTop();
+		int x = this.getLeftPos();
+		int y = this.getTopPos();
 
 		this.addRenderableWidget(new EnergyBarWidget(x + 7, y + 17, this.menu::getEnergyStored, this.menu::getMaxEnergyCapacity));
 	}

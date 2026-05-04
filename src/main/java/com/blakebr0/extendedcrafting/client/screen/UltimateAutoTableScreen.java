@@ -33,8 +33,8 @@ public class UltimateAutoTableScreen extends BaseContainerScreen<UltimateAutoTab
 	public void init() {
 		super.init();
 
-		int x = this.getGuiLeft();
-		int y = this.getGuiTop();
+		int x = this.getLeftPos();
+		int y = this.getTopPos();
 		var pos = this.getMenu().getBlockPos();
 
 		this.addRenderableWidget(new ToggleTableRunningButton(x + 226, y + 114, pos, this.menu::isRunning));
@@ -58,8 +58,8 @@ public class UltimateAutoTableScreen extends BaseContainerScreen<UltimateAutoTab
 
 	@Override
 	protected void extractTooltip(GuiGraphicsExtractor gfx, int mouseX, int mouseY) {
-		int x = this.getGuiLeft();
-		int y = this.getGuiTop();
+		int x = this.getLeftPos();
+		int y = this.getTopPos();
 
 		super.extractTooltip(gfx, mouseX, mouseY);
 
@@ -72,8 +72,8 @@ public class UltimateAutoTableScreen extends BaseContainerScreen<UltimateAutoTab
 	public void extractBackground(GuiGraphicsExtractor gfx, int mouseX, int mouseY, float a) {
 		super.extractBackground(gfx, mouseX, mouseY, a);
 
-		int x = this.getGuiLeft();
-		int y = this.getGuiTop();
+		int x = this.getLeftPos();
+		int y = this.getTopPos();
 
 		if (this.menu.isRunning()) {
 			int i2 = this.getProgressBarScaled();

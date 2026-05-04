@@ -25,8 +25,8 @@ public class CraftingCoreScreen extends BaseContainerScreen<CraftingCoreContaine
 	@Override
 	protected void init() {
 		super.init();
-		int x = this.getGuiLeft();
-		int y = this.getGuiTop();
+		int x = this.getLeftPos();
+		int y = this.getTopPos();
 
 		this.tile = this.getTileEntity();
 
@@ -61,8 +61,8 @@ public class CraftingCoreScreen extends BaseContainerScreen<CraftingCoreContaine
 
 	@Override
 	protected void extractTooltip(GuiGraphicsExtractor gfx, int mouseX, int mouseY) {
-		int x = this.getGuiLeft();
-		int y = this.getGuiTop();
+		int x = this.getLeftPos();
+		int y = this.getTopPos();
 
 		var isHoldingItem = !this.menu.getCarried().isEmpty() || this.isDragging();
 
@@ -78,8 +78,8 @@ public class CraftingCoreScreen extends BaseContainerScreen<CraftingCoreContaine
 	public void extractBackground(GuiGraphicsExtractor gfx, int mouseX, int mouseY, float a) {
 		super.extractBackground(gfx, mouseX, mouseY, a);
 
-		int x = this.getGuiLeft();
-		int y = this.getGuiTop();
+		int x = this.getLeftPos();
+		int y = this.getTopPos();
 
 		if (this.hasRecipe()) {
 			if (this.menu.getProgress() > 0 && this.menu.getEnergyRate() > 0) {

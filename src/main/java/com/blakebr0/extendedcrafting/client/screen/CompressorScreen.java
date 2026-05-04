@@ -31,8 +31,8 @@ public class CompressorScreen extends BaseContainerScreen<CompressorContainer> {
 	public void init() {
 		super.init();
 
-		int x = this.getGuiLeft();
-		int y = this.getGuiTop();
+		int x = this.getLeftPos();
+		int y = this.getTopPos();
 		var pos = this.getMenu().getBlockPos();
 
 		this.tile = this.getTileEntity();
@@ -50,8 +50,8 @@ public class CompressorScreen extends BaseContainerScreen<CompressorContainer> {
 
 	@Override
 	protected void extractTooltip(GuiGraphicsExtractor gfx, int mouseX, int mouseY) {
-		int x = this.getGuiLeft();
-		int y = this.getGuiTop();
+		int x = this.getLeftPos();
+		int y = this.getTopPos();
 
 		if (mouseX > x + 60 && mouseX < x + 85 && mouseY > y + 74 && mouseY < y + 83) {
 			var tooltip = new ArrayList<Component>();
@@ -100,8 +100,8 @@ public class CompressorScreen extends BaseContainerScreen<CompressorContainer> {
 	public void extractBackground(GuiGraphicsExtractor gfx, int mouseX, int mouseY, float a) {
 		super.extractBackground(gfx, mouseX, mouseY, a);
 
-		int x = this.getGuiLeft();
-		int y = this.getGuiTop();
+		int x = this.getLeftPos();
+		int y = this.getTopPos();
 
 		if (this.hasRecipe()) {
 			if (this.menu.getMaterialCount() > 0 && this.menu.getMaterialsRequired() > 0) {

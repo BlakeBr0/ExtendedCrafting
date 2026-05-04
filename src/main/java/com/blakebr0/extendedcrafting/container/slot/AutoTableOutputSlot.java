@@ -17,17 +17,18 @@ public class AutoTableOutputSlot extends COutputSlot {
         this.matrix = matrix;
     }
 
-//    TODO test that this isn't a thing anymore
-//    @Override
-//    public ItemStack getItem() {
-//        var stack = super.getItem();
-//
-//        // TODO: this is a shitty workaround for a dupe bug #146
-//        if (!stack.equals(this.lastStack)) {
-//            this.lastStack = stack;
-//            this.container.slotsChanged(this.matrix);
-//        }
-//
-//        return stack;
-//    }
+    @Override
+    public ItemStack getStackCopy() {
+        var stack = super.getStackCopy();
+
+        // TODO: this is a workaround for a dupe bug #146
+        // this is because the tile entity updating the inventory does not seem to trigger slotsChanged.
+        // one day I'll come up with a better solution but for now this accomplishes the same goal
+        if (!ItemStack.matches(stack, this.lastStack)) {
+            this.lastStack = stack;
+            this.container.slotsChanged(this.matrix);
+        }
+
+        return stack;
+    }
 }

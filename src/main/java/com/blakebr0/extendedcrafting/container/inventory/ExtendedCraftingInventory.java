@@ -52,13 +52,15 @@ public class ExtendedCraftingInventory extends TransientCraftingContainer {
 
             this.container.slotsChanged(this);
 
+            tx.commit();
+
             return resource.toStack(removed);
         }
     }
 
     @Override
     public ItemStack removeItemNoUpdate(int slot) {
-        var stack = this.inventory.getResource(slot).toStack(this.inventory.getAmountAsInt(slot));
+        var stack = this.getItem(slot);
 
         this.inventory.set(slot, ItemResource.EMPTY, 0);
 

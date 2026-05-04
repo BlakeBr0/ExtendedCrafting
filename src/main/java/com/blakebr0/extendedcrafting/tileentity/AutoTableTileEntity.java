@@ -1,6 +1,7 @@
 package com.blakebr0.extendedcrafting.tileentity;
 
 import com.blakebr0.cucumber.energy.CEnergyStorage;
+import com.blakebr0.cucumber.helper.ItemResourceHelper;
 import com.blakebr0.cucumber.inventory.CItemStacksHandler;
 import com.blakebr0.cucumber.inventory.OnContentsChangedFunction;
 import com.blakebr0.cucumber.tileentity.BaseInventoryTileEntity;
@@ -111,37 +112,41 @@ public abstract class AutoTableTileEntity extends BaseInventoryTileEntity implem
                 int outputSlot = inventory.size() - 1;
                 int powerRate = ModConfigs.AUTO_TABLE_POWER_RATE.get();
 
-                try (var tx = Transaction.openRoot()) {
-                    if (energy.getAmountAsInt() >= powerRate && inventory.insert(outputSlot, ItemResource.of(result), result.count(), tx, true) == result.count()) {
-                        tile.progress++;
+                if (energy.getAmountAsInt() >= powerRate) {
+                    if (ItemResourceHelper.canCombine(inventory, outputSlot, result)) {
+                        try (var tx = Transaction.openRoot()) {
+                            tile.progress++;
 
-                        energy.extract(powerRate, tx);
+                            energy.extract(powerRate, tx);
 
-                        if (tile.progress >= tile.getProgressRequired()) {
-                            var remaining = recipe.map(v -> v.getRemainingItems(recipeInventory), t -> t.getRemainingItems(recipeInventory));
+                            if (tile.progress >= tile.getProgressRequired()) {
+                                var remaining = recipe.map(v -> v.getRemainingItems(recipeInventory), t -> t.getRemainingItems(recipeInventory));
 
-                            for (int k = 0; k < recipeInventory.height(); k++) {
-                                for (int l = 0; l < recipeInventory.width(); l++) {
-                                    var size = (recipeInventory.tier() * 2) + 1;
-                                    var index = l + recipeInventory.left() + (k + recipeInventory.top()) * size;
-                                    var remainingStack = remaining.get(l + k * recipeInventory.width());
-                                    var currentStack = inventory.getResource(index);
+                                for (int k = 0; k < recipeInventory.height(); k++) {
+                                    for (int l = 0; l < recipeInventory.width(); l++) {
+                                        var size = (recipeInventory.tier() * 2) + 1;
+                                        var index = l + recipeInventory.left() + (k + recipeInventory.top()) * size;
+                                        var remainingStack = remaining.get(l + k * recipeInventory.width());
+                                        var currentStack = inventory.getResource(index);
 
-                                    inventory.extract(index, currentStack, 1, tx, true);
+                                        inventory.extract(index, currentStack, 1, tx, true);
 
-                                    if (!remainingStack.isEmpty()) {
-                                        inventory.insert(index, ItemResource.of(remainingStack), remainingStack.count(), tx, true);
+                                        if (!remainingStack.isEmpty()) {
+                                            inventory.insert(index, ItemResource.of(remainingStack), remainingStack.count(), tx, true);
+                                        }
                                     }
                                 }
+
+                                inventory.insert(outputSlot, ItemResource.of(result), result.count(), tx, true);
+
+                                tile.progress = 0;
+                                tile.isGridChanged = true;
                             }
 
-                            tile.progress = 0;
-                            tile.isGridChanged = true;
+                            tx.commit();
+
+                            tile.setChangedFast();
                         }
-
-                        tx.commit();
-
-                        tile.setChangedFast();
                     }
                 }
             } else {

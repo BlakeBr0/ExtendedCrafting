@@ -1,6 +1,7 @@
 package com.blakebr0.extendedcrafting.tileentity;
 
 import com.blakebr0.cucumber.energy.CEnergyStorage;
+import com.blakebr0.cucumber.helper.ItemResourceHelper;
 import com.blakebr0.cucumber.inventory.CItemStacksHandler;
 import com.blakebr0.cucumber.inventory.CachedRecipe;
 import com.blakebr0.cucumber.inventory.OnContentsChangedFunction;
@@ -144,12 +145,16 @@ public class CompressorTileEntity extends BaseInventoryTileEntity implements Men
             if (tile.materialCount >= recipe.getIngredient().count()) {
                 if (tile.progress >= recipe.getPowerCost()) {
                     var result = recipe.assemble(tile.toCraftingInput());
-                    var canFit = result.getCount() + tile.inventory.getAmountAsInt(0) <= output.getMaxStackSize();
 
-                    if (canFit && output.matches(result)) {
+                    if (ItemResourceHelper.canCombine(tile.inventory, 9, result)) {
                         var amount = recipe.getIngredient().count();
 
-                        tile.updateResult(result);
+                        try (var tx = Transaction.openRoot()) {
+                            tile.inventory.insert(9, ItemResource.of(result), result.count(), tx, true);
+
+                            tx.commit();
+                        }
+
                         tile.progress = 0;
                         tile.materialCount -= amount;
 
@@ -174,28 +179,29 @@ public class CompressorTileEntity extends BaseInventoryTileEntity implements Men
             var newestStack = newestInput.stack;
 
             if (tile.materialCount > 0 && !newestStack.isEmpty() && (output.isEmpty() || output.matches(newestStack))) {
-                int addCount = Math.min(newestInput.count, newestStack.getMaxStackSize() - tile.inventory.getAmountAsInt(0));
-                if (addCount > 0) {
-                    var toAdd = newestStack.copyWithCount(addCount);
+                try (var tx = Transaction.openRoot()) {
+                    var inserted = tile.inventory.insert(9, ItemResource.of(newestStack), newestStack.count(), tx, true);
+                    if (inserted > 0) {
+                        tile.materialCount -= inserted;
 
-                    tile.updateResult(toAdd);
-                    tile.materialCount -= addCount;
+                        newestInput.count -= inserted;
 
-                    newestInput.count -= addCount;
+                        if (newestInput.count <= 0) {
+                            tile.inputs.removeLast();
+                        }
 
-                    if (newestInput.count <= 0) {
-                        tile.inputs.removeLast();
+                        if (tile.materialCount < 1) {
+                            tile.materialStack = ItemStack.EMPTY;
+                            tile.ejecting = false;
+                        }
+
+                        if (tile.progress > 0)
+                            tile.progress = 0;
+
+                        tile.setChangedFast();
                     }
 
-                    if (tile.materialCount < 1) {
-                        tile.materialStack = ItemStack.EMPTY;
-                        tile.ejecting = false;
-                    }
-
-                    if (tile.progress > 0)
-                        tile.progress = 0;
-
-                    tile.setChangedFast();
+                    tx.commit();
                 }
             }
         }
@@ -314,17 +320,6 @@ public class CompressorTileEntity extends BaseInventoryTileEntity implements Men
             int extracted = this.energy.extract(extract, tx);
             this.progress += extracted;
             tx.commit();
-        }
-    }
-
-    private void updateResult(ItemStack stack) {
-        var result = this.inventory.getResource(9);
-
-        if (result.isEmpty()) {
-            this.inventory.set(9, ItemResource.of(stack), stack.getCount());
-        } else {
-            var amount = this.inventory.getAmountAsInt(0);
-            this.inventory.set(9, result, amount + stack.getCount());
         }
     }
 

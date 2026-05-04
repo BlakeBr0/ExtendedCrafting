@@ -1,5 +1,6 @@
 package com.blakebr0.extendedcrafting.tileentity;
 
+import com.blakebr0.cucumber.helper.ItemResourceHelper;
 import com.blakebr0.cucumber.inventory.CItemStacksHandler;
 import com.blakebr0.cucumber.inventory.CachedRecipe;
 import com.blakebr0.cucumber.inventory.OnContentsChangedFunction;
@@ -99,11 +100,9 @@ public class FluxCrafterTileEntity extends BaseInventoryTileEntity implements Me
 		var selectedRecipe = tile.getSelectedRecipeGrid();
 
 		if (recipe != null && (selectedRecipe == null || recipe.matches(selectedRecipe, level))) {
-			var result = recipe.assemble(tile.inventory.toCraftingInput(3, 3, 0, 9));
-			var output = tile.inventory.getResource(9);
-			var canFit = result.getCount() + tile.inventory.getAmountAsInt(9) <= output.getMaxStackSize();
+			var result = recipe.assemble(tile.toCraftingInput());
 
-			if (canFit && output.matches(result)) {
+			if (ItemResourceHelper.canCombine(tile.inventory, 9, result)) {
 				var alternators = tile.getAlternators();
 				int alternatorCount = alternators.size();
 
@@ -179,17 +178,6 @@ public class FluxCrafterTileEntity extends BaseInventoryTileEntity implements Me
 		return null;
 	}
 
-	private void updateResult(ItemStack stack) {
-		var result = this.inventory.getResource(9);
-
-		if (result.isEmpty()) {
-			this.inventory.set(9, ItemResource.of(stack), stack.getCount());
-		} else {
-			var amount = this.inventory.getAmountAsInt(0);
-			this.inventory.set(9, result, amount + stack.getCount());
-		}
-	}
-
 	private List<FluxAlternatorTileEntity> getAlternators() {
 		List<FluxAlternatorTileEntity> alternators = new ArrayList<>();
 		var level = this.getLevel();
@@ -250,7 +238,7 @@ public class FluxCrafterTileEntity extends BaseInventoryTileEntity implements Me
 		if (this.isGridChanged) {
 			this.isGridChanged = false;
 
-			this.recipe.check(this.inventory.toCraftingInput(3, 3, 0, 9), (ServerLevel) this.level);
+			this.recipe.check(this.toCraftingInput(), (ServerLevel) this.level);
 
 			if (this.recipeId != this.recipe.id()) {
 				this.recipeId = this.recipe.id();
@@ -263,5 +251,9 @@ public class FluxCrafterTileEntity extends BaseInventoryTileEntity implements Me
 
 	public @Nullable IFluxCrafterRecipe getActiveClientRecipe() {
 		return ClientRecipeHandler.FLUX_CRAFTER_RECIPE_MAP.get(this.recipeId);
+	}
+
+	private CraftingInput toCraftingInput() {
+		return this.inventory.toCraftingInput(3, 3, 0, 9);
 	}
 }

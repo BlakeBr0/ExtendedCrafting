@@ -1,5 +1,6 @@
 package com.blakebr0.extendedcrafting.tileentity;
 
+import com.blakebr0.cucumber.helper.ItemResourceHelper;
 import com.blakebr0.cucumber.inventory.CItemStacksHandler;
 import com.blakebr0.cucumber.inventory.CachedRecipe;
 import com.blakebr0.cucumber.inventory.OnContentsChangedFunction;
@@ -99,11 +100,9 @@ public class EnderCrafterTileEntity extends BaseInventoryTileEntity implements M
 		var selectedRecipe = tile.getSelectedRecipeGrid();
 
 		if (recipe != null && (selectedRecipe == null || recipe.matches(selectedRecipe, level))) {
-			var result = recipe.assemble(tile.inventory.toCraftingInput(3, 3, 0, 9));
-			var output = tile.inventory.getResource(9);
-			var canFit = result.getCount() + tile.inventory.getAmountAsInt(9) <= output.getMaxStackSize();
+			var result = recipe.assemble(tile.toCraftingInput());
 
-			if (canFit && output.matches(result)) {
+			if (ItemResourceHelper.canCombine(tile.inventory, 9, result)) {
 				var alternators = tile.getAlternatorPositions();
 				int alternatorCount = alternators.size();
 
@@ -240,7 +239,7 @@ public class EnderCrafterTileEntity extends BaseInventoryTileEntity implements M
 		if (this.isGridChanged) {
 			this.isGridChanged = false;
 
-			this.recipe.check(this.inventory.toCraftingInput(3, 3, 0, 9), (ServerLevel) this.level);
+			this.recipe.check(this.toCraftingInput(), (ServerLevel) this.level);
 
 			if (this.recipeId != this.recipe.id()) {
 				this.recipeId = this.recipe.id();
@@ -253,5 +252,9 @@ public class EnderCrafterTileEntity extends BaseInventoryTileEntity implements M
 
 	public @Nullable IEnderCrafterRecipe getActiveClientRecipe() {
 		return ClientRecipeHandler.ENDER_CRAFTER_RECIPE_MAP.get(this.recipeId);
+	}
+
+	private CraftingInput toCraftingInput() {
+		return this.inventory.toCraftingInput(3, 3, 0, 9);
 	}
 }

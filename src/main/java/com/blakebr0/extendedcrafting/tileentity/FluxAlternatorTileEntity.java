@@ -27,7 +27,7 @@ public class FluxAlternatorTileEntity extends BaseTileEntity implements MenuProv
         this.energy = new CEnergyStorage(ModConfigs.FLUX_ALTERNATOR_POWER_CAPACITY.get(), _ -> this.setChangedAndDispatch());
 
         this.dataAccess = ContainerDataBuilder.builder()
-                .sync(this.energy::getCapacityAsInt, this.energy::set)
+                .sync(this.energy::getAmountAsInt, this.energy::set)
                 .sync(this.energy::getCapacityAsInt, this.energy::setMaxCapacity)
                 .build();
     }

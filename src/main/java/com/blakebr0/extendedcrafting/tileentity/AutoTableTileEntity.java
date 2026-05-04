@@ -55,12 +55,12 @@ public abstract class AutoTableTileEntity extends BaseInventoryTileEntity implem
         super(type, pos, state);
 
         this.dataAccess = ContainerDataBuilder.builder()
-                .sync(this.getEnergy()::getAmountAsInt, this.getEnergy()::set)
-                .sync(this.getEnergy()::getCapacityAsInt, this.getEnergy()::setMaxCapacity)
+                .sync(() -> this.getEnergy().getAmountAsInt(), value -> this.getEnergy().set(value))
+                .sync(() -> this.getEnergy().getCapacityAsInt(), value -> this.getEnergy().setMaxCapacity(value))
                 .sync(() -> this.progress, value -> this.progress = value)
                 .sync(this::getProgressRequired)
                 .sync(() -> this.running ? 1 : 0, value -> this.running = value != 0)
-                .sync(this.getRecipeStorage()::getSelected, this.getRecipeStorage()::setSelected)
+                .sync(() -> this.getRecipeStorage().getSelected(), value -> this.getRecipeStorage().setSelected(value))
                 .build();
     }
 
@@ -128,7 +128,10 @@ public abstract class AutoTableTileEntity extends BaseInventoryTileEntity implem
                                     var currentStack = inventory.getResource(index);
 
                                     inventory.extract(index, currentStack, 1, tx, true);
-                                    inventory.insert(index, ItemResource.of(remainingStack), remainingStack.count(), tx, true);
+
+                                    if (!remainingStack.isEmpty()) {
+                                        inventory.insert(index, ItemResource.of(remainingStack), remainingStack.count(), tx, true);
+                                    }
                                 }
                             }
 

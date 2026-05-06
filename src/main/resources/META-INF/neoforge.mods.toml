@@ -17,13 +17,13 @@ license="MIT"
     [[dependencies.extendedcrafting]]
         modId="neoforge"
         mandatory=true
-        versionRange="[26.1.0.0-beta,)"
+        versionRange="[26.1.2.41-beta,)"
         ordering="NONE"
         side="BOTH"
     [[dependencies.extendedcrafting]]
         modId="minecraft"
         mandatory=true
-        versionRange="[26.1,26.2)"
+        versionRange="[26.1.2,26.2)"
         ordering="NONE"
         side="BOTH"
     [[dependencies.extendedcrafting]]

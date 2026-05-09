@@ -3,6 +3,7 @@ package com.blakebr0.extendedcrafting.block;
 import com.blakebr0.cucumber.block.BaseTileEntityBlock;
 import com.blakebr0.cucumber.helper.BlockHelper;
 import com.blakebr0.cucumber.iface.IHoverTextProvider;
+import com.blakebr0.extendedcrafting.ExtendedCrafting;
 import com.blakebr0.extendedcrafting.init.ModDataComponentTypes;
 import com.blakebr0.extendedcrafting.init.ModTileEntities;
 import com.blakebr0.extendedcrafting.lib.ModTooltips;
@@ -11,6 +12,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
+import net.minecraft.util.ProblemReporter;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
@@ -25,6 +27,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.TagValueInput;
 import net.minecraft.world.phys.BlockHitResult;
 
 import java.util.function.Consumer;
@@ -59,7 +62,13 @@ public class AutoFluxCrafterBlock extends BaseTileEntityBlock implements IHoverT
 			var tile = level.getBlockEntity(pos);
 
 			if (tile instanceof AutoFluxCrafterTileEntity crafter) {
-				crafter.getRecipeStorage().read(storage.data());
+				try (var reporter = new ProblemReporter.ScopedCollector(ExtendedCrafting.LOGGER)) {
+					var tag = TagValueInput.create(reporter, level.registryAccess(), storage.data());
+
+					if (reporter.isEmpty()) {
+						crafter.getRecipeStorage().deserialize(tag);
+					}
+				}
 			}
 		}
 	}

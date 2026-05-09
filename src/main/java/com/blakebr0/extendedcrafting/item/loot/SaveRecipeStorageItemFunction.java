@@ -1,5 +1,6 @@
 package com.blakebr0.extendedcrafting.item.loot;
 
+import com.blakebr0.extendedcrafting.ExtendedCrafting;
 import com.blakebr0.extendedcrafting.api.component.TableRecipeStorageComponent;
 import com.blakebr0.extendedcrafting.crafting.TableRecipeStorage;
 import com.blakebr0.extendedcrafting.init.ModDataComponentTypes;
@@ -7,8 +8,10 @@ import com.blakebr0.extendedcrafting.tileentity.AutoEnderCrafterTileEntity;
 import com.blakebr0.extendedcrafting.tileentity.AutoFluxCrafterTileEntity;
 import com.blakebr0.extendedcrafting.tileentity.AutoTableTileEntity;
 import com.mojang.serialization.MapCodec;
+import net.minecraft.util.ProblemReporter;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.storage.TagValueOutput;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.functions.LootItemFunction;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
@@ -55,7 +58,12 @@ public class SaveRecipeStorageItemFunction implements LootItemFunction {
 
     private static void save(ItemStack stack, TableRecipeStorage storage, Level level) {
         var count = storage.getRecipeCount();
-        var data = storage.write();
-        stack.set(ModDataComponentTypes.TABLE_RECIPE_STORAGE, new TableRecipeStorageComponent(count, data));
+
+        try (var reporter = new ProblemReporter.ScopedCollector(ExtendedCrafting.LOGGER)) {
+            var tag = TagValueOutput.createWithContext(reporter, level.registryAccess());
+
+            storage.serialize(tag);
+            stack.set(ModDataComponentTypes.TABLE_RECIPE_STORAGE, new TableRecipeStorageComponent(count, tag.buildResult()));
+        }
     }
 }

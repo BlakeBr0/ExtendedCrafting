@@ -1,7 +1,6 @@
 package com.blakebr0.extendedcrafting.crafting;
 
 import com.blakebr0.cucumber.inventory.CItemStacksHandler;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.CraftingInput;
 import net.minecraft.world.level.storage.ValueInput;
@@ -70,7 +69,7 @@ public class TableRecipeStorage implements ValueIOSerializable {
             recipe.set(i, resource, resource.isEmpty() ? 0 : 1);
         }
 
-        recipe.set(this.slots - 1, ItemResource.of(output), 1);
+        recipe.set(this.slots - 1, ItemResource.of(output), output.isEmpty() ? 0 : 1);
 
         this.recipes[index] = recipe;
     }
@@ -107,47 +106,28 @@ public class TableRecipeStorage implements ValueIOSerializable {
 
     @Override
     public void deserialize(ValueInput input) {
-        var child = input.childOrEmpty("RecipeStorage");
-        var recipes = input.childrenListOrEmpty("Recipes").stream().toList();
+        var child = input.childOrEmpty("recipe_storage");
+        var recipes = input.childrenListOrEmpty("recipes").stream().toList();
 
         for (int i = 0; i < recipes.size(); i++) {
             this.recipes[i].deserialize(recipes.get(i));
         }
 
-        this.selected = child.getIntOr("Selected", 0);
+        this.selected = child.getIntOr("selected", 0);
 
         this.updateSelectedRecipeGrid();
     }
 
     @Override
     public void serialize(ValueOutput output) {
-        var child = output.child("RecipeStorage");
-        var recipes = output.childrenList("Recipes");
+        var child = output.child("recipe_storage");
+        var recipes = output.childrenList("recipes");
 
         for (var recipe : this.recipes) {
             recipe.serialize(recipes.addChild());
         }
 
-        child.putInt("Selected", this.selected);
-    }
-
-    public void read(CompoundTag tag) {
-//        var child = tag.child("RecipeStorage");
-//        var recipes = child.childrenList("Recipes");
-//
-//        for (int i = 0; i < recipes.size(); i++) {
-//            this.recipes[i].deserialize(recipes.get(i));
-//        }
-//
-//        this.selected = child.getIntOr("Selected", 0);
-    }
-
-    public CompoundTag write() {
-        var tag = new CompoundTag();
-//        var recipes = new ListTag();
-//
-////        tag.
-        return tag;
+        child.putInt("selected", this.selected);
     }
 
     public void validate(Function<CraftingInput, ItemStack> validator) {

@@ -146,18 +146,6 @@ public class AutoEnderCrafterTileEntity extends EnderCrafterTileEntity implement
         return this.energy;
     }
 
-    private void addStackToSlot(ItemStack stack, int slot) {
-        var inventory = this.getInventory();
-        var stackInSlot = inventory.getResource(slot);
-
-        if (stackInSlot.isEmpty()) {
-            inventory.set(slot, ItemResource.of(stack), stack.getCount());
-        } else {
-            var amount = inventory.getAmountAsInt(slot);
-            inventory.set(slot, ItemResource.of(stack), amount + stack.getCount());
-        }
-    }
-
     private Optional<ResourceHandler<ItemResource>> getAboveInventory() {
         var level = this.getLevel();
         var pos = this.getBlockPos().above();

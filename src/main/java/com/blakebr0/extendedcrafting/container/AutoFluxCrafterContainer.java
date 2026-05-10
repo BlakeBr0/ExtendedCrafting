@@ -46,6 +46,8 @@ public class AutoFluxCrafterContainer extends BaseContainerMenu {
 		for (j = 0; j < 9; j++) {
 			this.addSlot(new Slot(playerInventory, j, 8 + j * 18, 170));
 		}
+
+		this.addDataSlots(data);
 	}
 
 	@Override

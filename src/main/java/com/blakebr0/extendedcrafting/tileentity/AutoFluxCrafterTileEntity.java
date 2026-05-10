@@ -38,7 +38,13 @@ public class AutoFluxCrafterTileEntity extends FluxCrafterTileEntity implements 
         this.energy = new CEnergyStorage(ModConfigs.AUTO_FLUX_CRAFTER_POWER_CAPACITY.get(), _ -> this.setChangedFast());
         this.recipeStorage = new TableRecipeStorage(10);
 
-        this.dataAccess = ContainerDataBuilder.builder().build();
+        this.dataAccess = ContainerDataBuilder.builder()
+                .sync(this.energy::getAmountAsInt, this.energy::set)
+                .sync(this.energy::getCapacityAsInt, this.energy::setMaxCapacity)
+                .sync(this::getProgress)
+                .sync(this::getProgressRequired)
+                .sync(this.recipeStorage::getSelected, this.recipeStorage::setSelected)
+                .build();
     }
 
     @Override

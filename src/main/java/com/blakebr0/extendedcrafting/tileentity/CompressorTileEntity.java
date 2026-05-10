@@ -146,11 +146,11 @@ public class CompressorTileEntity extends BaseInventoryTileEntity implements Men
                 if (tile.progress >= recipe.getPowerCost()) {
                     var result = recipe.assemble(tile.toCraftingInput());
 
-                    if (ItemResourceHelper.canCombine(tile.inventory, 9, result)) {
+                    if (ItemResourceHelper.canCombine(tile.inventory, 0, result)) {
                         var amount = recipe.getIngredient().count();
 
                         try (var tx = Transaction.openRoot()) {
-                            tile.inventory.insert(9, ItemResource.of(result), result.count(), tx, true);
+                            tile.inventory.insert(0, ItemResource.of(result), result.count(), tx, true);
 
                             tx.commit();
                         }
@@ -180,7 +180,7 @@ public class CompressorTileEntity extends BaseInventoryTileEntity implements Men
 
             if (tile.materialCount > 0 && !newestStack.isEmpty() && (output.isEmpty() || output.matches(newestStack))) {
                 try (var tx = Transaction.openRoot()) {
-                    var inserted = tile.inventory.insert(9, ItemResource.of(newestStack), newestStack.count(), tx, true);
+                    var inserted = tile.inventory.insert(0, ItemResource.of(newestStack), newestStack.count(), tx, true);
                     if (inserted > 0) {
                         tile.materialCount -= inserted;
 

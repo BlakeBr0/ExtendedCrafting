@@ -105,16 +105,14 @@ public class CompressorScreen extends BaseContainerScreen<CompressorContainer> {
 		int x = this.getLeftPos();
 		int y = this.getTopPos();
 
-		if (this.hasRecipe()) {
-			if (this.menu.getMaterialCount() > 0 && this.menu.getMaterialsRequired() > 0) {
-				int i2 = this.getMaterialBarScaled(26);
-				gfx.blit(RenderPipelines.GUI_TEXTURED, BACKGROUND, x + 60, y + 74, 194, 19, i2 + 1, 10, 256, 256);
-			}
+		if (this.menu.getMaterialCount() > 0 && this.menu.getMaterialsRequired() > 0) {
+			int i2 = this.getMaterialBarScaled(26);
+			gfx.blit(RenderPipelines.GUI_TEXTURED, BACKGROUND, x + 60, y + 74, 194, 19, i2 + 1, 10, 256, 256);
+		}
 
-			if (this.menu.getProgress() > 0 && this.menu.getEnergyRequired() > 0) {
-				int i2 = this.getProgressBarScaled(24);
-				gfx.blit(RenderPipelines.GUI_TEXTURED, BACKGROUND, x + 96, y + 47, 194, 0, i2 + 1, 16, 256, 256);
-			}
+		if (this.menu.getProgress() > 0 && this.menu.getEnergyRequired() > 0) {
+			int i2 = this.getProgressBarScaled(24);
+			gfx.blit(RenderPipelines.GUI_TEXTURED, BACKGROUND, x + 96, y + 47, 194, 0, i2 + 1, 16, 256, 256);
 		}
 
 		if (this.menu.isLimitingInput()) {
@@ -133,13 +131,6 @@ public class CompressorScreen extends BaseContainerScreen<CompressorContainer> {
 		}
 
 		return null;
-	}
-
-	public boolean hasRecipe() {
-		if (this.tile == null)
-			return false;
-
-		return this.tile.hasRecipe();
 	}
 
 	public boolean hasMaterialStack() {

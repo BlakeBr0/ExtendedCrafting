@@ -53,6 +53,8 @@ public class CompressorScreen extends BaseContainerScreen<CompressorContainer> {
 		int x = this.getLeftPos();
 		int y = this.getTopPos();
 
+		super.extractTooltip(gfx, mouseX, mouseY);
+
 		if (mouseX > x + 60 && mouseX < x + 85 && mouseY > y + 74 && mouseY < y + 83) {
 			var tooltip = new ArrayList<Component>();
 

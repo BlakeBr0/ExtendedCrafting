@@ -65,6 +65,8 @@ public class CraftingCoreScreen extends BaseContainerScreen<CraftingCoreContaine
 		int x = this.getLeftPos();
 		int y = this.getTopPos();
 
+		super.extractTooltip(gfx, mouseX, mouseY);
+
 		var isHoldingItem = !this.menu.getCarried().isEmpty() || this.isDragging();
 
 		if (!isHoldingItem && isHoveringSlot(x + 148, y + 47, mouseX, mouseY)) {

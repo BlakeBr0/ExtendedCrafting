@@ -45,7 +45,8 @@ public class CraftingCoreScreen extends BaseContainerScreen<CraftingCoreContaine
 
 		gfx.text(this.font, text("screen.extendedcrafting.crafting_core.pedestals", this.menu.getPedestalCount()), 36, 36, -1);
 
-		if (!this.hasRecipe()) {
+		var hasRecipe = !this.getRecipeOutput().isEmpty();
+		if (!hasRecipe) {
 			gfx.text(this.font, text("screen.extendedcrafting.crafting_core.no_recipe"), 36, 56, -1);
 		} else {
 			gfx.text(this.font, text("screen.extendedcrafting.crafting_core.power_cost", number(this.menu.getEnergyRequired())) + " FE", 36, 56, -1);
@@ -81,23 +82,21 @@ public class CraftingCoreScreen extends BaseContainerScreen<CraftingCoreContaine
 		int x = this.getLeftPos();
 		int y = this.getTopPos();
 
-		if (this.hasRecipe()) {
-			if (this.menu.getProgress() > 0 && this.menu.getEnergyRate() > 0) {
-				int i2 = this.getProgressBarScaled();
-				gfx.blit(RenderPipelines.GUI_TEXTURED, BACKGROUND, x + 116, y + 47, 194, 0, i2 + 1, 16, 256, 256);
-			}
+		if (this.menu.getProgress() > 0 && this.menu.getEnergyRate() > 0) {
+			int i2 = this.getProgressBarScaled();
+			gfx.blit(RenderPipelines.GUI_TEXTURED, BACKGROUND, x + 116, y + 47, 194, 0, i2 + 1, 16, 256, 256);
+		}
 
-			var output = this.getRecipeOutput();
+		var output = this.getRecipeOutput();
 
-			if (isHoveringSlot(x + 148, y + 47, mouseX, mouseY)) {
-				extractSlotHighlightBack(gfx, x + 148, y + 47);
-			}
+		if (isHoveringSlot(x + 148, y + 47, mouseX, mouseY)) {
+			extractSlotHighlightBack(gfx, x + 144, y + 43);
+		}
 
-			gfx.item(output, x + 148, y + 47);
+		gfx.fakeItem(output, x + 148, y + 47);
 
-			if (isHoveringSlot(x + 148, y + 47, mouseX, mouseY)) {
-				extractSlotHighlightFront(gfx, x + 148, y + 47);
-			}
+		if (isHoveringSlot(x + 148, y + 47, mouseX, mouseY)) {
+			extractSlotHighlightFront(gfx, x + 144, y + 43);
 		}
 	}
 
@@ -112,13 +111,6 @@ public class CraftingCoreScreen extends BaseContainerScreen<CraftingCoreContaine
 		}
 
 		return null;
-	}
-
-	private boolean hasRecipe() {
-		if (this.tile == null)
-			return false;
-
-		return this.tile.hasRecipe();
 	}
 
 	private ItemStack getRecipeOutput() {

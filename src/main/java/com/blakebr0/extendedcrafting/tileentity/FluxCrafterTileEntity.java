@@ -123,9 +123,13 @@ public class FluxCrafterTileEntity extends BaseInventoryTileEntity implements Me
 
 						if (tile.progress >= tile.progressReq) {
 							for (int i = 0; i < tile.inventory.size() - 1; i++) {
-								tile.inventory.extract(i, tile.inventory.getResource(i), 1, tx, false);
+								var resource = tile.inventory.getResource(i);
+								if (!resource.isEmpty()) {
+									tile.inventory.extract(i, resource, 1, tx, true);
+								}
 							}
 
+							tile.inventory.insert(9, ItemResource.of(result), result.count(), tx, true);
 							tile.progress = 0;
 						}
 

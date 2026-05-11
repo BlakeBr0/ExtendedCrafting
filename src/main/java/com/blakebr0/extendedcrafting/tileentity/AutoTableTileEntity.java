@@ -129,7 +129,9 @@ public abstract class AutoTableTileEntity extends BaseInventoryTileEntity implem
                                         var remainingStack = remaining.get(l + k * recipeInventory.width());
                                         var currentStack = inventory.getResource(index);
 
-                                        inventory.extract(index, currentStack, 1, tx, true);
+                                        if (!currentStack.isEmpty()) {
+                                            inventory.extract(index, currentStack, 1, tx, true);
+                                        }
 
                                         if (!remainingStack.isEmpty()) {
                                             inventory.insert(index, ItemResource.of(remainingStack), remainingStack.count(), tx, true);

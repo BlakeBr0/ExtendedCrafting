@@ -81,7 +81,9 @@ public class ExtendedCraftingInventory extends TransientCraftingContainer {
     }
 
     public TableCraftingInput asCraftInput() {
-        var tier = Math.floorDiv(this.getWidth(), 2);
-        return TableCraftingInput.of(this.getWidth(), this.getHeight(), this.inventory.getStacks(), tier);
+        var width = this.getWidth();
+        var height = this.getHeight();
+        var tier = Math.floorDiv(width, 2);
+        return TableCraftingInput.of(width, height, this.inventory.getStacks().subList(0, width * height), tier);
     }
 }

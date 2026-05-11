@@ -358,7 +358,7 @@ public abstract class AutoTableTileEntity extends BaseInventoryTileEntity implem
         if (slotToPut > -1) {
             int insertPowerRate = ModConfigs.AUTO_TABLE_INSERT_POWER_RATE.get();
 
-            this.getInventory().insert(slotToPut, input, stackAmountToPut, tx, true);
+            this.getInventory().insert(slotToPut, input, 1, tx, true);
             this.getEnergy().extract(insertPowerRate, tx);
 
             return true;

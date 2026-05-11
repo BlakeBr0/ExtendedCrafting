@@ -194,7 +194,7 @@ public class AutoEnderCrafterTileEntity extends EnderCrafterTileEntity implement
         if (slotToPut > -1) {
             int insertPowerRate = ModConfigs.AUTO_ENDER_CRAFTER_INSERT_POWER_RATE.get();
 
-            this.getInventory().insert(slotToPut, input, stackAmountToPut, tx, true);
+            this.getInventory().insert(slotToPut, input, 1, tx, true);
             this.getEnergy().extract(insertPowerRate, tx);
 
             return true;

@@ -13,6 +13,7 @@ import com.google.common.collect.Lists;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Inventory;
@@ -77,7 +78,7 @@ public class UltimateAutoTableScreen extends BaseContainerScreen<UltimateAutoTab
 
 		if (this.menu.isRunning()) {
 			int i2 = this.getProgressBarScaled();
-			gfx.blit(BACKGROUND, x + 225, y + 113, 272, 0, 13, i2, 512, 512);
+			gfx.blit(RenderPipelines.GUI_TEXTURED, BACKGROUND, x + 225, y + 113, 272, 0, 13, i2, 512, 512);
 		}
 
 		var recipe = this.getSelectedRecipe();

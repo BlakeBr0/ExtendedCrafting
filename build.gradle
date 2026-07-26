@@ -88,7 +88,7 @@ dependencies {
     implementation "curse.maven:jade-324717:${jade_version}"
 //  implementation "com.blamejared.crafttweaker:CraftTweaker-neoforge-${crafttweaker_version}"
 
-//  runtimeOnly "vazkii.patchouli:Patchouli:${patchouli_version}"
+    runtimeOnly "vazkii.patchouli:patchouli-neoforge:${patchouli_version}"
     runtimeOnly "mezz.jei:jei-${minecraft_version}-neoforge:${jei_version}"
 
     compileOnly "mezz.jei:jei-${minecraft_version}-common-api:${jei_version}"

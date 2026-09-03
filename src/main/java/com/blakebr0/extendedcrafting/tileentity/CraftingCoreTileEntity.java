@@ -264,16 +264,18 @@ public class CraftingCoreTileEntity extends BaseInventoryTileEntity implements M
 
 	public Map<BlockPos, ItemStack> getPedestalsWithItems() {
 		Map<BlockPos, ItemStack> pedestals = new LinkedHashMap<>();
-		var world = this.getLevel();
 
 		int pedestalCount = 0;
-		if (world != null) {
+		if (this.level != null) {
 			var pos = this.getBlockPos();
 			var positions = BlockPos.betweenClosedStream(pos.offset(-3, 0, -3), pos.offset(3, 0, 3)).iterator();
 
 			while (positions.hasNext()) {
 				var aoePos = positions.next();
-				var tile = world.getBlockEntity(aoePos);
+				if (!this.level.isLoaded(aoePos))
+					continue;
+
+				var tile = this.level.getBlockEntity(aoePos);
 
 				if (tile instanceof PedestalTileEntity pedestal) {
 					var resource = pedestal.getInventory().getResource(0);

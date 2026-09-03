@@ -184,13 +184,15 @@ public class FluxCrafterTileEntity extends BaseInventoryTileEntity implements Me
 
 	private List<FluxAlternatorTileEntity> getAlternators() {
 		List<FluxAlternatorTileEntity> alternators = new ArrayList<>();
-		var level = this.getLevel();
 
-		if (level != null) {
+		if (this.level != null) {
 			var pos = this.getBlockPos();
 
 			BlockPos.betweenClosedStream(pos.offset(-3, -3, -3), pos.offset(3, 3, 3)).forEach(aoePos -> {
-				var tile = level.getBlockEntity(aoePos);
+				if (!this.level.isLoaded(aoePos))
+					return;
+
+				var tile = this.level.getBlockEntity(aoePos);
 				if (tile instanceof FluxAlternatorTileEntity alternator && alternator.getEnergy().getAmountAsInt() >= this.recipe.get().getPowerRate())
 					alternators.add(alternator);
 			});

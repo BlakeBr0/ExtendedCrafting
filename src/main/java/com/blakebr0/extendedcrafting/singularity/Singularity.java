@@ -9,6 +9,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.ARGB;
+import net.minecraft.util.ExtraCodecs;
 import net.minecraft.world.item.crafting.Ingredient;
 
 import java.util.Optional;
@@ -17,8 +18,8 @@ public class Singularity {
     public static final MapCodec<Singularity> MAP_CODEC = RecordCodecBuilder.mapCodec(builder ->
             builder.group(
                     Codec.STRING.fieldOf("name").forGetter(singularity -> singularity.name),
-                    Codec.INT.fieldOf("overlay_color").forGetter(singularity -> singularity.overlayColor),
-                    Codec.INT.fieldOf("underlay_color").forGetter(singularity -> singularity.underlayColor),
+                    ExtraCodecs.STRING_RGB_COLOR.fieldOf("overlay_color").forGetter(singularity -> singularity.overlayColor),
+                    ExtraCodecs.STRING_RGB_COLOR.fieldOf("underlay_color").forGetter(singularity -> singularity.underlayColor),
                     Ingredient.CODEC.optionalFieldOf("ingredient").forGetter(singularity -> singularity.ingredient),
                     Codec.INT.optionalFieldOf("ingredient_count", ModConfigs.SINGULARITY_INGREDIENTS_REQUIRED.get()).forGetter(singularity -> singularity.ingredientCount),
                     Codec.BOOL.optionalFieldOf("in_ultimate_singularity", true).forGetter(singularity -> singularity.inUltimateSingularity),

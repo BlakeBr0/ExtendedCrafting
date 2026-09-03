@@ -7,8 +7,8 @@ public record DefaultSingularity(Identifier id, String name, int overlayColor, i
     public JsonObject toJson() {
         var json = new JsonObject();
         json.addProperty("name", this.name);
-        json.addProperty("overlay_color", this.overlayColor);
-        json.addProperty("underlay_color", this.underlayColor);
+        json.addProperty("overlay_color", String.format("#%06X", this.overlayColor));
+        json.addProperty("underlay_color", String.format("#%06X", this.underlayColor));
         json.addProperty("ingredient", this.ingredient);
         return json;
     }

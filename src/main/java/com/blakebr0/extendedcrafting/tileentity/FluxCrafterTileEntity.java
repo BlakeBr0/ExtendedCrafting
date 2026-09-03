@@ -178,6 +178,9 @@ public class FluxCrafterTileEntity extends BaseInventoryTileEntity implements Me
 			var pos = this.getBlockPos();
 
 			BlockPos.betweenClosedStream(pos.offset(-3, -3, -3), pos.offset(3, 3, 3)).forEach(aoePos -> {
+				if (!level.isLoaded(aoePos))
+					return;
+
 				var tile = level.getBlockEntity(aoePos);
 				if (tile instanceof FluxAlternatorTileEntity alternator && alternator.getEnergy().getEnergyStored() >= this.recipe.get().getPowerRate())
 					alternators.add(alternator);

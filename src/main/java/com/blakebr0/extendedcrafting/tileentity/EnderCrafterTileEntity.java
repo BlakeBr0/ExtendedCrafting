@@ -164,6 +164,9 @@ public class EnderCrafterTileEntity extends BaseInventoryTileEntity implements M
 			var pos = this.getBlockPos();
 
 			BlockPos.betweenClosedStream(pos.offset(-3, -3, -3), pos.offset(3, 3, 3)).forEach(aoePos -> {
+				if (!level.isLoaded(aoePos))
+					return;
+
 				var block = level.getBlockState(aoePos).getBlock();
 				if (block instanceof EnderAlternatorBlock)
 					alternators.add(aoePos.immutable());

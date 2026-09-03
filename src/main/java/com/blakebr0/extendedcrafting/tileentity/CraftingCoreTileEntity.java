@@ -234,6 +234,9 @@ public class CraftingCoreTileEntity extends BaseInventoryTileEntity implements M
 
 			while (positions.hasNext()) {
 				var aoePos = positions.next();
+				if (!world.isLoaded(aoePos))
+					continue;
+				
 				var tile = world.getBlockEntity(aoePos);
 
 				if (tile instanceof PedestalTileEntity pedestal) {

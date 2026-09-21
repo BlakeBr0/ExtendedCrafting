@@ -96,6 +96,7 @@ public class CraftingCoreScreen extends BaseContainerScreen<CraftingCoreContaine
 		}
 
 		gfx.fakeItem(output, x + 148, y + 47);
+		gfx.itemDecorations(this.font, output, x + 148, y + 47);
 
 		if (isHoveringSlot(x + 148, y + 47, mouseX, mouseY)) {
 			extractSlotHighlightFront(gfx, x + 144, y + 43);

@@ -1,0 +1,19 @@
+{
+  "type": "extendedcrafting:combination",
+  "power_cost": 400000,
+  "input": "minecraft:iron_ingot",
+  "ingredients": [
+    "minecraft:apple",
+    "minecraft:apple",
+    "minecraft:apple",
+    "minecraft:apple",
+    "minecraft:apple",
+    "minecraft:apple",
+    "minecraft:apple",
+    "minecraft:apple"
+  ],
+  "result": {
+    "id": "minecraft:cobblestone",
+    "count": 3
+  }
+}

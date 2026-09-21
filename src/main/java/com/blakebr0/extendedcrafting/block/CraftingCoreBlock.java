@@ -26,6 +26,7 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.neoforged.neoforge.transfer.item.ItemResource;
+import net.neoforged.neoforge.transfer.item.ItemUtil;
 
 public class CraftingCoreBlock extends BaseTileEntityBlock {
 	public static final VoxelShape CRAFTING_CORE_SHAPE = VoxelShapeBuilder.builder()
@@ -54,7 +55,7 @@ public class CraftingCoreBlock extends BaseTileEntityBlock {
 			if (tile instanceof CraftingCoreTileEntity core) {
 				if (hitResult.getDirection() == Direction.UP) {
 					var inventory = core.getInventory();
-					var input = inventory.getResource(0);
+					var input = ItemUtil.getStack(inventory, 0);
 					var held = player.getItemInHand(hand);
 
 					if (input.isEmpty()) {
@@ -64,7 +65,7 @@ public class CraftingCoreBlock extends BaseTileEntityBlock {
 							level.playSound(null, pos, SoundEvents.ITEM_PICKUP, SoundSource.BLOCKS, 1.0F, 1.0F);
 						}
 					} else {
-						var item = new ItemEntity(level, player.getX(), player.getY(), player.getZ(), input.toStack());
+						var item = new ItemEntity(level, player.getX(), player.getY(), player.getZ(), input);
 
 						item.setNoPickUpDelay();
 						level.addFreshEntity(item);

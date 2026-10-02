@@ -3,7 +3,7 @@ package com.blakebr0.extendedcrafting.container;
 import com.blakebr0.cucumber.container.BaseContainerMenu;
 import com.blakebr0.cucumber.inventory.CItemStacksHandler;
 import com.blakebr0.cucumber.inventory.slot.COutputSlot;
-import com.blakebr0.extendedcrafting.container.inventory.ExtendedCraftingInventory;
+import com.blakebr0.extendedcrafting.container.slot.ManualOnlyInputSlot;
 import com.blakebr0.extendedcrafting.init.ModMenuTypes;
 import com.blakebr0.extendedcrafting.tileentity.FluxCrafterTileEntity;
 import net.minecraft.core.BlockPos;
@@ -26,14 +26,12 @@ public class AutoFluxCrafterContainer extends BaseContainerMenu {
 		super(ModMenuTypes.AUTO_FLUX_CRAFTER.get(), id, pos);
 		this.data = data;
 
-		var matrix = new ExtendedCraftingInventory(this, inventory, 3);
-
 		this.addSlot(new COutputSlot(inventory, 9, 127, 48));
 
 		int i, j;
 		for (i = 0; i < 3; i++) {
 			for (j = 0; j < 3; j++) {
-				this.addSlot(new Slot(matrix, j + i * 3, 33 + j * 18, 30 + i * 18));
+				this.addSlot(new ManualOnlyInputSlot(inventory, j + i * 3, 33 + j * 18, 30 + i * 18));
 			}
 		}
 

@@ -22,6 +22,7 @@ import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
+import net.neoforged.neoforge.transfer.item.ResourceHandlerSlot;
 
 public class BasicAutoTableContainer extends BaseContainerMenu {
 	private final ContainerData data;
@@ -46,7 +47,7 @@ public class BasicAutoTableContainer extends BaseContainerMenu {
 		int i, j;
 		for (i = 0; i < 3; i++) {
 			for (j = 0; j < 3; j++) {
-				this.addSlot(new Slot(this.matrix, j + i * 3, 33 + j * 18, 30 + i * 18));
+				this.addSlot(new ResourceHandlerSlot(inventory, this.matrix::set, j + i * 3, 33 + j * 18, 30 + i * 18));
 			}
 		}
 

@@ -86,4 +86,9 @@ public class ExtendedCraftingInventory extends TransientCraftingContainer {
         var tier = Math.floorDiv(width, 2);
         return TableCraftingInput.of(width, height, this.inventory.getStacks().subList(0, width * height), tier);
     }
+
+    public void set(int slot, ItemResource resource, int amount) {
+        this.inventory.set(slot, resource, amount);
+        this.container.slotsChanged(this);
+    }
 }

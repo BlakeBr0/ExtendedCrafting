@@ -17,6 +17,7 @@ import net.minecraft.world.inventory.ResultContainer;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.neoforged.neoforge.transfer.item.ResourceHandlerSlot;
 
 public class AdvancedTableContainer extends BaseContainerMenu {
 	private final Level level;
@@ -38,7 +39,7 @@ public class AdvancedTableContainer extends BaseContainerMenu {
 		int i, j;
 		for (i = 0; i < 5; i++) {
 			for (j = 0; j < 5; j++) {
-				this.addSlot(new Slot(this.matrix, j + i * 5, 14 + j * 18, 18 + i * 18));
+				this.addSlot(new ResourceHandlerSlot(inventory, this.matrix::set, j + i * 5, 14 + j * 18, 18 + i * 18));
 			}
 		}
 
